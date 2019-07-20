@@ -101,7 +101,7 @@ def fit_numeric_outcome_treatment_(
             if summaryi["has_range"]:
                 xforms = xforms + [ clean_numeric(incoming_column_name = vi, 
                                                   replacement_value = summaryi["mean"]) ]
-            if summaryi["n_not_nan"]<summaryi["n"]:
+            if (summaryi["n_not_nan"]>0) and (summaryi["n_not_nan"]<summaryi["n"]):
                 xforms = xforms + [ indicate_missing(incoming_column_name = vi, 
                                                      dervied_column_names = vi + "_is_bad") ]  
     return({

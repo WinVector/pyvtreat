@@ -101,7 +101,7 @@ def fit_numeric_outcome_treatment_(
             if summaryi["has_range"]:
                 xforms = xforms + [ clean_numeric(incoming_column_name = vi, 
                                                   replacement_value = summaryi["mean"]) ]
-            if summaryi["n_not_nan"]<summaryi["n"]:
+            if (summaryi["n_not_nan"]>0) and (summaryi["n_not_nan"]<summaryi["n"]):
                 xforms = xforms + [ indicate_missing(incoming_column_name = vi, 
                                                      dervied_column_names = vi + "_is_bad") ]  
     return({
@@ -120,7 +120,6 @@ def transform_numeric_outcome_treatment_(
     new_frames = [ xfi.transform(X) for xfi in plan["xforms"] ]
     cp = X.loc[:, plan["cols_to_copy"] ].copy()
     return(pandas.concat([cp] + new_frames, axis=1))
-    #return({"plan":plan, "X":X, "new_frames":new_frames})
 
 
     
