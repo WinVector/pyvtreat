@@ -10,8 +10,7 @@ Created on Sat Jul 20 11:40:41 2019
 
 import pandas
 
-
-
+import vtreat.vtreat_impl as vtreat_impl
 
 
 class numeric_outcome_treatment():
@@ -30,19 +29,29 @@ class numeric_outcome_treatment():
         self.params_ = params.copy()
         self.plan_ = None
 
-    def fit(self, X, y=None):
+    def fit(self, X, y=None, 
+            *, 
+            sample_weight=None):
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
-        self.plan_ = None
+        self.plan_ = vtreat_impl.fit_numeric_outcome_treatment_(
+                X = X, y = y, sample_weight = sample_weight,
+                varlist = self.varlist_, outcomename = self.outcomename_,
+                plan = self.plan_
+                )
         return self
 
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
-        pass
+        return(vtreat_impl.transform_numeric_outcome_treatment_(
+                X = X,
+                plan = self.plan_))
     
-    def fit_transform(self, X, y=None, **fit_params):
-        self.fit(X, y)
+    def fit_transform(self, X, y=None, 
+                      *, 
+                      sample_weight=None):
+        self.fit(X, y, sample_weight=sample_weight)
         return(self.transform(X))
     
     def get_params(self, deep=True):

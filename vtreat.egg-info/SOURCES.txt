@@ -2,6 +2,7 @@ README.md
 setup.py
 vtreat/__init__.py
 vtreat/util.py
+vtreat/vtreat_impl.py
 vtreat.egg-info/PKG-INFO
 vtreat.egg-info/SOURCES.txt
 vtreat.egg-info/dependency_links.txt
