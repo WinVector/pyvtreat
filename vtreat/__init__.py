@@ -1,28 +1,46 @@
 
 
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Jul 20 11:40:41 2019
 
-import numpy
+@author: johnmount
+"""
+
+
+import pandas
 
 
 
-def k_way_cross_plan(n_rows, 
-                     k_folds, 
-                     *, 
-                     data_frame=None, 
-                     y=None):
-    """randomly split range(n_rows) into k_folds disjoint groups"""
-    if n_rows<2:
-        raise Exception('n_rows should be at least 2')
-    if k_folds>=n_rows:
-        k_folds = n_rows-1
-    # first assign groups modulo k (ensuring at least one in each group)
-    grp = [i % k_folds for i in range(n_rows)]
-    # now shuffle
-    numpy.random.shuffle(grp)
-    plan = [ 
-            { "train"  : [i for i in range(n_rows) if grp[i] != j],
-               "test" : [i for i in range(n_rows) if grp[i] == j] } for j in range(k_folds) 
-            ]
-    return(plan)
+
+
+class numeric_outcome_treatment():
+    """build a treatment plan for a numeric outcome (regression)"""
+    def __init__(self, params = {}):
+        self.params_ = params.copy()
+        self.plan_ = None
+
+    def fit(self, X, y):
+        if not isinstance(X, pandas.DataFrame):
+            raise Exception("X should be a Pandas DataFrame")
+        self.plan_ = None
+        return self
+
+    def transform(self, X):
+        if not isinstance(X, pandas.DataFrame):
+            raise Exception("X should be a Pandas DataFrame")
+        pass
+    
+    def fit_transform(self, X, y=None, **fit_params):
+        self.fit(X, y)
+        return(self.transform(X))
+    
+    def get_params(self, deep=True):
+        return(self.params_.copy())
+    
+    def set_params(self, **params):
+        self.plan = None
+        for a in params:
+            self.params_[a] = params[a]
 
 
