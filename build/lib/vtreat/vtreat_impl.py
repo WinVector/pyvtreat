@@ -9,6 +9,7 @@ Created on Sat Jul 20 12:07:57 2019
 
 import numpy
 import pandas
+import statistics
 
 def characterize_numeric_(x):
     """compute na count, min,max,mean of a numeric vector"""
@@ -71,10 +72,10 @@ class clean_numeric(var_transform):
 class indicate_missing(var_transform):
     def __init__(self, 
                  incoming_column_name,
-                 dervied_column_names):
+                 dervied_column_name):
         var_transform.__init__(self, 
                                incoming_column_name, 
-                               [dervied_column_names])
+                               [dervied_column_name])
     
     def transform(self, data_frame):
         col = data_frame[self.incoming_column_name_].isnull()
@@ -90,6 +91,55 @@ def can_convert_v_to_numeric_(x):
     except:
         return(False)
 
+
+
+class impact_code(var_transform):
+    def __init__(self, 
+                 incoming_column_name,
+                 dervied_column_name,
+                 code_book):
+        var_transform.__init__(self, 
+                               incoming_column_name, 
+                               [dervied_column_name])
+        self.code_book_ = code_book
+    
+    def transform(self, data_frame):
+        res = data_frame[[self.incoming_column_name_]].join(
+                self.code_book_,
+                on = self.incoming_column_name_,
+                how = 'left',
+                sort = False) # ordered by left table rows
+        res = res[[self.dervied_column_names_[0]]]
+        res.loc[res[self.dervied_column_names_[0]].isnull(), 
+                self.dervied_column_names_[0]] = 0
+        return(res)
+
+
+def fit_regression_impact_code(incoming_column_name, X, y):
+    try:
+        sf = pandas.DataFrame({"x":numpy.asarray(X[incoming_column_name]),
+                               "y":y})
+        na_posns = sf["x"].isnull()
+        sf.loc[na_posns, "x"] = "_NA_"
+        sf["_group_mean"] = sf.groupby("x")["y"].transform("mean")
+        sf["_gm"] = numpy.mean(sf[["y"]])[0]
+        sf["_nest"] = sf["_group_mean"] - sf["_gm"] # naive condtional mean est
+        # continue on to get heirarchical est with estimated variances
+        # http://www.win-vector.com/blog/2017/09/partial-pooling-for-lower-variance-variable-encoding/
+        means = sf.groupby("x")["y"].mean()
+        sf["_vb"] = statistics.variance(means)
+        sf["_one"] = 1
+        sf["_ni"] = sf.groupby("x")["_one"].transform("sum")
+        sf["_vw"] = numpy.mean((sf["y"] - sf["_group_mean"])**2) # a bit inflated
+        sf["_hest"] = (sf["_ni"]*sf["_group_mean"]/sf["_vw"] + sf["_gm"]/sf["_vb"])/(sf["_ni"]/sf["_vw"] + 1/sf["_vb"]) - sf["_gm"]
+        sf = sf.loc[:, ["x", "_hest"]].copy()
+        newcol = incoming_column_name + "_impact_code"
+        sf.columns = [ incoming_column_name, newcol ]
+        return(impact_code(incoming_column_name, 
+                           incoming_column_name + "_impact_code",
+                           code_book = sf))
+    except:
+        return(None)
 
 def fit_numeric_outcome_treatment_(
         *,
@@ -112,15 +162,18 @@ def fit_numeric_outcome_treatment_(
             all_null = all_null + [vi]
         if (n_null>0) and (n_null<n):
             xforms = xforms + [ indicate_missing(incoming_column_name = vi, 
-                                                dervied_column_names = vi + "_is_bad") ]
+                                                dervied_column_name = vi + "_is_bad") ]
     varlist = [ co for co in varlist if (not (co in set(all_null))) ]
     numlist = [ co for co in varlist if can_convert_v_to_numeric_(X[co]) ]
-    # catlist = [ co for co in varlist if not co in set(numlist) ]
+    catlist = [ co for co in varlist if not co in set(numlist) ]
     for vi in numlist:
         summaryi = characterize_numeric_(X[vi])
         if summaryi["varies"] and summaryi["has_range"]:
             xforms = xforms + [ clean_numeric(incoming_column_name = vi, 
                                               replacement_value = summaryi["mean"]) ]
+    for vi in catlist:
+        xforms = xforms + [ fit_regression_impact_code(incoming_column_name = vi, 
+                                                       X = X, y = y) ]
     xforms = [ xf for xf in xforms if xf is not None ]
     return({
             "outcomename":outcomename,
