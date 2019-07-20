@@ -85,11 +85,14 @@ def fit_numeric_outcome_treatment_(
         *,
         X, y,
         sample_weight,
-        varlist, outcomename,
+        varlist, 
+        outcomename,
+        cols_to_copy,
         plan):
-    if varlist is None:
+    if (varlist is None) or (len(varlist)<=0):
         varlist = [ co for co in X.columns ]
-    varlist = [ co for co in varlist if ((not (co == outcomename)) and 
+    copy_set = set(cols_to_copy)
+    varlist = [ co for co in varlist if ((not (co in copy_set)) and 
                                          (numpy.issubdtype(X[co].dtype, numpy.number))) ]
     xforms = []
     for vi in varlist:
@@ -101,9 +104,12 @@ def fit_numeric_outcome_treatment_(
             if summaryi["n_not_nan"]<summaryi["n"]:
                 xforms = xforms + [ indicate_missing(incoming_column_name = vi, 
                                                      dervied_column_names = vi + "_is_bad") ]  
-    return(xforms)
+    return({
+            "outcomename":outcomename,
+            "cols_to_copy":cols_to_copy,
+            "xforms":xforms
+            })
     
-# TODO: columns to copy
 
 
 def transform_numeric_outcome_treatment_(
@@ -111,8 +117,10 @@ def transform_numeric_outcome_treatment_(
         X,
         plan):
     X = X.reset_index(inplace=False, drop=True)
-    new_frames = [ xfi.transform(X) for xfi in plan ]
-    return(pandas.concat(new_frames, axis=1))
+    new_frames = [ xfi.transform(X) for xfi in plan["xforms"] ]
+    cp = X.loc[:, plan["cols_to_copy"] ].copy()
+    return(pandas.concat([cp] + new_frames, axis=1))
+    #return({"plan":plan, "X":X, "new_frames":new_frames})
 
 
     

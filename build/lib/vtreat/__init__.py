@@ -17,15 +17,15 @@ class numeric_outcome_treatment():
     """build a treatment plan for a numeric outcome (regression)"""
     def __init__(self, 
                  *,
-                 varlist=None,
-                 outcomename=None,
+                 varlist=[],
+                 outcomename,
+                 cols_to_copy=[],
                  params = {}):
-        self.varlist_ = None
-        self.outcomename_ = None
-        if not varlist is None:
-            self.varlist_ = varlist.copy()
-        if not outcomename is None:
-            self.outcomename_ = outcomename
+        if not outcomename in set(cols_to_copy):
+            cols_to_copy = cols_to_copy + [outcomename]
+        self.varlist_ = varlist.copy()
+        self.outcomename_ = outcomename
+        self.cols_to_copy_ = cols_to_copy.copy()
         self.params_ = params.copy()
         self.plan_ = None
 
@@ -36,7 +36,9 @@ class numeric_outcome_treatment():
             raise Exception("X should be a Pandas DataFrame")
         self.plan_ = vtreat_impl.fit_numeric_outcome_treatment_(
                 X = X, y = y, sample_weight = sample_weight,
-                varlist = self.varlist_, outcomename = self.outcomename_,
+                varlist = self.varlist_, 
+                outcomename = self.outcomename_,
+                cols_to_copy = self.cols_to_copy_,
                 plan = self.plan_
                 )
         return self
