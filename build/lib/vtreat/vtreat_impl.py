@@ -77,8 +77,7 @@ class indicate_missing(var_transform):
                                [dervied_column_names])
     
     def transform(self, data_frame):
-        col = numpy.asarray(data_frame[self.incoming_column_name_].copy()).astype(float)
-        col = numpy.isnan(col)
+        col = data_frame[self.incoming_column_name_].isnull()
         res = pandas.DataFrame({self.dervied_column_names_[0]:col})
         return(res.astype(float))
 
@@ -103,18 +102,26 @@ def fit_numeric_outcome_treatment_(
     if (varlist is None) or (len(varlist)<=0):
         varlist = [ co for co in X.columns ]
     copy_set = set(cols_to_copy)
-    varlist = [ co for co in varlist if (not (co in copy_set)) and
-                                      can_convert_v_to_numeric_(X[co]) ]
+    varlist = [ co for co in varlist if (not (co in copy_set)) ]    
     xforms = []
+    n = X.shape[0]
+    all_null = []
     for vi in varlist:
+        n_null = sum(X[vi].isnull())
+        if n_null>=n:
+            all_null = all_null + [vi]
+        if (n_null>0) and (n_null<n):
+            xforms = xforms + [ indicate_missing(incoming_column_name = vi, 
+                                                dervied_column_names = vi + "_is_bad") ]
+    varlist = [ co for co in varlist if (not (co in set(all_null))) ]
+    numlist = [ co for co in varlist if can_convert_v_to_numeric_(X[co]) ]
+    # catlist = [ co for co in varlist if not co in set(numlist) ]
+    for vi in numlist:
         summaryi = characterize_numeric_(X[vi])
-        if summaryi["varies"]:
-            if summaryi["has_range"]:
-                xforms = xforms + [ clean_numeric(incoming_column_name = vi, 
-                                                  replacement_value = summaryi["mean"]) ]
-            if (summaryi["n_not_nan"]>0) and (summaryi["n_not_nan"]<summaryi["n"]):
-                xforms = xforms + [ indicate_missing(incoming_column_name = vi, 
-                                                     dervied_column_names = vi + "_is_bad") ]  
+        if summaryi["varies"] and summaryi["has_range"]:
+            xforms = xforms + [ clean_numeric(incoming_column_name = vi, 
+                                              replacement_value = summaryi["mean"]) ]
+    xforms = [ xf for xf in xforms if xf is not None ]
     return({
             "outcomename":outcomename,
             "cols_to_copy":cols_to_copy,
