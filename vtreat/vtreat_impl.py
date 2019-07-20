@@ -12,6 +12,7 @@ import pandas
 
 def characterize_numeric_(x):
     """compute na count, min,max,mean of a numeric vector"""
+    x = numpy.asarray(x).astype(float)
     not_nan = numpy.logical_not(numpy.isnan(x))
     n_not_nan = sum(not_nan)
     n = len(x)
@@ -59,7 +60,7 @@ class clean_numeric(var_transform):
         self.replacement_value_ = replacement_value
     
     def transform(self, data_frame):
-        col = numpy.asarray(data_frame[self.incoming_column_name_].copy())
+        col = numpy.asarray(data_frame[self.incoming_column_name_].copy()).astype(float)
         na_posns = numpy.isnan(col)
         col[na_posns] = self.replacement_value_
         res = pandas.DataFrame({self.dervied_column_names_[0]:col})
@@ -76,9 +77,19 @@ class indicate_missing(var_transform):
                                [dervied_column_names])
     
     def transform(self, data_frame):
-        col = numpy.isnan(data_frame[self.incoming_column_name_].copy())
+        col = numpy.asarray(data_frame[self.incoming_column_name_].copy()).astype(float)
+        col = numpy.isnan(col)
         res = pandas.DataFrame({self.dervied_column_names_[0]:col})
         return(res.astype(float))
+
+
+def can_convert_v_to_numeric_(x):
+    """check if non-empty vector can convert to numeric"""
+    try:
+        x[0] + 0
+        return(True)
+    except:
+        return(False)
 
 
 def fit_numeric_outcome_treatment_(
@@ -92,8 +103,8 @@ def fit_numeric_outcome_treatment_(
     if (varlist is None) or (len(varlist)<=0):
         varlist = [ co for co in X.columns ]
     copy_set = set(cols_to_copy)
-    varlist = [ co for co in varlist if ((not (co in copy_set)) and 
-                                         (numpy.issubdtype(X[co].dtype, numpy.number))) ]
+    varlist = [ co for co in varlist if (not (co in copy_set)) and
+                                      can_convert_v_to_numeric_(X[co]) ]
     xforms = []
     for vi in varlist:
         summaryi = characterize_numeric_(X[vi])
