@@ -128,7 +128,7 @@ class mapped_code(var_transform):
         return(res)
 
 
-class impact_code(mapped_code):
+class y_aware_mapped_code(mapped_code):
     def __init__(self, 
                  incoming_column_name,
                  dervied_column_name,
@@ -162,7 +162,7 @@ def fit_regression_impact_code(incoming_column_name, x, y):
         newcol = incoming_column_name + "_impact_code"
         sf.columns = [ incoming_column_name, newcol ]
         sf = sf.groupby(incoming_column_name)[newcol].mean()
-        return(impact_code(incoming_column_name, 
+        return(y_aware_mapped_code(incoming_column_name, 
                            newcol,
                            code_book = sf,
                            refitter = fit_regression_impact_code))
