@@ -11,7 +11,8 @@ setuptools.setup(
     install_requires=[
         'numpy',
         'pandas',
-        'statistics'
+        'statistics',
+        'scipy'
     ],
     classifiers=[
         'License :: OSI Approved :: BSD-3-Clause'

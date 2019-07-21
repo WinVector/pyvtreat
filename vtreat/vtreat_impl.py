@@ -10,6 +10,7 @@ Created on Sat Jul 20 12:07:57 2019
 import numpy
 import pandas
 import statistics
+import scipy.stats
 
 import vtreat.util
 
@@ -234,3 +235,15 @@ def fit_numeric_outcome_treatment_cross_patch_(
          
 
          
+def score_variables(cross_frame,
+                    plan):
+    derived_vars = []
+    for xf in plan["xforms"]:
+        derived_vars = derived_vars + xf.dervied_column_names_
+    outcomename = plan["outcomename"]
+    ests = { v:scipy.stats.pearsonr(cross_frame[v], cross_frame[outcomename]) for v in derived_vars }
+    sf = [ pandas.DataFrame({"variable":[k], "PearsonR":ests[k][0], "significance":ests[k][1]}) for k in ests.keys() ]
+    sf = pandas.concat(sf, axis=0)
+    sf.reset_index(inplace=True, drop=True)
+    return(sf)
+

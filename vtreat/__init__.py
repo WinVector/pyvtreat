@@ -29,6 +29,7 @@ class numeric_outcome_treatment():
         self.cols_to_copy_ = cols_to_copy.copy()
         self.params_ = params.copy()
         self.plan_ = None
+        self.score_frame_ = None
 
     def fit(self, X, y=None, 
             *, 
@@ -41,11 +42,12 @@ class numeric_outcome_treatment():
             raise Exception("X.shape[0] should equal len(y)")
         if not sample_weight is None:
             raise Exception("doesn't accept sample_weight yest yet")
-        cross_frame = self.fit_transform(
+        self.plan_ = None
+        self.score_frame_ = None
+        self.fit_transform(
                 X=X,
                 y=y,
                 sample_weight=sample_weight)
-        # TODO: use cross_frame to compute variable effects
         return self
 
     def transform(self, X):
@@ -68,6 +70,7 @@ class numeric_outcome_treatment():
             raise Exception("doesn't accept sample_weight yest yet")
         # model for independent transforms
         self.plan_ = None
+        self.score_frame_ = None
         self.plan_ = vtreat_impl.fit_numeric_outcome_treatment_(
                 X = X, 
                 y = y, 
@@ -84,6 +87,10 @@ class numeric_outcome_treatment():
                 res = res,
                 plan = self.plan_
                 )
+        # use cross_frame to compute variable effects
+        self.score_frame_ = vtreat_impl.score_variables(
+                cross_frame = cross_frame,
+                plan = self.plan_)
         return(cross_frame)
   
     def get_params(self, deep=True):
