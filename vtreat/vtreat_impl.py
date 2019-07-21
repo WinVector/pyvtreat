@@ -152,6 +152,49 @@ def fit_regression_impact_code(incoming_column_name, x, y):
         return(None)
 
 
+class indicator_code(var_transform):
+    def __init__(self, 
+                 incoming_column_name,
+                 dervied_column_names,
+                 levels):
+        var_transform.__init__(self, 
+                               incoming_column_name, 
+                               dervied_column_names)
+        self.levels_ = levels
+    
+    def transform(self, data_frame):
+        incoming_column_name = self.incoming_column_name_
+        sf = pandas.DataFrame({incoming_column_name:data_frame[incoming_column_name]})
+        na_posns = sf[incoming_column_name].isnull()
+        sf.loc[na_posns, incoming_column_name] = "_NA_"
+        col = sf[self.incoming_column_name_]
+        def f(i):
+            v = (col==self.levels_[i])
+            return(numpy.asarray(v)+0)
+        res = [ pandas.DataFrame({self.dervied_column_names_[i]:f(i)}) for i in range(len(self.levels_)) ]
+        res = pandas.concat(res, axis=1)
+        res.reset_index(inplace=True, drop=True)
+        return(res)
+
+
+def fit_indicator_code(incoming_column_name, x, y):
+    try: 
+        sf = pandas.DataFrame({incoming_column_name:x})
+        na_posns = sf[incoming_column_name].isnull()
+        sf.loc[na_posns, incoming_column_name] = "_NA_"
+        counts = sf[incoming_column_name].value_counts()
+        n = sf.shape[0]
+        counts = counts[counts>=n/20] # no more than 20 symbols
+        levels = [v for v in counts.index]
+        if len(levels)<1:
+            return None
+        return(indicator_code(incoming_column_name, 
+                              [ incoming_column_name + "_" + lev for lev in levels ],
+                              levels = levels))
+    except:
+        return(None)
+
+
 def fit_numeric_outcome_treatment_(
         *,
         X, y,
@@ -186,6 +229,9 @@ def fit_numeric_outcome_treatment_(
         xforms = xforms + [ fit_regression_impact_code(incoming_column_name = vi, 
                                                        x = numpy.asarray(X[vi]), 
                                                        y = y) ]
+        xforms = xforms + [ fit_indicator_code(incoming_column_name = vi, 
+                                               x = numpy.asarray(X[vi]), 
+                                               y = y) ]
     xforms = [ xf for xf in xforms if xf is not None ]
     return({
             "outcomename":outcomename,
