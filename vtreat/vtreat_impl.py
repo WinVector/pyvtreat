@@ -100,29 +100,46 @@ def can_convert_v_to_numeric(x):
 
 
 
-class impact_code(var_transform):
+class mapped_code(var_transform):
+    def __init__(self, 
+                 incoming_column_name,
+                 dervied_column_name,
+                 code_book):
+        var_transform.__init__(self, 
+                               incoming_column_name, 
+                               [dervied_column_name])
+        self.code_book_ = code_book
+    
+    def transform(self, data_frame):
+        incoming_column_name = self.incoming_column_name_
+        dervied_column_name = self.dervied_column_names_[0]
+        sf = pandas.DataFrame(
+                {incoming_column_name:data_frame[incoming_column_name]})
+        na_posns = sf[incoming_column_name].isnull()
+        sf.loc[na_posns, incoming_column_name] = "_NA_"
+        res = pandas.merge(
+                sf,
+                self.code_book_,
+                on = [ self.incoming_column_name_ ],
+                how = 'left',
+                sort = False) # ordered by left table rows
+        res = res[[dervied_column_name]].copy()
+        res.loc[res[dervied_column_name].isnull(), dervied_column_name] = 0
+        return(res)
+
+
+class impact_code(mapped_code):
     def __init__(self, 
                  incoming_column_name,
                  dervied_column_name,
                  code_book,
                  refitter):
-        var_transform.__init__(self, 
-                               incoming_column_name, 
-                               [dervied_column_name])
-        self.code_book_ = code_book
+        mapped_code.__init__(self, 
+                             incoming_column_name = incoming_column_name, 
+                             dervied_column_name = dervied_column_name,
+                             code_book = code_book)
         self.need_cross_treatment_ = True
         self.refitter_ = refitter
-    
-    def transform(self, data_frame):
-        res = data_frame[[self.incoming_column_name_]].join(
-                self.code_book_,
-                on = [ self.incoming_column_name_ ],
-                how = 'left',
-                sort = False) # ordered by left table rows
-        res = res[[self.dervied_column_names_[0]]]
-        res.loc[res[self.dervied_column_names_[0]].isnull(), 
-                self.dervied_column_names_[0]] = 0
-        return(res)
 
 
 def fit_regression_impact_code(incoming_column_name, x, y):
@@ -140,13 +157,13 @@ def fit_regression_impact_code(incoming_column_name, x, y):
         sf["_one"] = 1
         sf["_ni"] = sf.groupby("x")["_one"].transform("sum")
         sf["_vw"] = numpy.mean((sf["y"] - sf["_group_mean"])**2) # a bit inflated
-        sf["_hest"] = (sf["_ni"]*sf["_group_mean"]/sf["_vw"] + sf["_gm"]/sf["_vb"])/(sf["_ni"]/sf["_vw"] + 1/sf["_vb"]) - sf["_gm"]
+        sf["_hest"] = ((sf["_ni"]-1)*sf["_group_mean"]/sf["_vw"] + sf["_gm"]/sf["_vb"])/((sf["_ni"]-1)/sf["_vw"] + 1/sf["_vb"]) - sf["_gm"]
         sf = sf.loc[:, ["x", "_hest"]].copy()
         newcol = incoming_column_name + "_impact_code"
         sf.columns = [ incoming_column_name, newcol ]
         sf = sf.groupby(incoming_column_name)[newcol].mean()
         return(impact_code(incoming_column_name, 
-                           incoming_column_name + "_impact_code",
+                           newcol,
                            code_book = sf,
                            refitter = fit_regression_impact_code))
     except:
@@ -190,10 +207,33 @@ def fit_indicator_code(incoming_column_name, x):
         if len(levels)<1:
             return None
         return(indicator_code(incoming_column_name, 
-                              [ incoming_column_name + "_" + lev for lev in levels ],
+                              [ incoming_column_name + "_lev_" + lev for lev in levels ],
                               levels = levels))
     except:
         return(None)
+
+
+def fit_regression_prevalence_code(incoming_column_name, x):
+    try: 
+        sf = pandas.DataFrame({"x":x})
+        na_posns = sf["x"].isnull()
+        sf.loc[na_posns, "x"] = "_NA_"
+        sf.reset_index(inplace=True, drop=True)
+        n = sf.shape[0]
+        sf["_ni"] = 1.0
+        sf = pandas.DataFrame(sf.groupby("x")["_ni"].sum())
+        sf.reset_index(inplace=True, drop=False)
+        sf["_hest"] = (sf["_ni"]-1.0)/n
+        sf = sf.loc[:, ["x", "_hest"]].copy()
+        newcol = incoming_column_name + "_prevalence_code"
+        sf.columns = [ incoming_column_name, newcol ]
+        sf[incoming_column_name]= sf[incoming_column_name].astype(str)
+        sf.reset_index(inplace=True, drop=True)
+        return(mapped_code(incoming_column_name, 
+                           newcol,
+                           code_book = sf))
+    except:
+       return(None)
 
 
 def fit_numeric_outcome_treatment(
@@ -230,6 +270,8 @@ def fit_numeric_outcome_treatment(
         xforms = xforms + [ fit_regression_impact_code(incoming_column_name = vi, 
                                                        x = numpy.asarray(X[vi]), 
                                                        y = y) ]
+        xforms = xforms + [ fit_regression_prevalence_code(incoming_column_name = vi, 
+                                                       x = numpy.asarray(X[vi])) ]
         xforms = xforms + [ fit_indicator_code(incoming_column_name = vi, 
                                                x = numpy.asarray(X[vi])) ]
     xforms = [ xf for xf in xforms if xf is not None ]
