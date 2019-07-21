@@ -41,13 +41,11 @@ class numeric_outcome_treatment():
             raise Exception("X.shape[0] should equal len(y)")
         if not sample_weight is None:
             raise Exception("doesn't accept sample_weight yest yet")
-        self.plan_ = vtreat_impl.fit_numeric_outcome_treatment_(
-                X = X, y = y, sample_weight = sample_weight,
-                varlist = self.varlist_, 
-                outcomename = self.outcomename_,
-                cols_to_copy = self.cols_to_copy_,
-                plan = self.plan_
-                )
+        cross_frame = self.fit_transform(
+                X=X,
+                y=y,
+                sample_weight=sample_weight)
+        # TODO: use cross_frame to compute variable effects
         return self
 
     def transform(self, X):
@@ -69,17 +67,25 @@ class numeric_outcome_treatment():
         if not sample_weight is None:
             raise Exception("doesn't accept sample_weight yest yet")
         # model for independent transforms
-        self.fit(X, y, sample_weight=sample_weight)
+        self.plan_ = None
+        self.plan_ = vtreat_impl.fit_numeric_outcome_treatment_(
+                X = X, 
+                y = y, 
+                sample_weight = sample_weight,
+                varlist = self.varlist_, 
+                outcomename = self.outcomename_,
+                cols_to_copy = self.cols_to_copy_,
+                plan = self.plan_
+                )
         res = self.transform(X)
         # patch in cross-frame versions of complex columns such as impact
-        print("vtreat fit_transform patching complex columns")
-        res = vtreat_impl.fit_numeric_outcome_treatment_cross_patch_(
+        cross_frame = vtreat_impl.fit_numeric_outcome_treatment_cross_patch_(
                 X = X, y = y, sample_weight = sample_weight,
                 res = res,
                 plan = self.plan_
-                )                # TODO: implement patching steps
-        return(res)
-    
+                )
+        return(cross_frame)
+  
     def get_params(self, deep=True):
         return(self.params_.copy())
     
