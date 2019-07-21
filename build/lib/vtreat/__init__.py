@@ -34,6 +34,10 @@ class numeric_outcome_treatment():
             sample_weight=None):
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
+        if not X.shape[0]==len(y):
+            raise Exception("X.shape[0] should equal len(y)")
+        if not sample_weight is None:
+            raise Exception("doesn't accept sample_weight yest yet")
         self.plan_ = vtreat_impl.fit_numeric_outcome_treatment_(
                 X = X, y = y, sample_weight = sample_weight,
                 varlist = self.varlist_, 
@@ -52,7 +56,17 @@ class numeric_outcome_treatment():
     
     def fit_transform(self, X, y=None, 
                       *, 
-                      sample_weight=None):
+                      sample_weight=None,
+                      cross_plan=None):
+        if not isinstance(X, pandas.DataFrame):
+            raise Exception("X should be a Pandas DataFrame")
+        if not X.shape[0]==len(y):
+            raise Exception("X.shape[0] should equal len(y)")
+        if not cross_plan is None:
+            raise Exception("doesn't accept external cross-plans yet")
+        if not sample_weight is None:
+            raise Exception("doesn't accept sample_weight yest yet")
+        # model for independent transforms
         self.fit(X, y, sample_weight=sample_weight)
         return(self.transform(X))
     

@@ -46,6 +46,8 @@ class var_transform():
                  dervied_column_names):
         self.incoming_column_name_ = incoming_column_name
         self.dervied_column_names_ = dervied_column_names.copy()
+        self.need_cross_treatment_ = False
+        self.refitter_ = None
     
     def transform(self, data_frame):
         return(None)
@@ -97,11 +99,14 @@ class impact_code(var_transform):
     def __init__(self, 
                  incoming_column_name,
                  dervied_column_name,
-                 code_book):
+                 code_book,
+                 refitter):
         var_transform.__init__(self, 
                                incoming_column_name, 
                                [dervied_column_name])
         self.code_book_ = code_book
+        self.need_cross_treatment_ = True
+        self.refitter_ = refitter
     
     def transform(self, data_frame):
         res = data_frame[[self.incoming_column_name_]].join(
@@ -138,7 +143,8 @@ def fit_regression_impact_code(incoming_column_name, x, y):
         sf = sf.groupby(incoming_column_name)[newcol].mean()
         return(impact_code(incoming_column_name, 
                            incoming_column_name + "_impact_code",
-                           code_book = sf))
+                           code_book = sf,
+                           refitter = fit_regression_impact_code))
     except:
         return(None)
 
