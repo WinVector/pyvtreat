@@ -16,7 +16,7 @@ import warnings
 import vtreat.util
 
 
-def characterize_numeric_(x):
+def characterize_numeric(x):
     """compute na count, min,max,mean of a numeric vector"""
     x = numpy.asarray(x).astype(float)
     not_nan = numpy.logical_not(numpy.isnan(x))
@@ -90,7 +90,7 @@ class indicate_missing(var_transform):
         return(res.astype(float))
 
 
-def can_convert_v_to_numeric_(x):
+def can_convert_v_to_numeric(x):
     """check if non-empty vector can convert to numeric"""
     try:
         x[0] + 0
@@ -178,7 +178,7 @@ class indicator_code(var_transform):
         return(res)
 
 
-def fit_indicator_code(incoming_column_name, x, y):
+def fit_indicator_code(incoming_column_name, x):
     try: 
         sf = pandas.DataFrame({incoming_column_name:x})
         na_posns = sf[incoming_column_name].isnull()
@@ -196,7 +196,7 @@ def fit_indicator_code(incoming_column_name, x, y):
         return(None)
 
 
-def fit_numeric_outcome_treatment_(
+def fit_numeric_outcome_treatment(
         *,
         X, y,
         sample_weight,
@@ -219,10 +219,10 @@ def fit_numeric_outcome_treatment_(
             xforms = xforms + [ indicate_missing(incoming_column_name = vi, 
                                                 dervied_column_name = vi + "_is_bad") ]
     varlist = [ co for co in varlist if (not (co in set(all_null))) ]
-    numlist = [ co for co in varlist if can_convert_v_to_numeric_(X[co]) ]
+    numlist = [ co for co in varlist if can_convert_v_to_numeric(X[co]) ]
     catlist = [ co for co in varlist if not co in set(numlist) ]
     for vi in numlist:
-        summaryi = characterize_numeric_(X[vi])
+        summaryi = characterize_numeric(X[vi])
         if summaryi["varies"] and summaryi["has_range"]:
             xforms = xforms + [ clean_numeric(incoming_column_name = vi, 
                                               replacement_value = summaryi["mean"]) ]
@@ -231,8 +231,7 @@ def fit_numeric_outcome_treatment_(
                                                        x = numpy.asarray(X[vi]), 
                                                        y = y) ]
         xforms = xforms + [ fit_indicator_code(incoming_column_name = vi, 
-                                               x = numpy.asarray(X[vi]), 
-                                               y = y) ]
+                                               x = numpy.asarray(X[vi])) ]
     xforms = [ xf for xf in xforms if xf is not None ]
     return({
             "outcomename":outcomename,
@@ -241,7 +240,7 @@ def fit_numeric_outcome_treatment_(
             })
 
 
-def transform_numeric_outcome_treatment_(
+def transform_numeric_outcome_treatment(
         *,
         X,
         plan):
@@ -251,7 +250,7 @@ def transform_numeric_outcome_treatment_(
     return(pandas.concat([cp] + new_frames, axis=1))
 
 
-def fit_numeric_outcome_treatment_cross_patch_(
+def fit_numeric_outcome_treatment_cross_patch(
         *,
         X, y, sample_weight,
         res,

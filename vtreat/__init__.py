@@ -53,7 +53,7 @@ class numeric_outcome_treatment():
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
-        return(vtreat_impl.transform_numeric_outcome_treatment_(
+        return(vtreat_impl.transform_numeric_outcome_treatment(
                 X = X,
                 plan = self.plan_))
     
@@ -71,7 +71,7 @@ class numeric_outcome_treatment():
         # model for independent transforms
         self.plan_ = None
         self.score_frame_ = None
-        self.plan_ = vtreat_impl.fit_numeric_outcome_treatment_(
+        self.plan_ = vtreat_impl.fit_numeric_outcome_treatment(
                 X = X, 
                 y = y, 
                 sample_weight = sample_weight,
@@ -82,7 +82,7 @@ class numeric_outcome_treatment():
                 )
         res = self.transform(X)
         # patch in cross-frame versions of complex columns such as impact
-        cross_frame = vtreat_impl.fit_numeric_outcome_treatment_cross_patch_(
+        cross_frame = vtreat_impl.fit_numeric_outcome_treatment_cross_patch(
                 X = X, y = y, sample_weight = sample_weight,
                 res = res,
                 plan = self.plan_
