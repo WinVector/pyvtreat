@@ -88,7 +88,7 @@ class numeric_outcome_treatment():
                 plan = self.plan_
                 )
         # use cross_frame to compute variable effects
-        self.score_frame_ = vtreat_impl.score_variables(
+        self.score_frame_ = vtreat_impl.score_plan_variables(
                 cross_frame = cross_frame,
                 plan = self.plan_)
         return(cross_frame)

@@ -11,6 +11,10 @@ Created on Sat Jul 20 11:40:41 2019
 
 
 import numpy
+import warnings
+
+import pandas
+import scipy.stats
 
 
 
@@ -35,3 +39,14 @@ def k_way_cross_plan(n_rows,
     return(plan)
 
 
+def score_variables(cross_frame,
+                    variables,
+                    outcomename):
+    """score the linear relation of varaibles to outcomename"""
+    ests = { v:scipy.stats.pearsonr(cross_frame[v], cross_frame[outcomename]) for v in variables }
+    with warnings.catch_warnings():
+        sf = [ pandas.DataFrame({"variable":[k], "PearsonR":ests[k][0], "significance":ests[k][1]}) for k in ests.keys() ]
+    sf = pandas.concat(sf, axis=0)
+    sf.reset_index(inplace=True, drop=True)
+    return(sf)
+         
