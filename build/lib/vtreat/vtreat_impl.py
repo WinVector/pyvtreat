@@ -106,7 +106,7 @@ class impact_code(var_transform):
     def transform(self, data_frame):
         res = data_frame[[self.incoming_column_name_]].join(
                 self.code_book_,
-                on = self.incoming_column_name_,
+                on = [ self.incoming_column_name_ ],
                 how = 'left',
                 sort = False) # ordered by left table rows
         res = res[[self.dervied_column_names_[0]]]
@@ -135,6 +135,7 @@ def fit_regression_impact_code(incoming_column_name, X, y):
         sf = sf.loc[:, ["x", "_hest"]].copy()
         newcol = incoming_column_name + "_impact_code"
         sf.columns = [ incoming_column_name, newcol ]
+        sf = sf.groupby(incoming_column_name)[newcol].mean()
         return(impact_code(incoming_column_name, 
                            incoming_column_name + "_impact_code",
                            code_book = sf))
