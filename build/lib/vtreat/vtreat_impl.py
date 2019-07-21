@@ -11,6 +11,9 @@ import numpy
 import pandas
 import statistics
 
+import vtreat.util
+
+
 def characterize_numeric_(x):
     """compute na count, min,max,mean of a numeric vector"""
     x = numpy.asarray(x).astype(float)
@@ -121,9 +124,8 @@ class impact_code(var_transform):
 
 
 def fit_regression_impact_code(incoming_column_name, x, y):
-    try:
-        sf = pandas.DataFrame({"x":x,
-                               "y":y})
+    try: 
+        sf = pandas.DataFrame({"x":x, "y":y})
         na_posns = sf["x"].isnull()
         sf.loc[na_posns, "x"] = "_NA_"
         sf["_group_mean"] = sf.groupby("x")["y"].transform("mean")
@@ -189,7 +191,6 @@ def fit_numeric_outcome_treatment_(
             "cols_to_copy":cols_to_copy,
             "xforms":xforms
             })
-    
 
 
 def transform_numeric_outcome_treatment_(
@@ -202,4 +203,34 @@ def transform_numeric_outcome_treatment_(
     return(pandas.concat([cp] + new_frames, axis=1))
 
 
-    
+def fit_numeric_outcome_treatment_cross_patch_(
+        *,
+        X, y, sample_weight,
+        res,
+        plan):
+     n = X.shape[0]
+     cross_plan = vtreat.util.k_way_cross_plan(n_rows=n, k_folds=5)
+     for xf in plan["xforms"]:
+         if not xf.need_cross_treatment_:
+             continue
+         incoming_column_name = xf.incoming_column_name_
+         dervied_column_name = xf.dervied_column_names_[0]
+         patches = [ fit_regression_impact_code(
+                 incoming_column_name,
+                 X.loc[cp["train"], incoming_column_name],
+                 y[cp["train"]]).transform(X.loc[cp["app"],[incoming_column_name]]) for cp in cross_plan ]
+         # replace any missing sections with global average (sligth data leak potential)
+         vals = pandas.concat([pi for pi in patches if pi is not None], axis = 0)
+         avg = numpy.mean(vals[numpy.logical_not(numpy.asarray(vals[dervied_column_name].isnull()))])[0]
+         res[dervied_column_name] = numpy.nan
+         for i in range(len(cross_plan)):
+             pi = patches[i]
+             if pi is None:
+                 continue
+             cp = cross_plan[i]
+             res.loc[cp["app"], dervied_column_name] = numpy.asarray(pi)
+         res.loc[res[dervied_column_name].isnull(), dervied_column_name] = avg
+     return(res)
+         
+
+         

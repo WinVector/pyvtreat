@@ -30,7 +30,7 @@ def k_way_cross_plan(n_rows,
     numpy.random.shuffle(grp)
     plan = [ 
             { "train"  : [i for i in range(n_rows) if grp[i] != j],
-               "test" : [i for i in range(n_rows) if grp[i] == j] } for j in range(k_folds) 
+               "app" : [i for i in range(n_rows) if grp[i] == j] } for j in range(k_folds) 
             ]
     return(plan)
 

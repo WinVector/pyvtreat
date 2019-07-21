@@ -10,6 +10,7 @@ Created on Sat Jul 20 11:40:41 2019
 
 import pandas
 
+
 import vtreat.vtreat_impl as vtreat_impl
 
 
@@ -34,6 +35,8 @@ class numeric_outcome_treatment():
             sample_weight=None):
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
+        if y is None:
+            y = X[self.outcomename_]
         if not X.shape[0]==len(y):
             raise Exception("X.shape[0] should equal len(y)")
         if not sample_weight is None:
@@ -56,19 +59,26 @@ class numeric_outcome_treatment():
     
     def fit_transform(self, X, y=None, 
                       *, 
-                      sample_weight=None,
-                      cross_plan=None):
+                      sample_weight=None):
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
+        if y is None:
+            y = X[self.outcomename_]
         if not X.shape[0]==len(y):
             raise Exception("X.shape[0] should equal len(y)")
-        if not cross_plan is None:
-            raise Exception("doesn't accept external cross-plans yet")
         if not sample_weight is None:
             raise Exception("doesn't accept sample_weight yest yet")
         # model for independent transforms
         self.fit(X, y, sample_weight=sample_weight)
-        return(self.transform(X))
+        res = self.transform(X)
+        # patch in cross-frame versions of complex columns such as impact
+        print("vtreat fit_transform patching complex columns")
+        res = vtreat_impl.fit_numeric_outcome_treatment_cross_patch_(
+                X = X, y = y, sample_weight = sample_weight,
+                res = res,
+                plan = self.plan_
+                )                # TODO: implement patching steps
+        return(res)
     
     def get_params(self, deep=True):
         return(self.params_.copy())
