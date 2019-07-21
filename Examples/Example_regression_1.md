@@ -1,6 +1,31 @@
 
 
 ```python
+!pip install /Users/johnmount/Documents/work/pyvtreat/dist/vtreat-0.1.tar.gz 
+```
+
+    Processing /Users/johnmount/Documents/work/pyvtreat/dist/vtreat-0.1.tar.gz
+    Requirement already satisfied: numpy in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from vtreat==0.1) (1.16.4)
+    Requirement already satisfied: pandas in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from vtreat==0.1) (0.24.2)
+    Requirement already satisfied: statistics in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from vtreat==0.1) (1.0.3.5)
+    Requirement already satisfied: scipy in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from vtreat==0.1) (1.2.1)
+    Requirement already satisfied: python-dateutil>=2.5.0 in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from pandas->vtreat==0.1) (2.8.0)
+    Requirement already satisfied: pytz>=2011k in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from pandas->vtreat==0.1) (2019.1)
+    Requirement already satisfied: docutils>=0.3 in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from statistics->vtreat==0.1) (0.14)
+    Requirement already satisfied: six>=1.5 in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from python-dateutil>=2.5.0->pandas->vtreat==0.1) (1.12.0)
+    Building wheels for collected packages: vtreat
+      Building wheel for vtreat (setup.py) ... [?25ldone
+    [?25h  Stored in directory: /Users/johnmount/Library/Caches/pip/wheels/28/d1/8a/f8f4ee7c515a6c18d95d64f4d49327fe498b9e6e23d04c7159
+    Successfully built vtreat
+    Installing collected packages: vtreat
+      Found existing installation: vtreat 0.1
+        Uninstalling vtreat-0.1:
+          Successfully uninstalled vtreat-0.1
+    Successfully installed vtreat-0.1
+
+
+
+```python
 import vtreat.util
 ```
 
@@ -12,10 +37,10 @@ vtreat.util.k_way_cross_plan(10,4)
 
 
 
-    [{'train': [0, 1, 3, 4, 6, 7, 8], 'test': [2, 5, 9]},
-     {'train': [0, 2, 4, 5, 7, 8, 9], 'test': [1, 3, 6]},
-     {'train': [0, 1, 2, 3, 5, 6, 7, 9], 'test': [4, 8]},
-     {'train': [1, 2, 3, 4, 5, 6, 8, 9], 'test': [0, 7]}]
+    [{'train': [0, 1, 4, 5, 7, 8, 9], 'app': [2, 3, 6]},
+     {'train': [2, 3, 5, 6, 7, 8, 9], 'app': [0, 1, 4]},
+     {'train': [0, 1, 2, 3, 4, 5, 6, 7], 'app': [8, 9]},
+     {'train': [0, 1, 2, 3, 4, 6, 8, 9], 'app': [5, 7]}]
 
 
 
@@ -77,11 +102,11 @@ df2
   <tbody>
     <tr>
       <th>a</th>
-      <td>-0.685734</td>
-      <td>-0.187367</td>
-      <td>2.483612</td>
+      <td>1.283982</td>
+      <td>-0.210587</td>
+      <td>-0.183986</td>
       <td>foo</td>
-      <td>False</td>
+      <td>True</td>
     </tr>
     <tr>
       <th>b</th>
@@ -93,9 +118,9 @@ df2
     </tr>
     <tr>
       <th>c</th>
-      <td>-0.331823</td>
-      <td>1.273405</td>
-      <td>0.207794</td>
+      <td>-1.693462</td>
+      <td>0.303648</td>
+      <td>-1.174237</td>
       <td>foo</td>
       <td>False</td>
     </tr>
@@ -109,17 +134,17 @@ df2
     </tr>
     <tr>
       <th>e</th>
-      <td>-1.763357</td>
-      <td>-0.108552</td>
-      <td>-0.525345</td>
+      <td>-0.397915</td>
+      <td>0.829961</td>
+      <td>-1.102066</td>
       <td>foo</td>
       <td>False</td>
     </tr>
     <tr>
       <th>f</th>
-      <td>-0.212728</td>
-      <td>-0.488208</td>
-      <td>-1.692696</td>
+      <td>-0.698799</td>
+      <td>-1.029879</td>
+      <td>-0.429696</td>
       <td>foo</td>
       <td>False</td>
     </tr>
@@ -133,9 +158,9 @@ df2
     </tr>
     <tr>
       <th>h</th>
-      <td>0.868518</td>
-      <td>0.717318</td>
-      <td>-0.582037</td>
+      <td>0.623927</td>
+      <td>0.277622</td>
+      <td>-0.022760</td>
       <td>foo</td>
       <td>True</td>
     </tr>
@@ -150,6 +175,12 @@ df2
 df2.reset_index(inplace=True, drop=True)
 df2["y"] = range(df2.shape[0])
 df2.loc[3, "four"] = "blog"
+```
+
+
+```python
+#df2 = pandas.concat([df2, df2, df2, df2, df2], axis=0)
+#df2.reset_index(inplace=True, drop=True)
 ```
 
 
@@ -189,11 +220,11 @@ df2
   <tbody>
     <tr>
       <th>0</th>
-      <td>-0.685734</td>
-      <td>-0.187367</td>
-      <td>2.483612</td>
+      <td>1.283982</td>
+      <td>-0.210587</td>
+      <td>-0.183986</td>
       <td>foo</td>
-      <td>False</td>
+      <td>True</td>
       <td>0</td>
     </tr>
     <tr>
@@ -207,9 +238,9 @@ df2
     </tr>
     <tr>
       <th>2</th>
-      <td>-0.331823</td>
-      <td>1.273405</td>
-      <td>0.207794</td>
+      <td>-1.693462</td>
+      <td>0.303648</td>
+      <td>-1.174237</td>
       <td>foo</td>
       <td>False</td>
       <td>2</td>
@@ -225,18 +256,18 @@ df2
     </tr>
     <tr>
       <th>4</th>
-      <td>-1.763357</td>
-      <td>-0.108552</td>
-      <td>-0.525345</td>
+      <td>-0.397915</td>
+      <td>0.829961</td>
+      <td>-1.102066</td>
       <td>foo</td>
       <td>False</td>
       <td>4</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>-0.212728</td>
-      <td>-0.488208</td>
-      <td>-1.692696</td>
+      <td>-0.698799</td>
+      <td>-1.029879</td>
+      <td>-0.429696</td>
       <td>foo</td>
       <td>False</td>
       <td>5</td>
@@ -252,9 +283,9 @@ df2
     </tr>
     <tr>
       <th>7</th>
-      <td>0.868518</td>
-      <td>0.717318</td>
-      <td>-0.582037</td>
+      <td>0.623927</td>
+      <td>0.277622</td>
+      <td>-0.022760</td>
       <td>foo</td>
       <td>True</td>
       <td>7</td>
@@ -267,25 +298,13 @@ df2
 
 
 ```python
-df2.loc[3, "four"]
-```
-
-
-
-
-    'blog'
-
-
-
-
-```python
 plan.fit(df2, df2["y"])
 ```
 
 
 
 
-    <vtreat.numeric_outcome_treatment at 0x11a582978>
+    <vtreat.numeric_outcome_treatment at 0x1a22c948d0>
 
 
 
@@ -338,10 +357,10 @@ res
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>-0.685734</td>
-      <td>-0.187367</td>
-      <td>2.483612</td>
-      <td>0.0</td>
+      <td>1.283982</td>
+      <td>-0.210587</td>
+      <td>-0.183986</td>
+      <td>1.0</td>
       <td>0.009018</td>
     </tr>
     <tr>
@@ -352,10 +371,10 @@ res
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>-0.425025</td>
-      <td>0.241319</td>
-      <td>-0.021734</td>
-      <td>0.2</td>
+      <td>-0.176453</td>
+      <td>0.034153</td>
+      <td>-0.582549</td>
+      <td>0.4</td>
       <td>0.000000</td>
     </tr>
     <tr>
@@ -366,9 +385,9 @@ res
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>-0.331823</td>
-      <td>1.273405</td>
-      <td>0.207794</td>
+      <td>-1.693462</td>
+      <td>0.303648</td>
+      <td>-1.174237</td>
       <td>0.0</td>
       <td>0.009018</td>
     </tr>
@@ -380,10 +399,10 @@ res
       <td>1.0</td>
       <td>0.0</td>
       <td>1.0</td>
-      <td>-0.425025</td>
-      <td>0.241319</td>
-      <td>-0.021734</td>
-      <td>0.2</td>
+      <td>-0.176453</td>
+      <td>0.034153</td>
+      <td>-0.582549</td>
+      <td>0.4</td>
       <td>-0.009719</td>
     </tr>
     <tr>
@@ -394,9 +413,9 @@ res
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>-1.763357</td>
-      <td>-0.108552</td>
-      <td>-0.525345</td>
+      <td>-0.397915</td>
+      <td>0.829961</td>
+      <td>-1.102066</td>
       <td>0.0</td>
       <td>0.009018</td>
     </tr>
@@ -408,9 +427,9 @@ res
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>-0.212728</td>
-      <td>-0.488208</td>
-      <td>-1.692696</td>
+      <td>-0.698799</td>
+      <td>-1.029879</td>
+      <td>-0.429696</td>
       <td>0.0</td>
       <td>0.009018</td>
     </tr>
@@ -422,10 +441,10 @@ res
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>-0.425025</td>
-      <td>0.241319</td>
-      <td>-0.021734</td>
-      <td>0.2</td>
+      <td>-0.176453</td>
+      <td>0.034153</td>
+      <td>-0.582549</td>
+      <td>0.4</td>
       <td>0.000000</td>
     </tr>
     <tr>
@@ -436,11 +455,426 @@ res
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.868518</td>
-      <td>0.717318</td>
-      <td>-0.582037</td>
+      <td>0.623927</td>
+      <td>0.277622</td>
+      <td>-0.022760</td>
       <td>1.0</td>
       <td>0.009018</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+res2 = plan.fit_transform(df2, df2["y"])
+res2
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>y</th>
+      <th>one_is_bad</th>
+      <th>two_is_bad</th>
+      <th>three_is_bad</th>
+      <th>four_is_bad</th>
+      <th>five_is_bad</th>
+      <th>one</th>
+      <th>two</th>
+      <th>three</th>
+      <th>five</th>
+      <th>four_impact_code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.283982</td>
+      <td>-0.210587</td>
+      <td>-0.183986</td>
+      <td>1.0</td>
+      <td>0.106667</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>-0.176453</td>
+      <td>0.034153</td>
+      <td>-0.582549</td>
+      <td>0.4</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-1.693462</td>
+      <td>0.303648</td>
+      <td>-1.174237</td>
+      <td>0.0</td>
+      <td>0.009181</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>-0.176453</td>
+      <td>0.034153</td>
+      <td>-0.582549</td>
+      <td>0.4</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-0.397915</td>
+      <td>0.829961</td>
+      <td>-1.102066</td>
+      <td>0.0</td>
+      <td>-0.227106</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>5</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-0.698799</td>
+      <td>-1.029879</td>
+      <td>-0.429696</td>
+      <td>0.0</td>
+      <td>0.009181</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>6</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>-0.176453</td>
+      <td>0.034153</td>
+      <td>-0.582549</td>
+      <td>0.4</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>7</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.623927</td>
+      <td>0.277622</td>
+      <td>-0.022760</td>
+      <td>1.0</td>
+      <td>-0.032580</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+plan.transform(df2)
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>y</th>
+      <th>one_is_bad</th>
+      <th>two_is_bad</th>
+      <th>three_is_bad</th>
+      <th>four_is_bad</th>
+      <th>five_is_bad</th>
+      <th>one</th>
+      <th>two</th>
+      <th>three</th>
+      <th>five</th>
+      <th>four_impact_code</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.283982</td>
+      <td>-0.210587</td>
+      <td>-0.183986</td>
+      <td>1.0</td>
+      <td>0.009018</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>-0.176453</td>
+      <td>0.034153</td>
+      <td>-0.582549</td>
+      <td>0.4</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-1.693462</td>
+      <td>0.303648</td>
+      <td>-1.174237</td>
+      <td>0.0</td>
+      <td>0.009018</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>-0.176453</td>
+      <td>0.034153</td>
+      <td>-0.582549</td>
+      <td>0.4</td>
+      <td>-0.009719</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-0.397915</td>
+      <td>0.829961</td>
+      <td>-1.102066</td>
+      <td>0.0</td>
+      <td>0.009018</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>5</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-0.698799</td>
+      <td>-1.029879</td>
+      <td>-0.429696</td>
+      <td>0.0</td>
+      <td>0.009018</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>6</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>-0.176453</td>
+      <td>0.034153</td>
+      <td>-0.582549</td>
+      <td>0.4</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>7</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.623927</td>
+      <td>0.277622</td>
+      <td>-0.022760</td>
+      <td>1.0</td>
+      <td>0.009018</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+plan.score_frame_
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>variable</th>
+      <th>PearsonR</th>
+      <th>significance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>one_is_bad</td>
+      <td>-0.056344</td>
+      <td>0.894579</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>two_is_bad</td>
+      <td>-0.056344</td>
+      <td>0.894579</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>three_is_bad</td>
+      <td>-0.056344</td>
+      <td>0.894579</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>four_is_bad</td>
+      <td>0.000000</td>
+      <td>1.000000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>five_is_bad</td>
+      <td>-0.056344</td>
+      <td>0.894579</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>one</td>
+      <td>-0.061701</td>
+      <td>0.884603</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>two</td>
+      <td>0.011729</td>
+      <td>0.978009</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>three</td>
+      <td>0.207647</td>
+      <td>0.621708</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>five</td>
+      <td>-0.028172</td>
+      <td>0.947206</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>four_impact_code</td>
+      <td>-0.372631</td>
+      <td>0.363299</td>
     </tr>
   </tbody>
 </table>
