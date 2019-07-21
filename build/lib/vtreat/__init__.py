@@ -9,6 +9,7 @@ Created on Sat Jul 20 11:40:41 2019
 
 
 import pandas
+import numpy
 
 
 import vtreat.vtreat_impl as vtreat_impl
@@ -66,6 +67,9 @@ class numeric_outcome_treatment():
             y = X[self.outcomename_]
         if not X.shape[0]==len(y):
             raise Exception("X.shape[0] should equal len(y)")
+        y = numpy.asarray(y, dtype=numpy.float64)
+        if numpy.isnan(y).sum()>0:
+            raise Exception("y should not have any missing/NA/NaN values")
         if not sample_weight is None:
             raise Exception("doesn't accept sample_weight yest yet")
         # model for independent transforms
