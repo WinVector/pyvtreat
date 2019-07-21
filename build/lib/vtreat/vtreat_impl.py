@@ -115,9 +115,9 @@ class impact_code(var_transform):
         return(res)
 
 
-def fit_regression_impact_code(incoming_column_name, X, y):
+def fit_regression_impact_code(incoming_column_name, x, y):
     try:
-        sf = pandas.DataFrame({"x":numpy.asarray(X[incoming_column_name]),
+        sf = pandas.DataFrame({"x":x,
                                "y":y})
         na_posns = sf["x"].isnull()
         sf.loc[na_posns, "x"] = "_NA_"
@@ -141,6 +141,7 @@ def fit_regression_impact_code(incoming_column_name, X, y):
                            code_book = sf))
     except:
         return(None)
+
 
 def fit_numeric_outcome_treatment_(
         *,
@@ -174,7 +175,8 @@ def fit_numeric_outcome_treatment_(
                                               replacement_value = summaryi["mean"]) ]
     for vi in catlist:
         xforms = xforms + [ fit_regression_impact_code(incoming_column_name = vi, 
-                                                       X = X, y = y) ]
+                                                       x = numpy.asarray(X[vi]), 
+                                                       y = y) ]
     xforms = [ xf for xf in xforms if xf is not None ]
     return({
             "outcomename":outcomename,
