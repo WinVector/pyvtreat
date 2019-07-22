@@ -177,6 +177,7 @@ def fit_binomial_impact_code(incoming_column_name, x, y):
         sf.loc[na_posns, "x"] = "_NA_"
         sf["_group_mean"] = sf.groupby("x")["y"].transform("mean")
         sf["_gm"] = numpy.mean(sf[["y"]])[0]
+        sf["_lgm"] = numpy.log(numpy.mean(sf[["y"]])[0])
         sf["_nest"] = sf["_group_mean"] - sf["_gm"] # naive condtional mean est
         # continue on to get heirarchical est with estimated variances
         # http://www.win-vector.com/blog/2017/09/partial-pooling-for-lower-variance-variable-encoding/
@@ -185,8 +186,8 @@ def fit_binomial_impact_code(incoming_column_name, x, y):
         sf["_one"] = 1
         sf["_ni"] = sf.groupby("x")["_one"].transform("sum")
         sf["_vw"] = numpy.mean((sf["y"] - sf["_group_mean"])**2) # a bit inflated
-        sf["_hest"] = ((sf["_ni"]-1)*sf["_group_mean"]/sf["_vw"] + sf["_gm"]/sf["_vb"])/((sf["_ni"]-1)/sf["_vw"] + 1/sf["_vb"]) - sf["_gm"]
-        # sf["_hest"] = numpy.log(sf["_hest"]) # TODO: NA-safe version of this
+        sf["_hest"] = ((sf["_ni"]-1)*sf["_group_mean"]/sf["_vw"] + sf["_gm"]/sf["_vb"])/((sf["_ni"]-1)/sf["_vw"] + 1/sf["_vb"])
+        sf["_hest"] = numpy.log(sf["_hest"]) - sf["_lgm"]
         sf = sf.loc[:, ["x", "_hest"]].copy()
         newcol = incoming_column_name + "_impact_code"
         sf.columns = [ incoming_column_name, newcol ]
@@ -389,6 +390,7 @@ def fit_numeric_outcome_treatment_cross_patch(
              continue
          incoming_column_name = xf.incoming_column_name_
          dervied_column_name = xf.dervied_column_names_[0]
+         print(dervied_column_name)
          patches = [ fit_regression_impact_code(
                  incoming_column_name,
                  X.loc[cp["train"], incoming_column_name],

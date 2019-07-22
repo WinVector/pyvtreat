@@ -178,18 +178,22 @@ class binomial_outcome_treatment():
                 cols_to_copy = self.cols_to_copy_,
                 plan = self.plan_
                 )
+        print("before transform")
         res = self.transform(X)
         # patch in cross-frame versions of complex columns such as impact
+        print("before patch")
         cross_frame = vtreat_impl.fit_numeric_outcome_treatment_cross_patch(
                 X = X, y = y, sample_weight = sample_weight,
                 res = res,
                 plan = self.plan_
                 )
+        print("before sf")
         # use cross_frame to compute variable effects
         self.score_frame_ = vtreat_impl.score_plan_variables(
                 cross_frame = cross_frame,
                 outcome = y,
                 plan = self.plan_)
+        print("before return")
         return(cross_frame)
   
     def get_params(self, deep=True):
