@@ -14,6 +14,28 @@ import numpy
 
 import vtreat.vtreat_impl as vtreat_impl
 
+# had been getting Future warnings on seemining correct (no missing values) use of
+# Pandas indexing from vtreat.vtreat_impl.cross_patch_refit_y_aware_cols
+# 
+#/Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages/pandas/core/series.py:942: FutureWarning: 
+#Passing list-likes to .loc or [] with any missing label will raise
+#KeyError in the future, you can use .reindex() as an alternative.
+#
+#See the documentation here:
+#https://pandas.pydata.org/pandas-docs/stable/indexing.html#deprecate-loc-reindex-listlike
+#  return self.loc[key]
+#/Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages/pandas/core/indexing.py:1494: FutureWarning: 
+#Passing list-likes to .loc or [] with any missing label will raise
+#KeyError in the future, you can use .reindex() as an alternative.
+#
+#See the documentation here:
+#https://pandas.pydata.org/pandas-docs/stable/indexing.html#deprecate-loc-reindex-listlike
+#  return self._getitem_tuple(key)
+#
+# working around with:
+# https://stackoverflow.com/questions/15777951/how-to-suppress-pandas-future-warning
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 class numeric_outcome_treatment():
     """manage a treatment plan for a numeric outcome (regression)"""
@@ -86,7 +108,7 @@ class numeric_outcome_treatment():
                 )
         res = self.transform(X)
         # patch in cross-frame versions of complex columns such as impact
-        cross_frame = vtreat_impl.fit_numeric_outcome_treatment_cross_patch(
+        cross_frame = vtreat_impl.cross_patch_refit_y_aware_cols(
                 X = X, y = y, sample_weight = sample_weight,
                 res = res,
                 plan = self.plan_
@@ -178,22 +200,18 @@ class binomial_outcome_treatment():
                 cols_to_copy = self.cols_to_copy_,
                 plan = self.plan_
                 )
-        print("before transform")
         res = self.transform(X)
         # patch in cross-frame versions of complex columns such as impact
-        print("before patch")
-        cross_frame = vtreat_impl.fit_numeric_outcome_treatment_cross_patch(
+        cross_frame = vtreat_impl.cross_patch_refit_y_aware_cols(
                 X = X, y = y, sample_weight = sample_weight,
                 res = res,
                 plan = self.plan_
                 )
-        print("before sf")
         # use cross_frame to compute variable effects
         self.score_frame_ = vtreat_impl.score_plan_variables(
                 cross_frame = cross_frame,
                 outcome = y,
                 plan = self.plan_)
-        print("before return")
         return(cross_frame)
   
     def get_params(self, deep=True):

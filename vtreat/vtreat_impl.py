@@ -147,6 +147,7 @@ def fit_regression_impact_code(incoming_column_name, x, y):
     try: 
         eps = 1.0e-3
         sf = pandas.DataFrame({"x":x, "y":y})
+        sf.reset_index(inplace=True, drop=True)
         na_posns = sf["x"].isnull()
         sf.loc[na_posns, "x"] = "_NA_"
         sf["_group_mean"] = sf.groupby("x")["y"].transform("mean")
@@ -179,6 +180,7 @@ def fit_binomial_impact_code(incoming_column_name, x, y):
     try: 
         eps = 1.0e-3
         sf = pandas.DataFrame({"x":x, "y":y})
+        sf.reset_index(inplace=True, drop=True)
         na_posns = sf["x"].isnull()
         sf.loc[na_posns, "x"] = "_NA_"
         sf["_group_mean"] = sf.groupby("x")["y"].transform("mean")
@@ -261,7 +263,7 @@ def fit_regression_prevalence_code(incoming_column_name, x):
         sf["_ni"] = 1.0
         sf = pandas.DataFrame(sf.groupby("x")["_ni"].sum())
         sf.reset_index(inplace=True, drop=False)
-        # adjusted from ni to ni-1 to make
+        # adjusted from ni to ni-1 lto make
         # rare levels look like new levels.
         sf["_hest"] = (sf["_ni"]-1.0)/n
         sf = sf.loc[:, ["x", "_hest"]].copy()
@@ -385,8 +387,12 @@ def transform_numeric_outcome_treatment(
     res.reset_index(inplace=True, drop=True)
     return(res)
 
+# TODO: basic column significance filtering
+# TODO: annotate which columns are y-aware
+# TODO: y-aware columns must have positive correlation on filter
+    
 
-def fit_numeric_outcome_treatment_cross_patch(
+def cross_patch_refit_y_aware_cols(
         *,
         X, y, sample_weight,
         res,
@@ -399,9 +405,9 @@ def fit_numeric_outcome_treatment_cross_patch(
          incoming_column_name = xf.incoming_column_name_
          dervied_column_name = xf.dervied_column_names_[0]
          print(dervied_column_name)
-         patches = [ fit_regression_impact_code(
+         patches = [ xf.refitter_(
                  incoming_column_name,
-                 X.loc[cp["train"], incoming_column_name],
+                 X[incoming_column_name][cp["train"]],
                  y[cp["train"]]).transform(X.loc[cp["app"],[incoming_column_name]]) for cp in cross_plan ]
          # replace any missing sections with global average (sligth data leak potential)
          vals = pandas.concat([pi for pi in patches if pi is not None], axis = 0)
@@ -415,7 +421,7 @@ def fit_numeric_outcome_treatment_cross_patch(
              res.loc[cp["app"], dervied_column_name] = numpy.asarray(pi)
          res.loc[res[dervied_column_name].isnull(), dervied_column_name] = avg
      return(res)
-         
+
 
 
 
