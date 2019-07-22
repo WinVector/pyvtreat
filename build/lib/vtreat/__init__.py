@@ -94,6 +94,7 @@ class numeric_outcome_treatment():
         # use cross_frame to compute variable effects
         self.score_frame_ = vtreat_impl.score_plan_variables(
                 cross_frame = cross_frame,
+                outcome = y,
                 plan = self.plan_)
         return(cross_frame)
   
@@ -187,6 +188,7 @@ class binomial_outcome_treatment():
         # use cross_frame to compute variable effects
         self.score_frame_ = vtreat_impl.score_plan_variables(
                 cross_frame = cross_frame,
+                outcome = y,
                 plan = self.plan_)
         return(cross_frame)
   

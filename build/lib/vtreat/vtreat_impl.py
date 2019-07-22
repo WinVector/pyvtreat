@@ -184,7 +184,7 @@ def fit_binomial_impact_code(incoming_column_name, x, y):
         sf["_ni"] = sf.groupby("x")["_one"].transform("sum")
         sf["_vw"] = numpy.mean((sf["y"] - sf["_group_mean"])**2) # a bit inflated
         sf["_hest"] = ((sf["_ni"]-1)*sf["_group_mean"]/sf["_vw"] + sf["_gm"]/sf["_vb"])/((sf["_ni"]-1)/sf["_vw"] + 1/sf["_vb"]) - sf["_gm"]
-        sf["_hest"] = numpy.log(sf["_hest"])
+        # sf["_hest"] = numpy.log(sf["_hest"]) # TODO: NA-safe version of this
         sf = sf.loc[:, ["x", "_hest"]].copy()
         newcol = incoming_column_name + "_impact_code"
         sf.columns = [ incoming_column_name, newcol ]
@@ -361,8 +361,16 @@ def transform_numeric_outcome_treatment(
         plan):
     X = X.reset_index(inplace=False, drop=True)
     new_frames = [ xfi.transform(X) for xfi in plan["xforms"] ]
-    cp = X.loc[:, plan["cols_to_copy"] ].copy()
-    return(pandas.concat([cp] + new_frames, axis=1))
+    # see if we want to copy over any columns
+    cols = set([ c for c in X.columns ])
+    to_copy = set(plan["cols_to_copy"].copy())
+    to_copy = list(to_copy.intersection(cols))
+    if len(to_copy)>0:
+        cp = X.loc[:, to_copy ].copy()
+        new_frames = [cp] + new_frames
+    res = pandas.concat(new_frames, axis=1)
+    res.reset_index(inplace=True, drop=True)
+    return(res)
 
 
 def fit_numeric_outcome_treatment_cross_patch(
@@ -398,12 +406,12 @@ def fit_numeric_outcome_treatment_cross_patch(
 
 
 def score_plan_variables(cross_frame,
+                         outcome,
                          plan):
     variables = []
     for xf in plan["xforms"]:
         variables = variables + xf.dervied_column_names_
-    outcomename = plan["outcomename"]
     return(vtreat.util.score_variables(cross_frame, 
                                        variables = variables, 
-                                       outcomename = outcomename))
+                                       outcome = outcome))
 

@@ -41,9 +41,9 @@ def k_way_cross_plan(n_rows,
 
 def score_variables(cross_frame,
                     variables,
-                    outcomename):
+                    outcome):
     """score the linear relation of varaibles to outcomename"""
-    ests = { v:scipy.stats.pearsonr(cross_frame[v], cross_frame[outcomename]) for v in variables }
+    ests = { v:scipy.stats.pearsonr(cross_frame[v], outcome) for v in variables }
     with warnings.catch_warnings():
         sf = [ pandas.DataFrame({"variable":[k], "PearsonR":ests[k][0], "significance":ests[k][1]}) for k in ests.keys() ]
     sf = pandas.concat(sf, axis=0)
