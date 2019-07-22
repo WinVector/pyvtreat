@@ -46,9 +46,11 @@ class var_transform():
     """build a treatment plan for a numeric outcome (regression)"""
     def __init__(self, 
                  incoming_column_name,
-                 dervied_column_names):
+                 dervied_column_names,
+                 treatment):
         self.incoming_column_name_ = incoming_column_name
         self.dervied_column_names_ = dervied_column_names.copy()
+        self.treatment_ = treatment
         self.need_cross_treatment_ = False
         self.refitter_ = None
     
@@ -62,7 +64,8 @@ class clean_numeric(var_transform):
                  replacement_value):
         var_transform.__init__(self, 
                                incoming_column_name, 
-                               [incoming_column_name])
+                               [incoming_column_name],
+                               "clean_copy")
         self.replacement_value_ = replacement_value
     
     def transform(self, data_frame):
@@ -80,7 +83,8 @@ class indicate_missing(var_transform):
                  dervied_column_name):
         var_transform.__init__(self, 
                                incoming_column_name, 
-                               [dervied_column_name])
+                               [dervied_column_name],
+                               "missing_indicator")
     
     def transform(self, data_frame):
         col = data_frame[self.incoming_column_name_].isnull()
@@ -102,10 +106,12 @@ class mapped_code(var_transform):
     def __init__(self, 
                  incoming_column_name,
                  dervied_column_name,
+                 treatment,
                  code_book):
         var_transform.__init__(self, 
                                incoming_column_name, 
-                               [dervied_column_name])
+                               [dervied_column_name],
+                               treatment)
         self.code_book_ = code_book
     
     def transform(self, data_frame):
@@ -130,11 +136,13 @@ class y_aware_mapped_code(mapped_code):
     def __init__(self, 
                  incoming_column_name,
                  dervied_column_name,
+                 treatment,
                  code_book,
                  refitter):
         mapped_code.__init__(self, 
                              incoming_column_name = incoming_column_name, 
                              dervied_column_name = dervied_column_name,
+                             treatment = treatment,
                              code_book = code_book)
         self.need_cross_treatment_ = True
         self.refitter_ = refitter
@@ -169,6 +177,7 @@ def fit_regression_impact_code(incoming_column_name, x, y):
             return(None)
         return(y_aware_mapped_code(incoming_column_name, 
                            newcol,
+                           treatment = "impact_code",
                            code_book = sf,
                            refitter = fit_regression_impact_code))
     except:
@@ -197,13 +206,14 @@ def fit_binomial_impact_code(incoming_column_name, x, y):
         sf["_hest"] = ((sf["_ni"]-1)*sf["_group_mean"]/sf["_vw"] + sf["_gm"]/sf["_vb"])/((sf["_ni"]-1)/sf["_vw"] + 1/sf["_vb"])
         sf["_hest"] = numpy.log(sf["_hest"]) - sf["_lgm"]
         sf = sf.loc[:, ["x", "_hest"]].copy()
-        newcol = incoming_column_name + "_impact_code"
+        newcol = incoming_column_name + "_logit_code"
         sf.columns = [ incoming_column_name, newcol ]
         sf = sf.groupby(incoming_column_name)[newcol].mean()
         if sf.shape[0]<=1:
             return(None)
         return(y_aware_mapped_code(incoming_column_name, 
                            newcol,
+                           treatment = "logit_code",
                            code_book = sf,
                            refitter = fit_binomial_impact_code))
     except:
@@ -217,7 +227,8 @@ class indicator_code(var_transform):
                  levels):
         var_transform.__init__(self, 
                                incoming_column_name, 
-                               dervied_column_names)
+                               dervied_column_names,
+                               "indicator")
         self.levels_ = levels
     
     def transform(self, data_frame):
@@ -273,6 +284,7 @@ def fit_regression_prevalence_code(incoming_column_name, x):
         sf.reset_index(inplace=True, drop=True)
         return(mapped_code(incoming_column_name, 
                            newcol,
+                           treatment = "prevalance",
                            code_book = sf))
     except:
        return(None)
@@ -388,10 +400,8 @@ def transform_numeric_outcome_treatment(
     return(res)
 
 # TODO: basic column significance filtering
-# TODO: annotate which columns are y-aware
-# TODO: y-aware columns must have positive correlation on filter
     
-
+# assumes each y-aware variable produces one derived column
 def cross_patch_refit_y_aware_cols(
         *,
         X, y, sample_weight,
@@ -427,17 +437,23 @@ def cross_patch_refit_y_aware_cols(
 def score_plan_variables(cross_frame,
                          outcome,
                          plan):
-    variables = []
-    for xf in plan["xforms"]:
-        variables = variables + xf.dervied_column_names_
+    def describe(xf):
+        description = pandas.DataFrame({"variable":xf.dervied_column_names_})
+        description["treatment"] = xf.treatment_
+        description["y_aware"] = xf.need_cross_treatment_
+        return(description)
+    var_table = pandas.concat([ describe(xf) for xf in plan["xforms"] ])
+    var_table.reset_index(inplace=True, drop=True)
     sf = vtreat.util.score_variables(cross_frame, 
-                                       variables = variables, 
-                                       outcome = outcome)
-    y_aware = []
-    for xf in plan["xforms"]:
-        if xf.need_cross_treatment_:
-            y_aware = y_aware + xf.dervied_column_names_
-    y_aware = set(y_aware)
-    sf["y_aware"] = [ col in y_aware for col in sf["variable"] ]
-    return(sf)
+                                     variables = var_table["variable"], 
+                                     outcome = outcome)
+    score_frame = pandas.merge(var_table, sf, 
+                               how="left", on = ["variable"], sort=False)
+    score_frame["_one"] = 1.0
+    score_frame["vcount"] = score_frame.groupby("treatment")["_one"].transform("sum")
+    score_frame.drop(["_one"], axis=1, inplace=True)
+    score_frame["recommended"] = numpy.logical_and(score_frame["significance"]<0.05,
+        numpy.logical_and(score_frame["significance"]<1/score_frame["vcount"],
+                          numpy.logical_or(score_frame["PearsonR"]>0, numpy.logical_not(score_frame["y_aware"]))))
+    return(score_frame)
 
