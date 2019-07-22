@@ -91,7 +91,7 @@ class indicate_missing(var_transform):
 def can_convert_v_to_numeric(x):
     """check if non-empty vector can convert to numeric"""
     try:
-        x[0] + 0
+        x + 0
         return(True)
     except:
         return(False)
@@ -164,6 +164,35 @@ def fit_regression_impact_code(incoming_column_name, x, y):
                            newcol,
                            code_book = sf,
                            refitter = fit_regression_impact_code))
+    except:
+        return(None)
+
+
+def fit_binomial_impact_code(incoming_column_name, x, y):
+    try: 
+        sf = pandas.DataFrame({"x":x, "y":y})
+        na_posns = sf["x"].isnull()
+        sf.loc[na_posns, "x"] = "_NA_"
+        sf["_group_mean"] = sf.groupby("x")["y"].transform("mean")
+        sf["_gm"] = numpy.mean(sf[["y"]])[0]
+        sf["_nest"] = sf["_group_mean"] - sf["_gm"] # naive condtional mean est
+        # continue on to get heirarchical est with estimated variances
+        # http://www.win-vector.com/blog/2017/09/partial-pooling-for-lower-variance-variable-encoding/
+        means = sf.groupby("x")["y"].mean()
+        sf["_vb"] = statistics.variance(means)
+        sf["_one"] = 1
+        sf["_ni"] = sf.groupby("x")["_one"].transform("sum")
+        sf["_vw"] = numpy.mean((sf["y"] - sf["_group_mean"])**2) # a bit inflated
+        sf["_hest"] = ((sf["_ni"]-1)*sf["_group_mean"]/sf["_vw"] + sf["_gm"]/sf["_vb"])/((sf["_ni"]-1)/sf["_vw"] + 1/sf["_vb"]) - sf["_gm"]
+        sf["_hest"] = numpy.log(sf["_hest"])
+        sf = sf.loc[:, ["x", "_hest"]].copy()
+        newcol = incoming_column_name + "_impact_code"
+        sf.columns = [ incoming_column_name, newcol ]
+        sf = sf.groupby(incoming_column_name)[newcol].mean()
+        return(y_aware_mapped_code(incoming_column_name, 
+                           newcol,
+                           code_book = sf,
+                           refitter = fit_binomial_impact_code))
     except:
         return(None)
 
@@ -266,6 +295,52 @@ def fit_numeric_outcome_treatment(
                                               replacement_value = summaryi["mean"]) ]
     for vi in catlist:
         xforms = xforms + [ fit_regression_impact_code(incoming_column_name = vi, 
+                                                       x = numpy.asarray(X[vi]), 
+                                                       y = y) ]
+        xforms = xforms + [ fit_regression_prevalence_code(incoming_column_name = vi, 
+                                                       x = numpy.asarray(X[vi])) ]
+        xforms = xforms + [ fit_indicator_code(incoming_column_name = vi, 
+                                               x = numpy.asarray(X[vi])) ]
+    xforms = [ xf for xf in xforms if xf is not None ]
+    return({
+            "outcomename":outcomename,
+            "cols_to_copy":cols_to_copy,
+            "xforms":xforms
+            })
+
+
+def fit_binomial_outcome_treatment(
+        *,
+        X, y,
+        sample_weight,
+        varlist, 
+        outcomename,
+        cols_to_copy,
+        plan):
+    if (varlist is None) or (len(varlist)<=0):
+        varlist = [ co for co in X.columns ]
+    copy_set = set(cols_to_copy)
+    varlist = [ co for co in varlist if (not (co in copy_set)) ]    
+    xforms = []
+    n = X.shape[0]
+    all_null = []
+    for vi in varlist:
+        n_null = sum(X[vi].isnull())
+        if n_null>=n:
+            all_null = all_null + [vi]
+        if (n_null>0) and (n_null<n):
+            xforms = xforms + [ indicate_missing(incoming_column_name = vi, 
+                                                dervied_column_name = vi + "_is_bad") ]
+    varlist = [ co for co in varlist if (not (co in set(all_null))) ]
+    numlist = [ co for co in varlist if can_convert_v_to_numeric(X[co]) ]
+    catlist = [ co for co in varlist if not co in set(numlist) ]
+    for vi in numlist:
+        summaryi = characterize_numeric(X[vi])
+        if summaryi["varies"] and summaryi["has_range"]:
+            xforms = xforms + [ clean_numeric(incoming_column_name = vi, 
+                                              replacement_value = summaryi["mean"]) ]
+    for vi in catlist:
+        xforms = xforms + [ fit_binomial_impact_code(incoming_column_name = vi, 
                                                        x = numpy.asarray(X[vi]), 
                                                        y = y) ]
         xforms = xforms + [ fit_regression_prevalence_code(incoming_column_name = vi, 
