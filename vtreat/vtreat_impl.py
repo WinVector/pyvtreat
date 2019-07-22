@@ -404,7 +404,6 @@ def cross_patch_refit_y_aware_cols(
              continue
          incoming_column_name = xf.incoming_column_name_
          dervied_column_name = xf.dervied_column_names_[0]
-         print(dervied_column_name)
          patches = [ xf.refitter_(
                  incoming_column_name,
                  X[incoming_column_name][cp["train"]],
@@ -431,7 +430,14 @@ def score_plan_variables(cross_frame,
     variables = []
     for xf in plan["xforms"]:
         variables = variables + xf.dervied_column_names_
-    return(vtreat.util.score_variables(cross_frame, 
+    sf = vtreat.util.score_variables(cross_frame, 
                                        variables = variables, 
-                                       outcome = outcome))
+                                       outcome = outcome)
+    y_aware = []
+    for xf in plan["xforms"]:
+        if xf.need_cross_treatment_:
+            y_aware = y_aware + xf.dervied_column_names_
+    y_aware = set(y_aware)
+    sf["y_aware"] = [ col in y_aware for col in sf["variable"] ]
+    return(sf)
 
