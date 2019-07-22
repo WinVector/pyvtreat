@@ -160,6 +160,8 @@ def fit_regression_impact_code(incoming_column_name, x, y):
         newcol = incoming_column_name + "_impact_code"
         sf.columns = [ incoming_column_name, newcol ]
         sf = sf.groupby(incoming_column_name)[newcol].mean()
+        if sf.shape[0]<=1:
+            return(None)
         return(y_aware_mapped_code(incoming_column_name, 
                            newcol,
                            code_book = sf,
@@ -189,6 +191,8 @@ def fit_binomial_impact_code(incoming_column_name, x, y):
         newcol = incoming_column_name + "_impact_code"
         sf.columns = [ incoming_column_name, newcol ]
         sf = sf.groupby(incoming_column_name)[newcol].mean()
+        if sf.shape[0]<=1:
+            return(None)
         return(y_aware_mapped_code(incoming_column_name, 
                            newcol,
                            code_book = sf,
