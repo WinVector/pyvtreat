@@ -399,7 +399,6 @@ def transform_numeric_outcome_treatment(
     res.reset_index(inplace=True, drop=True)
     return(res)
 
-# TODO: basic column significance filtering
     
 # assumes each y-aware variable produces one derived column
 def cross_patch_refit_y_aware_cols(
