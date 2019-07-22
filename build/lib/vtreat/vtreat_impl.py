@@ -148,76 +148,77 @@ class y_aware_mapped_code(mapped_code):
         self.refitter_ = refitter
 
 
-def fit_regression_impact_code(incoming_column_name, x, y):
+def grouped_by_x_statistics(x, y):
+    """compute some grouped by x summaries of y"""
+    eps = 1.0e-3
+    sf = pandas.DataFrame({"x":x, "y":y})
+    sf.reset_index(inplace=True, drop=True)
+    na_posns = sf["x"].isnull()
+    sf.loc[na_posns, "x"] = "_NA_"
+    global_mean = sf["y"].mean()
+    sf["_group_mean"] = sf.groupby("x")["y"].transform("mean")
+    sf["_var"] = (sf["y"] - sf["_group_mean"])**2
+    sf["_ni"] = 1
+    sf = sf.groupby("x").sum()
+    sf.reset_index(inplace=True, drop=False)
+    sf["y"] = sf["y"]/sf["_ni"]
+    sf["_group_mean"] = sf["_group_mean"]/sf["_ni"]
+    sf["_var"] = sf["_var"]/(sf["_ni"]-1) + eps
+    avg_var = numpy.nanmean(sf["_var"])
+    sf.loc[sf["_var"].isnull(),"_var"] = avg_var
+    sf["_vb"] = statistics.variance(sf["_group_mean"]) + eps
+    sf["_gm"] = global_mean
+    # heirarchical model is in:
+    # http://www.win-vector.com/blog/2017/09/partial-pooling-for-lower-variance-variable-encoding/
     # using naive empirical estimates of variances
     # adjusted from ni to ni-1 and +eps variance to make
     # rare levels look like new levels.
-    try: 
-        eps = 1.0e-3
-        sf = pandas.DataFrame({"x":x, "y":y})
-        sf.reset_index(inplace=True, drop=True)
-        na_posns = sf["x"].isnull()
-        sf.loc[na_posns, "x"] = "_NA_"
-        sf["_group_mean"] = sf.groupby("x")["y"].transform("mean")
-        sf["_gm"] = numpy.mean(sf[["y"]])[0]
-        sf["_nest"] = sf["_group_mean"] - sf["_gm"] # naive condtional mean est
-        # continue on to get heirarchical est with estimated variances
-        # http://www.win-vector.com/blog/2017/09/partial-pooling-for-lower-variance-variable-encoding/
-        means = sf.groupby("x")["y"].mean()
-        sf["_vb"] = statistics.variance(means) + eps
-        sf["_one"] = 1
-        sf["_ni"] = sf.groupby("x")["_one"].transform("sum")
-        sf["_vw"] = numpy.mean((sf["y"] - sf["_group_mean"])**2) + eps # a bit inflated
-        sf["_hest"] = ((sf["_ni"]-1)*sf["_group_mean"]/sf["_vw"] + sf["_gm"]/sf["_vb"])/((sf["_ni"]-1)/sf["_vw"] + 1/sf["_vb"]) - sf["_gm"]
-        sf = sf.loc[:, ["x", "_hest"]].copy()
-        newcol = incoming_column_name + "_impact_code"
-        sf.columns = [ incoming_column_name, newcol ]
-        sf = sf.groupby(incoming_column_name)[newcol].mean()
-        if sf.shape[0]<=1:
-            return(None)
-        return(y_aware_mapped_code(incoming_column_name, 
-                           newcol,
-                           treatment = "impact_code",
-                           code_book = sf,
-                           refitter = fit_regression_impact_code))
-    except:
-        return(None)
+    sf["_hest"] = ((sf["_ni"]-1)*sf["_group_mean"]/sf["_var"] + sf["_gm"]/sf["_vb"])/((sf["_ni"]-1)/sf["_var"] + 1/sf["_vb"])
+    return(sf)
+    
 
+def fit_regression_impact_code(incoming_column_name, x, y):
+    sf = grouped_by_x_statistics(x, y)
+    if sf.shape[0]<=1:
+        return(None)
+    sf["_impact_code"] = sf["_hest"] - sf["_gm"]
+    sf = sf.loc[:, ["x", "_impact_code"]].copy()
+    newcol = incoming_column_name + "_impact_code"
+    sf.columns = [ incoming_column_name, newcol ]
+    return(y_aware_mapped_code(incoming_column_name, 
+                       newcol,
+                       treatment = "impact_code",
+                       code_book = sf,
+                       refitter = fit_regression_impact_code))
+
+
+def fit_regression_deviance_code(incoming_column_name, x, y):
+    sf = grouped_by_x_statistics(x, y)
+    if sf.shape[0]<=1:
+        return(None)
+    sf["_deviance_code"] = numpy.sqrt(sf["_var"])
+    sf = sf.loc[:, ["x", "_deviance_code"]].copy()
+    newcol = incoming_column_name + "_deviance_code"
+    sf.columns = [ incoming_column_name, newcol ]
+    return(y_aware_mapped_code(incoming_column_name, 
+                           newcol,
+                           treatment = "deviance_code",
+                           code_book = sf,
+                           refitter = fit_regression_deviance_code))
 
 def fit_binomial_impact_code(incoming_column_name, x, y):
-    # based on fit_regression_impact_code()
-    try: 
-        eps = 1.0e-3
-        sf = pandas.DataFrame({"x":x, "y":y})
-        sf.reset_index(inplace=True, drop=True)
-        na_posns = sf["x"].isnull()
-        sf.loc[na_posns, "x"] = "_NA_"
-        sf["_group_mean"] = sf.groupby("x")["y"].transform("mean")
-        sf["_gm"] = numpy.mean(sf[["y"]])[0]
-        sf["_lgm"] = numpy.log(numpy.mean(sf[["y"]])[0])
-        sf["_nest"] = sf["_group_mean"] - sf["_gm"] # naive condtional mean est
-        # continue on to get heirarchical est with estimated variances
-        # http://www.win-vector.com/blog/2017/09/partial-pooling-for-lower-variance-variable-encoding/
-        means = sf.groupby("x")["y"].mean()
-        sf["_vb"] = statistics.variance(means) + eps
-        sf["_one"] = 1
-        sf["_ni"] = sf.groupby("x")["_one"].transform("sum")
-        sf["_vw"] = numpy.mean((sf["y"] - sf["_group_mean"])**2) + eps # a bit inflated
-        sf["_hest"] = ((sf["_ni"]-1)*sf["_group_mean"]/sf["_vw"] + sf["_gm"]/sf["_vb"])/((sf["_ni"]-1)/sf["_vw"] + 1/sf["_vb"])
-        sf["_hest"] = numpy.log(sf["_hest"]) - sf["_lgm"]
-        sf = sf.loc[:, ["x", "_hest"]].copy()
-        newcol = incoming_column_name + "_logit_code"
-        sf.columns = [ incoming_column_name, newcol ]
-        sf = sf.groupby(incoming_column_name)[newcol].mean()
-        if sf.shape[0]<=1:
-            return(None)
-        return(y_aware_mapped_code(incoming_column_name, 
+    sf = grouped_by_x_statistics(x, y)
+    if sf.shape[0]<=1:
+        return(None)
+    sf["_logit_code"] = numpy.log(sf["_hest"]) - numpy.log(sf["_gm"])
+    sf = sf.loc[:, ["x", "_logit_code"]].copy()
+    newcol = incoming_column_name + "_logit_code"
+    sf.columns = [ incoming_column_name, newcol ]
+    return(y_aware_mapped_code(incoming_column_name, 
                            newcol,
                            treatment = "logit_code",
                            code_book = sf,
                            refitter = fit_binomial_impact_code))
-    except:
-        return(None)
 
 
 class indicator_code(var_transform):
@@ -324,6 +325,9 @@ def fit_numeric_outcome_treatment(
         xforms = xforms + [ fit_regression_impact_code(incoming_column_name = vi, 
                                                        x = numpy.asarray(X[vi]), 
                                                        y = y) ]
+        xforms = xforms + [ fit_regression_deviance_code(incoming_column_name = vi, 
+                                                         x = numpy.asarray(X[vi]), 
+                                                         y = y) ]
         xforms = xforms + [ fit_regression_prevalence_code(incoming_column_name = vi, 
                                                        x = numpy.asarray(X[vi])) ]
         xforms = xforms + [ fit_indicator_code(incoming_column_name = vi, 

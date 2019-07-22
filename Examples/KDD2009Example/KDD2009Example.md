@@ -12,8 +12,8 @@ Compare to [R solution](https://github.com/WinVector/PDSwR2/blob/master/KDD2009/
     Requirement already satisfied: pandas in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from vtreat==0.1) (0.24.2)
     Requirement already satisfied: statistics in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from vtreat==0.1) (1.0.3.5)
     Requirement already satisfied: scipy in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from vtreat==0.1) (1.2.1)
-    Requirement already satisfied: pytz>=2011k in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from pandas->vtreat==0.1) (2019.1)
     Requirement already satisfied: python-dateutil>=2.5.0 in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from pandas->vtreat==0.1) (2.8.0)
+    Requirement already satisfied: pytz>=2011k in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from pandas->vtreat==0.1) (2019.1)
     Requirement already satisfied: docutils>=0.3 in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from statistics->vtreat==0.1) (0.14)
     Requirement already satisfied: six>=1.5 in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from python-dateutil>=2.5.0->pandas->vtreat==0.1) (1.12.0)
     Building wheels for collected packages: vtreat
@@ -152,8 +152,8 @@ sf.head()
       <td>Var1_is_bad</td>
       <td>missing_indicator</td>
       <td>False</td>
-      <td>0.003828</td>
-      <td>0.416801</td>
+      <td>0.004336</td>
+      <td>0.357633</td>
       <td>193.0</td>
       <td>False</td>
     </tr>
@@ -162,8 +162,8 @@ sf.head()
       <td>Var2_is_bad</td>
       <td>missing_indicator</td>
       <td>False</td>
-      <td>0.017581</td>
-      <td>0.000192</td>
+      <td>0.019270</td>
+      <td>0.000043</td>
       <td>193.0</td>
       <td>True</td>
     </tr>
@@ -172,8 +172,8 @@ sf.head()
       <td>Var3_is_bad</td>
       <td>missing_indicator</td>
       <td>False</td>
-      <td>0.017549</td>
-      <td>0.000197</td>
+      <td>0.019238</td>
+      <td>0.000045</td>
       <td>193.0</td>
       <td>True</td>
     </tr>
@@ -182,8 +182,8 @@ sf.head()
       <td>Var4_is_bad</td>
       <td>missing_indicator</td>
       <td>False</td>
-      <td>0.020507</td>
-      <td>0.000014</td>
+      <td>0.017983</td>
+      <td>0.000136</td>
       <td>193.0</td>
       <td>True</td>
     </tr>
@@ -192,8 +192,8 @@ sf.head()
       <td>Var5_is_bad</td>
       <td>missing_indicator</td>
       <td>False</td>
-      <td>0.019791</td>
-      <td>0.000027</td>
+      <td>0.015505</td>
+      <td>0.001002</td>
       <td>193.0</td>
       <td>True</td>
     </tr>
@@ -252,32 +252,22 @@ sf.loc[numpy.logical_and(sf["recommended"],sf["y_aware"]), :]
   </thead>
   <tbody>
     <tr>
-      <th>371</th>
-      <td>Var193_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>0.011778</td>
-      <td>0.012469</td>
-      <td>38.0</td>
-      <td>True</td>
-    </tr>
-    <tr>
       <th>425</th>
       <td>Var207_logit_code</td>
       <td>logit_code</td>
       <td>True</td>
-      <td>0.010494</td>
-      <td>0.025998</td>
+      <td>0.010722</td>
+      <td>0.022909</td>
       <td>38.0</td>
       <td>True</td>
     </tr>
     <tr>
-      <th>467</th>
-      <td>Var219_logit_code</td>
+      <th>490</th>
+      <td>Var225_logit_code</td>
       <td>logit_code</td>
       <td>True</td>
-      <td>0.011670</td>
-      <td>0.013301</td>
+      <td>0.012494</td>
+      <td>0.008026</td>
       <td>38.0</td>
       <td>True</td>
     </tr>
@@ -296,7 +286,7 @@ len(model_vars)
 
 
 
-    235
+    224
 
 
 
@@ -363,13 +353,13 @@ cross_frame.head()
       <td>1.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>0.018654</td>
-      <td>0.654009</td>
+      <td>0.001876</td>
+      <td>0.654472</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
-      <td>-0.001400</td>
-      <td>0.569016</td>
+      <td>-0.000671</td>
+      <td>0.568306</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
@@ -387,13 +377,13 @@ cross_frame.head()
       <td>1.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>0.024487</td>
-      <td>0.654009</td>
+      <td>0.001876</td>
+      <td>0.654472</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
-      <td>-0.024004</td>
-      <td>0.569016</td>
+      <td>-0.000671</td>
+      <td>0.568306</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
@@ -411,13 +401,13 @@ cross_frame.head()
       <td>1.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>-0.183612</td>
-      <td>0.053351</td>
+      <td>-0.046118</td>
+      <td>0.053045</td>
       <td>0</td>
       <td>0</td>
       <td>1</td>
-      <td>-0.046047</td>
-      <td>0.233624</td>
+      <td>-0.014519</td>
+      <td>0.234440</td>
       <td>0</td>
       <td>1</td>
       <td>0</td>
@@ -435,13 +425,13 @@ cross_frame.head()
       <td>1.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>0.028822</td>
-      <td>0.654009</td>
+      <td>0.013857</td>
+      <td>0.654472</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
-      <td>0.003161</td>
-      <td>0.569016</td>
+      <td>-0.000938</td>
+      <td>0.568306</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
@@ -459,16 +449,16 @@ cross_frame.head()
       <td>1.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>0.024487</td>
-      <td>0.654009</td>
+      <td>-0.056743</td>
+      <td>0.018659</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>-0.000671</td>
+      <td>0.234440</td>
+      <td>0</td>
       <td>1</td>
       <td>0</td>
-      <td>0</td>
-      <td>0.078828</td>
-      <td>0.195760</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
     </tr>
   </tbody>
 </table>
@@ -525,38 +515,38 @@ cv.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>0.073315</td>
-      <td>0.000746</td>
-      <td>0.073638</td>
-      <td>0.001404</td>
+      <td>0.073171</td>
+      <td>0.000892</td>
+      <td>0.073926</td>
+      <td>0.001910</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>0.073460</td>
-      <td>0.000648</td>
-      <td>0.073460</td>
-      <td>0.001295</td>
+      <td>0.073293</td>
+      <td>0.000770</td>
+      <td>0.073304</td>
+      <td>0.001517</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.073415</td>
-      <td>0.000671</td>
-      <td>0.073482</td>
-      <td>0.001306</td>
+      <td>0.073293</td>
+      <td>0.000770</td>
+      <td>0.073304</td>
+      <td>0.001517</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>0.073415</td>
-      <td>0.000671</td>
-      <td>0.073460</td>
-      <td>0.001295</td>
+      <td>0.073304</td>
+      <td>0.000758</td>
+      <td>0.073304</td>
+      <td>0.001517</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>0.073460</td>
-      <td>0.000648</td>
-      <td>0.073460</td>
-      <td>0.001295</td>
+      <td>0.073282</td>
+      <td>0.000781</td>
+      <td>0.073304</td>
+      <td>0.001517</td>
     </tr>
   </tbody>
 </table>
@@ -601,11 +591,11 @@ best
   </thead>
   <tbody>
     <tr>
-      <th>33</th>
-      <td>0.071971</td>
-      <td>0.00084</td>
-      <td>0.073016</td>
-      <td>0.001276</td>
+      <th>57</th>
+      <td>0.071116</td>
+      <td>0.000884</td>
+      <td>0.072526</td>
+      <td>0.001948</td>
     </tr>
   </tbody>
 </table>
@@ -622,7 +612,7 @@ ntree
 
 
 
-    33
+    57
 
 
 
@@ -637,7 +627,7 @@ fitter
 
     XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
                   colsample_bytree=1, gamma=0, learning_rate=0.1, max_delta_step=0,
-                  max_depth=3, min_child_weight=1, missing=None, n_estimators=33,
+                  max_depth=3, min_child_weight=1, missing=None, n_estimators=57,
                   n_jobs=1, nthread=None, objective='binary:logistic',
                   random_state=0, reg_alpha=0, reg_lambda=1, scale_pos_weight=1,
                   seed=None, silent=True, subsample=1)
@@ -688,7 +678,7 @@ wvpy.util.plot_roc(pf["pred"], pf["churn"])
 
 
 
-    0.7381557672107543
+    0.7384554381545494
 
 
 

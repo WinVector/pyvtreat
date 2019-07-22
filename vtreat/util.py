@@ -43,9 +43,16 @@ def score_variables(cross_frame,
                     variables,
                     outcome):
     """score the linear relation of varaibles to outcomename"""
-    ests = { v:scipy.stats.pearsonr(cross_frame[v], outcome) for v in variables }
-    with warnings.catch_warnings():
-        sf = [ pandas.DataFrame({"variable":[k], "PearsonR":ests[k][0], "significance":ests[k][1]}) for k in ests.keys() ]
+    def f(v):
+        col = cross_frame[v]
+        if numpy.max(col)>numpy.min(col):        
+            with warnings.catch_warnings():
+                est = scipy.stats.pearsonr(cross_frame[v], outcome)
+                sf = pandas.DataFrame({"variable":[v], "PearsonR":est[0], "significance":est[1]})    
+        else:
+            sf = pandas.DataFrame({"variable":[v], "PearsonR":numpy.NaN, "significance":1})
+        return(sf)  
+    sf = [ f(v) for v in variables ]
     sf = pandas.concat(sf, axis=0)
     sf.reset_index(inplace=True, drop=True)
     return(sf)
