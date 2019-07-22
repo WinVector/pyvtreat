@@ -141,7 +141,11 @@ class y_aware_mapped_code(mapped_code):
 
 
 def fit_regression_impact_code(incoming_column_name, x, y):
+    # using naive empirical estimates of variances
+    # adjusted from ni to ni-1 and +eps variance to make
+    # rare levels look like new levels.
     try: 
+        eps = 1.0e-3
         sf = pandas.DataFrame({"x":x, "y":y})
         na_posns = sf["x"].isnull()
         sf.loc[na_posns, "x"] = "_NA_"
@@ -151,10 +155,10 @@ def fit_regression_impact_code(incoming_column_name, x, y):
         # continue on to get heirarchical est with estimated variances
         # http://www.win-vector.com/blog/2017/09/partial-pooling-for-lower-variance-variable-encoding/
         means = sf.groupby("x")["y"].mean()
-        sf["_vb"] = statistics.variance(means)
+        sf["_vb"] = statistics.variance(means) + eps
         sf["_one"] = 1
         sf["_ni"] = sf.groupby("x")["_one"].transform("sum")
-        sf["_vw"] = numpy.mean((sf["y"] - sf["_group_mean"])**2) # a bit inflated
+        sf["_vw"] = numpy.mean((sf["y"] - sf["_group_mean"])**2) + eps # a bit inflated
         sf["_hest"] = ((sf["_ni"]-1)*sf["_group_mean"]/sf["_vw"] + sf["_gm"]/sf["_vb"])/((sf["_ni"]-1)/sf["_vw"] + 1/sf["_vb"]) - sf["_gm"]
         sf = sf.loc[:, ["x", "_hest"]].copy()
         newcol = incoming_column_name + "_impact_code"
@@ -171,7 +175,9 @@ def fit_regression_impact_code(incoming_column_name, x, y):
 
 
 def fit_binomial_impact_code(incoming_column_name, x, y):
+    # based on fit_regression_impact_code()
     try: 
+        eps = 1.0e-3
         sf = pandas.DataFrame({"x":x, "y":y})
         na_posns = sf["x"].isnull()
         sf.loc[na_posns, "x"] = "_NA_"
@@ -182,10 +188,10 @@ def fit_binomial_impact_code(incoming_column_name, x, y):
         # continue on to get heirarchical est with estimated variances
         # http://www.win-vector.com/blog/2017/09/partial-pooling-for-lower-variance-variable-encoding/
         means = sf.groupby("x")["y"].mean()
-        sf["_vb"] = statistics.variance(means)
+        sf["_vb"] = statistics.variance(means) + eps
         sf["_one"] = 1
         sf["_ni"] = sf.groupby("x")["_one"].transform("sum")
-        sf["_vw"] = numpy.mean((sf["y"] - sf["_group_mean"])**2) # a bit inflated
+        sf["_vw"] = numpy.mean((sf["y"] - sf["_group_mean"])**2) + eps # a bit inflated
         sf["_hest"] = ((sf["_ni"]-1)*sf["_group_mean"]/sf["_vw"] + sf["_gm"]/sf["_vb"])/((sf["_ni"]-1)/sf["_vw"] + 1/sf["_vb"])
         sf["_hest"] = numpy.log(sf["_hest"]) - sf["_lgm"]
         sf = sf.loc[:, ["x", "_hest"]].copy()
@@ -255,6 +261,8 @@ def fit_regression_prevalence_code(incoming_column_name, x):
         sf["_ni"] = 1.0
         sf = pandas.DataFrame(sf.groupby("x")["_ni"].sum())
         sf.reset_index(inplace=True, drop=False)
+        # adjusted from ni to ni-1 to make
+        # rare levels look like new levels.
         sf["_hest"] = (sf["_ni"]-1.0)/n
         sf = sf.loc[:, ["x", "_hest"]].copy()
         newcol = incoming_column_name + "_prevalence_code"
