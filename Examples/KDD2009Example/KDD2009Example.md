@@ -1,32 +1,8 @@
 
 Compare to [R solution](https://github.com/WinVector/PDSwR2/blob/master/KDD2009/KDD2009vtreat.md).
-
-
-```python
-!pip install /Users/johnmount/Documents/work/pyvtreat/dist/vtreat-0.1.tar.gz
-#!pip install https://github.com/WinVector/pyvtreat/raw/master/dist/vtreat-0.1.tar.gz
-```
-
-    Processing /Users/johnmount/Documents/work/pyvtreat/dist/vtreat-0.1.tar.gz
-    Requirement already satisfied: numpy in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from vtreat==0.1) (1.16.4)
-    Requirement already satisfied: pandas in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from vtreat==0.1) (0.24.2)
-    Requirement already satisfied: statistics in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from vtreat==0.1) (1.0.3.5)
-    Requirement already satisfied: scipy in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from vtreat==0.1) (1.2.1)
-    Requirement already satisfied: python-dateutil>=2.5.0 in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from pandas->vtreat==0.1) (2.8.0)
-    Requirement already satisfied: pytz>=2011k in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from pandas->vtreat==0.1) (2019.1)
-    Requirement already satisfied: docutils>=0.3 in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from statistics->vtreat==0.1) (0.14)
-    Requirement already satisfied: six>=1.5 in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from python-dateutil>=2.5.0->pandas->vtreat==0.1) (1.12.0)
-    Building wheels for collected packages: vtreat
-      Building wheel for vtreat (setup.py) ... [?25ldone
-    [?25h  Stored in directory: /Users/johnmount/Library/Caches/pip/wheels/28/d1/8a/f8f4ee7c515a6c18d95d64f4d49327fe498b9e6e23d04c7159
-    Successfully built vtreat
-    Installing collected packages: vtreat
-      Found existing installation: vtreat 0.1
-        Uninstalling vtreat-0.1:
-          Successfully uninstalled vtreat-0.1
-    Successfully installed vtreat-0.1
-
-
+!pip install /Users/johnmount/Documents/work/pyvtreat/pkg/dist/vtreat-0.1.tar.gz
+#!pip install https://github.com/WinVector/pyvtreat/raw/master/pkg/dist/vtreat-0.1.tar.gz!pip install /Users/johnmount/Documents/work/wvpy/pkg/dist/wvpy-0.1.tar.gz
+#!pip install https://github.com/WinVector/wvpy/raw/master/pkg/dist/wvpy-0.1.tar.gz
 First read in data
 
 
@@ -152,8 +128,8 @@ sf.head()
       <td>Var1_is_bad</td>
       <td>missing_indicator</td>
       <td>False</td>
-      <td>0.004336</td>
-      <td>0.357633</td>
+      <td>0.001885</td>
+      <td>0.688921</td>
       <td>193.0</td>
       <td>False</td>
     </tr>
@@ -162,8 +138,8 @@ sf.head()
       <td>Var2_is_bad</td>
       <td>missing_indicator</td>
       <td>False</td>
-      <td>0.019270</td>
-      <td>0.000043</td>
+      <td>0.018179</td>
+      <td>0.000113</td>
       <td>193.0</td>
       <td>True</td>
     </tr>
@@ -172,8 +148,8 @@ sf.head()
       <td>Var3_is_bad</td>
       <td>missing_indicator</td>
       <td>False</td>
-      <td>0.019238</td>
-      <td>0.000045</td>
+      <td>0.018146</td>
+      <td>0.000116</td>
       <td>193.0</td>
       <td>True</td>
     </tr>
@@ -182,8 +158,8 @@ sf.head()
       <td>Var4_is_bad</td>
       <td>missing_indicator</td>
       <td>False</td>
-      <td>0.017983</td>
-      <td>0.000136</td>
+      <td>0.018424</td>
+      <td>0.000091</td>
       <td>193.0</td>
       <td>True</td>
     </tr>
@@ -192,8 +168,8 @@ sf.head()
       <td>Var5_is_bad</td>
       <td>missing_indicator</td>
       <td>False</td>
-      <td>0.015505</td>
-      <td>0.001002</td>
+      <td>0.018589</td>
+      <td>0.000079</td>
       <td>193.0</td>
       <td>True</td>
     </tr>
@@ -212,6 +188,428 @@ sf.shape
 
 
     (519, 7)
+
+
+
+
+```python
+sf.loc[sf["y_aware"], :]
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>variable</th>
+      <th>treatment</th>
+      <th>y_aware</th>
+      <th>PearsonR</th>
+      <th>significance</th>
+      <th>vcount</th>
+      <th>recommended</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>366</th>
+      <td>Var191_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>-0.010852</td>
+      <td>0.021195</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>369</th>
+      <td>Var192_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>-0.004734</td>
+      <td>0.314785</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>371</th>
+      <td>Var193_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>0.001687</td>
+      <td>0.720204</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>375</th>
+      <td>Var194_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>-0.007852</td>
+      <td>0.095460</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>379</th>
+      <td>Var195_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>0.003428</td>
+      <td>0.466701</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>382</th>
+      <td>Var196_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>-0.005286</td>
+      <td>0.261701</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>385</th>
+      <td>Var197_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>-0.001359</td>
+      <td>0.772894</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>392</th>
+      <td>Var198_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>-0.001283</td>
+      <td>0.785333</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>395</th>
+      <td>Var199_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>0.003023</td>
+      <td>0.520901</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>397</th>
+      <td>Var200_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>-0.003642</td>
+      <td>0.439325</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>400</th>
+      <td>Var201_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>-0.001239</td>
+      <td>0.792423</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>404</th>
+      <td>Var202_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>-0.007673</td>
+      <td>0.103257</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>406</th>
+      <td>Var203_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>0.002970</td>
+      <td>0.528212</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>410</th>
+      <td>Var204_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>-0.019010</td>
+      <td>0.000054</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>412</th>
+      <td>Var205_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>-0.009283</td>
+      <td>0.048684</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>417</th>
+      <td>Var206_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>-0.000492</td>
+      <td>0.916818</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>425</th>
+      <td>Var207_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>0.003874</td>
+      <td>0.410697</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>430</th>
+      <td>Var208_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>0.002587</td>
+      <td>0.582764</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>434</th>
+      <td>Var210_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>0.003884</td>
+      <td>0.409481</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>437</th>
+      <td>Var211_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>0.003169</td>
+      <td>0.501007</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>441</th>
+      <td>Var212_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>-0.000289</td>
+      <td>0.951023</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>446</th>
+      <td>Var213_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>-0.007102</td>
+      <td>0.131521</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>449</th>
+      <td>Var214_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>-0.003642</td>
+      <td>0.439325</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>452</th>
+      <td>Var215_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>-0.001853</td>
+      <td>0.693913</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>455</th>
+      <td>Var216_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>0.005447</td>
+      <td>0.247431</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>461</th>
+      <td>Var217_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>0.000027</td>
+      <td>0.995379</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>463</th>
+      <td>Var218_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>-0.000228</td>
+      <td>0.961437</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>467</th>
+      <td>Var219_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>-0.001743</td>
+      <td>0.711341</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>471</th>
+      <td>Var220_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>-0.001283</td>
+      <td>0.785333</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>474</th>
+      <td>Var221_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>-0.007073</td>
+      <td>0.133099</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>479</th>
+      <td>Var222_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>-0.001283</td>
+      <td>0.785333</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>482</th>
+      <td>Var223_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>-0.016637</td>
+      <td>0.000411</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>487</th>
+      <td>Var224_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>-0.001400</td>
+      <td>0.766240</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>490</th>
+      <td>Var225_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>-0.007331</td>
+      <td>0.119530</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>495</th>
+      <td>Var226_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>-0.010062</td>
+      <td>0.032621</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>504</th>
+      <td>Var227_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>0.006876</td>
+      <td>0.144269</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>509</th>
+      <td>Var228_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>-0.016963</td>
+      <td>0.000315</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>514</th>
+      <td>Var229_logit_code</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>-0.005042</td>
+      <td>0.284303</td>
+      <td>38.0</td>
+      <td>False</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 
 
@@ -251,26 +649,6 @@ sf.loc[numpy.logical_and(sf["recommended"],sf["y_aware"]), :]
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <th>425</th>
-      <td>Var207_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>0.010722</td>
-      <td>0.022909</td>
-      <td>38.0</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>490</th>
-      <td>Var225_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>0.012494</td>
-      <td>0.008026</td>
-      <td>38.0</td>
-      <td>True</td>
-    </tr>
   </tbody>
 </table>
 </div>
@@ -286,7 +664,7 @@ len(model_vars)
 
 
 
-    224
+    231
 
 
 
@@ -353,13 +731,13 @@ cross_frame.head()
       <td>1.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>0.001876</td>
-      <td>0.654472</td>
+      <td>0.007700</td>
+      <td>0.654403</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
-      <td>-0.000671</td>
-      <td>0.568306</td>
+      <td>-0.009832</td>
+      <td>0.568270</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
@@ -377,13 +755,13 @@ cross_frame.head()
       <td>1.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>0.001876</td>
-      <td>0.654472</td>
+      <td>0.010584</td>
+      <td>0.654403</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
-      <td>-0.000671</td>
-      <td>0.568306</td>
+      <td>-0.003556</td>
+      <td>0.568270</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
@@ -401,13 +779,13 @@ cross_frame.head()
       <td>1.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>-0.046118</td>
-      <td>0.053045</td>
+      <td>0.076126</td>
+      <td>0.053534</td>
       <td>0</td>
       <td>0</td>
       <td>1</td>
-      <td>-0.014519</td>
-      <td>0.234440</td>
+      <td>0.022498</td>
+      <td>0.234715</td>
       <td>0</td>
       <td>1</td>
       <td>0</td>
@@ -419,22 +797,22 @@ cross_frame.head()
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>1.0</td>
+      <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>0.013857</td>
-      <td>0.654472</td>
+      <td>-0.104512</td>
+      <td>0.654403</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
-      <td>-0.000938</td>
-      <td>0.568306</td>
+      <td>-0.007813</td>
+      <td>0.195396</td>
+      <td>0</td>
+      <td>0</td>
       <td>1</td>
-      <td>0</td>
-      <td>0</td>
     </tr>
     <tr>
       <th>4</th>
@@ -449,13 +827,13 @@ cross_frame.head()
       <td>1.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>-0.056743</td>
-      <td>0.018659</td>
+      <td>0.010584</td>
+      <td>0.018517</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>-0.000671</td>
-      <td>0.234440</td>
+      <td>0.004001</td>
+      <td>0.234715</td>
       <td>0</td>
       <td>1</td>
       <td>0</td>
@@ -515,38 +893,38 @@ cv.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>0.073171</td>
-      <td>0.000892</td>
-      <td>0.073926</td>
-      <td>0.001910</td>
+      <td>0.073238</td>
+      <td>0.001498</td>
+      <td>0.073914</td>
+      <td>0.003063</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>0.073293</td>
-      <td>0.000770</td>
-      <td>0.073304</td>
-      <td>0.001517</td>
+      <td>0.073404</td>
+      <td>0.001476</td>
+      <td>0.073404</td>
+      <td>0.002952</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.073293</td>
-      <td>0.000770</td>
-      <td>0.073304</td>
-      <td>0.001517</td>
+      <td>0.073382</td>
+      <td>0.001463</td>
+      <td>0.073404</td>
+      <td>0.002952</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>0.073304</td>
-      <td>0.000758</td>
-      <td>0.073304</td>
-      <td>0.001517</td>
+      <td>0.073404</td>
+      <td>0.001476</td>
+      <td>0.073404</td>
+      <td>0.002952</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>0.073282</td>
-      <td>0.000781</td>
-      <td>0.073304</td>
-      <td>0.001517</td>
+      <td>0.073415</td>
+      <td>0.001460</td>
+      <td>0.073404</td>
+      <td>0.002952</td>
     </tr>
   </tbody>
 </table>
@@ -591,11 +969,25 @@ best
   </thead>
   <tbody>
     <tr>
-      <th>57</th>
-      <td>0.071116</td>
-      <td>0.000884</td>
-      <td>0.072526</td>
-      <td>0.001948</td>
+      <th>42</th>
+      <td>0.071763</td>
+      <td>0.001751</td>
+      <td>0.072894</td>
+      <td>0.002462</td>
+    </tr>
+    <tr>
+      <th>49</th>
+      <td>0.071386</td>
+      <td>0.001583</td>
+      <td>0.072894</td>
+      <td>0.002368</td>
+    </tr>
+    <tr>
+      <th>50</th>
+      <td>0.071408</td>
+      <td>0.001580</td>
+      <td>0.072894</td>
+      <td>0.002368</td>
     </tr>
   </tbody>
 </table>
@@ -612,7 +1004,7 @@ ntree
 
 
 
-    57
+    42
 
 
 
@@ -627,7 +1019,7 @@ fitter
 
     XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
                   colsample_bytree=1, gamma=0, learning_rate=0.1, max_delta_step=0,
-                  max_depth=3, min_child_weight=1, missing=None, n_estimators=57,
+                  max_depth=3, min_child_weight=1, missing=None, n_estimators=42,
                   n_jobs=1, nthread=None, objective='binary:logistic',
                   random_state=0, reg_alpha=0, reg_lambda=1, scale_pos_weight=1,
                   seed=None, silent=True, subsample=1)
@@ -672,13 +1064,13 @@ wvpy.util.plot_roc(pf["pred"], pf["churn"])
 ```
 
 
-![png](output_29_0.png)
+![png](output_31_0.png)
 
 
 
 
 
-    0.7384554381545494
+    0.7429389347774557
 
 
 
