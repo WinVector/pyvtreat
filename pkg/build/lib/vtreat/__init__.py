@@ -183,7 +183,6 @@ class binomial_outcome_treatment():
             y = X[self.outcomename_]
         if not X.shape[0]==len(y):
             raise Exception("X.shape[0] should equal len(y)")
-        y = numpy.asarray(y==self.outcometarget_, dtype=numpy.float64)
         if numpy.isnan(y).sum()>0:
             raise Exception("y should not have any missing/NA/NaN values")
         if not sample_weight is None:
@@ -194,6 +193,7 @@ class binomial_outcome_treatment():
         self.plan_ = vtreat_impl.fit_binomial_outcome_treatment(
                 X = X, 
                 y = y, 
+                outcometarget = self.outcometarget_,
                 sample_weight = sample_weight,
                 varlist = self.varlist_, 
                 outcomename = self.outcomename_,

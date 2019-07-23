@@ -138,7 +138,8 @@ class y_aware_mapped_code(mapped_code):
                  dervied_column_name,
                  treatment,
                  code_book,
-                 refitter):
+                 refitter,
+                 extra_args):
         mapped_code.__init__(self, 
                              incoming_column_name = incoming_column_name, 
                              dervied_column_name = dervied_column_name,
@@ -146,6 +147,7 @@ class y_aware_mapped_code(mapped_code):
                              code_book = code_book)
         self.need_cross_treatment_ = True
         self.refitter_ = refitter
+        self.extra_args_ = extra_args
 
 
 def grouped_by_x_statistics(x, y):
@@ -177,7 +179,10 @@ def grouped_by_x_statistics(x, y):
     return(sf)
     
 
-def fit_regression_impact_code(incoming_column_name, x, y):
+def fit_regression_impact_code(*,
+                               incoming_column_name, 
+                               x, y,
+                               extra_args):
     sf = grouped_by_x_statistics(x, y)
     if sf.shape[0]<=1:
         return(None)
@@ -185,14 +190,18 @@ def fit_regression_impact_code(incoming_column_name, x, y):
     sf = sf.loc[:, ["x", "_impact_code"]].copy()
     newcol = incoming_column_name + "_impact_code"
     sf.columns = [ incoming_column_name, newcol ]
-    return(y_aware_mapped_code(incoming_column_name, 
-                       newcol,
-                       treatment = "impact_code",
-                       code_book = sf,
-                       refitter = fit_regression_impact_code))
+    return(y_aware_mapped_code(incoming_column_name = incoming_column_name, 
+                               dervied_column_name = newcol,
+                               treatment = "impact_code",
+                               code_book = sf,
+                               refitter = fit_regression_impact_code,
+                               extra_args = extra_args))
 
 
-def fit_regression_deviance_code(incoming_column_name, x, y):
+def fit_regression_deviation_code(*,
+                                 incoming_column_name, 
+                                 x, y,
+                                 extra_args):
     sf = grouped_by_x_statistics(x, y)
     if sf.shape[0]<=1:
         return(None)
@@ -200,25 +209,33 @@ def fit_regression_deviance_code(incoming_column_name, x, y):
     sf = sf.loc[:, ["x", "_deviance_code"]].copy()
     newcol = incoming_column_name + "_deviance_code"
     sf.columns = [ incoming_column_name, newcol ]
-    return(y_aware_mapped_code(incoming_column_name, 
-                           newcol,
-                           treatment = "deviance_code",
-                           code_book = sf,
-                           refitter = fit_regression_deviance_code))
+    return(y_aware_mapped_code(incoming_column_name = incoming_column_name, 
+                               dervied_column_name = newcol,
+                               treatment = "deviance_code",
+                               code_book = sf,
+                               refitter = fit_regression_deviation_code,
+                               extra_args = extra_args))
 
-def fit_binomial_impact_code(incoming_column_name, x, y):
+def fit_binomial_impact_code(*,
+                             incoming_column_name, 
+                             x, y,
+                             extra_args):
+    outcometarget = extra_args["outcometarget"],
+    var_suffix = extra_args["var_suffix"]
+    y = numpy.asarray(y==outcometarget, dtype=numpy.float64)
     sf = grouped_by_x_statistics(x, y)
     if sf.shape[0]<=1:
         return(None)
     sf["_logit_code"] = numpy.log(sf["_hest"]) - numpy.log(sf["_gm"])
     sf = sf.loc[:, ["x", "_logit_code"]].copy()
-    newcol = incoming_column_name + "_logit_code"
+    newcol = incoming_column_name + "_logit_code" + var_suffix
     sf.columns = [ incoming_column_name, newcol ]
-    return(y_aware_mapped_code(incoming_column_name, 
-                           newcol,
-                           treatment = "logit_code",
-                           code_book = sf,
-                           refitter = fit_binomial_impact_code))
+    return(y_aware_mapped_code(incoming_column_name = incoming_column_name, 
+                               dervied_column_name = newcol,
+                               treatment = "logit_code",
+                               code_book = sf,
+                               refitter = fit_binomial_impact_code,
+                               extra_args = extra_args))
 
 
 class indicator_code(var_transform):
@@ -324,10 +341,12 @@ def fit_numeric_outcome_treatment(
     for vi in catlist:
         xforms = xforms + [ fit_regression_impact_code(incoming_column_name = vi, 
                                                        x = numpy.asarray(X[vi]), 
-                                                       y = y) ]
-        xforms = xforms + [ fit_regression_deviance_code(incoming_column_name = vi, 
+                                                       y = y,
+                                                       extra_args = None) ]
+        xforms = xforms + [ fit_regression_deviation_code(incoming_column_name = vi, 
                                                          x = numpy.asarray(X[vi]), 
-                                                         y = y) ]
+                                                         y = y,
+                                                         extra_args = None) ]
         xforms = xforms + [ fit_regression_prevalence_code(incoming_column_name = vi, 
                                                        x = numpy.asarray(X[vi])) ]
         xforms = xforms + [ fit_indicator_code(incoming_column_name = vi, 
@@ -343,6 +362,7 @@ def fit_numeric_outcome_treatment(
 def fit_binomial_outcome_treatment(
         *,
         X, y,
+        outcometarget,
         sample_weight,
         varlist, 
         outcomename,
@@ -370,10 +390,12 @@ def fit_binomial_outcome_treatment(
         if summaryi["varies"] and summaryi["has_range"]:
             xforms = xforms + [ clean_numeric(incoming_column_name = vi, 
                                               replacement_value = summaryi["mean"]) ]
+    extra_args = { "outcometarget":outcometarget, "var_suffix":"" }
     for vi in catlist:
         xforms = xforms + [ fit_binomial_impact_code(incoming_column_name = vi, 
                                                        x = numpy.asarray(X[vi]), 
-                                                       y = y) ]
+                                                       y = y,
+                                                       extra_args = extra_args) ]
         xforms = xforms + [ fit_regression_prevalence_code(incoming_column_name = vi, 
                                                        x = numpy.asarray(X[vi])) ]
         xforms = xforms + [ fit_indicator_code(incoming_column_name = vi, 
@@ -417,10 +439,13 @@ def cross_patch_refit_y_aware_cols(
              continue
          incoming_column_name = xf.incoming_column_name_
          dervied_column_name = xf.dervied_column_names_[0]
-         patches = [ xf.refitter_(
-                 incoming_column_name,
-                 X[incoming_column_name][cp["train"]],
-                 y[cp["train"]]).transform(X.loc[cp["app"],[incoming_column_name]]) for cp in cross_plan ]
+         patches = [ 
+            xf.refitter_(
+                 incoming_column_name = incoming_column_name,
+                 x = X[incoming_column_name][cp["train"]],
+                 y = y[cp["train"]],
+                 extra_args = xf.extra_args_).transform(
+                         X.loc[cp["app"],[incoming_column_name]]) for cp in cross_plan ]
          # replace any missing sections with global average (sligth data leak potential)
          vals = pandas.concat([pi for pi in patches if pi is not None], axis = 0)
          avg = numpy.mean(vals[numpy.logical_not(numpy.asarray(vals[dervied_column_name].isnull()))])[0]
