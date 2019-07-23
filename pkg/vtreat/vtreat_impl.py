@@ -408,6 +408,56 @@ def fit_binomial_outcome_treatment(
             })
 
 
+def fit_multinomial_outcome_treatment(
+        *,
+        X, y,
+        sample_weight,
+        varlist, 
+        outcomename,
+        cols_to_copy,
+        plan):
+    if (varlist is None) or (len(varlist)<=0):
+        varlist = [ co for co in X.columns ]
+    copy_set = set(cols_to_copy)
+    varlist = [ co for co in varlist if (not (co in copy_set)) ]    
+    xforms = []
+    n = X.shape[0]
+    all_null = []
+    for vi in varlist:
+        n_null = sum(X[vi].isnull())
+        if n_null>=n:
+            all_null = all_null + [vi]
+        if (n_null>0) and (n_null<n):
+            xforms = xforms + [ indicate_missing(incoming_column_name = vi, 
+                                                dervied_column_name = vi + "_is_bad") ]
+    outcomes = [ oi for oi in set(y) ]
+    varlist = [ co for co in varlist if (not (co in set(all_null))) ]
+    numlist = [ co for co in varlist if can_convert_v_to_numeric(X[co]) ]
+    catlist = [ co for co in varlist if not co in set(numlist) ]
+    for vi in numlist:
+        summaryi = characterize_numeric(X[vi])
+        if summaryi["varies"] and summaryi["has_range"]:
+            xforms = xforms + [ clean_numeric(incoming_column_name = vi, 
+                                              replacement_value = summaryi["mean"]) ]
+    for vi in catlist:
+        for outcome in outcomes:
+            extra_args = { "outcometarget":outcome, "var_suffix":("_" + str(outcome)) }
+            xforms = xforms + [ fit_binomial_impact_code(incoming_column_name = vi, 
+                                                         x = numpy.asarray(X[vi]), 
+                                                         y = y,
+                                                         extra_args = extra_args) ]
+        xforms = xforms + [ fit_regression_prevalence_code(incoming_column_name = vi, 
+                                                       x = numpy.asarray(X[vi])) ]
+        xforms = xforms + [ fit_indicator_code(incoming_column_name = vi, 
+                                               x = numpy.asarray(X[vi])) ]
+    xforms = [ xf for xf in xforms if xf is not None ]
+    return({
+            "outcomename":outcomename,
+            "cols_to_copy":cols_to_copy,
+            "xforms":xforms
+            })
+
+
 def transform_numeric_outcome_treatment(
         *,
         X,
