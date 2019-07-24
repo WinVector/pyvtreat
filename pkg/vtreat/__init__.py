@@ -76,7 +76,7 @@ class numeric_outcome_treatment():
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
-        return(vtreat_impl.transform_numeric_outcome_treatment(
+        return(vtreat_impl.perform_transform(
                 X = X,
                 plan = self.plan_))
     
@@ -170,7 +170,7 @@ class binomial_outcome_treatment():
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
-        return(vtreat_impl.transform_numeric_outcome_treatment(
+        return(vtreat_impl.perform_transform(
                 X = X,
                 plan = self.plan_))
     
@@ -262,7 +262,7 @@ class multinomial_outcome_treatment():
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
-        return(vtreat_impl.transform_numeric_outcome_treatment(
+        return(vtreat_impl.perform_transform(
                 X = X,
                 plan = self.plan_))
     
@@ -304,6 +304,68 @@ class multinomial_outcome_treatment():
                 outcome = y,
                 plan = self.plan_)
         return(cross_frame)
+  
+    def get_params(self, deep=True):
+        return(self.params_.copy())
+    
+    def set_params(self, **params):
+        self.plan = None
+        for a in params:
+            self.params_[a] = params[a]
+
+
+class unsupervised_treatment():
+    """manage an unsupervised treatment plan"""
+    def __init__(self, 
+                 *,
+                 varlist=[],
+                 outcomename,
+                 cols_to_copy=[],
+                 params = {}):
+        if not outcomename in set(cols_to_copy):
+            cols_to_copy = cols_to_copy + [outcomename]
+        self.varlist_ = varlist.copy()
+        self.outcomename_ = outcomename
+        self.cols_to_copy_ = cols_to_copy.copy()
+        self.params_ = params.copy()
+        self.plan_ = None
+
+    def fit(self, X, y=None, 
+            *, 
+            sample_weight=None):
+        if not isinstance(X, pandas.DataFrame):
+            raise Exception("X should be a Pandas DataFrame")
+        if not y is None:
+            raise Exception("y should be None")
+        if not sample_weight is None:
+            raise Exception("doesn't accept sample_weight yest yet")
+        # model for independent transforms
+        self.plan_ = None
+        self.plan_ = vtreat_impl.fit_unsupervised_treatment(
+                X = X, 
+                sample_weight = sample_weight,
+                varlist = self.varlist_, 
+                outcomename = self.outcomename_,
+                cols_to_copy = self.cols_to_copy_,
+                plan = self.plan_
+                )
+        return self
+
+    def transform(self, X):
+        if not isinstance(X, pandas.DataFrame):
+            raise Exception("X should be a Pandas DataFrame")
+        return(vtreat_impl.perform_transform(
+                X = X,
+                plan = self.plan_))
+    
+    def fit_transform(self, X, y=None, 
+                      *, 
+                      sample_weight=None):
+        
+        if not y is None:
+            raise Exception("y should be None")
+        self.fit(X = X, sample_weight = sample_weight)
+        return(self.transform(X))
   
     def get_params(self, deep=True):
         return(self.params_.copy())
