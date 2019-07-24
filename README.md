@@ -763,7 +763,7 @@ Notice we dealt with many problem columns at once, and in a statistically sound 
 Compare to [R solution](https://github.com/WinVector/PDSwR2/blob/master/KDD2009/KDD2009vtreat.md).
 
 
-## Solution
+## Solution Details
 
 Some `vreat` data treatments are “y-aware” (use distribution relations between
 independent variables and the dependent variable).
