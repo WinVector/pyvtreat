@@ -1,9 +1,9 @@
 
 
 [This](https://github.com/WinVector/pyvtreat) is the Python version of the 
-['R' 'vtreat'](http://winvector.github.io/vtreat/) package.
+[`R` `vtreat`](http://winvector.github.io/vtreat/) package.
 
-In each case: 'vtreat' is an data.frame processor/conditioner that
+In each case: `vtreat` is an data.frame processor/conditioner that
 prepares real-world data for predictive modeling in a statistically
 sound manner.
 
@@ -21,10 +21,10 @@ a [Python version of ‘vtreat’]().
 Some operational examples can be found [here](https://github.com/WinVector/pyvtreat/tree/master/Examples).
 
 We are working on new documentation. But for now understand `vtreat` is used by instantiating one of the classes
-'vtreat.numeric_outcome_treatment()', 'vtreat.binomial_outcome_treatment()', or 'vtreat.multinomial_outcome_treatment()'.
-Each of these implements the ['sklearn.pipeline.Pipeline'](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html) interfaces
-expecting a [Pandas Data.Frame](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html) as input.  The 'Pipeline.fit_transform()'
-method implements the powerful [cross-frame](https://cran.r-project.org/web/packages/vtreat/vignettes/vtreatCrossFrames.html) ideas (allowing the same data to be used for 'vtreat' fitting and for later model construction, while
+`vtreat.numeric_outcome_treatment()`, `vtreat.binomial_outcome_treatment()`, or `vtreat.multinomial_outcome_treatment()`.
+Each of these implements the [`sklearn.pipeline.Pipeline`](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html) interfaces
+expecting a [Pandas Data.Frame](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html) as input.  The `Pipeline.fit_transform()`
+method implements the powerful [cross-frame](https://cran.r-project.org/web/packages/vtreat/vignettes/vtreatCrossFrames.html) ideas (allowing the same data to be used for `vtreat` fitting and for later model construction, while
 mitigating nested model bias issues).
 
 ## Background
@@ -36,7 +36,7 @@ generalized additive models) there are *common* data issues that can
 cause modeling to fail. vtreat deals with a number of these in a
 principled and automated fashion.
 
-In particular 'vtreat' emphasizes a concept called “y-aware
+In particular `vtreat` emphasizes a concept called “y-aware
 pre-processing” and implements:
 
   - Treatment of missing values through safe replacement plus an indicator
@@ -88,7 +88,7 @@ To help explain the methods we have prepared some documentation:
 
 ## Solution
 
-Some 'vreat' data treatments are “y-aware” (use distribution relations between
+Some `vreat` data treatments are “y-aware” (use distribution relations between
 independent variables and the dependent variable).
 
 The purpose of ‘vtreat’ library is to reliably prepare data for
@@ -166,7 +166,7 @@ not want to do less.
 Some of our related articles (which should make clear some of our
 motivations, and design decisions):
 
-  - [The 'vtreat' technical paper](https://arxiv.org/abs/1611.09477).
+  - [The `vtreat` technical paper](https://arxiv.org/abs/1611.09477).
   - [Modeling trick: impact coding of categorical variables with many
     levels](http://www.win-vector.com/blog/2012/07/modeling-trick-impact-coding-of-categorical-variables-with-many-levels/)
   - [A bit more on impact
