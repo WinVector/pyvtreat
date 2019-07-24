@@ -906,10 +906,6 @@ motivations, and design decisions):
     classifiers](http://www.win-vector.com/blog/2014/12/a-comment-on-preparing-data-for-classifiers/)
   - [Nina Zumel presenting on
     vtreat](http://www.slideshare.net/ChesterChen/vtreat)
-  - [What is new in the vtreat
-    library?](http://www.win-vector.com/blog/2015/05/what-is-new-in-the-vtreat-library/)
-  - [How do you know if your data has
-    signal?](http://www.win-vector.com/blog/2015/08/how-do-you-know-if-your-data-has-signal/)
 
 
 We intend to add better Python documentation and a certification suite going forward.
