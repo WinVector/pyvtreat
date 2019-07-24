@@ -1,14 +1,27 @@
 
-Compare to [R solution](https://github.com/WinVector/PDSwR2/blob/master/KDD2009/KDD2009vtreat.md).
-!pip install /Users/johnmount/Documents/work/pyvtreat/pkg/dist/vtreat-0.1.tar.gz
-#!pip install https://github.com/WinVector/pyvtreat/raw/master/pkg/dist/vtreat-0.1.tar.gz!pip install /Users/johnmount/Documents/work/wvpy/pkg/dist/wvpy-0.1.tar.gz
-#!pip install https://github.com/WinVector/wvpy/raw/master/pkg/dist/wvpy-0.1.tar.gz
-First read in data
+This is an supervised classification example taken from the KDD 2009 cup.  A copy of the data and details can be found here: [https://github.com/WinVector/PDSwR2/tree/master/KDD2009](https://github.com/WinVector/PDSwR2/tree/master/KDD2009).  The problem was to predict account cancellation ("churn") from very messy data (column names not given, numeric and categorical variables, many missing values, some categorical variables with a large number of possible levels).  In this example we show how to quickly use `vtreat` to prepare the data for modeling.  `vtreat` takes in `Pandas` `DataFrame`s and returns both a treatment plan and a clean `Pandas` `DataFrame` ready for modeling.
+# To install:
+!pip install https://github.com/WinVector/pyvtreat/raw/master/pkg/dist/vtreat-0.1.tar.gz
+!pip install https://github.com/WinVector/wvpy/raw/master/pkg/dist/wvpy-0.1.tar.gz
+Load our packages/modules.
 
 
 ```python
 import pandas
+import xgboost
+import vtreat
+import numpy
+import numpy.random
+import wvpy.util
+```
 
+Read in explanitory variables.
+
+
+```python
+
+
+# data from https://github.com/WinVector/PDSwR2/tree/master/KDD2009
 dir = "../../PracticalDataScienceWithR2nd/PDSwR2/KDD2009/"
 d = pandas.read_csv(dir + 'orange_small_train.data.gz', sep='\t', header=0)
 vars = [c for c in d.columns]
@@ -21,6 +34,8 @@ d.shape
     (50000, 230)
 
 
+
+Read in dependent variable we are trying to predict.
 
 
 ```python
@@ -50,11 +65,11 @@ churn["churn"].value_counts()
 
 
 
-arrange test/train split
+Arrange test/train split.
 
 
 ```python
-import numpy.random
+
 
 n = d.shape[0]
 is_train = numpy.random.uniform(size=n)<=0.9
@@ -69,604 +84,229 @@ d_test = d.loc[is_test, :].copy()
 churn_test = numpy.asarray(churn.loc[is_test, :]["churn"]==1)
 ```
 
-Treat variables
+Take a look at the dependent variables.  They are a mess, many missing values.  Categorical variables that can not be directly used without some re-encoding.
 
 
 ```python
-import vtreat
+d_train.head()
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Var1</th>
+      <th>Var2</th>
+      <th>Var3</th>
+      <th>Var4</th>
+      <th>Var5</th>
+      <th>Var6</th>
+      <th>Var7</th>
+      <th>Var8</th>
+      <th>Var9</th>
+      <th>Var10</th>
+      <th>...</th>
+      <th>Var221</th>
+      <th>Var222</th>
+      <th>Var223</th>
+      <th>Var224</th>
+      <th>Var225</th>
+      <th>Var226</th>
+      <th>Var227</th>
+      <th>Var228</th>
+      <th>Var229</th>
+      <th>Var230</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1526.0</td>
+      <td>7.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>oslk</td>
+      <td>fXVEsaq</td>
+      <td>jySVZNlOJy</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>xb3V</td>
+      <td>RAYp</td>
+      <td>F2FyR07IdsN7I</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>525.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>oslk</td>
+      <td>2Kb5FSF</td>
+      <td>LM8l689qOp</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>fKCe</td>
+      <td>RAYp</td>
+      <td>F2FyR07IdsN7I</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>5236.0</td>
+      <td>7.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>Al6ZaUT</td>
+      <td>NKv4yOc</td>
+      <td>jySVZNlOJy</td>
+      <td>NaN</td>
+      <td>kG3k</td>
+      <td>Qu4f</td>
+      <td>02N6s8f</td>
+      <td>ib5G6X1eUxUn6</td>
+      <td>am7c</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>oslk</td>
+      <td>CE7uk3u</td>
+      <td>LM8l689qOp</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>FSa2</td>
+      <td>RAYp</td>
+      <td>F2FyR07IdsN7I</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1029.0</td>
+      <td>7.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>oslk</td>
+      <td>1J2cvxe</td>
+      <td>LM8l689qOp</td>
+      <td>NaN</td>
+      <td>kG3k</td>
+      <td>FSa2</td>
+      <td>RAYp</td>
+      <td>F2FyR07IdsN7I</td>
+      <td>mj86</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 230 columns</p>
+</div>
+
+
+
+
+```python
+d_train.shape
+```
+
+
+
+
+    (44967, 230)
+
+
+
+Try building a model directly off this data (this will fail).
+
+
+```python
+fitter = xgboost.XGBClassifier(n_estimators=10, max_depth=3, objective='binary:logistic')
+try:
+    fitter.fit(d_train, churn_train)
+except Exception as ex:
+    print(ex)
+```
+
+    DataFrame.dtypes for data must be int, float or bool.
+                    Did not expect the data types in fields Var191, Var192, Var193, Var194, Var195, Var196, Var197, Var198, Var199, Var200, Var201, Var202, Var203, Var204, Var205, Var206, Var207, Var208, Var210, Var211, Var212, Var213, Var214, Var215, Var216, Var217, Var218, Var219, Var220, Var221, Var222, Var223, Var224, Var225, Var226, Var227, Var228, Var229
+
+
+Let's quickly prepare a data frame with none of these issues.
+
+Build our treatment plan, this has the `sklearn.pipeline.Pipeline` interfaces.
 
 
 ```python
 plan = vtreat.binomial_outcome_treatment(outcomename="y", outcometarget=True)
 ```
 
+Use `.fit_transform()` to get a special copy of the treated training data that has cross-validated mitigations againsst nested model bias. We call this a "cross frame." `.fit_transform()` is deliberately a different `DataFrame` than what would be returned by `.fit().transform()` (the `.fit().transform()` would damage the modeling effort due nested model bias, the `.fit_transform()` "cross frame" uses cross-validation techniques similar to "stacking" to mitigate these issues).
+
 
 ```python
 cross_frame = plan.fit_transform(d_train, churn_train)
 ```
 
-
-```python
-sf = plan.score_frame_
-sf.head()
-```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>variable</th>
-      <th>treatment</th>
-      <th>y_aware</th>
-      <th>PearsonR</th>
-      <th>significance</th>
-      <th>vcount</th>
-      <th>recommended</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>Var1_is_bad</td>
-      <td>missing_indicator</td>
-      <td>False</td>
-      <td>0.001885</td>
-      <td>0.688921</td>
-      <td>193.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>Var2_is_bad</td>
-      <td>missing_indicator</td>
-      <td>False</td>
-      <td>0.018179</td>
-      <td>0.000113</td>
-      <td>193.0</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>Var3_is_bad</td>
-      <td>missing_indicator</td>
-      <td>False</td>
-      <td>0.018146</td>
-      <td>0.000116</td>
-      <td>193.0</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>Var4_is_bad</td>
-      <td>missing_indicator</td>
-      <td>False</td>
-      <td>0.018424</td>
-      <td>0.000091</td>
-      <td>193.0</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>Var5_is_bad</td>
-      <td>missing_indicator</td>
-      <td>False</td>
-      <td>0.018589</td>
-      <td>0.000079</td>
-      <td>193.0</td>
-      <td>True</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-
-```python
-sf.shape
-```
-
-
-
-
-    (519, 7)
-
-
-
-
-```python
-sf.loc[sf["y_aware"], :]
-```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>variable</th>
-      <th>treatment</th>
-      <th>y_aware</th>
-      <th>PearsonR</th>
-      <th>significance</th>
-      <th>vcount</th>
-      <th>recommended</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>366</th>
-      <td>Var191_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>-0.010852</td>
-      <td>0.021195</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>369</th>
-      <td>Var192_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>-0.004734</td>
-      <td>0.314785</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>371</th>
-      <td>Var193_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>0.001687</td>
-      <td>0.720204</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>375</th>
-      <td>Var194_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>-0.007852</td>
-      <td>0.095460</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>379</th>
-      <td>Var195_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>0.003428</td>
-      <td>0.466701</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>382</th>
-      <td>Var196_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>-0.005286</td>
-      <td>0.261701</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>385</th>
-      <td>Var197_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>-0.001359</td>
-      <td>0.772894</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>392</th>
-      <td>Var198_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>-0.001283</td>
-      <td>0.785333</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>395</th>
-      <td>Var199_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>0.003023</td>
-      <td>0.520901</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>397</th>
-      <td>Var200_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>-0.003642</td>
-      <td>0.439325</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>400</th>
-      <td>Var201_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>-0.001239</td>
-      <td>0.792423</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>404</th>
-      <td>Var202_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>-0.007673</td>
-      <td>0.103257</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>406</th>
-      <td>Var203_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>0.002970</td>
-      <td>0.528212</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>410</th>
-      <td>Var204_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>-0.019010</td>
-      <td>0.000054</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>412</th>
-      <td>Var205_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>-0.009283</td>
-      <td>0.048684</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>417</th>
-      <td>Var206_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>-0.000492</td>
-      <td>0.916818</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>425</th>
-      <td>Var207_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>0.003874</td>
-      <td>0.410697</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>430</th>
-      <td>Var208_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>0.002587</td>
-      <td>0.582764</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>434</th>
-      <td>Var210_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>0.003884</td>
-      <td>0.409481</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>437</th>
-      <td>Var211_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>0.003169</td>
-      <td>0.501007</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>441</th>
-      <td>Var212_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>-0.000289</td>
-      <td>0.951023</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>446</th>
-      <td>Var213_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>-0.007102</td>
-      <td>0.131521</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>449</th>
-      <td>Var214_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>-0.003642</td>
-      <td>0.439325</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>452</th>
-      <td>Var215_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>-0.001853</td>
-      <td>0.693913</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>455</th>
-      <td>Var216_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>0.005447</td>
-      <td>0.247431</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>461</th>
-      <td>Var217_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>0.000027</td>
-      <td>0.995379</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>463</th>
-      <td>Var218_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>-0.000228</td>
-      <td>0.961437</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>467</th>
-      <td>Var219_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>-0.001743</td>
-      <td>0.711341</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>471</th>
-      <td>Var220_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>-0.001283</td>
-      <td>0.785333</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>474</th>
-      <td>Var221_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>-0.007073</td>
-      <td>0.133099</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>479</th>
-      <td>Var222_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>-0.001283</td>
-      <td>0.785333</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>482</th>
-      <td>Var223_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>-0.016637</td>
-      <td>0.000411</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>487</th>
-      <td>Var224_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>-0.001400</td>
-      <td>0.766240</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>490</th>
-      <td>Var225_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>-0.007331</td>
-      <td>0.119530</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>495</th>
-      <td>Var226_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>-0.010062</td>
-      <td>0.032621</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>504</th>
-      <td>Var227_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>0.006876</td>
-      <td>0.144269</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>509</th>
-      <td>Var228_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>-0.016963</td>
-      <td>0.000315</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>514</th>
-      <td>Var229_logit_code</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>-0.005042</td>
-      <td>0.284303</td>
-      <td>38.0</td>
-      <td>False</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-
-```python
-sf.loc[numpy.logical_and(sf["recommended"],sf["y_aware"]), :]
-```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>variable</th>
-      <th>treatment</th>
-      <th>y_aware</th>
-      <th>PearsonR</th>
-      <th>significance</th>
-      <th>vcount</th>
-      <th>recommended</th>
-    </tr>
-  </thead>
-  <tbody>
-  </tbody>
-</table>
-</div>
-
-
-
-
-```python
-model_vars = numpy.asarray(sf["variable"][sf["recommended"]])
-len(model_vars)
-```
-
-
-
-
-    231
-
-
+Take a look at the new data.  This frame is guaranteed to be all numeric with no missing values.
 
 
 ```python
@@ -731,13 +371,13 @@ cross_frame.head()
       <td>1.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>0.007700</td>
-      <td>0.654403</td>
+      <td>0.000361</td>
+      <td>0.653034</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
-      <td>-0.009832</td>
-      <td>0.568270</td>
+      <td>-0.001351</td>
+      <td>0.568350</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
@@ -755,13 +395,13 @@ cross_frame.head()
       <td>1.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>0.010584</td>
-      <td>0.654403</td>
+      <td>-0.015897</td>
+      <td>0.653034</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
-      <td>-0.003556</td>
-      <td>0.568270</td>
+      <td>-0.005008</td>
+      <td>0.568350</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
@@ -779,13 +419,13 @@ cross_frame.head()
       <td>1.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>0.076126</td>
-      <td>0.053534</td>
+      <td>0.032316</td>
+      <td>0.054017</td>
       <td>0</td>
       <td>0</td>
       <td>1</td>
-      <td>0.022498</td>
-      <td>0.234715</td>
+      <td>0.009257</td>
+      <td>0.233794</td>
       <td>0</td>
       <td>1</td>
       <td>0</td>
@@ -797,22 +437,22 @@ cross_frame.head()
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>0.0</td>
+      <td>1.0</td>
       <td>0.0</td>
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>-0.104512</td>
-      <td>0.654403</td>
+      <td>-0.006761</td>
+      <td>0.653034</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
-      <td>-0.007813</td>
-      <td>0.195396</td>
-      <td>0</td>
-      <td>0</td>
+      <td>0.008817</td>
+      <td>0.568350</td>
       <td>1</td>
+      <td>0</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>4</th>
@@ -827,16 +467,16 @@ cross_frame.head()
       <td>1.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>0.010584</td>
-      <td>0.018517</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0.004001</td>
-      <td>0.234715</td>
-      <td>0</td>
+      <td>0.000361</td>
+      <td>0.653034</td>
       <td>1</td>
       <td>0</td>
+      <td>0</td>
+      <td>-0.001308</td>
+      <td>0.196322</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
     </tr>
   </tbody>
 </table>
@@ -847,12 +487,35 @@ cross_frame.head()
 
 
 ```python
-import xgboost
+cross_frame.shape
 ```
 
 
-```python
 
+
+    (44967, 519)
+
+
+
+Pick a recommended subset of the new derived variables.
+
+
+```python
+model_vars = numpy.asarray(plan.score_frame_["variable"][plan.score_frame_["recommended"]])
+len(model_vars)
+```
+
+
+
+
+    230
+
+
+
+Fit the model
+
+
+```python
 fd = xgboost.DMatrix(data=cross_frame.loc[:, model_vars], label=churn_train)
 x_parameters = {"max_depth":3, "objective":'binary:logistic'}
 cv = xgboost.cv(x_parameters, fd, num_boost_round=100, verbose_eval=False)
@@ -893,38 +556,38 @@ cv.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>0.073238</td>
-      <td>0.001498</td>
-      <td>0.073914</td>
-      <td>0.003063</td>
+      <td>0.073521</td>
+      <td>0.000357</td>
+      <td>0.074188</td>
+      <td>0.000737</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>0.073404</td>
-      <td>0.001476</td>
-      <td>0.073404</td>
-      <td>0.002952</td>
+      <td>0.073743</td>
+      <td>0.000338</td>
+      <td>0.073743</td>
+      <td>0.000677</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.073382</td>
-      <td>0.001463</td>
-      <td>0.073404</td>
-      <td>0.002952</td>
+      <td>0.073743</td>
+      <td>0.000338</td>
+      <td>0.073743</td>
+      <td>0.000677</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>0.073404</td>
-      <td>0.001476</td>
-      <td>0.073404</td>
-      <td>0.002952</td>
+      <td>0.073743</td>
+      <td>0.000338</td>
+      <td>0.073743</td>
+      <td>0.000677</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>0.073415</td>
-      <td>0.001460</td>
-      <td>0.073404</td>
-      <td>0.002952</td>
+      <td>0.073743</td>
+      <td>0.000338</td>
+      <td>0.073743</td>
+      <td>0.000677</td>
     </tr>
   </tbody>
 </table>
@@ -969,25 +632,11 @@ best
   </thead>
   <tbody>
     <tr>
-      <th>42</th>
-      <td>0.071763</td>
-      <td>0.001751</td>
-      <td>0.072894</td>
-      <td>0.002462</td>
-    </tr>
-    <tr>
-      <th>49</th>
-      <td>0.071386</td>
-      <td>0.001583</td>
-      <td>0.072894</td>
-      <td>0.002368</td>
-    </tr>
-    <tr>
-      <th>50</th>
-      <td>0.071408</td>
-      <td>0.001580</td>
-      <td>0.072894</td>
-      <td>0.002368</td>
+      <th>92</th>
+      <td>0.070241</td>
+      <td>0.00048</td>
+      <td>0.073031</td>
+      <td>0.000816</td>
     </tr>
   </tbody>
 </table>
@@ -1004,7 +653,7 @@ ntree
 
 
 
-    42
+    92
 
 
 
@@ -1019,7 +668,7 @@ fitter
 
     XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
                   colsample_bytree=1, gamma=0, learning_rate=0.1, max_delta_step=0,
-                  max_depth=3, min_child_weight=1, missing=None, n_estimators=42,
+                  max_depth=3, min_child_weight=1, missing=None, n_estimators=92,
                   n_jobs=1, nthread=None, objective='binary:logistic',
                   random_state=0, reg_alpha=0, reg_lambda=1, scale_pos_weight=1,
                   seed=None, silent=True, subsample=1)
@@ -1034,10 +683,14 @@ model = fitter.fit(cross_frame.loc[:, model_vars], churn_train)
 
 ```
 
+Apply the data transform to our held-out data.
+
 
 ```python
 test_processed = plan.transform(d_test)
 ```
+
+Plot the quality of the model score on the held-out data.  This AUC is not great, but in the ballpark of the original contest winners.
 
 
 ```python
@@ -1055,31 +708,20 @@ pf["pred"] = preds[:, 1]
 
 
 ```python
-import wvpy.util
-```
-
-
-```python
 wvpy.util.plot_roc(pf["pred"], pf["churn"])
 ```
 
 
-![png](output_31_0.png)
+![png](output_39_0.png)
 
 
 
 
 
-    0.7429389347774557
+    0.7391688468311339
 
 
 
+Notice we dealt with many problem columns at once, and in a statistically sound manner. More on the `vtreat` package for Python can be found here: [https://github.com/WinVector/pyvtreat](https://github.com/WinVector/pyvtreat).  Details on the `R` version can be found here: [https://github.com/WinVector/vtreat](https://github.com/WinVector/vtreat).
 
-```python
-
-```
-
-
-```python
-
-```
+Compare to [R solution](https://github.com/WinVector/PDSwR2/blob/master/KDD2009/KDD2009vtreat.md).
