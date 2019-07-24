@@ -11,7 +11,7 @@ For more detail please see here: [arXiv:1611.09477
 stat.AP](https://arxiv.org/abs/1611.09477).
 
 ‘vtreat’ is supplied by [Win-Vector LLC](http://www.win-vector.com)
-under a GPL-2 | GPL-3 license, without warranty. We are also developing
+under a [BSD 3-clause license](LICENSE), without warranty. We are also developing
 a [Python version of ‘vtreat’]().
 
 ![](https://github.com/WinVector/vtreat/raw/master/tools/vtreat.png)
