@@ -529,7 +529,7 @@ def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
             if pi is None:
                 continue
             cp = cross_plan[i]
-            res.loc[cp["app"], derived_column_name] = numpy.asarray(pi)
+            res.loc[cp["app"], derived_column_name] = numpy.asarray(pi).reshape((len(pi)))
         res.loc[res[derived_column_name].isnull(), derived_column_name] = avg
     return res
 
