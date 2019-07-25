@@ -324,6 +324,8 @@ def fit_numeric_outcome_treatment(
                 fit_indicator_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
             ]
     xforms = [xf for xf in xforms if xf is not None]
+    if len(xforms)<=0:
+        raise Exception("no variables created")
     return {"outcome_name": outcome_name, "cols_to_copy": cols_to_copy, "xforms": xforms}
 
 
@@ -381,6 +383,8 @@ def fit_binomial_outcome_treatment(
                 fit_indicator_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
             ]
     xforms = [xf for xf in xforms if xf is not None]
+    if len(xforms)<=0:
+        raise Exception("no variables created")
     return {"outcome_name": outcome_name, "cols_to_copy": cols_to_copy, "xforms": xforms}
 
 
@@ -440,6 +444,8 @@ def fit_multinomial_outcome_treatment(
                 fit_indicator_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
             ]
     xforms = [xf for xf in xforms if xf is not None]
+    if len(xforms)<=0:
+        raise Exception("no variables created")
     return {"outcome_name": outcome_name, "cols_to_copy": cols_to_copy, "xforms": xforms}
 
 
@@ -486,6 +492,8 @@ def fit_unsupervised_treatment(
                 fit_indicator_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
             ]
     xforms = [xf for xf in xforms if xf is not None]
+    if len(xforms)<=0:
+        raise Exception("no variables created")
     return {"outcome_name": outcome_name, "cols_to_copy": cols_to_copy, "xforms": xforms}
 
 
@@ -500,6 +508,8 @@ def perform_transform(*, x, transform):
     if len(to_copy) > 0:
         cp = x.loc[:, to_copy].copy()
         new_frames = [cp] + new_frames
+    if len(new_frames)<=0:
+        raise Exception("no columns transformed")
     res = pandas.concat(new_frames, axis=1)
     res.reset_index(inplace=True, drop=True)
     return res
@@ -514,6 +524,8 @@ def limit_to_appropriate_columns(*, res, transform):
     else:
         to_take = set([ci for ci in transform.score_frame_['variable'][transform.score_frame_['has_range']]])
     cols_to_keep = [ci for ci in cols if ci in to_copy or ci in to_take]
+    if len(cols_to_keep)<=0:
+        raise Exception("no columns retained")
     return res[cols_to_keep]
 
 
