@@ -10,8 +10,8 @@
     Requirement already satisfied: pandas in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from vtreat==0.1) (0.24.2)
     Requirement already satisfied: statistics in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from vtreat==0.1) (1.0.3.5)
     Requirement already satisfied: scipy in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from vtreat==0.1) (1.2.1)
-    Requirement already satisfied: python-dateutil>=2.5.0 in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from pandas->vtreat==0.1) (2.8.0)
     Requirement already satisfied: pytz>=2011k in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from pandas->vtreat==0.1) (2019.1)
+    Requirement already satisfied: python-dateutil>=2.5.0 in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from pandas->vtreat==0.1) (2.8.0)
     Requirement already satisfied: docutils>=0.3 in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from statistics->vtreat==0.1) (0.14)
     Requirement already satisfied: six>=1.5 in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from python-dateutil>=2.5.0->pandas->vtreat==0.1) (1.12.0)
     Building wheels for collected packages: vtreat
@@ -27,6 +27,40 @@
 
 
 ```python
+!pip install /Users/johnmount/Documents/work/wvpy/pkg/dist/wvpy-0.1.tar.gz
+#!pip install https://github.com/WinVector/wvpy/raw/master/pkg/dist/wvpy-0.1.tar.gz
+```
+
+    Processing /Users/johnmount/Documents/work/wvpy/pkg/dist/wvpy-0.1.tar.gz
+    Requirement already satisfied: statistics in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from wvpy==0.1) (1.0.3.5)
+    Requirement already satisfied: numpy in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from wvpy==0.1) (1.16.4)
+    Requirement already satisfied: matplotlib in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from wvpy==0.1) (3.1.0)
+    Requirement already satisfied: sklearn in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from wvpy==0.1) (0.0)
+    Requirement already satisfied: pandas in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from wvpy==0.1) (0.24.2)
+    Requirement already satisfied: docutils>=0.3 in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from statistics->wvpy==0.1) (0.14)
+    Requirement already satisfied: cycler>=0.10 in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from matplotlib->wvpy==0.1) (0.10.0)
+    Requirement already satisfied: kiwisolver>=1.0.1 in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from matplotlib->wvpy==0.1) (1.1.0)
+    Requirement already satisfied: pyparsing!=2.0.4,!=2.1.2,!=2.1.6,>=2.0.1 in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from matplotlib->wvpy==0.1) (2.4.0)
+    Requirement already satisfied: python-dateutil>=2.1 in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from matplotlib->wvpy==0.1) (2.8.0)
+    Requirement already satisfied: scikit-learn in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from sklearn->wvpy==0.1) (0.21.2)
+    Requirement already satisfied: pytz>=2011k in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from pandas->wvpy==0.1) (2019.1)
+    Requirement already satisfied: six in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from cycler>=0.10->matplotlib->wvpy==0.1) (1.12.0)
+    Requirement already satisfied: setuptools in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from kiwisolver>=1.0.1->matplotlib->wvpy==0.1) (41.0.1)
+    Requirement already satisfied: scipy>=0.17.0 in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from scikit-learn->sklearn->wvpy==0.1) (1.2.1)
+    Requirement already satisfied: joblib>=0.11 in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from scikit-learn->sklearn->wvpy==0.1) (0.13.2)
+    Building wheels for collected packages: wvpy
+      Building wheel for wvpy (setup.py) ... [?25ldone
+    [?25h  Stored in directory: /Users/johnmount/Library/Caches/pip/wheels/28/4c/d6/62fecbbece82266ee38611997d63be527cf60570e11e16c8c9
+    Successfully built wvpy
+    Installing collected packages: wvpy
+      Found existing installation: wvpy 0.1
+        Uninstalling wvpy-0.1:
+          Successfully uninstalled wvpy-0.1
+    Successfully installed wvpy-0.1
+
+
+
+```python
 import vtreat.util
 ```
 
@@ -38,10 +72,10 @@ vtreat.util.k_way_cross_plan(10,4)
 
 
 
-    [{'train': [0, 1, 2, 6, 7, 8, 9], 'app': [3, 4, 5]},
-     {'train': [0, 2, 3, 4, 5, 8, 9], 'app': [1, 6, 7]},
-     {'train': [1, 2, 3, 4, 5, 6, 7, 8], 'app': [0, 9]},
-     {'train': [0, 1, 3, 4, 5, 6, 7, 9], 'app': [2, 8]}]
+    [{'train': [1, 2, 3, 4, 7, 8, 9], 'app': [0, 5, 6]},
+     {'train': [0, 1, 3, 4, 5, 6, 9], 'app': [2, 7, 8]},
+     {'train': [0, 2, 3, 5, 6, 7, 8, 9], 'app': [1, 4]},
+     {'train': [0, 1, 2, 4, 5, 6, 7, 8], 'app': [3, 9]}]
 
 
 
@@ -52,7 +86,8 @@ import vtreat
 
 
 ```python
-plan = vtreat.NumericOutcomeTreatment(outcome_name="y")
+plan = vtreat.NumericOutcomeTreatment(outcome_name="y",
+                                      params=vtreat.vtreat_parameters({'filter_to_recommended':False}))
 ```
 
 
@@ -113,9 +148,9 @@ df2
   <tbody>
     <tr>
       <th>0</th>
-      <td>0.155558</td>
-      <td>0.694439</td>
-      <td>1.557513</td>
+      <td>1.163373</td>
+      <td>-0.068142</td>
+      <td>-1.201239</td>
       <td>foo</td>
       <td>True</td>
       <td>0</td>
@@ -133,11 +168,11 @@ df2
     </tr>
     <tr>
       <th>2</th>
-      <td>0.716563</td>
-      <td>-0.175088</td>
-      <td>0.501894</td>
+      <td>-0.533348</td>
+      <td>-0.895574</td>
+      <td>0.276632</td>
       <td>foo</td>
-      <td>True</td>
+      <td>False</td>
       <td>2</td>
       <td>1</td>
     </tr>
@@ -153,9 +188,9 @@ df2
     </tr>
     <tr>
       <th>4</th>
-      <td>0.815340</td>
-      <td>-0.351145</td>
-      <td>0.698274</td>
+      <td>0.552737</td>
+      <td>0.853020</td>
+      <td>0.253525</td>
       <td>foo</td>
       <td>True</td>
       <td>4</td>
@@ -163,11 +198,11 @@ df2
     </tr>
     <tr>
       <th>5</th>
-      <td>0.460135</td>
-      <td>1.639162</td>
-      <td>-1.947680</td>
+      <td>-0.108254</td>
+      <td>-0.393725</td>
+      <td>0.046050</td>
       <td>foo</td>
-      <td>True</td>
+      <td>False</td>
       <td>5</td>
       <td>1</td>
     </tr>
@@ -183,11 +218,11 @@ df2
     </tr>
     <tr>
       <th>7</th>
-      <td>1.367969</td>
-      <td>-1.191424</td>
-      <td>0.132021</td>
+      <td>-0.057475</td>
+      <td>-0.269963</td>
+      <td>1.667742</td>
       <td>foo</td>
-      <td>True</td>
+      <td>False</td>
       <td>7</td>
       <td>1</td>
     </tr>
@@ -205,7 +240,7 @@ plan.fit(df2, df2["y"])
 
 
 
-    <vtreat.NumericOutcomeTreatment at 0x1a1e693710>
+    <vtreat.NumericOutcomeTreatment at 0x1a21a22e80>
 
 
 
@@ -245,6 +280,7 @@ res
       <th>one</th>
       <th>two</th>
       <th>three</th>
+      <th>five</th>
       <th>four_impact_code</th>
       <th>four_deviance_code</th>
       <th>four_prevalence_code</th>
@@ -262,9 +298,10 @@ res
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.155558</td>
-      <td>0.694439</td>
-      <td>1.557513</td>
+      <td>1.163373</td>
+      <td>-0.068142</td>
+      <td>-1.201239</td>
+      <td>1.0</td>
       <td>0.005407</td>
       <td>2.702036</td>
       <td>0.500</td>
@@ -280,9 +317,10 @@ res
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>0.703113</td>
-      <td>0.123189</td>
-      <td>0.188405</td>
+      <td>0.203407</td>
+      <td>-0.154877</td>
+      <td>0.208542</td>
+      <td>0.4</td>
       <td>0.000000</td>
       <td>3.535675</td>
       <td>0.125</td>
@@ -298,9 +336,10 @@ res
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.716563</td>
-      <td>-0.175088</td>
-      <td>0.501894</td>
+      <td>-0.533348</td>
+      <td>-0.895574</td>
+      <td>0.276632</td>
+      <td>0.0</td>
       <td>0.005407</td>
       <td>2.702036</td>
       <td>0.500</td>
@@ -316,9 +355,10 @@ res
       <td>1.0</td>
       <td>0.0</td>
       <td>1.0</td>
-      <td>0.703113</td>
-      <td>0.123189</td>
-      <td>0.188405</td>
+      <td>0.203407</td>
+      <td>-0.154877</td>
+      <td>0.208542</td>
+      <td>0.4</td>
       <td>0.000000</td>
       <td>3.146585</td>
       <td>0.000</td>
@@ -334,9 +374,10 @@ res
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.815340</td>
-      <td>-0.351145</td>
-      <td>0.698274</td>
+      <td>0.552737</td>
+      <td>0.853020</td>
+      <td>0.253525</td>
+      <td>1.0</td>
       <td>0.005407</td>
       <td>2.702036</td>
       <td>0.500</td>
@@ -352,9 +393,10 @@ res
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.460135</td>
-      <td>1.639162</td>
-      <td>-1.947680</td>
+      <td>-0.108254</td>
+      <td>-0.393725</td>
+      <td>0.046050</td>
+      <td>0.0</td>
       <td>0.005407</td>
       <td>2.702036</td>
       <td>0.500</td>
@@ -370,9 +412,10 @@ res
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>0.703113</td>
-      <td>0.123189</td>
-      <td>0.188405</td>
+      <td>0.203407</td>
+      <td>-0.154877</td>
+      <td>0.208542</td>
+      <td>0.4</td>
       <td>0.000000</td>
       <td>3.535675</td>
       <td>0.125</td>
@@ -388,9 +431,10 @@ res
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>1.367969</td>
-      <td>-1.191424</td>
-      <td>0.132021</td>
+      <td>-0.057475</td>
+      <td>-0.269963</td>
+      <td>1.667742</td>
+      <td>0.0</td>
       <td>0.005407</td>
       <td>2.702036</td>
       <td>0.500</td>
@@ -440,6 +484,7 @@ res2
       <th>one</th>
       <th>two</th>
       <th>three</th>
+      <th>five</th>
       <th>four_impact_code</th>
       <th>four_deviance_code</th>
       <th>four_prevalence_code</th>
@@ -457,11 +502,12 @@ res2
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.155558</td>
-      <td>0.694439</td>
-      <td>1.557513</td>
-      <td>8.582686e-02</td>
-      <td>2.081906</td>
+      <td>1.163373</td>
+      <td>-0.068142</td>
+      <td>-1.201239</td>
+      <td>1.0</td>
+      <td>1.569873e-02</td>
+      <td>1.527853</td>
       <td>0.500</td>
       <td>1</td>
       <td>0</td>
@@ -475,9 +521,10 @@ res2
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>0.703113</td>
-      <td>0.123189</td>
-      <td>0.188405</td>
+      <td>0.203407</td>
+      <td>-0.154877</td>
+      <td>0.208542</td>
+      <td>0.4</td>
       <td>-4.440892e-16</td>
       <td>2.702036</td>
       <td>0.125</td>
@@ -493,9 +540,10 @@ res2
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.716563</td>
-      <td>-0.175088</td>
-      <td>0.501894</td>
+      <td>-0.533348</td>
+      <td>-0.895574</td>
+      <td>0.276632</td>
+      <td>0.0</td>
       <td>1.239231e-02</td>
       <td>3.605690</td>
       <td>0.500</td>
@@ -511,9 +559,10 @@ res2
       <td>1.0</td>
       <td>0.0</td>
       <td>1.0</td>
-      <td>0.703113</td>
-      <td>0.123189</td>
-      <td>0.188405</td>
+      <td>0.203407</td>
+      <td>-0.154877</td>
+      <td>0.208542</td>
+      <td>0.4</td>
       <td>0.000000e+00</td>
       <td>0.000000</td>
       <td>0.000</td>
@@ -529,9 +578,10 @@ res2
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.815340</td>
-      <td>-0.351145</td>
-      <td>0.698274</td>
+      <td>0.552737</td>
+      <td>0.853020</td>
+      <td>0.253525</td>
+      <td>1.0</td>
       <td>1.239231e-02</td>
       <td>3.605690</td>
       <td>0.500</td>
@@ -547,9 +597,10 @@ res2
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.460135</td>
-      <td>1.639162</td>
-      <td>-1.947680</td>
+      <td>-0.108254</td>
+      <td>-0.393725</td>
+      <td>0.046050</td>
+      <td>0.0</td>
       <td>1.410864e-01</td>
       <td>2.986246</td>
       <td>0.500</td>
@@ -565,9 +616,10 @@ res2
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>0.703113</td>
-      <td>0.123189</td>
-      <td>0.188405</td>
+      <td>0.203407</td>
+      <td>-0.154877</td>
+      <td>0.208542</td>
+      <td>0.4</td>
       <td>0.000000e+00</td>
       <td>2.986246</td>
       <td>0.125</td>
@@ -583,11 +635,12 @@ res2
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>1.367969</td>
-      <td>-1.191424</td>
-      <td>0.132021</td>
-      <td>-2.055274e-02</td>
-      <td>2.217581</td>
+      <td>-0.057475</td>
+      <td>-0.269963</td>
+      <td>1.667742</td>
+      <td>0.0</td>
+      <td>1.569873e-02</td>
+      <td>1.527853</td>
       <td>0.500</td>
       <td>1</td>
       <td>0</td>
@@ -634,6 +687,7 @@ plan.transform(df2)
       <th>one</th>
       <th>two</th>
       <th>three</th>
+      <th>five</th>
       <th>four_impact_code</th>
       <th>four_deviance_code</th>
       <th>four_prevalence_code</th>
@@ -651,9 +705,10 @@ plan.transform(df2)
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.155558</td>
-      <td>0.694439</td>
-      <td>1.557513</td>
+      <td>1.163373</td>
+      <td>-0.068142</td>
+      <td>-1.201239</td>
+      <td>1.0</td>
       <td>0.005407</td>
       <td>2.702036</td>
       <td>0.500</td>
@@ -669,9 +724,10 @@ plan.transform(df2)
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>0.703113</td>
-      <td>0.123189</td>
-      <td>0.188405</td>
+      <td>0.203407</td>
+      <td>-0.154877</td>
+      <td>0.208542</td>
+      <td>0.4</td>
       <td>0.000000</td>
       <td>3.535675</td>
       <td>0.125</td>
@@ -687,9 +743,10 @@ plan.transform(df2)
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.716563</td>
-      <td>-0.175088</td>
-      <td>0.501894</td>
+      <td>-0.533348</td>
+      <td>-0.895574</td>
+      <td>0.276632</td>
+      <td>0.0</td>
       <td>0.005407</td>
       <td>2.702036</td>
       <td>0.500</td>
@@ -705,9 +762,10 @@ plan.transform(df2)
       <td>1.0</td>
       <td>0.0</td>
       <td>1.0</td>
-      <td>0.703113</td>
-      <td>0.123189</td>
-      <td>0.188405</td>
+      <td>0.203407</td>
+      <td>-0.154877</td>
+      <td>0.208542</td>
+      <td>0.4</td>
       <td>0.000000</td>
       <td>3.146585</td>
       <td>0.000</td>
@@ -723,9 +781,10 @@ plan.transform(df2)
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.815340</td>
-      <td>-0.351145</td>
-      <td>0.698274</td>
+      <td>0.552737</td>
+      <td>0.853020</td>
+      <td>0.253525</td>
+      <td>1.0</td>
       <td>0.005407</td>
       <td>2.702036</td>
       <td>0.500</td>
@@ -741,9 +800,10 @@ plan.transform(df2)
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.460135</td>
-      <td>1.639162</td>
-      <td>-1.947680</td>
+      <td>-0.108254</td>
+      <td>-0.393725</td>
+      <td>0.046050</td>
+      <td>0.0</td>
       <td>0.005407</td>
       <td>2.702036</td>
       <td>0.500</td>
@@ -759,9 +819,10 @@ plan.transform(df2)
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>0.703113</td>
-      <td>0.123189</td>
-      <td>0.188405</td>
+      <td>0.203407</td>
+      <td>-0.154877</td>
+      <td>0.208542</td>
+      <td>0.4</td>
       <td>0.000000</td>
       <td>3.535675</td>
       <td>0.125</td>
@@ -777,9 +838,10 @@ plan.transform(df2)
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>1.367969</td>
-      <td>-1.191424</td>
-      <td>0.132021</td>
+      <td>-0.057475</td>
+      <td>-0.269963</td>
+      <td>1.667742</td>
+      <td>0.0</td>
       <td>0.005407</td>
       <td>2.702036</td>
       <td>0.500</td>
@@ -822,6 +884,7 @@ plan.score_frame_
       <th>variable</th>
       <th>treatment</th>
       <th>y_aware</th>
+      <th>has_range</th>
       <th>PearsonR</th>
       <th>significance</th>
       <th>vcount</th>
@@ -834,6 +897,7 @@ plan.score_frame_
       <td>one_is_bad</td>
       <td>missing_indicator</td>
       <td>False</td>
+      <td>True</td>
       <td>-0.056344</td>
       <td>0.894579</td>
       <td>5.0</td>
@@ -844,6 +908,7 @@ plan.score_frame_
       <td>two_is_bad</td>
       <td>missing_indicator</td>
       <td>False</td>
+      <td>True</td>
       <td>-0.056344</td>
       <td>0.894579</td>
       <td>5.0</td>
@@ -854,6 +919,7 @@ plan.score_frame_
       <td>three_is_bad</td>
       <td>missing_indicator</td>
       <td>False</td>
+      <td>True</td>
       <td>-0.056344</td>
       <td>0.894579</td>
       <td>5.0</td>
@@ -864,6 +930,7 @@ plan.score_frame_
       <td>four_is_bad</td>
       <td>missing_indicator</td>
       <td>False</td>
+      <td>True</td>
       <td>0.000000</td>
       <td>1.000000</td>
       <td>5.0</td>
@@ -874,6 +941,7 @@ plan.score_frame_
       <td>five_is_bad</td>
       <td>missing_indicator</td>
       <td>False</td>
+      <td>True</td>
       <td>-0.056344</td>
       <td>0.894579</td>
       <td>5.0</td>
@@ -884,9 +952,10 @@ plan.score_frame_
       <td>one</td>
       <td>clean_copy</td>
       <td>False</td>
-      <td>0.669691</td>
-      <td>0.069250</td>
-      <td>3.0</td>
+      <td>True</td>
+      <td>-0.403480</td>
+      <td>0.321572</td>
+      <td>4.0</td>
       <td>False</td>
     </tr>
     <tr>
@@ -894,9 +963,10 @@ plan.score_frame_
       <td>two</td>
       <td>clean_copy</td>
       <td>False</td>
-      <td>-0.294022</td>
-      <td>0.479657</td>
-      <td>3.0</td>
+      <td>True</td>
+      <td>0.066265</td>
+      <td>0.876116</td>
+      <td>4.0</td>
       <td>False</td>
     </tr>
     <tr>
@@ -904,66 +974,84 @@ plan.score_frame_
       <td>three</td>
       <td>clean_copy</td>
       <td>False</td>
-      <td>-0.497608</td>
-      <td>0.209562</td>
-      <td>3.0</td>
-      <td>False</td>
+      <td>True</td>
+      <td>0.736106</td>
+      <td>0.037331</td>
+      <td>4.0</td>
+      <td>True</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>four_impact_code</td>
-      <td>impact_code</td>
+      <td>five</td>
+      <td>clean_copy</td>
+      <td>False</td>
       <td>True</td>
-      <td>-0.182907</td>
-      <td>0.664622</td>
-      <td>1.0</td>
+      <td>-0.450749</td>
+      <td>0.262344</td>
+      <td>4.0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>four_deviance_code</td>
-      <td>deviance_code</td>
+      <td>four_impact_code</td>
+      <td>impact_code</td>
       <td>True</td>
-      <td>0.103305</td>
-      <td>0.807677</td>
+      <td>True</td>
+      <td>0.244261</td>
+      <td>0.559902</td>
       <td>1.0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>10</th>
-      <td>four_prevalence_code</td>
-      <td>prevalance</td>
+      <td>four_deviance_code</td>
+      <td>deviance_code</td>
+      <td>True</td>
+      <td>True</td>
+      <td>0.073842</td>
+      <td>0.862049</td>
+      <td>1.0</td>
       <td>False</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>four_prevalence_code</td>
+      <td>prevalence_code</td>
+      <td>False</td>
+      <td>True</td>
       <td>0.066556</td>
       <td>0.875576</td>
       <td>1.0</td>
       <td>False</td>
     </tr>
     <tr>
-      <th>11</th>
+      <th>12</th>
       <td>four_lev_foo</td>
-      <td>indicator</td>
+      <td>indicator_code</td>
       <td>False</td>
+      <td>True</td>
       <td>0.056344</td>
       <td>0.894579</td>
       <td>3.0</td>
       <td>False</td>
     </tr>
     <tr>
-      <th>12</th>
+      <th>13</th>
       <td>four_lev__NA_</td>
-      <td>indicator</td>
+      <td>indicator_code</td>
       <td>False</td>
+      <td>True</td>
       <td>0.000000</td>
       <td>1.000000</td>
       <td>3.0</td>
       <td>False</td>
     </tr>
     <tr>
-      <th>13</th>
+      <th>14</th>
       <td>four_lev_blog</td>
-      <td>indicator</td>
+      <td>indicator_code</td>
       <td>False</td>
+      <td>True</td>
       <td>-0.082479</td>
       <td>0.846053</td>
       <td>3.0</td>
