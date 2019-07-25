@@ -193,6 +193,7 @@ class MultinomialOutcomeTreatment:
             cols_to_copy = cols_to_copy + [outcome_name]
         self.var_list_ = var_list.copy()
         self.outcome_name_ = outcome_name
+        self.outcomes_ = None
         self.cols_to_copy_ = cols_to_copy.copy()
         self.params_ = params.copy()
         self.plan_ = None
@@ -226,6 +227,7 @@ class MultinomialOutcomeTreatment:
         # model for independent transforms
         self.plan_ = None
         self.score_frame_ = None
+        self.outcomes_ = numpy.unique(y)
         self.plan_ = vtreat_impl.fit_multinomial_outcome_treatment(
             X=X,
             y=y,
@@ -240,9 +242,17 @@ class MultinomialOutcomeTreatment:
             x=X, y=y, res=res, plan=self.plan_, cross_plan=self.cross_plan_
         )
         # use cross_frame to compute variable effects
-        self.score_frame_ = vtreat_impl.score_plan_variables(
-            cross_frame=cross_frame, outcome=y, plan=self.plan_
-        )
+
+        def si(oi):
+            sf = vtreat_impl.score_plan_variables(
+                cross_frame=cross_frame,
+                outcome=numpy.asarray(numpy.asarray(y) == oi, dtype=numpy.float64),
+                plan=self.plan_)
+            sf["outcome_target"] = oi
+            return sf
+        score_frames = [si(oi) for oi in self.outcomes_]
+        self.score_frame_ = pandas.concat(score_frames, axis=0)
+        self.score_frame_.reset_index(inplace=True, drop=True)
         return cross_frame
 
 
