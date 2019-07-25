@@ -21,7 +21,7 @@ a [Python version of ‘vtreat’]().
 Some operational examples can be found [here](https://github.com/WinVector/pyvtreat/tree/master/Examples).
 
 We are working on new documentation. But for now understand `vtreat` is used by instantiating one of the classes
-`vtreat.numeric_outcome_treatment()`, `vtreat.binomial_outcome_treatment()`, or `vtreat.multinomial_outcome_treatment()`.
+`vtreat.NumericOutcomeTreatment`, `vtreat.BinomialOutcomeTreatment`, `vtreat.MultinomialOutcomeTreatment`, or `vtreat.UnsupervisedTreatment`.
 Each of these implements the [`sklearn.pipeline.Pipeline`](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html) interfaces
 expecting a [Pandas Data.Frame](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html) as input.  The `Pipeline.fit_transform()`
 method implements the powerful [cross-frame](https://cran.r-project.org/web/packages/vtreat/vignettes/vtreatCrossFrames.html) ideas (allowing the same data to be used for `vtreat` fitting and for later model construction, while
