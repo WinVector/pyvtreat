@@ -203,9 +203,9 @@ def fit_regression_deviation_code(*, incoming_column_name, x, y, extra_args):
 
 
 def fit_binomial_impact_code(*, incoming_column_name, x, y, extra_args):
-    outcometarget = (extra_args["outcometarget"],)
+    outcome_target = (extra_args["outcome_target"],)
     var_suffix = extra_args["var_suffix"]
-    y = numpy.asarray(y == outcometarget, dtype=numpy.float64)
+    y = numpy.asarray(numpy.asarray(y) == outcome_target, dtype=numpy.float64)
     sf = grouped_by_x_statistics(x, y)
     if sf.shape[0] <= 1:
         return None
@@ -338,7 +338,7 @@ def fit_numeric_outcome_treatment(
             fit_indicator_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
         ]
     xforms = [xf for xf in xforms if xf is not None]
-    return {"outcomename": outcome_name, "cols_to_copy": cols_to_copy, "xforms": xforms}
+    return {"outcome_name": outcome_name, "cols_to_copy": cols_to_copy, "xforms": xforms}
 
 
 def fit_binomial_outcome_treatment(
@@ -372,7 +372,7 @@ def fit_binomial_outcome_treatment(
                     incoming_column_name=vi, replacement_value=summaryi["mean"]
                 )
             ]
-    extra_args = {"outcometarget": outcome_target, "var_suffix": ""}
+    extra_args = {"outcome_target": outcome_target, "var_suffix": ""}
     for vi in cat_list:
         xforms = xforms + [
             fit_binomial_impact_code(
@@ -389,7 +389,7 @@ def fit_binomial_outcome_treatment(
             fit_indicator_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
         ]
     xforms = [xf for xf in xforms if xf is not None]
-    return {"outcomename": outcome_name, "cols_to_copy": cols_to_copy, "xforms": xforms}
+    return {"outcome_name": outcome_name, "cols_to_copy": cols_to_copy, "xforms": xforms}
 
 
 def fit_multinomial_outcome_treatment(
@@ -426,7 +426,7 @@ def fit_multinomial_outcome_treatment(
             ]
     for vi in cat_list:
         for outcome in outcomes:
-            extra_args = {"outcometarget": outcome, "var_suffix": ("_" + str(outcome))}
+            extra_args = {"outcome_target": outcome, "var_suffix": ("_" + str(outcome))}
             xforms = xforms + [
                 fit_binomial_impact_code(
                     incoming_column_name=vi,
@@ -442,7 +442,7 @@ def fit_multinomial_outcome_treatment(
             fit_indicator_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
         ]
     xforms = [xf for xf in xforms if xf is not None]
-    return {"outcomename": outcome_name, "cols_to_copy": cols_to_copy, "xforms": xforms}
+    return {"outcome_name": outcome_name, "cols_to_copy": cols_to_copy, "xforms": xforms}
 
 
 def fit_unsupervised_treatment(
@@ -484,7 +484,7 @@ def fit_unsupervised_treatment(
             fit_indicator_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
         ]
     xforms = [xf for xf in xforms if xf is not None]
-    return {"outcomename": outcome_name, "cols_to_copy": cols_to_copy, "xforms": xforms}
+    return {"outcome_name": outcome_name, "cols_to_copy": cols_to_copy, "xforms": xforms}
 
 
 def perform_transform(*, x, plan):

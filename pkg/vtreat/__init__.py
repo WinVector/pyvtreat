@@ -122,7 +122,7 @@ class BinomialOutcomeTreatment:
             cols_to_copy = cols_to_copy + [outcome_name]
         self.var_list_ = var_list.copy()
         self.outcome_name_ = outcome_name
-        self.outcometarget_ = outcome_target
+        self.outcome_target_ = outcome_target
         self.cols_to_copy_ = cols_to_copy.copy()
         self.params_ = params.copy()
         self.plan_ = None
@@ -159,7 +159,7 @@ class BinomialOutcomeTreatment:
         self.plan_ = vtreat_impl.fit_binomial_outcome_treatment(
             X=X,
             y=y,
-            outcome_target=self.outcometarget_,
+            outcome_target=self.outcome_target_,
             var_list=self.var_list_,
             outcome_name=self.outcome_name_,
             cols_to_copy=self.cols_to_copy_,
@@ -172,7 +172,9 @@ class BinomialOutcomeTreatment:
         )
         # use cross_frame to compute variable effects
         self.score_frame_ = vtreat_impl.score_plan_variables(
-            cross_frame=cross_frame, outcome=y, plan=self.plan_
+            cross_frame=cross_frame,
+            outcome=numpy.asarray(numpy.asarray(y) == self.outcome_target_, dtype=numpy.float64),
+            plan=self.plan_
         )
         return cross_frame
 
