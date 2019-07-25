@@ -489,7 +489,8 @@ def fit_unsupervised_treatment(
     return {"outcome_name": outcome_name, "cols_to_copy": cols_to_copy, "xforms": xforms}
 
 
-def perform_transform(*, x, plan):
+def perform_transform(*, x, transform):
+    plan = transform.plan_
     x = x.reset_index(inplace=False, drop=True)
     new_frames = [xfi.transform(x) for xfi in plan["xforms"]]
     # see if we want to copy over any columns
@@ -504,13 +505,32 @@ def perform_transform(*, x, plan):
     return res
 
 
+def limit_to_appropriate_columns(*, res, transform):
+    plan = transform.plan_
+    to_copy = set(plan["cols_to_copy"])
+    cols = [c for c in res.columns]
+    if transform.params_['filter_to_recommended']:
+        to_take = set([ci for ci in transform.score_frame_['variable'][transform.score_frame_['recommended']]])
+    else:
+        to_take = set([ci for ci in transform.score_frame_['variable'][transform.score_frame_['has_range']]])
+    cols_to_keep = [ci for ci in cols if ci in to_copy or ci in to_take]
+    return res[cols_to_keep]
+
+
+
 # assumes each y-aware variable produces one derived column
 def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
+    incoming_colset = set(x.columns)
+    derived_colset = set(res.columns)
     for xf in plan["xforms"]:
         if not xf.need_cross_treatment_:
             continue
         incoming_column_name = xf.incoming_column_name_
         derived_column_name = xf.derived_column_names_[0]
+        if derived_column_name not in derived_colset:
+            continue
+        if incoming_column_name not in incoming_colset:
+            raise Exception("missing required column " + incoming_column_name)
         patches = [
             xf.refitter_(
                 incoming_column_name=incoming_column_name,

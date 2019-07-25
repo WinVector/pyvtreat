@@ -47,6 +47,7 @@ def vtreat_parameters(user_params=None):
                         'deviance_code',
                         'logit_code',
                         'prevalence_code'}.copy(),
+               'filter_to_recommended':True
               }.copy()
     if user_params is not None:
         pkeys = set(params.keys())
@@ -89,7 +90,10 @@ class NumericOutcomeTreatment:
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
-        return vtreat_impl.perform_transform(x=X, plan=self.plan_)
+        res = vtreat_impl.perform_transform(x=X, transform=self)
+        if self.score_frame_ is not None:
+            res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
+        return res
 
     def fit_transform(self, X, y):
         if not isinstance(X, pandas.DataFrame):
@@ -120,8 +124,8 @@ class NumericOutcomeTreatment:
         )
         # use cross_frame to compute variable effects
         self.score_frame_ = vtreat_impl.score_plan_variables(
-            cross_frame=cross_frame, outcome=y, plan=self.plan_
-        )
+            cross_frame=cross_frame, outcome=y, plan=self.plan_)
+        cross_frame = vtreat_impl.limit_to_appropriate_columns(res = cross_frame, transform = self)
         return cross_frame
 
 
@@ -160,7 +164,10 @@ class BinomialOutcomeTreatment:
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
-        return vtreat_impl.perform_transform(x=X, plan=self.plan_)
+        res = vtreat_impl.perform_transform(x=X, transform=self)
+        if self.score_frame_ is not None:
+            res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
+        return res
 
     def fit_transform(self, X, y):
         if not isinstance(X, pandas.DataFrame):
@@ -195,6 +202,7 @@ class BinomialOutcomeTreatment:
             outcome=numpy.asarray(numpy.asarray(y) == self.outcome_target_, dtype=numpy.float64),
             plan=self.plan_
         )
+        cross_frame = vtreat_impl.limit_to_appropriate_columns(res=cross_frame, transform=self)
         return cross_frame
 
 
@@ -231,7 +239,10 @@ class MultinomialOutcomeTreatment:
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
-        return vtreat_impl.perform_transform(x=X, plan=self.plan_)
+        res = vtreat_impl.perform_transform(x=X, transform=self)
+        if self.score_frame_ is not None:
+            res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
+        return res
 
     def fit_transform(self, X, y):
         if not isinstance(X, pandas.DataFrame):
@@ -272,6 +283,7 @@ class MultinomialOutcomeTreatment:
         score_frames = [si(oi) for oi in self.outcomes_]
         self.score_frame_ = pandas.concat(score_frames, axis=0)
         self.score_frame_.reset_index(inplace=True, drop=True)
+        cross_frame = vtreat_impl.limit_to_appropriate_columns(res=cross_frame, transform=self)
         return cross_frame
 
 
@@ -311,7 +323,7 @@ class UnsupervisedTreatment:
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
-        return vtreat_impl.perform_transform(x=X, plan=self.plan_)
+        return vtreat_impl.perform_transform(x=X, transform=self)
 
     def fit_transform(self, X, y=None):
         if y is not None:
