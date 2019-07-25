@@ -7,7 +7,7 @@ Created on Sat Jul 20 12:07:57 2019
 
 import numpy
 import pandas
-import statistics
+
 
 import vtreat.util
 
@@ -122,6 +122,7 @@ class YAwareMappedCodeTransform(MappedCodeTransform):
         code_book,
         refitter,
         extra_args,
+        params,
     ):
         MappedCodeTransform.__init__(
             self,
@@ -133,44 +134,17 @@ class YAwareMappedCodeTransform(MappedCodeTransform):
         self.need_cross_treatment_ = True
         self.refitter_ = refitter
         self.extra_args_ = extra_args
+        self.params_ = params
 
 
-def grouped_by_x_statistics(x, y):
-    """compute some grouped by x summaries of y"""
-    eps = 1.0e-3
-    sf = pandas.DataFrame({"x": x, "y": y})
-    sf.reset_index(inplace=True, drop=True)
-    na_posns = sf["x"].isnull()
-    sf.loc[na_posns, "x"] = "_NA_"
-    global_mean = sf["y"].mean()
-    sf["_group_mean"] = sf.groupby("x")["y"].transform("mean")
-    sf["_var"] = (sf["y"] - sf["_group_mean"]) ** 2
-    sf["_ni"] = 1
-    sf = sf.groupby("x").sum()
-    sf.reset_index(inplace=True, drop=False)
-    sf["y"] = sf["y"] / sf["_ni"]
-    sf["_group_mean"] = sf["_group_mean"] / sf["_ni"]
-    sf["_var"] = sf["_var"] / (sf["_ni"] - 1) + eps
-    avg_var = numpy.nanmean(sf["_var"])
-    sf.loc[sf["_var"].isnull(), "_var"] = avg_var
-    sf["_vb"] = statistics.variance(sf["_group_mean"]) + eps
-    sf["_gm"] = global_mean
-    # heirarchical model is in:
-    # http://www.win-vector.com/blog/2017/09/partial-pooling-for-lower-variance-variable-encoding/
-    # using naive empirical estimates of variances
-    # adjusted from ni to ni-1 and +eps variance to make
-    # rare levels look like new levels.
-    sf["_hest"] = (
-        (sf["_ni"] - 1) * sf["_group_mean"] / sf["_var"] + sf["_gm"] / sf["_vb"]
-    ) / ((sf["_ni"] - 1) / sf["_var"] + 1 / sf["_vb"])
-    return sf
-
-
-def fit_regression_impact_code(*, incoming_column_name, x, y, extra_args):
-    sf = grouped_by_x_statistics(x, y)
+def fit_regression_impact_code(*, incoming_column_name, x, y, extra_args, params):
+    sf = vtreat.util.grouped_by_x_statistics(x, y)
     if sf.shape[0] <= 1:
         return None
-    sf["_impact_code"] = sf["_hest"] - sf["_gm"]
+    if params['use_hierarchical_estimate']:
+        sf["_impact_code"] = sf["_hest"] - sf["_gm"]
+    else:
+        sf["_impact_code"] = sf["_group_mean"] - sf["_gm"]
     sf = sf.loc[:, ["x", "_impact_code"]].copy()
     newcol = incoming_column_name + "_impact_code"
     sf.columns = [incoming_column_name, newcol]
@@ -181,11 +155,12 @@ def fit_regression_impact_code(*, incoming_column_name, x, y, extra_args):
         code_book=sf,
         refitter=fit_regression_impact_code,
         extra_args=extra_args,
+        params=params
     )
 
 
-def fit_regression_deviation_code(*, incoming_column_name, x, y, extra_args):
-    sf = grouped_by_x_statistics(x, y)
+def fit_regression_deviation_code(*, incoming_column_name, x, y, extra_args, params):
+    sf = vtreat.util.grouped_by_x_statistics(x, y)
     if sf.shape[0] <= 1:
         return None
     sf["_deviance_code"] = numpy.sqrt(sf["_var"])
@@ -199,17 +174,21 @@ def fit_regression_deviation_code(*, incoming_column_name, x, y, extra_args):
         code_book=sf,
         refitter=fit_regression_deviation_code,
         extra_args=extra_args,
+        params=params
     )
 
 
-def fit_binomial_impact_code(*, incoming_column_name, x, y, extra_args):
+def fit_binomial_impact_code(*, incoming_column_name, x, y, extra_args, params):
     outcome_target = (extra_args["outcome_target"],)
     var_suffix = extra_args["var_suffix"]
     y = numpy.asarray(numpy.asarray(y) == outcome_target, dtype=numpy.float64)
-    sf = grouped_by_x_statistics(x, y)
+    sf = vtreat.util.grouped_by_x_statistics(x, y)
     if sf.shape[0] <= 1:
         return None
-    sf["_logit_code"] = numpy.log(sf["_hest"]) - numpy.log(sf["_gm"])
+    if params['use_hierarchical_estimate']:
+        sf["_logit_code"] = numpy.log(sf["_hest"]) - numpy.log(sf["_gm"])
+    else:
+        sf["_logit_code"] = numpy.log(sf["_group_mean"]) - numpy.log(sf["_gm"])
     sf = sf.loc[:, ["x", "_logit_code"]].copy()
     newcol = incoming_column_name + "_logit_code" + var_suffix
     sf.columns = [incoming_column_name, newcol]
@@ -220,13 +199,14 @@ def fit_binomial_impact_code(*, incoming_column_name, x, y, extra_args):
         code_book=sf,
         refitter=fit_binomial_impact_code,
         extra_args=extra_args,
+        params= params
     )
 
 
 class IndicatorCodeTransform(VarTransform):
     def __init__(self, incoming_column_name, derived_column_names, levels):
         VarTransform.__init__(
-            self, incoming_column_name, derived_column_names, "indicator"
+            self, incoming_column_name, derived_column_names, "indicator_code"
         )
         self.levels_ = levels
 
@@ -285,12 +265,12 @@ def fit_prevalence_code(incoming_column_name, x):
     sf[incoming_column_name] = sf[incoming_column_name].astype(str)
     sf.reset_index(inplace=True, drop=True)
     return MappedCodeTransform(
-        incoming_column_name, newcol, treatment="prevalance", code_book=sf
+        incoming_column_name, newcol, treatment="prevalence_code", code_book=sf
     )
 
 
 def fit_numeric_outcome_treatment(
-    *, X, y, var_list, outcome_name, cols_to_copy
+    *, X, y, var_list, outcome_name, cols_to_copy, params
 ):
     if (var_list is None) or (len(var_list) <= 0):
         var_list = [co for co in X.columns]
@@ -304,45 +284,51 @@ def fit_numeric_outcome_treatment(
         if n_null >= n:
             all_null = all_null + [vi]
         if (n_null > 0) and (n_null < n):
-            xforms = xforms + [
-                IndicateMissingTransform(
-                    incoming_column_name=vi, derived_column_name=vi + "_is_bad"
-                )
-            ]
+            if 'missing_indicator' in params['coders']:
+                xforms = xforms + [
+                    IndicateMissingTransform(
+                        incoming_column_name=vi, derived_column_name=vi + "_is_bad"
+                    )
+                ]
     var_list = [co for co in var_list if (not (co in set(all_null)))]
     num_list = [co for co in var_list if can_convert_v_to_numeric(X[co])]
     cat_list = [co for co in var_list if co not in set(num_list)]
-    for vi in num_list:
-        summaryi = characterize_numeric(X[vi])
-        if summaryi["varies"] and summaryi["has_range"]:
+    if 'clean_copy' in params['coders']:
+        for vi in num_list:
+            summaryi = characterize_numeric(X[vi])
+            if summaryi["varies"] and summaryi["has_range"]:
+                xforms = xforms + [
+                    CleanNumericTransform(
+                        incoming_column_name=vi, replacement_value=summaryi["mean"]
+                    )
+                ]
+    for vi in cat_list:
+        if 'impact_code' in params['coders']:
             xforms = xforms + [
-                CleanNumericTransform(
-                    incoming_column_name=vi, replacement_value=summaryi["mean"]
+                fit_regression_impact_code(
+                    incoming_column_name=vi, x=numpy.asarray(X[vi]), y=y, extra_args=None, params = params
                 )
             ]
-    for vi in cat_list:
-        xforms = xforms + [
-            fit_regression_impact_code(
-                incoming_column_name=vi, x=numpy.asarray(X[vi]), y=y, extra_args=None
-            )
-        ]
-        xforms = xforms + [
-            fit_regression_deviation_code(
-                incoming_column_name=vi, x=numpy.asarray(X[vi]), y=y, extra_args=None
-            )
-        ]
-        xforms = xforms + [
-            fit_prevalence_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
-        ]
-        xforms = xforms + [
-            fit_indicator_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
-        ]
+        if 'deviance_code' in params['coders']:
+            xforms = xforms + [
+                fit_regression_deviation_code(
+                    incoming_column_name=vi, x=numpy.asarray(X[vi]), y=y, extra_args=None, params = params
+                )
+            ]
+        if 'prevalence_code' in params['coders']:
+            xforms = xforms + [
+                fit_prevalence_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
+            ]
+        if 'indicator_code' in params['coders']:
+            xforms = xforms + [
+                fit_indicator_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
+            ]
     xforms = [xf for xf in xforms if xf is not None]
     return {"outcome_name": outcome_name, "cols_to_copy": cols_to_copy, "xforms": xforms}
 
 
 def fit_binomial_outcome_treatment(
-    *, X, y, outcome_target, var_list, outcome_name, cols_to_copy
+    *, X, y, outcome_target, var_list, outcome_name, cols_to_copy, params
 ):
     if (var_list is None) or (len(var_list) <= 0):
         var_list = [co for co in X.columns]
@@ -356,97 +342,50 @@ def fit_binomial_outcome_treatment(
         if n_null >= n:
             all_null = all_null + [vi]
         if (n_null > 0) and (n_null < n):
-            xforms = xforms + [
-                IndicateMissingTransform(
-                    incoming_column_name=vi, derived_column_name=vi + "_is_bad"
-                )
-            ]
+            if 'missing_indicator' in params['coders']:
+                xforms = xforms + [
+                    IndicateMissingTransform(
+                        incoming_column_name=vi, derived_column_name=vi + "_is_bad"
+                    )
+                ]
     var_list = [co for co in var_list if (not (co in set(all_null)))]
     num_list = [co for co in var_list if can_convert_v_to_numeric(X[co])]
     cat_list = [co for co in var_list if co not in set(num_list)]
-    for vi in num_list:
-        summaryi = characterize_numeric(X[vi])
-        if summaryi["varies"] and summaryi["has_range"]:
-            xforms = xforms + [
-                CleanNumericTransform(
-                    incoming_column_name=vi, replacement_value=summaryi["mean"]
-                )
-            ]
+    if 'clean_copy' in params['coders']:
+        for vi in num_list:
+            summaryi = characterize_numeric(X[vi])
+            if summaryi["varies"] and summaryi["has_range"]:
+                xforms = xforms + [
+                    CleanNumericTransform(
+                        incoming_column_name=vi, replacement_value=summaryi["mean"]
+                    )
+                ]
     extra_args = {"outcome_target": outcome_target, "var_suffix": ""}
     for vi in cat_list:
-        xforms = xforms + [
-            fit_binomial_impact_code(
-                incoming_column_name=vi,
-                x=numpy.asarray(X[vi]),
-                y=y,
-                extra_args=extra_args,
-            )
-        ]
-        xforms = xforms + [
-            fit_prevalence_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
-        ]
-        xforms = xforms + [
-            fit_indicator_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
-        ]
-    xforms = [xf for xf in xforms if xf is not None]
-    return {"outcome_name": outcome_name, "cols_to_copy": cols_to_copy, "xforms": xforms}
-
-
-def fit_multinomial_outcome_treatment(
-    *, X, y, var_list, outcome_name, cols_to_copy
-):
-    if (var_list is None) or (len(var_list) <= 0):
-        var_list = [co for co in X.columns]
-    copy_set = set(cols_to_copy)
-    var_list = [co for co in var_list if (not (co in copy_set))]
-    xforms = []
-    n = X.shape[0]
-    all_null = []
-    for vi in var_list:
-        n_null = sum(X[vi].isnull())
-        if n_null >= n:
-            all_null = all_null + [vi]
-        if (n_null > 0) and (n_null < n):
-            xforms = xforms + [
-                IndicateMissingTransform(
-                    incoming_column_name=vi, derived_column_name=vi + "_is_bad"
-                )
-            ]
-    outcomes = [oi for oi in set(y)]
-    var_list = [co for co in var_list if (not (co in set(all_null)))]
-    num_list = [co for co in var_list if can_convert_v_to_numeric(X[co])]
-    cat_list = [co for co in var_list if co not in set(num_list)]
-    for vi in num_list:
-        summaryi = characterize_numeric(X[vi])
-        if summaryi["varies"] and summaryi["has_range"]:
-            xforms = xforms + [
-                CleanNumericTransform(
-                    incoming_column_name=vi, replacement_value=summaryi["mean"]
-                )
-            ]
-    for vi in cat_list:
-        for outcome in outcomes:
-            extra_args = {"outcome_target": outcome, "var_suffix": ("_" + str(outcome))}
+        if 'logit_code' in params['coders']:
             xforms = xforms + [
                 fit_binomial_impact_code(
                     incoming_column_name=vi,
                     x=numpy.asarray(X[vi]),
                     y=y,
                     extra_args=extra_args,
+                    params = params
                 )
             ]
-        xforms = xforms + [
-            fit_prevalence_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
-        ]
-        xforms = xforms + [
-            fit_indicator_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
-        ]
+        if 'prevalence_code' in params['coders']:
+            xforms = xforms + [
+                fit_prevalence_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
+            ]
+        if 'indicator_code' in params['coders']:
+            xforms = xforms + [
+                fit_indicator_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
+            ]
     xforms = [xf for xf in xforms if xf is not None]
     return {"outcome_name": outcome_name, "cols_to_copy": cols_to_copy, "xforms": xforms}
 
 
-def fit_unsupervised_treatment(
-    *, X, var_list, outcome_name, cols_to_copy
+def fit_multinomial_outcome_treatment(
+    *, X, y, var_list, outcome_name, cols_to_copy, params
 ):
     if (var_list is None) or (len(var_list) <= 0):
         var_list = [co for co in X.columns]
@@ -460,29 +399,92 @@ def fit_unsupervised_treatment(
         if n_null >= n:
             all_null = all_null + [vi]
         if (n_null > 0) and (n_null < n):
-            xforms = xforms + [
-                IndicateMissingTransform(
-                    incoming_column_name=vi, derived_column_name=vi + "_is_bad"
-                )
-            ]
+            if 'missing_indicator' in params['coders']:
+                xforms = xforms + [
+                    IndicateMissingTransform(
+                        incoming_column_name=vi, derived_column_name=vi + "_is_bad"
+                    )
+                ]
+    outcomes = [oi for oi in set(y)]
     var_list = [co for co in var_list if (not (co in set(all_null)))]
     num_list = [co for co in var_list if can_convert_v_to_numeric(X[co])]
     cat_list = [co for co in var_list if co not in set(num_list)]
-    for vi in num_list:
-        summaryi = characterize_numeric(X[vi])
-        if summaryi["varies"] and summaryi["has_range"]:
-            xforms = xforms + [
-                CleanNumericTransform(
-                    incoming_column_name=vi, replacement_value=summaryi["mean"]
-                )
-            ]
+    if 'clean_copy' in params['coders']:
+        for vi in num_list:
+            summaryi = characterize_numeric(X[vi])
+            if summaryi["varies"] and summaryi["has_range"]:
+                xforms = xforms + [
+                    CleanNumericTransform(
+                        incoming_column_name=vi, replacement_value=summaryi["mean"]
+                    )
+                ]
     for vi in cat_list:
-        xforms = xforms + [
-            fit_prevalence_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
-        ]
-        xforms = xforms + [
-            fit_indicator_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
-        ]
+        for outcome in outcomes:
+            if 'impact_code' in params['coders']:
+                extra_args = {"outcome_target": outcome, "var_suffix": ("_" + str(outcome))}
+                xforms = xforms + [
+                    fit_binomial_impact_code(
+                        incoming_column_name=vi,
+                        x=numpy.asarray(X[vi]),
+                        y=y,
+                        extra_args=extra_args,
+                        params=params
+                    )
+                ]
+        if 'prevalence_code' in params['coders']:
+            xforms = xforms + [
+                fit_prevalence_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
+            ]
+        if 'indicator_code' in params['coders']:
+            xforms = xforms + [
+                fit_indicator_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
+            ]
+    xforms = [xf for xf in xforms if xf is not None]
+    return {"outcome_name": outcome_name, "cols_to_copy": cols_to_copy, "xforms": xforms}
+
+
+def fit_unsupervised_treatment(
+    *, X, var_list, outcome_name, cols_to_copy, params
+):
+    if (var_list is None) or (len(var_list) <= 0):
+        var_list = [co for co in X.columns]
+    copy_set = set(cols_to_copy)
+    var_list = [co for co in var_list if (not (co in copy_set))]
+    xforms = []
+    n = X.shape[0]
+    all_null = []
+    for vi in var_list:
+        n_null = sum(X[vi].isnull())
+        if n_null >= n:
+            all_null = all_null + [vi]
+        if (n_null > 0) and (n_null < n):
+            if 'missing_indicator' in params['coders']:
+                xforms = xforms + [
+                    IndicateMissingTransform(
+                        incoming_column_name=vi, derived_column_name=vi + "_is_bad"
+                    )
+                ]
+    var_list = [co for co in var_list if (not (co in set(all_null)))]
+    num_list = [co for co in var_list if can_convert_v_to_numeric(X[co])]
+    cat_list = [co for co in var_list if co not in set(num_list)]
+    if 'clean_copy' in params['coders']:
+        for vi in num_list:
+            summaryi = characterize_numeric(X[vi])
+            if summaryi["varies"] and summaryi["has_range"]:
+                xforms = xforms + [
+                    CleanNumericTransform(
+                        incoming_column_name=vi, replacement_value=summaryi["mean"]
+                    )
+                ]
+    for vi in cat_list:
+        if 'prevalence_code' in params['coders']:
+            xforms = xforms + [
+                fit_prevalence_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
+            ]
+        if 'indicator_code' in params['coders']:
+            xforms = xforms + [
+                fit_indicator_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
+            ]
     xforms = [xf for xf in xforms if xf is not None]
     return {"outcome_name": outcome_name, "cols_to_copy": cols_to_copy, "xforms": xforms}
 
@@ -515,6 +517,7 @@ def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
                 x=x[incoming_column_name][cp["train"]],
                 y=y[cp["train"]],
                 extra_args=xf.extra_args_,
+                params=xf.params_
             ).transform(x.loc[cp["app"], [incoming_column_name]])
             for cp in cross_plan
         ]

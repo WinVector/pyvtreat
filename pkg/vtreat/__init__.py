@@ -37,13 +37,32 @@ import warnings
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
+def vtreat_parameters(user_params=None):
+    """build a vtreat parmaters dictionary, adding in user choices"""
+    params = {'use_hierarchical_estimate':True,
+              'coders':{'clean_copy',
+                        'missing_indicator',
+                        'indicator_code',
+                        'impact_code',
+                        'deviance_code',
+                        'logit_code',
+                        'prevalence_code'},
+              }.copy()
+    if user_params is not None:
+        pkeys = set(params.keys())
+        for k in user_params.keys():
+            if k not in pkeys:
+                raise Exception("paramatere key " + str(k) + " not recognized")
+            params[k] = user_params[k]
+    return params
+
 
 class NumericOutcomeTreatment:
     """manage a treatment plan for a numeric outcome (regression)"""
 
     def __init__(self, *, var_list=None, outcome_name=None, cols_to_copy=None, params=None):
         if params is None:
-            params = {}
+            params = vtreat_parameters()
         if var_list is None:
             var_list = []
         if cols_to_copy is None:
@@ -92,6 +111,7 @@ class NumericOutcomeTreatment:
             var_list=self.var_list_,
             outcome_name=self.outcome_name_,
             cols_to_copy=self.cols_to_copy_,
+            params=self.params_
         )
         res = self.transform(X)
         # patch in cross-frame versions of complex columns such as impact
@@ -113,7 +133,7 @@ class BinomialOutcomeTreatment:
         self, *, var_list=None, outcome_name=None, outcome_target, cols_to_copy=None, params=None
     ):
         if params is None:
-            params = {}
+            params = vtreat_parameters()
         if cols_to_copy is None:
             cols_to_copy = []
         if var_list is None:
@@ -163,6 +183,7 @@ class BinomialOutcomeTreatment:
             var_list=self.var_list_,
             outcome_name=self.outcome_name_,
             cols_to_copy=self.cols_to_copy_,
+            params=self.params_
         )
         res = self.transform(X)
         # patch in cross-frame versions of complex columns such as impact
@@ -188,7 +209,7 @@ class MultinomialOutcomeTreatment:
         if cols_to_copy is None:
             cols_to_copy = []
         if params is None:
-            params = {}
+            params = vtreat_parameters()
         if outcome_name not in set(cols_to_copy):
             cols_to_copy = cols_to_copy + [outcome_name]
         self.var_list_ = var_list.copy()
@@ -234,6 +255,7 @@ class MultinomialOutcomeTreatment:
             var_list=self.var_list_,
             outcome_name=self.outcome_name_,
             cols_to_copy=self.cols_to_copy_,
+            params=self.params_
         )
         res = self.transform(X)
         # patch in cross-frame versions of complex columns such as impact
@@ -265,7 +287,7 @@ class UnsupervisedTreatment:
         if cols_to_copy is None:
             cols_to_copy = []
         if params is None:
-            params = {}
+            params = vtreat_parameters()
         if outcome_name not in set(cols_to_copy):
             cols_to_copy = cols_to_copy + [outcome_name]
         self.var_list_ = var_list.copy()
@@ -286,6 +308,7 @@ class UnsupervisedTreatment:
             var_list=self.var_list_,
             outcome_name=self.outcome_name_,
             cols_to_copy=self.cols_to_copy_,
+            params = self.params_
         )
         return self
 

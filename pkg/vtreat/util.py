@@ -11,6 +11,7 @@ import warnings
 
 import pandas
 import scipy.stats
+import statistics
 
 
 def k_way_cross_plan(n_rows, k_folds):
@@ -31,6 +32,37 @@ def k_way_cross_plan(n_rows, k_folds):
         for j in range(k_folds)
     ]
     return plan
+
+
+def grouped_by_x_statistics(x, y):
+    """compute some grouped by x vector summaries of numeric y vector (no missing values in y)"""
+    eps = 1.0e-3
+    sf = pandas.DataFrame({"x": x, "y": y})
+    sf.reset_index(inplace=True, drop=True)
+    na_posns = sf["x"].isnull()
+    sf.loc[na_posns, "x"] = "_NA_"
+    global_mean = sf["y"].mean()
+    sf["_group_mean"] = sf.groupby("x")["y"].transform("mean")
+    sf["_var"] = (sf["y"] - sf["_group_mean"]) ** 2
+    sf["_ni"] = 1
+    sf = sf.groupby("x").sum()
+    sf.reset_index(inplace=True, drop=False)
+    sf["y"] = sf["y"] / sf["_ni"]
+    sf["_group_mean"] = sf["_group_mean"] / sf["_ni"]
+    sf["_var"] = sf["_var"] / (sf["_ni"] - 1) + eps
+    avg_var = numpy.nanmean(sf["_var"])
+    sf.loc[sf["_var"].isnull(), "_var"] = avg_var
+    sf["_vb"] = statistics.variance(sf["_group_mean"]) + eps
+    sf["_gm"] = global_mean
+    # heirarchical model is in:
+    # http://www.win-vector.com/blog/2017/09/partial-pooling-for-lower-variance-variable-encoding/
+    # using naive empirical estimates of variances
+    # adjusted from ni to ni-1 and +eps variance to make
+    # rare levels look like new levels.
+    sf["_hest"] = (
+        (sf["_ni"] - 1) * sf["_group_mean"] / sf["_var"] + sf["_gm"] / sf["_vb"]
+    ) / ((sf["_ni"] - 1) / sf["_var"] + 1 / sf["_vb"])
+    return sf
 
 
 def score_variables(cross_frame, variables, outcome):
