@@ -503,9 +503,7 @@ def perform_transform(*, x, plan):
 
 
 # assumes each y-aware variable produces one derived column
-def cross_patch_refit_y_aware_cols(*, x, y, res, plan):
-    n = x.shape[0]
-    cross_plan = vtreat.util.k_way_cross_plan(n_rows=n, k_folds=5)
+def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
     for xf in plan["xforms"]:
         if not xf.need_cross_treatment_:
             continue

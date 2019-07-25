@@ -11,6 +11,7 @@ import numpy
 
 
 import vtreat.vtreat_impl as vtreat_impl
+import vtreat.util
 
 # had been getting Future warnings on seemining correct (no missing values) use of
 # Pandas indexing from vtreat.vtreat_impl.cross_patch_refit_y_aware_cols
@@ -40,31 +41,30 @@ warnings.simplefilter(action="ignore", category=FutureWarning)
 class NumericOutcomeTreatment:
     """manage a treatment plan for a numeric outcome (regression)"""
 
-    def __init__(self, *, varlist=None, outcome_name=None, cols_to_copy=None, params=None):
+    def __init__(self, *, var_list=None, outcome_name=None, cols_to_copy=None, params=None):
         if params is None:
             params = {}
-        if varlist is None:
-            varlist = []
+        if var_list is None:
+            var_list = []
         if cols_to_copy is None:
             cols_to_copy = []
         if outcome_name not in set(cols_to_copy):
             cols_to_copy = cols_to_copy + [outcome_name]
-        self.varlist_ = varlist.copy()
-        self.outcomename_ = outcome_name
+        self.var_list_ = var_list.copy()
+        self.outcome_name_ = outcome_name
         self.cols_to_copy_ = cols_to_copy.copy()
         self.params_ = params.copy()
         self.plan_ = None
         self.score_frame_ = None
+        self.cross_plan_ = None
 
     def fit(self, X, y):
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
         if y is None:
-            y = X[self.outcomename_]
+            y = X[self.outcome_name_]
         if not X.shape[0] == len(y):
             raise Exception("X.shape[0] should equal len(y)")
-        self.plan_ = None
-        self.score_frame_ = None
         self.fit_transform(X=X, y=y)
         return self
 
@@ -77,7 +77,7 @@ class NumericOutcomeTreatment:
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
         if y is None:
-            y = X[self.outcomename_]
+            y = X[self.outcome_name_]
         if not X.shape[0] == len(y):
             raise Exception("X.shape[0] should equal len(y)")
         y = numpy.asarray(y, dtype=numpy.float64)
@@ -89,14 +89,15 @@ class NumericOutcomeTreatment:
         self.plan_ = vtreat_impl.fit_numeric_outcome_treatment(
             X=X,
             y=y,
-            var_list=self.varlist_,
-            outcome_name=self.outcomename_,
+            var_list=self.var_list_,
+            outcome_name=self.outcome_name_,
             cols_to_copy=self.cols_to_copy_,
         )
         res = self.transform(X)
         # patch in cross-frame versions of complex columns such as impact
+        self.cross_plan_ = vtreat.util.k_way_cross_plan(n_rows=X.shape[0], k_folds=5)
         cross_frame = vtreat_impl.cross_patch_refit_y_aware_cols(
-            x=X, y=y, res=res, plan=self.plan_
+            x=X, y=y, res=res, plan=self.plan_, cross_plan=self.cross_plan_
         )
         # use cross_frame to compute variable effects
         self.score_frame_ = vtreat_impl.score_plan_variables(
@@ -104,46 +105,37 @@ class NumericOutcomeTreatment:
         )
         return cross_frame
 
-    def get_params(self, deep=True):
-        return self.params_.copy()
-
-    def set_params(self, **params):
-        self.plan_ = None
-        for a in params:
-            self.params_[a] = params[a]
-
 
 class BinomialOutcomeTreatment:
     """manage a treatment plan for a target outcome (binomial classification)"""
 
     def __init__(
-        self, *, varlist=None, outcome_name=None, outcome_target, cols_to_copy=None, params=None
+        self, *, var_list=None, outcome_name=None, outcome_target, cols_to_copy=None, params=None
     ):
         if params is None:
             params = {}
         if cols_to_copy is None:
             cols_to_copy = []
-        if varlist is None:
-            varlist = []
+        if var_list is None:
+            var_list = []
         if outcome_name not in set(cols_to_copy):
             cols_to_copy = cols_to_copy + [outcome_name]
-        self.varlist_ = varlist.copy()
-        self.outcomename_ = outcome_name
+        self.var_list_ = var_list.copy()
+        self.outcome_name_ = outcome_name
         self.outcometarget_ = outcome_target
         self.cols_to_copy_ = cols_to_copy.copy()
         self.params_ = params.copy()
         self.plan_ = None
         self.score_frame_ = None
+        self.cross_plan_ = None
 
     def fit(self, X, y):
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
         if y is None:
-            y = X[self.outcomename_]
+            y = X[self.outcome_name_]
         if not X.shape[0] == len(y):
             raise Exception("X.shape[0] should equal len(y)")
-        self.plan_ = None
-        self.score_frame_ = None
         self.fit_transform(X=X, y=y)
         return self
 
@@ -156,7 +148,7 @@ class BinomialOutcomeTreatment:
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
         if y is None:
-            y = X[self.outcomename_]
+            y = X[self.outcome_name_]
         if not X.shape[0] == len(y):
             raise Exception("X.shape[0] should equal len(y)")
         if numpy.isnan(y).sum() > 0:
@@ -168,14 +160,15 @@ class BinomialOutcomeTreatment:
             X=X,
             y=y,
             outcome_target=self.outcometarget_,
-            var_list=self.varlist_,
-            outcome_name=self.outcomename_,
+            var_list=self.var_list_,
+            outcome_name=self.outcome_name_,
             cols_to_copy=self.cols_to_copy_,
         )
         res = self.transform(X)
         # patch in cross-frame versions of complex columns such as impact
+        self.cross_plan_ = vtreat.util.k_way_cross_plan(n_rows=X.shape[0], k_folds=5)
         cross_frame = vtreat_impl.cross_patch_refit_y_aware_cols(
-            x=X, y=y, res=res, plan=self.plan_
+            x=X, y=y, res=res, plan=self.plan_, cross_plan=self.cross_plan_
         )
         # use cross_frame to compute variable effects
         self.score_frame_ = vtreat_impl.score_plan_variables(
@@ -183,43 +176,34 @@ class BinomialOutcomeTreatment:
         )
         return cross_frame
 
-    def get_params(self, deep=True):
-        return self.params_.copy()
-
-    def set_params(self, **params):
-        self.plan_ = None
-        for a in params:
-            self.params_[a] = params[a]
-
 
 class MultinomialOutcomeTreatment:
     """manage a treatment plan for a set of outcomes (multinomial classification)"""
 
-    def __init__(self, *, varlist=None, outcome_name=None, cols_to_copy=None, params=None):
-        if varlist is None:
-            varlist = []
+    def __init__(self, *, var_list=None, outcome_name=None, cols_to_copy=None, params=None):
+        if var_list is None:
+            var_list = []
         if cols_to_copy is None:
             cols_to_copy = []
         if params is None:
             params = {}
         if outcome_name not in set(cols_to_copy):
             cols_to_copy = cols_to_copy + [outcome_name]
-        self.varlist_ = varlist.copy()
-        self.outcomename_ = outcome_name
+        self.var_list_ = var_list.copy()
+        self.outcome_name_ = outcome_name
         self.cols_to_copy_ = cols_to_copy.copy()
         self.params_ = params.copy()
         self.plan_ = None
         self.score_frame_ = None
+        self.cross_plan_ = None
 
     def fit(self, X, y):
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
         if y is None:
-            y = X[self.outcomename_]
+            y = X[self.outcome_name_]
         if not X.shape[0] == len(y):
             raise Exception("X.shape[0] should equal len(y)")
-        self.plan_ = None
-        self.score_frame_ = None
         self.fit_transform(X=X, y=y)
         return self
 
@@ -232,7 +216,7 @@ class MultinomialOutcomeTreatment:
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
         if y is None:
-            y = X[self.outcomename_]
+            y = X[self.outcome_name_]
         if not X.shape[0] == len(y):
             raise Exception("X.shape[0] should equal len(y)")
         if numpy.isnan(y).sum() > 0:
@@ -243,14 +227,15 @@ class MultinomialOutcomeTreatment:
         self.plan_ = vtreat_impl.fit_multinomial_outcome_treatment(
             X=X,
             y=y,
-            var_list=self.varlist_,
-            outcome_name=self.outcomename_,
+            var_list=self.var_list_,
+            outcome_name=self.outcome_name_,
             cols_to_copy=self.cols_to_copy_,
         )
         res = self.transform(X)
         # patch in cross-frame versions of complex columns such as impact
+        self.cross_plan_ = vtreat.util.k_way_cross_plan(n_rows=X.shape[0], k_folds=5)
         cross_frame = vtreat_impl.cross_patch_refit_y_aware_cols(
-            x=X, y=y, res=res, plan=self.plan_
+            x=X, y=y, res=res, plan=self.plan_, cross_plan=self.cross_plan_
         )
         # use cross_frame to compute variable effects
         self.score_frame_ = vtreat_impl.score_plan_variables(
@@ -258,29 +243,21 @@ class MultinomialOutcomeTreatment:
         )
         return cross_frame
 
-    def get_params(self, deep=True):
-        return self.params_.copy()
-
-    def set_params(self, **params):
-        self.plan_ = None
-        for a in params:
-            self.params_[a] = params[a]
-
 
 class UnsupervisedTreatment:
     """manage an unsupervised treatment plan"""
 
-    def __init__(self, *, varlist=None, outcome_name=None, cols_to_copy=None, params=None):
-        if varlist is None:
-            varlist = []
+    def __init__(self, *, var_list=None, outcome_name=None, cols_to_copy=None, params=None):
+        if var_list is None:
+            var_list = []
         if cols_to_copy is None:
             cols_to_copy = []
         if params is None:
             params = {}
         if outcome_name not in set(cols_to_copy):
             cols_to_copy = cols_to_copy + [outcome_name]
-        self.varlist_ = varlist.copy()
-        self.outcomename_ = outcome_name
+        self.var_list_ = var_list.copy()
+        self.outcome_name_ = outcome_name
         self.cols_to_copy_ = cols_to_copy.copy()
         self.params_ = params.copy()
         self.plan_ = None
@@ -294,8 +271,8 @@ class UnsupervisedTreatment:
         self.plan_ = None
         self.plan_ = vtreat_impl.fit_unsupervised_treatment(
             X=X,
-            var_list=self.varlist_,
-            outcome_name=self.outcomename_,
+            var_list=self.var_list_,
+            outcome_name=self.outcome_name_,
             cols_to_copy=self.cols_to_copy_,
         )
         return self
@@ -310,11 +287,3 @@ class UnsupervisedTreatment:
             raise Exception("y should be None")
         self.fit(X=X)
         return self.transform(X)
-
-    def get_params(self, deep=True):
-        return self.params_.copy()
-
-    def set_params(self, **params):
-        self.plan_ = None
-        for a in params:
-            self.params_[a] = params[a]
