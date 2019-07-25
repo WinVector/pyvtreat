@@ -74,11 +74,11 @@ def score_variables(cross_frame, variables, outcome):
             with warnings.catch_warnings():
                 est = scipy.stats.pearsonr(cross_frame[v], outcome)
                 sfi = pandas.DataFrame(
-                    {"variable": [v], "PearsonR": est[0], "significance": est[1]}
+                    {"variable": [v], "has_range": True, "PearsonR": est[0], "significance": est[1]}
                 )
         else:
             sfi = pandas.DataFrame(
-                {"variable": [v], "PearsonR": numpy.NaN, "significance": 1}
+                {"variable": [v], "has_range": False, "PearsonR": numpy.NaN, "significance": 1}
             )
         return sfi
 

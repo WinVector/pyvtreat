@@ -46,13 +46,13 @@ def vtreat_parameters(user_params=None):
                         'impact_code',
                         'deviance_code',
                         'logit_code',
-                        'prevalence_code'},
+                        'prevalence_code'}.copy(),
               }.copy()
     if user_params is not None:
         pkeys = set(params.keys())
         for k in user_params.keys():
             if k not in pkeys:
-                raise Exception("paramatere key " + str(k) + " not recognized")
+                raise Exception("paramater key " + str(k) + " not recognized")
             params[k] = user_params[k]
     return params
 
@@ -61,8 +61,7 @@ class NumericOutcomeTreatment:
     """manage a treatment plan for a numeric outcome (regression)"""
 
     def __init__(self, *, var_list=None, outcome_name=None, cols_to_copy=None, params=None):
-        if params is None:
-            params = vtreat_parameters()
+        params = vtreat_parameters(params)
         if var_list is None:
             var_list = []
         if cols_to_copy is None:
@@ -132,8 +131,7 @@ class BinomialOutcomeTreatment:
     def __init__(
         self, *, var_list=None, outcome_name=None, outcome_target, cols_to_copy=None, params=None
     ):
-        if params is None:
-            params = vtreat_parameters()
+        params = vtreat_parameters(params)
         if cols_to_copy is None:
             cols_to_copy = []
         if var_list is None:
@@ -204,12 +202,11 @@ class MultinomialOutcomeTreatment:
     """manage a treatment plan for a set of outcomes (multinomial classification)"""
 
     def __init__(self, *, var_list=None, outcome_name=None, cols_to_copy=None, params=None):
+        params = vtreat_parameters(params)
         if var_list is None:
             var_list = []
         if cols_to_copy is None:
             cols_to_copy = []
-        if params is None:
-            params = vtreat_parameters()
         if outcome_name not in set(cols_to_copy):
             cols_to_copy = cols_to_copy + [outcome_name]
         self.var_list_ = var_list.copy()
@@ -282,12 +279,11 @@ class UnsupervisedTreatment:
     """manage an unsupervised treatment plan"""
 
     def __init__(self, *, var_list=None, outcome_name=None, cols_to_copy=None, params=None):
+        params = vtreat_parameters(params)
         if var_list is None:
             var_list = []
         if cols_to_copy is None:
             cols_to_copy = []
-        if params is None:
-            params = vtreat_parameters()
         if outcome_name not in set(cols_to_copy):
             cols_to_copy = cols_to_copy + [outcome_name]
         self.var_list_ = var_list.copy()

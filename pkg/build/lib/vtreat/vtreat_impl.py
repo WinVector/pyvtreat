@@ -554,12 +554,14 @@ def score_plan_variables(cross_frame, outcome, plan):
     score_frame["vcount"] = score_frame.groupby("treatment")["_one"].transform("sum")
     score_frame.drop(["_one"], axis=1, inplace=True)
     score_frame["recommended"] = numpy.logical_and(
-        score_frame["significance"] < 0.05,
+        score_frame["has_range"],
         numpy.logical_and(
-            score_frame["significance"] < 1 / score_frame["vcount"],
-            numpy.logical_or(
-                score_frame["PearsonR"] > 0, numpy.logical_not(score_frame["y_aware"])
+            score_frame["significance"] < 0.05,
+            numpy.logical_and(
+                score_frame["significance"] < 1 / score_frame["vcount"],
+                numpy.logical_or(
+                    score_frame["PearsonR"] > 0, numpy.logical_not(score_frame["y_aware"])
+                ),
             ),
-        ),
-    )
+        ))
     return score_frame
