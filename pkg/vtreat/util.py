@@ -50,7 +50,9 @@ def grouped_by_x_statistics(x, y):
     sf["y"] = sf["y"] / sf["_ni"]
     sf["_group_mean"] = sf["_group_mean"] / sf["_ni"]
     sf["_var"] = sf["_var"] / (sf["_ni"] - 1) + eps
-    avg_var = numpy.nanmean(sf["_var"])
+    avg_var = 0
+    if sum(sf["_var"].isnull())<len(sf["_var"]):
+        avg_var = numpy.nanmean(sf["_var"])
     sf.loc[sf["_var"].isnull(), "_var"] = avg_var
     sf["_vb"] = statistics.variance(sf["_group_mean"]) + eps
     sf["_gm"] = global_mean
