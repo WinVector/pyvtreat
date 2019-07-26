@@ -16,10 +16,17 @@ import statistics
 
 def k_way_cross_plan(n_rows, k_folds):
     """randomly split range(n_rows) into k_folds disjoint groups"""
-    if n_rows < 2:
-        raise Exception("n_rows should be at least 2")
     if k_folds >= n_rows:
         k_folds = n_rows - 1
+    if n_rows <= 1 or k_folds <= 1 or k_folds>=n_rows/2:
+        # degenerate overlap cases
+        plan = [
+            {
+                "train": [i for i in range(n_rows)],
+                "app": [i for i in range(n_rows)],
+            }
+        ]
+        return plan
     # first assign groups modulo k (ensuring at least one in each group)
     grp = [i % k_folds for i in range(n_rows)]
     # now shuffle
