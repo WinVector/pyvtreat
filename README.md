@@ -1073,6 +1073,8 @@ motivations, and design decisions):
     vtreat](http://www.slideshare.net/ChesterChen/vtreat)
 
 
+A directory of worked examples can be found [here](https://github.com/WinVector/pyvtreat/tree/master/Examples).
+
 We intend to add better Python documentation and a certification suite going forward.
 
 ## Installation
