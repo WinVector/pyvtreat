@@ -976,7 +976,7 @@ wvpy.util.plot_roc(pfn["pred_naive"], pfn["churn"])
 
 
 
-Note the naive test performance is worse, despite the far better training performance.  This is over-fit due to the nested model bias of using the same data to build the treatment plan and model without any cross-frame mitigations. This is one reason why the cross-frame techniques (as described [here]((https://arxiv.org/abs/1611.09477))) are so important.
+Note the naive test performance is worse, despite the far better training performance.  This is over-fit due to the nested model bias of using the same data to build the treatment plan and model without any cross-frame mitigations. This is one reason why the cross-frame techniques (as described [here](https://arxiv.org/abs/1611.09477)) are so important.
 
 
 
