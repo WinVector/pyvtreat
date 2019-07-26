@@ -531,6 +531,7 @@ def limit_to_appropriate_columns(*, res, transform):
 
 
 # assumes each y-aware variable produces one derived column
+# also clears out refitter_ values to None
 def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
     incoming_colset = set(x.columns)
     derived_colset = set(res.columns)
@@ -543,6 +544,8 @@ def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
             continue
         if incoming_column_name not in incoming_colset:
             raise Exception("missing required column " + incoming_column_name)
+        if xf.refitter_ is None:
+            raise Exception("refitter is None: " + incoming_column_name + " -> " + derived_column_name)
         patches = [
             xf.refitter_(
                 incoming_column_name=incoming_column_name,
@@ -566,6 +569,8 @@ def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
             cp = cross_plan[i]
             res.loc[cp["app"], derived_column_name] = numpy.asarray(pi).reshape((len(pi)))
         res.loc[res[derived_column_name].isnull(), derived_column_name] = avg
+    for xf in plan["xforms"]:
+        xf.refitter_ = None
     return res
 
 
