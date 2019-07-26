@@ -91,8 +91,7 @@ class NumericOutcomeTreatment:
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
         res = vtreat_impl.perform_transform(x=X, transform=self)
-        if self.score_frame_ is not None:
-            res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
+        res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
         return res
 
     def fit_transform(self, X, y):
@@ -116,7 +115,7 @@ class NumericOutcomeTreatment:
             cols_to_copy=self.cols_to_copy_,
             params=self.params_
         )
-        res = self.transform(X)
+        res = vtreat_impl.perform_transform(x=X, transform=self)
         # patch in cross-frame versions of complex columns such as impact
         self.cross_plan_ = vtreat.util.k_way_cross_plan(n_rows=X.shape[0], k_folds=5)
         cross_frame = vtreat_impl.cross_patch_refit_y_aware_cols(
@@ -165,8 +164,7 @@ class BinomialOutcomeTreatment:
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
         res = vtreat_impl.perform_transform(x=X, transform=self)
-        if self.score_frame_ is not None:
-            res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
+        res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
         return res
 
     def fit_transform(self, X, y):
@@ -190,7 +188,7 @@ class BinomialOutcomeTreatment:
             cols_to_copy=self.cols_to_copy_,
             params=self.params_
         )
-        res = self.transform(X)
+        res = vtreat_impl.perform_transform(x=X, transform=self)
         # patch in cross-frame versions of complex columns such as impact
         self.cross_plan_ = vtreat.util.k_way_cross_plan(n_rows=X.shape[0], k_folds=5)
         cross_frame = vtreat_impl.cross_patch_refit_y_aware_cols(
@@ -240,8 +238,7 @@ class MultinomialOutcomeTreatment:
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
         res = vtreat_impl.perform_transform(x=X, transform=self)
-        if self.score_frame_ is not None:
-            res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
+        res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
         return res
 
     def fit_transform(self, X, y):
@@ -265,7 +262,7 @@ class MultinomialOutcomeTreatment:
             cols_to_copy=self.cols_to_copy_,
             params=self.params_
         )
-        res = self.transform(X)
+        res = vtreat_impl.perform_transform(x=X, transform=self)
         # patch in cross-frame versions of complex columns such as impact
         self.cross_plan_ = vtreat.util.k_way_cross_plan(n_rows=X.shape[0], k_folds=5)
         cross_frame = vtreat_impl.cross_patch_refit_y_aware_cols(

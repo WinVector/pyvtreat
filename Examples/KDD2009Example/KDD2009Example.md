@@ -22,7 +22,7 @@ Read in explanitory variables.
 
 
 # data from https://github.com/WinVector/PDSwR2/tree/master/KDD2009
-dir = "../../PracticalDataScienceWithR2nd/PDSwR2/KDD2009/"
+dir = "../../../PracticalDataScienceWithR2nd/PDSwR2/KDD2009/"
 d = pandas.read_csv(dir + 'orange_small_train.data.gz', sep='\t', header=0)
 vars = [c for c in d.columns]
 d.shape
@@ -271,7 +271,7 @@ d_train.shape
 
 
 
-    (44967, 230)
+    (44962, 230)
 
 
 
@@ -292,11 +292,11 @@ except Exception as ex:
 
 Let's quickly prepare a data frame with none of these issues.
 
-Build our treatment plan, this has the `sklearn.pipeline.Pipeline` interfaces.
+We start by building our treatment plan, this has the `sklearn.pipeline.Pipeline` interfaces.
 
 
 ```python
-plan = vtreat.binomial_outcome_treatment(outcomename="y", outcometarget=True)
+plan = vtreat.BinomialOutcomeTreatment(outcome_target=True)
 ```
 
 Use `.fit_transform()` to get a special copy of the treated training data that has cross-validated mitigations againsst nested model bias. We call this a "cross frame." `.fit_transform()` is deliberately a different `DataFrame` than what would be returned by `.fit().transform()` (the `.fit().transform()` would damage the modeling effort due nested model bias, the `.fit_transform()` "cross frame" uses cross-validation techniques similar to "stacking" to mitigate these issues).
@@ -334,23 +334,23 @@ cross_frame.head()
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Var1_is_bad</th>
       <th>Var2_is_bad</th>
       <th>Var3_is_bad</th>
       <th>Var4_is_bad</th>
       <th>Var5_is_bad</th>
       <th>Var6_is_bad</th>
       <th>Var7_is_bad</th>
-      <th>Var9_is_bad</th>
       <th>Var10_is_bad</th>
       <th>Var11_is_bad</th>
+      <th>Var13_is_bad</th>
+      <th>Var14_is_bad</th>
       <th>...</th>
-      <th>Var228_logit_code</th>
+      <th>Var227_lev_RAYp</th>
+      <th>Var227_lev_ZI9m</th>
       <th>Var228_prevalence_code</th>
       <th>Var228_lev_F2FyR07IdsN7I</th>
       <th>Var228_lev_55YFVY9</th>
       <th>Var228_lev_ib5G6X1eUxUn6</th>
-      <th>Var229_logit_code</th>
       <th>Var229_prevalence_code</th>
       <th>Var229_lev__NA_</th>
       <th>Var229_lev_am7c</th>
@@ -364,20 +364,20 @@ cross_frame.head()
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>1.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
       <td>1.0</td>
+      <td>0.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>0.000361</td>
-      <td>0.653034</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0.653329</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
-      <td>-0.001351</td>
-      <td>0.568350</td>
+      <td>0.567902</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
@@ -388,20 +388,20 @@ cross_frame.head()
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>1.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
       <td>1.0</td>
+      <td>0.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>-0.015897</td>
-      <td>0.653034</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0.653329</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
-      <td>-0.005008</td>
-      <td>0.568350</td>
+      <td>0.567902</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
@@ -412,20 +412,20 @@ cross_frame.head()
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>1.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
       <td>1.0</td>
+      <td>0.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>0.032316</td>
-      <td>0.054017</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.053267</td>
       <td>0</td>
       <td>0</td>
       <td>1</td>
-      <td>0.009257</td>
-      <td>0.233794</td>
+      <td>0.234153</td>
       <td>0</td>
       <td>1</td>
       <td>0</td>
@@ -437,19 +437,19 @@ cross_frame.head()
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>1.0</td>
       <td>0.0</td>
       <td>1.0</td>
       <td>1.0</td>
+      <td>0.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>-0.006761</td>
-      <td>0.653034</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0.653329</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
-      <td>0.008817</td>
-      <td>0.568350</td>
+      <td>0.567902</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
@@ -460,27 +460,27 @@ cross_frame.head()
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>1.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
       <td>1.0</td>
+      <td>0.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>0.000361</td>
-      <td>0.653034</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0.653329</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
-      <td>-0.001308</td>
-      <td>0.196322</td>
+      <td>0.196344</td>
       <td>0</td>
       <td>0</td>
       <td>1</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 519 columns</p>
+<p>5 rows × 232 columns</p>
 </div>
 
 
@@ -493,11 +493,109 @@ cross_frame.shape
 
 
 
-    (44967, 519)
+    (44962, 232)
 
 
 
 Pick a recommended subset of the new derived variables.
+
+
+```python
+plan.score_frame_.head()
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>variable</th>
+      <th>treatment</th>
+      <th>y_aware</th>
+      <th>has_range</th>
+      <th>PearsonR</th>
+      <th>significance</th>
+      <th>vcount</th>
+      <th>recommended</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Var1_is_bad</td>
+      <td>missing_indicator</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.004424</td>
+      <td>0.348220</td>
+      <td>193.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Var2_is_bad</td>
+      <td>missing_indicator</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.018454</td>
+      <td>0.000091</td>
+      <td>193.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Var3_is_bad</td>
+      <td>missing_indicator</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.018454</td>
+      <td>0.000091</td>
+      <td>193.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Var4_is_bad</td>
+      <td>missing_indicator</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.018810</td>
+      <td>0.000066</td>
+      <td>193.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Var5_is_bad</td>
+      <td>missing_indicator</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.018720</td>
+      <td>0.000072</td>
+      <td>193.0</td>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 
 ```python
@@ -508,7 +606,7 @@ len(model_vars)
 
 
 
-    230
+    232
 
 
 
@@ -556,38 +654,38 @@ cv.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>0.073521</td>
-      <td>0.000357</td>
-      <td>0.074188</td>
-      <td>0.000737</td>
+      <td>0.073773</td>
+      <td>0.000638</td>
+      <td>0.074418</td>
+      <td>0.001162</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>0.073743</td>
-      <td>0.000338</td>
-      <td>0.073743</td>
-      <td>0.000677</td>
+      <td>0.073784</td>
+      <td>0.000577</td>
+      <td>0.073907</td>
+      <td>0.001493</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.073743</td>
-      <td>0.000338</td>
-      <td>0.073743</td>
-      <td>0.000677</td>
+      <td>0.073974</td>
+      <td>0.000771</td>
+      <td>0.073929</td>
+      <td>0.001462</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>0.073743</td>
-      <td>0.000338</td>
-      <td>0.073743</td>
-      <td>0.000677</td>
+      <td>0.073974</td>
+      <td>0.000772</td>
+      <td>0.073973</td>
+      <td>0.001493</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>0.073743</td>
-      <td>0.000338</td>
-      <td>0.073743</td>
-      <td>0.000677</td>
+      <td>0.073985</td>
+      <td>0.000739</td>
+      <td>0.073973</td>
+      <td>0.001493</td>
     </tr>
   </tbody>
 </table>
@@ -632,11 +730,11 @@ best
   </thead>
   <tbody>
     <tr>
-      <th>92</th>
-      <td>0.070241</td>
-      <td>0.00048</td>
-      <td>0.073031</td>
-      <td>0.000816</td>
+      <th>69</th>
+      <td>0.071405</td>
+      <td>0.000469</td>
+      <td>0.073617</td>
+      <td>0.001956</td>
     </tr>
   </tbody>
 </table>
@@ -653,7 +751,7 @@ ntree
 
 
 
-    92
+    69
 
 
 
@@ -668,7 +766,7 @@ fitter
 
     XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
                   colsample_bytree=1, gamma=0, learning_rate=0.1, max_delta_step=0,
-                  max_depth=3, min_child_weight=1, missing=None, n_estimators=92,
+                  max_depth=3, min_child_weight=1, missing=None, n_estimators=69,
                   n_jobs=1, nthread=None, objective='binary:logistic',
                   random_state=0, reg_alpha=0, reg_lambda=1, scale_pos_weight=1,
                   seed=None, silent=True, subsample=1)
@@ -678,9 +776,6 @@ fitter
 
 ```python
 model = fitter.fit(cross_frame.loc[:, model_vars], churn_train)
-
-
-
 ```
 
 Apply the data transform to our held-out data.
@@ -712,16 +807,161 @@ wvpy.util.plot_roc(pf["pred"], pf["churn"])
 ```
 
 
-![png](output_39_0.png)
+![png](output_40_0.png)
 
 
 
 
 
-    0.7391688468311339
+    0.7521540785200735
 
 
 
 Notice we dealt with many problem columns at once, and in a statistically sound manner. More on the `vtreat` package for Python can be found here: [https://github.com/WinVector/pyvtreat](https://github.com/WinVector/pyvtreat).  Details on the `R` version can be found here: [https://github.com/WinVector/vtreat](https://github.com/WinVector/vtreat).
 
-Compare to [R solution](https://github.com/WinVector/PDSwR2/blob/master/KDD2009/KDD2009vtreat.md).
+We can compare this to the [R solution](https://github.com/WinVector/PDSwR2/blob/master/KDD2009/KDD2009vtreat.md).
+
+
+```python
+
+```
+
+We can compare the above cross-frame solution to a naive "design transform and model on the same data set" solution as we show below.  Note we turn off `filter_to_recommended` as this is computed using cross-frame techniques (and hence is a non-naive estimate).
+
+
+```python
+plan_naive = vtreat.BinomialOutcomeTreatment(
+    outcome_target=True,              
+    params=vtreat.vtreat_parameters({'filter_to_recommended':False}))
+plan_naive.fit(d_train, churn_train)
+naive_frame = plan_naive.transform(d_train)
+```
+
+
+```python
+fd_naive = xgboost.DMatrix(data=naive_frame, label=churn_train)
+x_parameters = {"max_depth":3, "objective":'binary:logistic'}
+cvn = xgboost.cv(x_parameters, fd_naive, num_boost_round=100, verbose_eval=False)
+```
+
+
+```python
+bestn = cvn.loc[cvn["test-error-mean"]<= min(cvn["test-error-mean"] + 1.0e-9), :]
+bestn
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>train-error-mean</th>
+      <th>train-error-std</th>
+      <th>test-error-mean</th>
+      <th>test-error-std</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>56</th>
+      <td>0.050443</td>
+      <td>0.000396</td>
+      <td>0.056581</td>
+      <td>0.000931</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+ntreen = bestn.index.values[0]
+ntreen
+```
+
+
+
+
+    56
+
+
+
+
+```python
+fittern = xgboost.XGBClassifier(n_estimators=ntreen, max_depth=3, objective='binary:logistic')
+fittern
+```
+
+
+
+
+    XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
+                  colsample_bytree=1, gamma=0, learning_rate=0.1, max_delta_step=0,
+                  max_depth=3, min_child_weight=1, missing=None, n_estimators=56,
+                  n_jobs=1, nthread=None, objective='binary:logistic',
+                  random_state=0, reg_alpha=0, reg_lambda=1, scale_pos_weight=1,
+                  seed=None, silent=True, subsample=1)
+
+
+
+
+```python
+modeln = fittern.fit(naive_frame, churn_train)
+```
+
+
+```python
+test_processedn = plan_naive.transform(d_test)
+```
+
+
+```python
+pfn = pandas.DataFrame({"churn":churn_test})
+predsn = modeln.predict_proba(test_processedn)
+```
+
+
+```python
+pfn["pred_naive"] = predsn[:, 1]
+```
+
+
+```python
+wvpy.util.plot_roc(pfn["pred_naive"], pfn["churn"])
+```
+
+
+![png](output_54_0.png)
+
+
+
+
+
+    0.5826181817285848
+
+
+
+Note the naive test performance is worse, despite its far better training performance.  This is over-fit due to the nested model bias of using the same data to build the treatment plan and model without any cross-frame mitigations.
+
+
+```python
+
+```
