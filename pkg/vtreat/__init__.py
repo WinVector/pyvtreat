@@ -37,18 +37,20 @@ import warnings
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
+
 def vtreat_parameters(user_params=None):
     """build a vtreat parmaters dictionary, adding in user choices"""
-    params = {'use_hierarchical_estimate':True,
-              'coders':{'clean_copy',
-                        'missing_indicator',
-                        'indicator_code',
-                        'impact_code',
-                        'deviance_code',
-                        'logit_code',
-                        'prevalence_code'}.copy(),
-               'filter_to_recommended':True
-              }.copy()
+    params = {'use_hierarchical_estimate': True,
+              'coders': {'clean_copy',
+                         'missing_indicator',
+                         'indicator_code',
+                         'impact_code',
+                         'deviance_code',
+                         'logit_code',
+                         'prevalence_code'},
+              'filter_to_recommended': True,
+              'indicator_min_fracton': 1/20.0
+              }
     if user_params is not None:
         pkeys = set(params.keys())
         for k in user_params.keys():
@@ -124,7 +126,7 @@ class NumericOutcomeTreatment:
         # use cross_frame to compute variable effects
         self.score_frame_ = vtreat_impl.score_plan_variables(
             cross_frame=cross_frame, outcome=y, plan=self.plan_)
-        cross_frame = vtreat_impl.limit_to_appropriate_columns(res = cross_frame, transform = self)
+        cross_frame = vtreat_impl.limit_to_appropriate_columns(res=cross_frame, transform=self)
         return cross_frame
 
 

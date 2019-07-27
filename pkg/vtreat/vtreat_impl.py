@@ -8,7 +8,6 @@ Created on Sat Jul 20 12:07:57 2019
 import numpy
 import pandas
 
-
 import vtreat.util
 
 
@@ -115,14 +114,14 @@ class MappedCodeTransform(VarTransform):
 
 class YAwareMappedCodeTransform(MappedCodeTransform):
     def __init__(
-        self,
-        incoming_column_name,
-        derived_column_name,
-        treatment,
-        code_book,
-        refitter,
-        extra_args,
-        params,
+            self,
+            incoming_column_name,
+            derived_column_name,
+            treatment,
+            code_book,
+            refitter,
+            extra_args,
+            params,
     ):
         MappedCodeTransform.__init__(
             self,
@@ -199,7 +198,7 @@ def fit_binomial_impact_code(*, incoming_column_name, x, y, extra_args, params):
         code_book=sf,
         refitter=fit_binomial_impact_code,
         extra_args=extra_args,
-        params= params
+        params=params
     )
 
 
@@ -230,13 +229,13 @@ class IndicatorCodeTransform(VarTransform):
         return res
 
 
-def fit_indicator_code(incoming_column_name, x):
+def fit_indicator_code(*, incoming_column_name, x, min_fraction = 1/20.0):
     sf = pandas.DataFrame({incoming_column_name: x})
     na_posns = sf[incoming_column_name].isnull()
     sf.loc[na_posns, incoming_column_name] = "_NA_"
     counts = sf[incoming_column_name].value_counts()
     n = sf.shape[0]
-    counts = counts[counts >= n / 20]  # no more than 20 symbols
+    counts = counts[counts >= min_fraction]  # no more than 20 symbols
     levels = [v for v in counts.index]
     if len(levels) < 1:
         return None
@@ -270,7 +269,7 @@ def fit_prevalence_code(incoming_column_name, x):
 
 
 def fit_numeric_outcome_treatment(
-    *, X, y, var_list, outcome_name, cols_to_copy, params
+        *, X, y, var_list, outcome_name, cols_to_copy, params
 ):
     if (var_list is None) or (len(var_list) <= 0):
         var_list = [co for co in X.columns]
@@ -306,13 +305,13 @@ def fit_numeric_outcome_treatment(
         if 'impact_code' in params['coders']:
             xforms = xforms + [
                 fit_regression_impact_code(
-                    incoming_column_name=vi, x=numpy.asarray(X[vi]), y=y, extra_args=None, params = params
+                    incoming_column_name=vi, x=numpy.asarray(X[vi]), y=y, extra_args=None, params=params
                 )
             ]
         if 'deviance_code' in params['coders']:
             xforms = xforms + [
                 fit_regression_deviation_code(
-                    incoming_column_name=vi, x=numpy.asarray(X[vi]), y=y, extra_args=None, params = params
+                    incoming_column_name=vi, x=numpy.asarray(X[vi]), y=y, extra_args=None, params=params
                 )
             ]
         if 'prevalence_code' in params['coders']:
@@ -321,16 +320,18 @@ def fit_numeric_outcome_treatment(
             ]
         if 'indicator_code' in params['coders']:
             xforms = xforms + [
-                fit_indicator_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
+                fit_indicator_code(incoming_column_name=vi,
+                                   x=numpy.asarray(X[vi]),
+                                   min_fraction=params['indicator_min_fracton'])
             ]
     xforms = [xf for xf in xforms if xf is not None]
-    if len(xforms)<=0:
+    if len(xforms) <= 0:
         raise Exception("no variables created")
     return {"outcome_name": outcome_name, "cols_to_copy": cols_to_copy, "xforms": xforms}
 
 
 def fit_binomial_outcome_treatment(
-    *, X, y, outcome_target, var_list, outcome_name, cols_to_copy, params
+        *, X, y, outcome_target, var_list, outcome_name, cols_to_copy, params
 ):
     if (var_list is None) or (len(var_list) <= 0):
         var_list = [co for co in X.columns]
@@ -371,7 +372,7 @@ def fit_binomial_outcome_treatment(
                     x=numpy.asarray(X[vi]),
                     y=y,
                     extra_args=extra_args,
-                    params = params
+                    params=params
                 )
             ]
         if 'prevalence_code' in params['coders']:
@@ -380,16 +381,18 @@ def fit_binomial_outcome_treatment(
             ]
         if 'indicator_code' in params['coders']:
             xforms = xforms + [
-                fit_indicator_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
+                fit_indicator_code(incoming_column_name=vi,
+                                   x=numpy.asarray(X[vi]),
+                                   min_fraction=params['indicator_min_fracton'])
             ]
     xforms = [xf for xf in xforms if xf is not None]
-    if len(xforms)<=0:
+    if len(xforms) <= 0:
         raise Exception("no variables created")
     return {"outcome_name": outcome_name, "cols_to_copy": cols_to_copy, "xforms": xforms}
 
 
 def fit_multinomial_outcome_treatment(
-    *, X, y, var_list, outcome_name, cols_to_copy, params
+        *, X, y, var_list, outcome_name, cols_to_copy, params
 ):
     if (var_list is None) or (len(var_list) <= 0):
         var_list = [co for co in X.columns]
@@ -441,16 +444,18 @@ def fit_multinomial_outcome_treatment(
             ]
         if 'indicator_code' in params['coders']:
             xforms = xforms + [
-                fit_indicator_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
+                fit_indicator_code(incoming_column_name=vi,
+                                   x=numpy.asarray(X[vi]),
+                                   min_fraction=params['indicator_min_fracton'])
             ]
     xforms = [xf for xf in xforms if xf is not None]
-    if len(xforms)<=0:
+    if len(xforms) <= 0:
         raise Exception("no variables created")
     return {"outcome_name": outcome_name, "cols_to_copy": cols_to_copy, "xforms": xforms}
 
 
 def fit_unsupervised_treatment(
-    *, X, var_list, outcome_name, cols_to_copy, params
+        *, X, var_list, outcome_name, cols_to_copy, params
 ):
     if (var_list is None) or (len(var_list) <= 0):
         var_list = [co for co in X.columns]
@@ -489,10 +494,12 @@ def fit_unsupervised_treatment(
             ]
         if 'indicator_code' in params['coders']:
             xforms = xforms + [
-                fit_indicator_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
+                fit_indicator_code(incoming_column_name=vi,
+                                   x=numpy.asarray(X[vi]),
+                                   min_fraction=params['indicator_min_fracton'])
             ]
     xforms = [xf for xf in xforms if xf is not None]
-    if len(xforms)<=0:
+    if len(xforms) <= 0:
         raise Exception("no variables created")
     return {"outcome_name": outcome_name, "cols_to_copy": cols_to_copy, "xforms": xforms}
 
@@ -508,7 +515,7 @@ def perform_transform(*, x, transform):
     if len(to_copy) > 0:
         cp = x.loc[:, to_copy].copy()
         new_frames = [cp] + new_frames
-    if len(new_frames)<=0:
+    if len(new_frames) <= 0:
         raise Exception("no columns transformed")
     res = pandas.concat(new_frames, axis=1)
     res.reset_index(inplace=True, drop=True)
@@ -524,15 +531,18 @@ def limit_to_appropriate_columns(*, res, transform):
     else:
         to_take = set([ci for ci in transform.score_frame_['variable'][transform.score_frame_['has_range']]])
     cols_to_keep = [ci for ci in cols if ci in to_copy or ci in to_take]
-    if len(cols_to_keep)<=0:
+    if len(cols_to_keep) <= 0:
         raise Exception("no columns retained")
     return res[cols_to_keep]
-
 
 
 # assumes each y-aware variable produces one derived column
 # also clears out refitter_ values to None
 def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
+    if cross_plan is None or len(cross_plan) <= 1:
+        for xf in plan["xforms"]:
+            xf.refitter_ = None
+        return res
     incoming_colset = set(x.columns)
     derived_colset = set(res.columns)
     for xf in plan["xforms"]:
@@ -604,6 +614,7 @@ def score_plan_variables(cross_frame, outcome, plan):
             ),
         ))
     return score_frame
+
 
 def pseudo_score_plan_variables(cross_frame, plan):
     def describe(xf):

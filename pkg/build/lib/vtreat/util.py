@@ -16,9 +16,10 @@ import statistics
 
 def k_way_cross_plan(n_rows, k_folds):
     """randomly split range(n_rows) into k_folds disjoint groups"""
-    if k_folds >= n_rows:
-        k_folds = n_rows - 1
-    if n_rows <= 1 or k_folds <= 1 or k_folds>=n_rows/2:
+    n2 = int(numpy.floor(n_rows/2))
+    if k_folds > n2:
+        k_folds = n2
+    if n_rows <= 1 or k_folds <= 1:
         # degenerate overlap cases
         plan = [
             {
@@ -43,6 +44,11 @@ def k_way_cross_plan(n_rows, k_folds):
 
 def grouped_by_x_statistics(x, y):
     """compute some grouped by x vector summaries of numeric y vector (no missing values in y)"""
+    n = len(x)
+    if n <= 0:
+        raise Exception("no rows")
+    if n != len(y):
+        raise Exception("len(y)!=len(x)")
     eps = 1.0e-3
     sf = pandas.DataFrame({"x": x, "y": y})
     sf.reset_index(inplace=True, drop=True)
@@ -58,10 +64,13 @@ def grouped_by_x_statistics(x, y):
     sf["_group_mean"] = sf["_group_mean"] / sf["_ni"]
     sf["_var"] = sf["_var"] / (sf["_ni"] - 1) + eps
     avg_var = 0
-    if sum(sf["_var"].isnull())<len(sf["_var"]):
+    if sum(sf["_var"].isnull()) < len(sf["_var"]):
         avg_var = numpy.nanmean(sf["_var"])
     sf.loc[sf["_var"].isnull(), "_var"] = avg_var
-    sf["_vb"] = statistics.variance(sf["_group_mean"]) + eps
+    if sf.shape[0]>1:
+        sf["_vb"] = statistics.variance(sf["_group_mean"]) + eps
+    else:
+        sf["_vb"] = eps
     sf["_gm"] = global_mean
     # heirarchical model is in:
     # http://www.win-vector.com/blog/2017/09/partial-pooling-for-lower-variance-variable-encoding/
@@ -77,9 +86,15 @@ def grouped_by_x_statistics(x, y):
 def score_variables(cross_frame, variables, outcome):
     """score the linear relation of varaibles to outcomename"""
 
+    if len(variables) <= 0:
+        return None
+    n = cross_frame.shape[0]
+    if n != len(outcome):
+        raise Exception("len(n) must equal cross_frame.shape[0]")
+
     def f(v):
         col = cross_frame[v]
-        if numpy.max(col) > numpy.min(col):
+        if n > 0 and numpy.max(col) > numpy.min(col):
             with warnings.catch_warnings():
                 est = scipy.stats.pearsonr(cross_frame[v], outcome)
                 sfi = pandas.DataFrame(
@@ -92,6 +107,8 @@ def score_variables(cross_frame, variables, outcome):
         return sfi
 
     sf = [f(v) for v in variables]
+    if len(sf) <= 0:
+        return None
     sf = pandas.concat(sf, axis=0)
     sf.reset_index(inplace=True, drop=True)
     return sf
