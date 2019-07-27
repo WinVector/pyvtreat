@@ -576,7 +576,9 @@ def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
 
 def score_plan_variables(cross_frame, outcome, plan):
     def describe(xf):
-        description = pandas.DataFrame({"variable": xf.derived_column_names_})
+        description = pandas.DataFrame({
+            "variable": xf.derived_column_names_})
+        description["orig_variable"] = xf.incoming_column_name_
         description["treatment"] = xf.treatment_
         description["y_aware"] = xf.need_cross_treatment_
         return description
