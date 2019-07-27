@@ -38,8 +38,29 @@ import warnings
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
 
+class CrossValidationPlan:
+    """Data splitting plan"""
+
+    def __init__(self):
+        pass
+
+    def split_plan(self, *, n_rows=None, k_folds=None, data=None, y=None):
+        raise Exception("base class called")
+
+
+class KWayCrossPlan(CrossValidationPlan):
+    """K-way cross validation plan"""
+
+    def __init__(self):
+        CrossValidationPlan.__init__(self)
+
+    def split_plan(self, *, n_rows=None, k_folds=None, data=None, y=None):
+        return vtreat.util.k_way_cross_plan(n_rows=n_rows, k_folds=k_folds)
+
+
 def vtreat_parameters(user_params=None):
     """build a vtreat parmaters dictionary, adding in user choices"""
+
     params = {'use_hierarchical_estimate': True,
               'coders': {'clean_copy',
                          'missing_indicator',
@@ -49,7 +70,9 @@ def vtreat_parameters(user_params=None):
                          'logit_code',
                          'prevalence_code'},
               'filter_to_recommended': True,
-              'indicator_min_fracton': 1/20.0
+              'indicator_min_fracton': 0.05,
+              'cross_validation_plan': KWayCrossPlan(),
+              'cross_validation_k': 5
               }
     if user_params is not None:
         pkeys = set(params.keys())
@@ -119,7 +142,11 @@ class NumericOutcomeTreatment:
         )
         res = vtreat_impl.perform_transform(x=X, transform=self)
         # patch in cross-frame versions of complex columns such as impact
-        self.cross_plan_ = vtreat.util.k_way_cross_plan(n_rows=X.shape[0], k_folds=5)
+        self.cross_plan_ = self.params_['cross_validation_plan'].split_plan(
+            n_rows=X.shape[0],
+            k_folds=self.params_['cross_validation_k'],
+            data=X,
+            y=y)
         cross_frame = vtreat_impl.cross_patch_refit_y_aware_cols(
             x=X, y=y, res=res, plan=self.plan_, cross_plan=self.cross_plan_
         )
@@ -190,7 +217,11 @@ class BinomialOutcomeTreatment:
         )
         res = vtreat_impl.perform_transform(x=X, transform=self)
         # patch in cross-frame versions of complex columns such as impact
-        self.cross_plan_ = vtreat.util.k_way_cross_plan(n_rows=X.shape[0], k_folds=5)
+        self.cross_plan_ = vtreat.util.self.params_['cross_validation_plan'].split_plan(
+            n_rows=X.shape[0],
+            k_folds=self.params_['cross_validation_k'],
+            data=X,
+            y=y)
         cross_frame = vtreat_impl.cross_patch_refit_y_aware_cols(
             x=X, y=y, res=res, plan=self.plan_, cross_plan=self.cross_plan_
         )
@@ -262,7 +293,11 @@ class MultinomialOutcomeTreatment:
         )
         res = vtreat_impl.perform_transform(x=X, transform=self)
         # patch in cross-frame versions of complex columns such as impact
-        self.cross_plan_ = vtreat.util.k_way_cross_plan(n_rows=X.shape[0], k_folds=5)
+        self.cross_plan_ = self.params_['cross_validation_plan'].split_plan(
+            n_rows=X.shape[0],
+            k_folds=self.params_['cross_validation_k'],
+            data=X,
+            y=y)
         cross_frame = vtreat_impl.cross_patch_refit_y_aware_cols(
             x=X, y=y, res=res, plan=self.plan_, cross_plan=self.cross_plan_
         )

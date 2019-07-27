@@ -229,7 +229,7 @@ class IndicatorCodeTransform(VarTransform):
         return res
 
 
-def fit_indicator_code(*, incoming_column_name, x, min_fraction = 1/20.0):
+def fit_indicator_code(*, incoming_column_name, x, min_fraction = 0.05):
     sf = pandas.DataFrame({incoming_column_name: x})
     na_posns = sf[incoming_column_name].isnull()
     sf.loc[na_posns, incoming_column_name] = "_NA_"
@@ -603,14 +603,14 @@ def score_plan_variables(cross_frame, outcome, plan):
     score_frame["recommended"] = numpy.logical_and(
         score_frame["has_range"],
         numpy.logical_and(
-            score_frame["significance"] < 0.05,
+            numpy.logical_not(numpy.logical_or(
+                numpy.isnan(score_frame["significance"]),
+                numpy.isnan(score_frame["PearsonR"]))),
             numpy.logical_and(
                 score_frame["significance"] < 1 / score_frame["vcount"],
                 numpy.logical_or(
-                    score_frame["PearsonR"] > 0, numpy.logical_not(score_frame["y_aware"])
-                ),
-            ),
-        ))
+                    score_frame["PearsonR"] > 0,
+                    numpy.logical_not(score_frame["y_aware"])))))
     return score_frame
 
 
