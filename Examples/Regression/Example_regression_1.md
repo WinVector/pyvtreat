@@ -10,8 +10,8 @@
     Requirement already satisfied: pandas in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from vtreat==0.1) (0.24.2)
     Requirement already satisfied: statistics in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from vtreat==0.1) (1.0.3.5)
     Requirement already satisfied: scipy in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from vtreat==0.1) (1.2.1)
-    Requirement already satisfied: pytz>=2011k in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from pandas->vtreat==0.1) (2019.1)
     Requirement already satisfied: python-dateutil>=2.5.0 in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from pandas->vtreat==0.1) (2.8.0)
+    Requirement already satisfied: pytz>=2011k in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from pandas->vtreat==0.1) (2019.1)
     Requirement already satisfied: docutils>=0.3 in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from statistics->vtreat==0.1) (0.14)
     Requirement already satisfied: six>=1.5 in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from python-dateutil>=2.5.0->pandas->vtreat==0.1) (1.12.0)
     Building wheels for collected packages: vtreat
@@ -72,10 +72,10 @@ vtreat.util.k_way_cross_plan(10,4)
 
 
 
-    [{'train': [1, 2, 3, 4, 5, 7, 8], 'app': [0, 6, 9]},
-     {'train': [0, 1, 3, 4, 6, 7, 9], 'app': [2, 5, 8]},
-     {'train': [0, 2, 4, 5, 6, 7, 8, 9], 'app': [1, 3]},
-     {'train': [0, 1, 2, 3, 5, 6, 8, 9], 'app': [4, 7]}]
+    [{'train': [0, 1, 2, 4, 5, 6, 7], 'app': [3, 8, 9]},
+     {'train': [0, 1, 3, 4, 5, 8, 9], 'app': [2, 6, 7]},
+     {'train': [0, 2, 3, 4, 6, 7, 8, 9], 'app': [1, 5]},
+     {'train': [1, 2, 3, 5, 6, 7, 8, 9], 'app': [0, 4]}]
 
 
 
@@ -148,11 +148,11 @@ df2
   <tbody>
     <tr>
       <th>0</th>
-      <td>-2.300266</td>
-      <td>0.929874</td>
-      <td>0.464463</td>
+      <td>0.445190</td>
+      <td>-0.623772</td>
+      <td>-1.427559</td>
       <td>foo</td>
-      <td>False</td>
+      <td>True</td>
       <td>0</td>
       <td>1</td>
     </tr>
@@ -168,11 +168,11 @@ df2
     </tr>
     <tr>
       <th>2</th>
-      <td>-0.076417</td>
-      <td>-0.573195</td>
-      <td>1.360757</td>
+      <td>1.642672</td>
+      <td>-0.536310</td>
+      <td>-0.270743</td>
       <td>foo</td>
-      <td>False</td>
+      <td>True</td>
       <td>2</td>
       <td>1</td>
     </tr>
@@ -188,21 +188,21 @@ df2
     </tr>
     <tr>
       <th>4</th>
-      <td>1.459697</td>
-      <td>1.589305</td>
-      <td>0.682469</td>
+      <td>-0.462884</td>
+      <td>-1.132874</td>
+      <td>2.172930</td>
       <td>foo</td>
-      <td>True</td>
+      <td>False</td>
       <td>4</td>
       <td>1</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>0.416368</td>
-      <td>0.983062</td>
-      <td>-0.908183</td>
+      <td>-0.998529</td>
+      <td>-0.199181</td>
+      <td>-1.414412</td>
       <td>foo</td>
-      <td>True</td>
+      <td>False</td>
       <td>5</td>
       <td>1</td>
     </tr>
@@ -218,9 +218,9 @@ df2
     </tr>
     <tr>
       <th>7</th>
-      <td>-0.430715</td>
-      <td>-1.468672</td>
-      <td>-0.274606</td>
+      <td>-0.357196</td>
+      <td>-0.023285</td>
+      <td>-1.398068</td>
       <td>foo</td>
       <td>False</td>
       <td>7</td>
@@ -240,7 +240,7 @@ plan.fit(df2, df2["y"])
 
 
 
-    <vtreat.NumericOutcomeTreatment at 0x1a143deef0>
+    <vtreat.NumericOutcomeTreatment at 0x1a23c3b550>
 
 
 
@@ -271,6 +271,7 @@ plan.score_frame_
     <tr style="text-align: right;">
       <th></th>
       <th>variable</th>
+      <th>orig_variable</th>
       <th>treatment</th>
       <th>y_aware</th>
       <th>has_range</th>
@@ -284,6 +285,7 @@ plan.score_frame_
     <tr>
       <th>0</th>
       <td>one_is_bad</td>
+      <td>one</td>
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
@@ -295,6 +297,7 @@ plan.score_frame_
     <tr>
       <th>1</th>
       <td>two_is_bad</td>
+      <td>two</td>
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
@@ -306,6 +309,7 @@ plan.score_frame_
     <tr>
       <th>2</th>
       <td>three_is_bad</td>
+      <td>three</td>
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
@@ -317,6 +321,7 @@ plan.score_frame_
     <tr>
       <th>3</th>
       <td>four_is_bad</td>
+      <td>four</td>
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
@@ -328,6 +333,7 @@ plan.score_frame_
     <tr>
       <th>4</th>
       <td>five_is_bad</td>
+      <td>five</td>
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
@@ -339,72 +345,79 @@ plan.score_frame_
     <tr>
       <th>5</th>
       <td>one</td>
+      <td>one</td>
       <td>clean_copy</td>
       <td>False</td>
       <td>True</td>
-      <td>0.453291</td>
-      <td>0.259327</td>
+      <td>-0.527877</td>
+      <td>0.178729</td>
       <td>4.0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>6</th>
       <td>two</td>
+      <td>two</td>
       <td>clean_copy</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.329682</td>
-      <td>0.425178</td>
+      <td>0.412649</td>
+      <td>0.309629</td>
       <td>4.0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>7</th>
       <td>three</td>
+      <td>three</td>
       <td>clean_copy</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.508127</td>
-      <td>0.198552</td>
+      <td>-0.014472</td>
+      <td>0.972868</td>
       <td>4.0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>8</th>
       <td>five</td>
+      <td>five</td>
       <td>clean_copy</td>
       <td>False</td>
       <td>True</td>
-      <td>0.253546</td>
-      <td>0.544582</td>
+      <td>-0.732467</td>
+      <td>0.038780</td>
       <td>4.0</td>
-      <td>False</td>
+      <td>True</td>
     </tr>
     <tr>
       <th>9</th>
       <td>four_impact_code</td>
+      <td>four</td>
       <td>impact_code</td>
       <td>True</td>
       <td>True</td>
-      <td>-0.141848</td>
-      <td>0.737580</td>
+      <td>0.056344</td>
+      <td>0.894579</td>
       <td>1.0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>10</th>
       <td>four_deviance_code</td>
+      <td>four</td>
       <td>deviance_code</td>
       <td>True</td>
       <td>True</td>
-      <td>-0.010071</td>
-      <td>0.981119</td>
+      <td>-0.033794</td>
+      <td>0.936685</td>
       <td>1.0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>11</th>
       <td>four_prevalence_code</td>
+      <td>four</td>
       <td>prevalence_code</td>
       <td>False</td>
       <td>True</td>
@@ -416,6 +429,7 @@ plan.score_frame_
     <tr>
       <th>12</th>
       <td>four_lev_foo</td>
+      <td>four</td>
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
@@ -427,6 +441,7 @@ plan.score_frame_
     <tr>
       <th>13</th>
       <td>four_lev__NA_</td>
+      <td>four</td>
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
@@ -438,6 +453,7 @@ plan.score_frame_
     <tr>
       <th>14</th>
       <td>four_lev_blog</td>
+      <td>four</td>
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
@@ -506,10 +522,10 @@ res
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>-2.300266</td>
-      <td>0.929874</td>
-      <td>0.464463</td>
-      <td>0.0</td>
+      <td>0.445190</td>
+      <td>-0.623772</td>
+      <td>-1.427559</td>
+      <td>1.0</td>
       <td>0.005407</td>
       <td>2.702036</td>
       <td>0.500</td>
@@ -525,9 +541,9 @@ res
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>-0.186267</td>
-      <td>0.292075</td>
-      <td>0.264980</td>
+      <td>0.053851</td>
+      <td>-0.503085</td>
+      <td>-0.467571</td>
       <td>0.4</td>
       <td>0.000000</td>
       <td>3.535675</td>
@@ -544,10 +560,10 @@ res
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>-0.076417</td>
-      <td>-0.573195</td>
-      <td>1.360757</td>
-      <td>0.0</td>
+      <td>1.642672</td>
+      <td>-0.536310</td>
+      <td>-0.270743</td>
+      <td>1.0</td>
       <td>0.005407</td>
       <td>2.702036</td>
       <td>0.500</td>
@@ -563,9 +579,9 @@ res
       <td>1.0</td>
       <td>0.0</td>
       <td>1.0</td>
-      <td>-0.186267</td>
-      <td>0.292075</td>
-      <td>0.264980</td>
+      <td>0.053851</td>
+      <td>-0.503085</td>
+      <td>-0.467571</td>
       <td>0.4</td>
       <td>0.000000</td>
       <td>3.146585</td>
@@ -582,10 +598,10 @@ res
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>1.459697</td>
-      <td>1.589305</td>
-      <td>0.682469</td>
-      <td>1.0</td>
+      <td>-0.462884</td>
+      <td>-1.132874</td>
+      <td>2.172930</td>
+      <td>0.0</td>
       <td>0.005407</td>
       <td>2.702036</td>
       <td>0.500</td>
@@ -601,10 +617,10 @@ res
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.416368</td>
-      <td>0.983062</td>
-      <td>-0.908183</td>
-      <td>1.0</td>
+      <td>-0.998529</td>
+      <td>-0.199181</td>
+      <td>-1.414412</td>
+      <td>0.0</td>
       <td>0.005407</td>
       <td>2.702036</td>
       <td>0.500</td>
@@ -620,9 +636,9 @@ res
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>-0.186267</td>
-      <td>0.292075</td>
-      <td>0.264980</td>
+      <td>0.053851</td>
+      <td>-0.503085</td>
+      <td>-0.467571</td>
       <td>0.4</td>
       <td>0.000000</td>
       <td>3.535675</td>
@@ -639,9 +655,9 @@ res
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>-0.430715</td>
-      <td>-1.468672</td>
-      <td>-0.274606</td>
+      <td>-0.357196</td>
+      <td>-0.023285</td>
+      <td>-1.398068</td>
       <td>0.0</td>
       <td>0.005407</td>
       <td>2.702036</td>
@@ -710,12 +726,12 @@ res2
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>-2.300266</td>
-      <td>0.929874</td>
-      <td>0.464463</td>
-      <td>0.0</td>
-      <td>0.000000e+00</td>
-      <td>2.081906</td>
+      <td>0.445190</td>
+      <td>-0.623772</td>
+      <td>-1.427559</td>
+      <td>1.0</td>
+      <td>0.005407</td>
+      <td>2.702036</td>
       <td>0.500</td>
       <td>1</td>
       <td>0</td>
@@ -729,12 +745,12 @@ res2
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>-0.186267</td>
-      <td>0.292075</td>
-      <td>0.264980</td>
+      <td>0.053851</td>
+      <td>-0.503085</td>
+      <td>-0.467571</td>
       <td>0.4</td>
-      <td>0.000000e+00</td>
-      <td>2.081906</td>
+      <td>0.000000</td>
+      <td>3.535675</td>
       <td>0.125</td>
       <td>0</td>
       <td>1</td>
@@ -748,12 +764,12 @@ res2
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>-0.076417</td>
-      <td>-0.573195</td>
-      <td>1.360757</td>
-      <td>0.0</td>
-      <td>1.239231e-02</td>
-      <td>3.605690</td>
+      <td>1.642672</td>
+      <td>-0.536310</td>
+      <td>-0.270743</td>
+      <td>1.0</td>
+      <td>0.005407</td>
+      <td>2.702036</td>
       <td>0.500</td>
       <td>1</td>
       <td>0</td>
@@ -767,12 +783,12 @@ res2
       <td>1.0</td>
       <td>0.0</td>
       <td>1.0</td>
-      <td>-0.186267</td>
-      <td>0.292075</td>
-      <td>0.264980</td>
+      <td>0.053851</td>
+      <td>-0.503085</td>
+      <td>-0.467571</td>
       <td>0.4</td>
-      <td>0.000000e+00</td>
       <td>0.000000</td>
+      <td>3.146585</td>
       <td>0.000</td>
       <td>0</td>
       <td>0</td>
@@ -786,12 +802,12 @@ res2
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>1.459697</td>
-      <td>1.589305</td>
-      <td>0.682469</td>
-      <td>1.0</td>
-      <td>1.239231e-02</td>
-      <td>3.605690</td>
+      <td>-0.462884</td>
+      <td>-1.132874</td>
+      <td>2.172930</td>
+      <td>0.0</td>
+      <td>0.005407</td>
+      <td>2.702036</td>
       <td>0.500</td>
       <td>1</td>
       <td>0</td>
@@ -805,12 +821,12 @@ res2
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.416368</td>
-      <td>0.983062</td>
-      <td>-0.908183</td>
-      <td>1.0</td>
-      <td>-7.469748e-04</td>
-      <td>2.986246</td>
+      <td>-0.998529</td>
+      <td>-0.199181</td>
+      <td>-1.414412</td>
+      <td>0.0</td>
+      <td>0.005407</td>
+      <td>2.702036</td>
       <td>0.500</td>
       <td>1</td>
       <td>0</td>
@@ -824,12 +840,12 @@ res2
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>-0.186267</td>
-      <td>0.292075</td>
-      <td>0.264980</td>
+      <td>0.053851</td>
+      <td>-0.503085</td>
+      <td>-0.467571</td>
       <td>0.4</td>
-      <td>-4.440892e-16</td>
-      <td>2.217581</td>
+      <td>0.000000</td>
+      <td>3.535675</td>
       <td>0.125</td>
       <td>0</td>
       <td>1</td>
@@ -843,12 +859,12 @@ res2
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>-0.430715</td>
-      <td>-1.468672</td>
-      <td>-0.274606</td>
+      <td>-0.357196</td>
+      <td>-0.023285</td>
+      <td>-1.398068</td>
       <td>0.0</td>
-      <td>1.050757e-01</td>
-      <td>2.217581</td>
+      <td>0.005407</td>
+      <td>2.702036</td>
       <td>0.500</td>
       <td>1</td>
       <td>0</td>
@@ -913,10 +929,10 @@ plan.transform(df2)
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>-2.300266</td>
-      <td>0.929874</td>
-      <td>0.464463</td>
-      <td>0.0</td>
+      <td>0.445190</td>
+      <td>-0.623772</td>
+      <td>-1.427559</td>
+      <td>1.0</td>
       <td>0.005407</td>
       <td>2.702036</td>
       <td>0.500</td>
@@ -932,9 +948,9 @@ plan.transform(df2)
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>-0.186267</td>
-      <td>0.292075</td>
-      <td>0.264980</td>
+      <td>0.053851</td>
+      <td>-0.503085</td>
+      <td>-0.467571</td>
       <td>0.4</td>
       <td>0.000000</td>
       <td>3.535675</td>
@@ -951,10 +967,10 @@ plan.transform(df2)
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>-0.076417</td>
-      <td>-0.573195</td>
-      <td>1.360757</td>
-      <td>0.0</td>
+      <td>1.642672</td>
+      <td>-0.536310</td>
+      <td>-0.270743</td>
+      <td>1.0</td>
       <td>0.005407</td>
       <td>2.702036</td>
       <td>0.500</td>
@@ -970,9 +986,9 @@ plan.transform(df2)
       <td>1.0</td>
       <td>0.0</td>
       <td>1.0</td>
-      <td>-0.186267</td>
-      <td>0.292075</td>
-      <td>0.264980</td>
+      <td>0.053851</td>
+      <td>-0.503085</td>
+      <td>-0.467571</td>
       <td>0.4</td>
       <td>0.000000</td>
       <td>3.146585</td>
@@ -989,10 +1005,10 @@ plan.transform(df2)
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>1.459697</td>
-      <td>1.589305</td>
-      <td>0.682469</td>
-      <td>1.0</td>
+      <td>-0.462884</td>
+      <td>-1.132874</td>
+      <td>2.172930</td>
+      <td>0.0</td>
       <td>0.005407</td>
       <td>2.702036</td>
       <td>0.500</td>
@@ -1008,10 +1024,10 @@ plan.transform(df2)
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.416368</td>
-      <td>0.983062</td>
-      <td>-0.908183</td>
-      <td>1.0</td>
+      <td>-0.998529</td>
+      <td>-0.199181</td>
+      <td>-1.414412</td>
+      <td>0.0</td>
       <td>0.005407</td>
       <td>2.702036</td>
       <td>0.500</td>
@@ -1027,9 +1043,9 @@ plan.transform(df2)
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>-0.186267</td>
-      <td>0.292075</td>
-      <td>0.264980</td>
+      <td>0.053851</td>
+      <td>-0.503085</td>
+      <td>-0.467571</td>
       <td>0.4</td>
       <td>0.000000</td>
       <td>3.535675</td>
@@ -1046,9 +1062,9 @@ plan.transform(df2)
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>-0.430715</td>
-      <td>-1.468672</td>
-      <td>-0.274606</td>
+      <td>-0.357196</td>
+      <td>-0.023285</td>
+      <td>-1.398068</td>
       <td>0.0</td>
       <td>0.005407</td>
       <td>2.702036</td>
@@ -1090,6 +1106,7 @@ plan.score_frame_
     <tr style="text-align: right;">
       <th></th>
       <th>variable</th>
+      <th>orig_variable</th>
       <th>treatment</th>
       <th>y_aware</th>
       <th>has_range</th>
@@ -1103,6 +1120,7 @@ plan.score_frame_
     <tr>
       <th>0</th>
       <td>one_is_bad</td>
+      <td>one</td>
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
@@ -1114,6 +1132,7 @@ plan.score_frame_
     <tr>
       <th>1</th>
       <td>two_is_bad</td>
+      <td>two</td>
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
@@ -1125,6 +1144,7 @@ plan.score_frame_
     <tr>
       <th>2</th>
       <td>three_is_bad</td>
+      <td>three</td>
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
@@ -1136,6 +1156,7 @@ plan.score_frame_
     <tr>
       <th>3</th>
       <td>four_is_bad</td>
+      <td>four</td>
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
@@ -1147,6 +1168,7 @@ plan.score_frame_
     <tr>
       <th>4</th>
       <td>five_is_bad</td>
+      <td>five</td>
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
@@ -1158,72 +1180,79 @@ plan.score_frame_
     <tr>
       <th>5</th>
       <td>one</td>
+      <td>one</td>
       <td>clean_copy</td>
       <td>False</td>
       <td>True</td>
-      <td>0.453291</td>
-      <td>0.259327</td>
+      <td>-0.527877</td>
+      <td>0.178729</td>
       <td>4.0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>6</th>
       <td>two</td>
+      <td>two</td>
       <td>clean_copy</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.329682</td>
-      <td>0.425178</td>
+      <td>0.412649</td>
+      <td>0.309629</td>
       <td>4.0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>7</th>
       <td>three</td>
+      <td>three</td>
       <td>clean_copy</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.508127</td>
-      <td>0.198552</td>
+      <td>-0.014472</td>
+      <td>0.972868</td>
       <td>4.0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>8</th>
       <td>five</td>
+      <td>five</td>
       <td>clean_copy</td>
       <td>False</td>
       <td>True</td>
-      <td>0.253546</td>
-      <td>0.544582</td>
+      <td>-0.732467</td>
+      <td>0.038780</td>
       <td>4.0</td>
-      <td>False</td>
+      <td>True</td>
     </tr>
     <tr>
       <th>9</th>
       <td>four_impact_code</td>
+      <td>four</td>
       <td>impact_code</td>
       <td>True</td>
       <td>True</td>
-      <td>0.567897</td>
-      <td>0.141981</td>
+      <td>0.056344</td>
+      <td>0.894579</td>
       <td>1.0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>10</th>
       <td>four_deviance_code</td>
+      <td>four</td>
       <td>deviance_code</td>
       <td>True</td>
       <td>True</td>
-      <td>0.085582</td>
-      <td>0.840316</td>
+      <td>-0.033794</td>
+      <td>0.936685</td>
       <td>1.0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>11</th>
       <td>four_prevalence_code</td>
+      <td>four</td>
       <td>prevalence_code</td>
       <td>False</td>
       <td>True</td>
@@ -1235,6 +1264,7 @@ plan.score_frame_
     <tr>
       <th>12</th>
       <td>four_lev_foo</td>
+      <td>four</td>
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
@@ -1246,6 +1276,7 @@ plan.score_frame_
     <tr>
       <th>13</th>
       <td>four_lev__NA_</td>
+      <td>four</td>
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
@@ -1257,6 +1288,7 @@ plan.score_frame_
     <tr>
       <th>14</th>
       <td>four_lev_blog</td>
+      <td>four</td>
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>

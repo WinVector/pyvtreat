@@ -116,8 +116,8 @@ d_treated.head()
       <th>zip_lev_z00004</th>
       <th>zip_lev_z00015</th>
       <th>zip_lev_z00005</th>
-      <th>zip_lev_z00001</th>
       <th>zip_lev_z00014</th>
+      <th>zip_lev_z00001</th>
       <th>zip_lev_z00006</th>
       <th>zip_lev_z00012</th>
       <th>zip_lev_z00002</th>
@@ -386,7 +386,7 @@ transform.score_frame_
     </tr>
     <tr>
       <th>10</th>
-      <td>zip_lev_z00001</td>
+      <td>zip_lev_z00014</td>
       <td>zip</td>
       <td>indicator_code</td>
       <td>False</td>
@@ -398,7 +398,7 @@ transform.score_frame_
     </tr>
     <tr>
       <th>11</th>
-      <td>zip_lev_z00014</td>
+      <td>zip_lev_z00001</td>
       <td>zip</td>
       <td>indicator_code</td>
       <td>False</td>

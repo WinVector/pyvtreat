@@ -161,30 +161,6 @@ d_train.head()
       <td>NaN</td>
     </tr>
     <tr>
-      <th>1</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>525.0</td>
-      <td>0.0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>...</td>
-      <td>oslk</td>
-      <td>2Kb5FSF</td>
-      <td>LM8l689qOp</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>fKCe</td>
-      <td>RAYp</td>
-      <td>F2FyR07IdsN7I</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
       <th>2</th>
       <td>NaN</td>
       <td>NaN</td>
@@ -233,27 +209,51 @@ d_train.head()
       <td>NaN</td>
     </tr>
     <tr>
-      <th>4</th>
+      <th>5</th>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
-      <td>1029.0</td>
+      <td>658.0</td>
       <td>7.0</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>NaN</td>
       <td>...</td>
-      <td>oslk</td>
-      <td>1J2cvxe</td>
+      <td>zCkv</td>
+      <td>QqVuch3</td>
       <td>LM8l689qOp</td>
       <td>NaN</td>
-      <td>kG3k</td>
+      <td>NaN</td>
+      <td>Qcbd</td>
+      <td>02N6s8f</td>
+      <td>Zy3gnGM</td>
+      <td>am7c</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>77.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>oslk</td>
+      <td>R2LdzOv</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
       <td>FSa2</td>
       <td>RAYp</td>
       <td>F2FyR07IdsN7I</td>
-      <td>mj86</td>
+      <td>NaN</td>
       <td>NaN</td>
     </tr>
   </tbody>
@@ -271,7 +271,7 @@ d_train.shape
 
 
 
-    (44962, 230)
+    (44877, 230)
 
 
 
@@ -373,11 +373,11 @@ cross_frame.head()
       <td>...</td>
       <td>1</td>
       <td>0</td>
-      <td>0.653329</td>
+      <td>0.653408</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
-      <td>0.567902</td>
+      <td>0.567440</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
@@ -395,15 +395,15 @@ cross_frame.head()
       <td>0.0</td>
       <td>1.0</td>
       <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.054193</td>
+      <td>0</td>
+      <td>0</td>
       <td>1</td>
+      <td>0.233594</td>
       <td>0</td>
-      <td>0.653329</td>
       <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0.567902</td>
-      <td>1</td>
-      <td>0</td>
       <td>0</td>
     </tr>
     <tr>
@@ -412,22 +412,22 @@ cross_frame.head()
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>0.0</td>
+      <td>1.0</td>
       <td>0.0</td>
       <td>1.0</td>
       <td>1.0</td>
       <td>0.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0.053267</td>
-      <td>0</td>
-      <td>0</td>
       <td>1</td>
-      <td>0.234153</td>
       <td>0</td>
+      <td>0.653408</td>
       <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.567440</td>
+      <td>1</td>
+      <td>0</td>
       <td>0</td>
     </tr>
     <tr>
@@ -436,22 +436,22 @@ cross_frame.head()
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>1.0</td>
+      <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
       <td>1.0</td>
       <td>0.0</td>
       <td>1.0</td>
       <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.018852</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.233594</td>
+      <td>0</td>
       <td>1</td>
-      <td>0</td>
-      <td>0.653329</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0.567902</td>
-      <td>1</td>
-      <td>0</td>
       <td>0</td>
     </tr>
     <tr>
@@ -469,18 +469,18 @@ cross_frame.head()
       <td>...</td>
       <td>1</td>
       <td>0</td>
-      <td>0.653329</td>
+      <td>0.653408</td>
       <td>1</td>
       <td>0</td>
       <td>0</td>
-      <td>0.196344</td>
-      <td>0</td>
-      <td>0</td>
+      <td>0.567440</td>
       <td>1</td>
+      <td>0</td>
+      <td>0</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 232 columns</p>
+<p>5 rows × 222 columns</p>
 </div>
 
 
@@ -493,7 +493,7 @@ cross_frame.shape
 
 
 
-    (44962, 232)
+    (44877, 222)
 
 
 
@@ -526,6 +526,7 @@ plan.score_frame_.head()
     <tr style="text-align: right;">
       <th></th>
       <th>variable</th>
+      <th>orig_variable</th>
       <th>treatment</th>
       <th>y_aware</th>
       <th>has_range</th>
@@ -539,55 +540,60 @@ plan.score_frame_.head()
     <tr>
       <th>0</th>
       <td>Var1_is_bad</td>
+      <td>Var1</td>
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.004424</td>
-      <td>0.348220</td>
+      <td>0.006205</td>
+      <td>0.188663</td>
       <td>193.0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>1</th>
       <td>Var2_is_bad</td>
+      <td>Var2</td>
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.018454</td>
-      <td>0.000091</td>
+      <td>0.016714</td>
+      <td>0.000399</td>
       <td>193.0</td>
       <td>True</td>
     </tr>
     <tr>
       <th>2</th>
       <td>Var3_is_bad</td>
+      <td>Var3</td>
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.018454</td>
-      <td>0.000091</td>
+      <td>0.016681</td>
+      <td>0.000409</td>
       <td>193.0</td>
       <td>True</td>
     </tr>
     <tr>
       <th>3</th>
       <td>Var4_is_bad</td>
+      <td>Var4</td>
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.018810</td>
-      <td>0.000066</td>
+      <td>0.018341</td>
+      <td>0.000102</td>
       <td>193.0</td>
       <td>True</td>
     </tr>
     <tr>
       <th>4</th>
       <td>Var5_is_bad</td>
+      <td>Var5</td>
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.018720</td>
-      <td>0.000072</td>
+      <td>0.017612</td>
+      <td>0.000191</td>
       <td>193.0</td>
       <td>True</td>
     </tr>
@@ -606,7 +612,7 @@ len(model_vars)
 
 
 
-    232
+    222
 
 
 
@@ -654,38 +660,38 @@ cv.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>0.073773</td>
-      <td>0.000638</td>
-      <td>0.074418</td>
-      <td>0.001162</td>
+      <td>0.074024</td>
+      <td>0.000468</td>
+      <td>0.074515</td>
+      <td>0.000853</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>0.073784</td>
-      <td>0.000577</td>
-      <td>0.073907</td>
-      <td>0.001493</td>
+      <td>0.074114</td>
+      <td>0.000605</td>
+      <td>0.074158</td>
+      <td>0.001186</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.073974</td>
-      <td>0.000771</td>
-      <td>0.073929</td>
-      <td>0.001462</td>
+      <td>0.074114</td>
+      <td>0.000605</td>
+      <td>0.074158</td>
+      <td>0.001186</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>0.073974</td>
-      <td>0.000772</td>
-      <td>0.073973</td>
-      <td>0.001493</td>
+      <td>0.074114</td>
+      <td>0.000605</td>
+      <td>0.074158</td>
+      <td>0.001186</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>0.073985</td>
-      <td>0.000739</td>
-      <td>0.073973</td>
-      <td>0.001493</td>
+      <td>0.074114</td>
+      <td>0.000605</td>
+      <td>0.074158</td>
+      <td>0.001186</td>
     </tr>
   </tbody>
 </table>
@@ -730,11 +736,18 @@ best
   </thead>
   <tbody>
     <tr>
-      <th>69</th>
-      <td>0.071405</td>
-      <td>0.000469</td>
-      <td>0.073617</td>
-      <td>0.001956</td>
+      <th>79</th>
+      <td>0.071440</td>
+      <td>0.000863</td>
+      <td>0.073646</td>
+      <td>0.001053</td>
+    </tr>
+    <tr>
+      <th>85</th>
+      <td>0.070972</td>
+      <td>0.000535</td>
+      <td>0.073646</td>
+      <td>0.001238</td>
     </tr>
   </tbody>
 </table>
@@ -751,7 +764,7 @@ ntree
 
 
 
-    69
+    79
 
 
 
@@ -766,7 +779,7 @@ fitter
 
     XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
                   colsample_bytree=1, gamma=0, learning_rate=0.1, max_delta_step=0,
-                  max_depth=3, min_child_weight=1, missing=None, n_estimators=69,
+                  max_depth=3, min_child_weight=1, missing=None, n_estimators=79,
                   n_jobs=1, nthread=None, objective='binary:logistic',
                   random_state=0, reg_alpha=0, reg_lambda=1, scale_pos_weight=1,
                   seed=None, silent=True, subsample=1)
@@ -813,7 +826,7 @@ wvpy.util.plot_roc(pf["pred"], pf["churn"])
 
 
 
-    0.7521540785200735
+    0.737410400151827
 
 
 
@@ -879,11 +892,11 @@ bestn
   </thead>
   <tbody>
     <tr>
-      <th>56</th>
-      <td>0.050443</td>
-      <td>0.000396</td>
-      <td>0.056581</td>
-      <td>0.000931</td>
+      <th>64</th>
+      <td>0.050349</td>
+      <td>0.000219</td>
+      <td>0.056488</td>
+      <td>0.000476</td>
     </tr>
   </tbody>
 </table>
@@ -900,7 +913,7 @@ ntreen
 
 
 
-    56
+    64
 
 
 
@@ -915,7 +928,7 @@ fittern
 
     XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
                   colsample_bytree=1, gamma=0, learning_rate=0.1, max_delta_step=0,
-                  max_depth=3, min_child_weight=1, missing=None, n_estimators=56,
+                  max_depth=3, min_child_weight=1, missing=None, n_estimators=64,
                   n_jobs=1, nthread=None, objective='binary:logistic',
                   random_state=0, reg_alpha=0, reg_lambda=1, scale_pos_weight=1,
                   seed=None, silent=True, subsample=1)
@@ -955,7 +968,7 @@ wvpy.util.plot_roc(pfn["pred_naive"], pfn["churn"])
 
 
 
-    0.5826181817285848
+    0.6002243950033334
 
 
 

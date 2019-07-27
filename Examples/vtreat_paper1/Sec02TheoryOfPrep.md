@@ -214,8 +214,8 @@ msleep_prepared.head()
       <th>brainwt</th>
       <th>...</th>
       <th>order_lev_Rodentia</th>
-      <th>order_lev_Carnivora</th>
       <th>order_lev_Primates</th>
+      <th>order_lev_Carnivora</th>
       <th>order_lev_Artiodactyla</th>
       <th>order_lev_Soricomorpha</th>
       <th>conservation_prevalence_code</th>
@@ -240,8 +240,8 @@ msleep_prepared.head()
       <td>0.281581</td>
       <td>...</td>
       <td>0</td>
-      <td>1</td>
       <td>0</td>
+      <td>1</td>
       <td>0</td>
       <td>0</td>
       <td>0.313253</td>
@@ -264,8 +264,8 @@ msleep_prepared.head()
       <td>0.015500</td>
       <td>...</td>
       <td>0</td>
-      <td>0</td>
       <td>1</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>0.337349</td>
@@ -348,7 +348,7 @@ msleep_prepared.head()
     </tr>
   </tbody>
 </table>
-<p>5 rows × 30 columns</p>
+<p>5 rows × 29 columns</p>
 </div>
 
 
@@ -363,11 +363,11 @@ msleep_prepared.columns
 
     Index(['vore_is_bad', 'conservation_is_bad', 'sleep_rem_is_bad',
            'sleep_cycle_is_bad', 'brainwt_is_bad', 'sleep_total', 'sleep_rem',
-           'sleep_cycle', 'awake', 'brainwt', 'bodywt', 'name_prevalence_code',
-           'genus_prevalence_code', 'vore_prevalence_code', 'vore_lev_herbi',
-           'vore_lev_omni', 'vore_lev_carni', 'vore_lev__NA_', 'vore_lev_insecti',
-           'order_prevalence_code', 'order_lev_Rodentia', 'order_lev_Carnivora',
-           'order_lev_Primates', 'order_lev_Artiodactyla',
+           'sleep_cycle', 'awake', 'brainwt', 'bodywt', 'genus_prevalence_code',
+           'vore_prevalence_code', 'vore_lev_herbi', 'vore_lev_omni',
+           'vore_lev_carni', 'vore_lev__NA_', 'vore_lev_insecti',
+           'order_prevalence_code', 'order_lev_Rodentia', 'order_lev_Primates',
+           'order_lev_Carnivora', 'order_lev_Artiodactyla',
            'order_lev_Soricomorpha', 'conservation_prevalence_code',
            'conservation_lev__NA_', 'conservation_lev_lc',
            'conservation_lev_domesticated', 'conservation_lev_vu'],
@@ -534,8 +534,8 @@ df_treated
       <th></th>
       <th>y</th>
       <th>x_impact_code</th>
-      <th>x_lev_c</th>
       <th>x_lev_a</th>
+      <th>x_lev_c</th>
     </tr>
   </thead>
   <tbody>
@@ -543,15 +543,15 @@ df_treated
       <th>0</th>
       <td>1</td>
       <td>-1.777432</td>
-      <td>0</td>
       <td>1</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>1</th>
       <td>2</td>
       <td>-1.777432</td>
-      <td>0</td>
       <td>1</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>2</th>
@@ -571,15 +571,15 @@ df_treated
       <th>4</th>
       <td>5</td>
       <td>1.777432</td>
-      <td>1</td>
       <td>0</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>5</th>
       <td>6</td>
       <td>1.777432</td>
-      <td>1</td>
       <td>0</td>
+      <td>1</td>
     </tr>
   </tbody>
 </table>
@@ -684,16 +684,16 @@ newdata_treated
     <tr style="text-align: right;">
       <th></th>
       <th>x_impact_code</th>
-      <th>x_lev_c</th>
       <th>x_lev_a</th>
+      <th>x_lev_c</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
       <td>-1.777432</td>
-      <td>0</td>
       <td>1</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>1</th>
@@ -704,8 +704,8 @@ newdata_treated
     <tr>
       <th>2</th>
       <td>1.777432</td>
-      <td>1</td>
       <td>0</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>3</th>
@@ -1106,7 +1106,7 @@ matplotlib.pyplot.plot([min, max], [min, max], color = 'red', alpha=0.5)
 
 
 
-    [<matplotlib.lines.Line2D at 0x1a15c50438>]
+    [<matplotlib.lines.Line2D at 0x1a1d3de160>]
 
 
 
@@ -2385,7 +2385,7 @@ seaborn.scatterplot(x='significance', y='variable', hue = 'varType', data=sframe
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x1a16bc5d68>
+    <matplotlib.axes._subplots.AxesSubplot at 0x1a1e3ab780>
 
 
 

@@ -116,123 +116,123 @@ d.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>-16.907658</td>
-      <td>level_194</td>
-      <td>level_21</td>
-      <td>level_61</td>
-      <td>level_80</td>
-      <td>level_139</td>
-      <td>level_70</td>
-      <td>level_48</td>
-      <td>level_27</td>
-      <td>level_199</td>
-      <td>...</td>
-      <td>level_61</td>
-      <td>level_45</td>
+      <td>21.609390</td>
+      <td>level_423</td>
+      <td>level_466</td>
       <td>level_66</td>
-      <td>level_444</td>
-      <td>level_299</td>
-      <td>level_438</td>
-      <td>level_314</td>
+      <td>level_471</td>
+      <td>level_21</td>
+      <td>level_293</td>
+      <td>level_298</td>
+      <td>level_392</td>
+      <td>level_120</td>
+      <td>...</td>
+      <td>level_311</td>
+      <td>level_90</td>
+      <td>level_64</td>
+      <td>level_363</td>
       <td>level_442</td>
-      <td>level_25</td>
-      <td>level_79</td>
+      <td>level_228</td>
+      <td>level_103</td>
+      <td>level_240</td>
+      <td>level_387</td>
+      <td>level_216</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>13.173611</td>
-      <td>level_426</td>
-      <td>level_59</td>
-      <td>level_308</td>
-      <td>level_187</td>
-      <td>level_309</td>
-      <td>level_99</td>
-      <td>level_398</td>
-      <td>level_10</td>
-      <td>level_309</td>
+      <td>-34.679568</td>
+      <td>level_255</td>
+      <td>level_319</td>
+      <td>level_152</td>
+      <td>level_102</td>
+      <td>level_278</td>
+      <td>level_6</td>
+      <td>level_280</td>
+      <td>level_335</td>
+      <td>level_412</td>
       <td>...</td>
-      <td>level_467</td>
-      <td>level_238</td>
+      <td>level_5</td>
+      <td>level_275</td>
       <td>level_395</td>
-      <td>level_214</td>
-      <td>level_477</td>
-      <td>level_74</td>
-      <td>level_65</td>
-      <td>level_210</td>
-      <td>level_434</td>
-      <td>level_229</td>
+      <td>level_341</td>
+      <td>level_284</td>
+      <td>level_253</td>
+      <td>level_158</td>
+      <td>level_414</td>
+      <td>level_419</td>
+      <td>level_55</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>-24.634721</td>
-      <td>level_259</td>
-      <td>level_268</td>
-      <td>level_2</td>
-      <td>level_66</td>
-      <td>level_204</td>
-      <td>level_379</td>
-      <td>level_440</td>
-      <td>level_266</td>
-      <td>level_208</td>
+      <td>-11.430131</td>
+      <td>level_413</td>
+      <td>level_347</td>
+      <td>level_90</td>
+      <td>level_101</td>
+      <td>level_115</td>
+      <td>level_156</td>
+      <td>level_383</td>
+      <td>level_140</td>
+      <td>level_275</td>
       <td>...</td>
-      <td>level_465</td>
-      <td>level_442</td>
-      <td>level_477</td>
-      <td>level_83</td>
-      <td>level_418</td>
-      <td>level_220</td>
-      <td>level_317</td>
-      <td>level_168</td>
-      <td>level_317</td>
-      <td>level_330</td>
+      <td>level_489</td>
+      <td>level_53</td>
+      <td>level_404</td>
+      <td>level_215</td>
+      <td>level_456</td>
+      <td>level_493</td>
+      <td>level_67</td>
+      <td>level_146</td>
+      <td>level_324</td>
+      <td>level_393</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>-28.889694</td>
-      <td>level_4</td>
-      <td>level_467</td>
-      <td>level_223</td>
-      <td>level_185</td>
-      <td>level_493</td>
-      <td>level_399</td>
-      <td>level_436</td>
-      <td>level_84</td>
-      <td>level_417</td>
+      <td>29.711234</td>
+      <td>level_60</td>
+      <td>level_108</td>
+      <td>level_458</td>
+      <td>level_183</td>
+      <td>level_43</td>
+      <td>level_233</td>
+      <td>level_98</td>
+      <td>level_186</td>
+      <td>level_101</td>
       <td>...</td>
-      <td>level_153</td>
-      <td>level_358</td>
-      <td>level_477</td>
-      <td>level_10</td>
-      <td>level_322</td>
-      <td>level_111</td>
-      <td>level_242</td>
-      <td>level_499</td>
-      <td>level_243</td>
-      <td>level_275</td>
+      <td>level_216</td>
+      <td>level_463</td>
+      <td>level_432</td>
+      <td>level_41</td>
+      <td>level_308</td>
+      <td>level_139</td>
+      <td>level_220</td>
+      <td>level_136</td>
+      <td>level_448</td>
+      <td>level_32</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>11.143388</td>
-      <td>level_29</td>
-      <td>level_433</td>
-      <td>level_89</td>
-      <td>level_292</td>
-      <td>level_78</td>
-      <td>level_119</td>
-      <td>level_225</td>
-      <td>level_57</td>
-      <td>level_119</td>
+      <td>-15.009132</td>
+      <td>level_98</td>
+      <td>level_140</td>
+      <td>level_493</td>
+      <td>level_344</td>
+      <td>level_2</td>
+      <td>level_223</td>
+      <td>level_405</td>
+      <td>level_111</td>
+      <td>level_438</td>
       <td>...</td>
-      <td>level_170</td>
-      <td>level_354</td>
-      <td>level_16</td>
-      <td>level_366</td>
-      <td>level_341</td>
-      <td>level_95</td>
-      <td>level_366</td>
-      <td>level_49</td>
-      <td>level_470</td>
-      <td>level_117</td>
+      <td>level_79</td>
+      <td>level_78</td>
+      <td>level_291</td>
+      <td>level_230</td>
+      <td>level_225</td>
+      <td>level_9</td>
+      <td>level_107</td>
+      <td>level_495</td>
+      <td>level_284</td>
+      <td>level_455</td>
     </tr>
   </tbody>
 </table>
@@ -328,123 +328,123 @@ naive_train_empirical.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>-1.613044</td>
-      <td>7.309693</td>
-      <td>-17.785767</td>
-      <td>1.969784</td>
-      <td>-17.954727</td>
-      <td>-0.422620</td>
-      <td>-10.214963</td>
-      <td>-16.316675</td>
-      <td>-12.062746</td>
-      <td>-6.635621</td>
+      <td>-8.679132</td>
+      <td>-12.946137</td>
+      <td>-10.540995</td>
+      <td>-13.802363</td>
+      <td>-2.423945</td>
+      <td>-2.190078</td>
+      <td>-27.101848</td>
+      <td>14.417548</td>
+      <td>-14.502177</td>
+      <td>-22.410318</td>
       <td>...</td>
-      <td>-2.450519</td>
-      <td>-5.307431</td>
-      <td>-16.498058</td>
-      <td>-7.187587</td>
-      <td>-15.078140</td>
-      <td>-15.450775</td>
-      <td>9.307387</td>
-      <td>-5.057685</td>
-      <td>-8.329166</td>
-      <td>-1.105957</td>
+      <td>-10.967147</td>
+      <td>-2.380420</td>
+      <td>-10.436120</td>
+      <td>-13.803981</td>
+      <td>-2.003209</td>
+      <td>-4.355741</td>
+      <td>-0.747413</td>
+      <td>9.070266</td>
+      <td>-2.595415</td>
+      <td>1.803060</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>-3.345912</td>
-      <td>-11.179383</td>
-      <td>-9.296097</td>
-      <td>-3.085181</td>
-      <td>-10.636432</td>
-      <td>-12.083500</td>
-      <td>-12.189272</td>
-      <td>-7.263878</td>
-      <td>7.885662</td>
-      <td>-5.065825</td>
+      <td>-9.547589</td>
+      <td>1.185870</td>
+      <td>-5.059223</td>
+      <td>-11.519371</td>
+      <td>-9.783299</td>
+      <td>-11.861813</td>
+      <td>-13.021508</td>
+      <td>-2.905935</td>
+      <td>-9.991621</td>
+      <td>9.410818</td>
       <td>...</td>
-      <td>-11.529781</td>
-      <td>-6.832922</td>
-      <td>-14.899030</td>
-      <td>-1.822661</td>
-      <td>1.508089</td>
-      <td>-7.146757</td>
-      <td>-3.656139</td>
-      <td>-6.747974</td>
-      <td>-0.770327</td>
-      <td>-8.589438</td>
+      <td>1.591085</td>
+      <td>8.329865</td>
+      <td>-5.047402</td>
+      <td>-11.882084</td>
+      <td>7.264065</td>
+      <td>1.667959</td>
+      <td>-10.928701</td>
+      <td>-7.383560</td>
+      <td>-9.432686</td>
+      <td>-2.118444</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>1.096256</td>
-      <td>-12.897146</td>
-      <td>4.730032</td>
-      <td>-4.440202</td>
-      <td>-15.097173</td>
-      <td>-11.504246</td>
-      <td>-12.538091</td>
-      <td>-0.655624</td>
-      <td>-21.253826</td>
-      <td>-12.918054</td>
+      <td>-3.888768</td>
+      <td>8.959155</td>
+      <td>5.026165</td>
+      <td>2.543915</td>
+      <td>12.577426</td>
+      <td>5.217121</td>
+      <td>4.682948</td>
+      <td>-1.366168</td>
+      <td>0.179817</td>
+      <td>17.171127</td>
       <td>...</td>
-      <td>0.232059</td>
-      <td>-4.846785</td>
-      <td>-14.899030</td>
-      <td>3.691378</td>
-      <td>-15.007704</td>
-      <td>1.709418</td>
-      <td>-18.292191</td>
-      <td>3.740072</td>
-      <td>-29.605933</td>
-      <td>-2.382473</td>
+      <td>10.043307</td>
+      <td>-2.805734</td>
+      <td>-3.094489</td>
+      <td>-5.973781</td>
+      <td>-4.441704</td>
+      <td>10.806701</td>
+      <td>9.085976</td>
+      <td>-1.319056</td>
+      <td>-1.361479</td>
+      <td>11.152599</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>-6.043885</td>
-      <td>4.087619</td>
-      <td>-1.826510</td>
-      <td>4.862241</td>
-      <td>13.001756</td>
-      <td>15.588116</td>
-      <td>13.205725</td>
-      <td>10.677192</td>
-      <td>-10.181010</td>
-      <td>-10.971738</td>
+      <td>-2.551488</td>
+      <td>19.544376</td>
+      <td>16.623793</td>
+      <td>20.029344</td>
+      <td>-5.913443</td>
+      <td>13.356561</td>
+      <td>7.973948</td>
+      <td>5.691288</td>
+      <td>-4.220708</td>
+      <td>-4.934892</td>
       <td>...</td>
-      <td>1.686216</td>
-      <td>-2.996761</td>
-      <td>-6.827816</td>
-      <td>-7.590614</td>
-      <td>-5.550391</td>
-      <td>4.442275</td>
-      <td>-0.508748</td>
-      <td>7.296096</td>
-      <td>-1.374595</td>
-      <td>-1.105957</td>
+      <td>-5.519360</td>
+      <td>0.523508</td>
+      <td>7.640596</td>
+      <td>11.276150</td>
+      <td>3.007670</td>
+      <td>5.478667</td>
+      <td>3.651329</td>
+      <td>2.865009</td>
+      <td>9.951669</td>
+      <td>7.248498</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>12.592230</td>
-      <td>9.351592</td>
-      <td>17.908038</td>
-      <td>2.314205</td>
-      <td>10.352554</td>
-      <td>0.822898</td>
-      <td>2.348441</td>
-      <td>1.894467</td>
-      <td>-8.158815</td>
-      <td>-2.434019</td>
+      <td>-11.190103</td>
+      <td>0.700021</td>
+      <td>6.473456</td>
+      <td>5.746871</td>
+      <td>0.214304</td>
+      <td>-20.888046</td>
+      <td>-13.152050</td>
+      <td>-7.141453</td>
+      <td>-8.515137</td>
+      <td>-3.972293</td>
       <td>...</td>
-      <td>8.339193</td>
-      <td>4.765558</td>
-      <td>4.383108</td>
-      <td>9.772782</td>
-      <td>19.225731</td>
-      <td>9.142069</td>
-      <td>14.381890</td>
-      <td>6.567419</td>
-      <td>-8.329166</td>
-      <td>-0.249482</td>
+      <td>-2.847291</td>
+      <td>-9.850933</td>
+      <td>-2.008301</td>
+      <td>-7.821950</td>
+      <td>4.399075</td>
+      <td>-14.265884</td>
+      <td>-1.601099</td>
+      <td>-7.323682</td>
+      <td>-6.379215</td>
+      <td>-1.343901</td>
     </tr>
   </tbody>
 </table>
@@ -505,123 +505,123 @@ naive_train_hierarchical.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>-1.189601</td>
-      <td>3.239000</td>
-      <td>-10.838493</td>
-      <td>1.201294</td>
-      <td>-14.351030</td>
-      <td>-0.313430</td>
-      <td>-7.045294</td>
-      <td>-10.875722</td>
-      <td>-9.459114</td>
-      <td>-4.171693</td>
+      <td>-5.409051</td>
+      <td>-9.534771</td>
+      <td>-5.165008</td>
+      <td>-8.025075</td>
+      <td>-1.767962</td>
+      <td>-0.914594</td>
+      <td>-7.807669</td>
+      <td>4.713296</td>
+      <td>-11.325538</td>
+      <td>-14.301553</td>
       <td>...</td>
-      <td>-1.185211</td>
-      <td>-3.362592</td>
-      <td>-10.064938</td>
-      <td>-4.485625</td>
-      <td>-9.433327</td>
-      <td>-14.284450</td>
-      <td>0.536543</td>
-      <td>-4.064510</td>
-      <td>-3.767950</td>
-      <td>-0.714570</td>
+      <td>-6.783303</td>
+      <td>-1.708832</td>
+      <td>-6.966434</td>
+      <td>-9.270277</td>
+      <td>-1.067556</td>
+      <td>-2.705914</td>
+      <td>-0.531356</td>
+      <td>3.622207</td>
+      <td>-1.198465</td>
+      <td>1.033777</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>-2.172107</td>
-      <td>-9.030694</td>
-      <td>-6.358005</td>
-      <td>-1.574773</td>
-      <td>-8.357936</td>
-      <td>-7.614960</td>
-      <td>-7.959597</td>
-      <td>-5.498445</td>
-      <td>5.444707</td>
-      <td>-3.834936</td>
+      <td>-8.813362</td>
+      <td>0.886794</td>
+      <td>-2.835199</td>
+      <td>-10.507145</td>
+      <td>-7.201350</td>
+      <td>-10.046687</td>
+      <td>-6.575432</td>
+      <td>-2.096325</td>
+      <td>-6.857580</td>
+      <td>4.123817</td>
       <td>...</td>
-      <td>-5.998020</td>
-      <td>-2.491869</td>
-      <td>-12.681084</td>
-      <td>-0.910839</td>
-      <td>0.772592</td>
-      <td>-4.308604</td>
-      <td>-2.195945</td>
-      <td>-0.729158</td>
-      <td>-0.189000</td>
-      <td>-3.163784</td>
+      <td>0.650271</td>
+      <td>2.872083</td>
+      <td>-3.914992</td>
+      <td>-4.689325</td>
+      <td>4.323584</td>
+      <td>0.846375</td>
+      <td>-8.963390</td>
+      <td>-5.109565</td>
+      <td>-7.899942</td>
+      <td>-1.377017</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.637642</td>
-      <td>-8.293719</td>
-      <td>3.224296</td>
-      <td>-3.297465</td>
-      <td>-8.163491</td>
-      <td>-8.223806</td>
-      <td>-9.096305</td>
-      <td>-0.386405</td>
-      <td>-16.039755</td>
-      <td>-5.783740</td>
+      <td>-3.062155</td>
+      <td>7.122420</td>
+      <td>3.298227</td>
+      <td>2.258247</td>
+      <td>5.997278</td>
+      <td>3.605126</td>
+      <td>3.960861</td>
+      <td>-0.610069</td>
+      <td>0.148842</td>
+      <td>10.793259</td>
       <td>...</td>
-      <td>0.127999</td>
-      <td>-1.129770</td>
-      <td>-12.681084</td>
-      <td>1.998449</td>
-      <td>-2.655265</td>
-      <td>0.901850</td>
-      <td>-9.857703</td>
-      <td>1.967284</td>
-      <td>-29.360009</td>
-      <td>-1.416476</td>
+      <td>5.553129</td>
+      <td>-1.792656</td>
+      <td>-1.923821</td>
+      <td>-4.084548</td>
+      <td>-3.053155</td>
+      <td>7.541425</td>
+      <td>4.143451</td>
+      <td>-1.144251</td>
+      <td>-0.642274</td>
+      <td>8.787491</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>-3.274597</td>
-      <td>3.025480</td>
-      <td>-1.451880</td>
-      <td>2.872828</td>
-      <td>12.325686</td>
-      <td>13.472276</td>
-      <td>6.355680</td>
-      <td>8.019223</td>
-      <td>-6.558431</td>
-      <td>-7.378532</td>
+      <td>-1.898779</td>
+      <td>12.613384</td>
+      <td>14.999617</td>
+      <td>18.263842</td>
+      <td>-4.578783</td>
+      <td>12.814313</td>
+      <td>7.188919</td>
+      <td>3.285220</td>
+      <td>-2.726931</td>
+      <td>-0.751065</td>
       <td>...</td>
-      <td>0.866719</td>
-      <td>-1.471892</td>
-      <td>-2.090957</td>
-      <td>-3.817411</td>
-      <td>-3.029714</td>
-      <td>3.699033</td>
-      <td>-0.417870</td>
-      <td>3.404639</td>
-      <td>-0.871065</td>
-      <td>-0.714570</td>
+      <td>-2.183322</td>
+      <td>0.307034</td>
+      <td>5.524847</td>
+      <td>5.023735</td>
+      <td>2.057327</td>
+      <td>4.542621</td>
+      <td>2.952050</td>
+      <td>1.673224</td>
+      <td>9.103564</td>
+      <td>6.066340</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>7.388958</td>
-      <td>6.270885</td>
-      <td>13.937263</td>
-      <td>1.246526</td>
-      <td>7.238080</td>
-      <td>0.648207</td>
-      <td>2.019714</td>
-      <td>1.235937</td>
-      <td>-5.440480</td>
-      <td>-1.376015</td>
+      <td>-7.304249</td>
+      <td>0.455404</td>
+      <td>4.054707</td>
+      <td>4.689491</td>
+      <td>0.131177</td>
+      <td>-11.722100</td>
+      <td>-10.791469</td>
+      <td>-5.111008</td>
+      <td>-7.170465</td>
+      <td>-2.934171</td>
       <td>...</td>
-      <td>1.938650</td>
-      <td>2.801780</td>
-      <td>2.569122</td>
-      <td>4.983974</td>
-      <td>16.701618</td>
-      <td>6.093368</td>
-      <td>6.671650</td>
-      <td>4.822364</td>
-      <td>-3.767950</td>
-      <td>-0.171341</td>
+      <td>-1.289193</td>
+      <td>-3.926041</td>
+      <td>-0.667166</td>
+      <td>-5.587118</td>
+      <td>3.205342</td>
+      <td>0.000000</td>
+      <td>-0.943923</td>
+      <td>-4.648872</td>
+      <td>-4.826035</td>
+      <td>-0.982326</td>
     </tr>
   </tbody>
 </table>
@@ -682,123 +682,123 @@ cross_frame.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>-2.429800</td>
-      <td>9.478144</td>
-      <td>-5.724042e+00</td>
-      <td>0.160907</td>
-      <td>-3.568846e+00</td>
-      <td>1.268282</td>
-      <td>-4.093980</td>
-      <td>-9.170642</td>
-      <td>-9.649399e+00</td>
-      <td>-4.061774</td>
+      <td>-1.577828</td>
+      <td>-7.227700</td>
+      <td>-3.855967</td>
+      <td>-3.886909e+00</td>
+      <td>-4.257620</td>
+      <td>-0.761945</td>
+      <td>-2.651281</td>
+      <td>12.682504</td>
+      <td>-7.761752</td>
+      <td>-11.772113</td>
       <td>...</td>
-      <td>0.003507</td>
-      <td>-0.171469</td>
-      <td>-6.493029</td>
-      <td>-1.300497</td>
-      <td>-5.337944</td>
-      <td>-18.414072</td>
-      <td>0.000000</td>
-      <td>-1.903406</td>
-      <td>-0.492786</td>
-      <td>0.101069</td>
+      <td>-4.853190</td>
+      <td>-0.079950</td>
+      <td>-7.657039</td>
+      <td>-7.560701</td>
+      <td>3.454321</td>
+      <td>-0.755195</td>
+      <td>1.257315</td>
+      <td>10.785771</td>
+      <td>-2.642234</td>
+      <td>0.464302</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>0.201904</td>
-      <td>-5.770232</td>
-      <td>2.220446e-16</td>
-      <td>-1.191729</td>
-      <td>-8.419630e+00</td>
-      <td>-3.349275</td>
-      <td>-7.843296</td>
-      <td>-2.072195</td>
-      <td>8.781943e+00</td>
-      <td>-0.630140</td>
+      <td>-8.002641</td>
+      <td>1.322067</td>
+      <td>-3.134132</td>
+      <td>-9.644490e+00</td>
+      <td>-6.639595</td>
+      <td>-9.270213</td>
+      <td>-5.744349</td>
+      <td>-4.082217</td>
+      <td>-5.927746</td>
+      <td>6.273442</td>
       <td>...</td>
-      <td>-3.787456</td>
-      <td>-0.109888</td>
-      <td>-12.169186</td>
-      <td>0.135093</td>
-      <td>-0.780486</td>
-      <td>-0.642486</td>
-      <td>0.541746</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>-0.618028</td>
+      <td>3.033130</td>
+      <td>2.538090</td>
+      <td>-0.903240</td>
+      <td>-3.756326</td>
+      <td>5.267615</td>
+      <td>13.009085</td>
+      <td>-6.455530</td>
+      <td>-2.353809</td>
+      <td>-8.586595</td>
+      <td>6.642490</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>3.934290</td>
-      <td>-5.949222</td>
-      <td>9.318881e+00</td>
-      <td>1.507254</td>
-      <td>-2.115167e+01</td>
-      <td>-6.269846</td>
-      <td>-7.639893</td>
-      <td>2.294588</td>
-      <td>-2.220446e-16</td>
-      <td>-2.332152</td>
+      <td>-0.243802</td>
+      <td>7.508896</td>
+      <td>3.167852</td>
+      <td>-1.110223e-16</td>
+      <td>5.862297</td>
+      <td>7.347908</td>
+      <td>1.197554</td>
+      <td>-0.939724</td>
+      <td>-0.999242</td>
+      <td>13.469074</td>
       <td>...</td>
-      <td>2.925051</td>
-      <td>2.883001</td>
-      <td>-12.169186</td>
-      <td>7.332923</td>
-      <td>-0.657793</td>
-      <td>-0.241049</td>
-      <td>-4.664650</td>
-      <td>7.967789</td>
+      <td>1.575999</td>
+      <td>-5.978235</td>
+      <td>-7.944025</td>
+      <td>-6.010237</td>
+      <td>-4.399605</td>
+      <td>6.958157</td>
+      <td>3.346978</td>
+      <td>0.524751</td>
       <td>0.000000</td>
-      <td>1.698408</td>
+      <td>9.401659</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>-2.719407</td>
-      <td>3.283230</td>
-      <td>-6.207167e+00</td>
-      <td>1.663967</td>
-      <td>-2.220446e-16</td>
-      <td>19.386210</td>
-      <td>2.871416</td>
-      <td>6.496570</td>
-      <td>-1.156488e+01</td>
-      <td>-9.495806</td>
+      <td>-4.638295</td>
+      <td>9.099892</td>
+      <td>11.242872</td>
+      <td>1.950372e+01</td>
+      <td>-7.945239</td>
+      <td>0.000000</td>
+      <td>5.215806</td>
+      <td>2.647548</td>
+      <td>-4.593982</td>
+      <td>0.000000</td>
       <td>...</td>
-      <td>-0.316220</td>
-      <td>-7.198142</td>
-      <td>-3.723235</td>
-      <td>-9.582345</td>
-      <td>-9.724437</td>
-      <td>1.316487</td>
-      <td>-2.182906</td>
-      <td>2.569129</td>
-      <td>-2.448430</td>
-      <td>-2.279102</td>
+      <td>-4.334630</td>
+      <td>3.117263</td>
+      <td>0.000000</td>
+      <td>3.710264</td>
+      <td>0.901831</td>
+      <td>0.384036</td>
+      <td>1.944163</td>
+      <td>0.009096</td>
+      <td>0.000000</td>
+      <td>7.475121</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>2.328340</td>
-      <td>2.969105</td>
-      <td>2.220446e-16</td>
-      <td>-0.305870</td>
-      <td>1.746467e+00</td>
-      <td>-0.847380</td>
-      <td>3.515272</td>
-      <td>0.791242</td>
-      <td>-7.039588e+00</td>
-      <td>-19.879679</td>
+      <td>0.000000</td>
+      <td>1.957648</td>
+      <td>3.428543</td>
+      <td>4.586005e+00</td>
+      <td>2.236838</td>
+      <td>0.000000</td>
+      <td>-10.795208</td>
+      <td>-2.199459</td>
+      <td>-2.569341</td>
+      <td>-0.157058</td>
       <td>...</td>
+      <td>1.047682</td>
+      <td>-2.373316</td>
+      <td>0.760367</td>
+      <td>-5.079112</td>
+      <td>6.617227</td>
       <td>0.000000</td>
-      <td>5.394772</td>
-      <td>2.565390</td>
-      <td>17.577781</td>
+      <td>4.177583</td>
+      <td>-1.846081</td>
+      <td>-4.848367</td>
       <td>0.000000</td>
-      <td>1.120931</td>
-      <td>4.030480</td>
-      <td>4.283975</td>
-      <td>-19.284753</td>
-      <td>-2.563977</td>
     </tr>
   </tbody>
 </table>
@@ -862,271 +862,271 @@ corr_frame
     <tr>
       <th>0</th>
       <td>var_0_impact_code</td>
-      <td>0.504259</td>
-      <td>0.482239</td>
-      <td>0.154502</td>
-      <td>0.169229</td>
+      <td>0.537538</td>
+      <td>0.512498</td>
+      <td>0.173024</td>
+      <td>0.189492</td>
       <td>False</td>
     </tr>
     <tr>
       <th>1</th>
       <td>var_1_impact_code</td>
-      <td>0.538102</td>
-      <td>0.518626</td>
-      <td>0.160459</td>
-      <td>0.162919</td>
+      <td>0.517274</td>
+      <td>0.490760</td>
+      <td>0.143846</td>
+      <td>0.174671</td>
       <td>False</td>
     </tr>
     <tr>
       <th>2</th>
       <td>var_2_impact_code</td>
-      <td>0.518221</td>
-      <td>0.488762</td>
-      <td>0.153543</td>
-      <td>0.206053</td>
+      <td>0.494306</td>
+      <td>0.462618</td>
+      <td>0.106144</td>
+      <td>0.160621</td>
       <td>False</td>
     </tr>
     <tr>
       <th>3</th>
       <td>var_3_impact_code</td>
-      <td>0.518402</td>
-      <td>0.488867</td>
-      <td>0.126099</td>
-      <td>0.203749</td>
+      <td>0.540377</td>
+      <td>0.517965</td>
+      <td>0.196954</td>
+      <td>0.185956</td>
       <td>False</td>
     </tr>
     <tr>
       <th>4</th>
       <td>var_4_impact_code</td>
-      <td>0.526746</td>
-      <td>0.503099</td>
-      <td>0.159614</td>
-      <td>0.132191</td>
+      <td>0.537606</td>
+      <td>0.514735</td>
+      <td>0.176158</td>
+      <td>0.172490</td>
       <td>False</td>
     </tr>
     <tr>
       <th>5</th>
       <td>var_5_impact_code</td>
-      <td>0.548220</td>
-      <td>0.519622</td>
-      <td>0.194347</td>
-      <td>0.198982</td>
+      <td>0.536109</td>
+      <td>0.508992</td>
+      <td>0.169973</td>
+      <td>0.158436</td>
       <td>False</td>
     </tr>
     <tr>
       <th>6</th>
       <td>var_6_impact_code</td>
-      <td>0.541297</td>
-      <td>0.518205</td>
-      <td>0.174802</td>
-      <td>0.192643</td>
+      <td>0.532761</td>
+      <td>0.507913</td>
+      <td>0.154856</td>
+      <td>0.214377</td>
       <td>False</td>
     </tr>
     <tr>
       <th>7</th>
       <td>var_7_impact_code</td>
-      <td>0.561650</td>
-      <td>0.539927</td>
-      <td>0.194140</td>
-      <td>0.199807</td>
+      <td>0.522554</td>
+      <td>0.496471</td>
+      <td>0.166342</td>
+      <td>0.146731</td>
       <td>False</td>
     </tr>
     <tr>
       <th>8</th>
       <td>var_8_impact_code</td>
-      <td>0.514836</td>
-      <td>0.492104</td>
-      <td>0.151708</td>
-      <td>0.148226</td>
+      <td>0.518686</td>
+      <td>0.494362</td>
+      <td>0.136878</td>
+      <td>0.146182</td>
       <td>False</td>
     </tr>
     <tr>
       <th>9</th>
       <td>var_9_impact_code</td>
-      <td>0.519385</td>
-      <td>0.489752</td>
-      <td>0.119879</td>
-      <td>0.181701</td>
+      <td>0.515479</td>
+      <td>0.487364</td>
+      <td>0.133546</td>
+      <td>0.129562</td>
       <td>False</td>
     </tr>
     <tr>
       <th>10</th>
       <td>noise_0_impact_code</td>
-      <td>0.443031</td>
-      <td>0.414039</td>
-      <td>-0.003036</td>
-      <td>0.013851</td>
+      <td>0.445585</td>
+      <td>0.414996</td>
+      <td>-0.000244</td>
+      <td>-0.006766</td>
       <td>True</td>
     </tr>
     <tr>
       <th>11</th>
       <td>noise_1_impact_code</td>
-      <td>0.464352</td>
-      <td>0.434771</td>
-      <td>0.016678</td>
-      <td>-0.004495</td>
+      <td>0.437374</td>
+      <td>0.409657</td>
+      <td>-0.001348</td>
+      <td>-0.000008</td>
       <td>True</td>
     </tr>
     <tr>
       <th>12</th>
       <td>noise_2_impact_code</td>
-      <td>0.444239</td>
-      <td>0.409691</td>
-      <td>0.013614</td>
-      <td>-0.006119</td>
+      <td>0.439760</td>
+      <td>0.408043</td>
+      <td>-0.022775</td>
+      <td>0.010506</td>
       <td>True</td>
     </tr>
     <tr>
       <th>13</th>
       <td>noise_3_impact_code</td>
-      <td>0.434637</td>
-      <td>0.400306</td>
-      <td>-0.018197</td>
-      <td>0.025597</td>
+      <td>0.445398</td>
+      <td>0.419427</td>
+      <td>0.011538</td>
+      <td>-0.021490</td>
       <td>True</td>
     </tr>
     <tr>
       <th>14</th>
       <td>noise_4_impact_code</td>
-      <td>0.426227</td>
-      <td>0.395953</td>
-      <td>-0.026847</td>
-      <td>-0.012815</td>
+      <td>0.437810</td>
+      <td>0.404932</td>
+      <td>0.012626</td>
+      <td>0.001318</td>
       <td>True</td>
     </tr>
     <tr>
       <th>15</th>
       <td>noise_5_impact_code</td>
-      <td>0.452084</td>
-      <td>0.424438</td>
-      <td>0.025477</td>
-      <td>0.010695</td>
+      <td>0.428542</td>
+      <td>0.399424</td>
+      <td>-0.018017</td>
+      <td>0.007516</td>
       <td>True</td>
     </tr>
     <tr>
       <th>16</th>
       <td>noise_6_impact_code</td>
-      <td>0.432697</td>
-      <td>0.400305</td>
-      <td>-0.016805</td>
-      <td>-0.000264</td>
+      <td>0.444305</td>
+      <td>0.413066</td>
+      <td>0.013665</td>
+      <td>-0.029029</td>
       <td>True</td>
     </tr>
     <tr>
       <th>17</th>
       <td>noise_7_impact_code</td>
-      <td>0.427889</td>
-      <td>0.393411</td>
-      <td>-0.031050</td>
-      <td>-0.023639</td>
+      <td>0.449492</td>
+      <td>0.417463</td>
+      <td>0.017376</td>
+      <td>0.001439</td>
       <td>True</td>
     </tr>
     <tr>
       <th>18</th>
       <td>noise_8_impact_code</td>
-      <td>0.450677</td>
-      <td>0.422882</td>
-      <td>0.027459</td>
-      <td>0.014889</td>
+      <td>0.421637</td>
+      <td>0.386197</td>
+      <td>-0.024192</td>
+      <td>-0.018093</td>
       <td>True</td>
     </tr>
     <tr>
       <th>19</th>
       <td>noise_9_impact_code</td>
-      <td>0.434278</td>
-      <td>0.403265</td>
-      <td>-0.028636</td>
-      <td>-0.036770</td>
+      <td>0.445379</td>
+      <td>0.411923</td>
+      <td>0.010800</td>
+      <td>-0.005291</td>
       <td>True</td>
     </tr>
     <tr>
       <th>20</th>
       <td>noise_10_impact_code</td>
-      <td>0.439710</td>
-      <td>0.406303</td>
-      <td>-0.005705</td>
-      <td>-0.007690</td>
+      <td>0.438248</td>
+      <td>0.405460</td>
+      <td>0.012719</td>
+      <td>0.026924</td>
       <td>True</td>
     </tr>
     <tr>
       <th>21</th>
       <td>noise_11_impact_code</td>
-      <td>0.443208</td>
-      <td>0.409738</td>
-      <td>-0.012466</td>
-      <td>0.000791</td>
+      <td>0.478902</td>
+      <td>0.449365</td>
+      <td>0.054864</td>
+      <td>0.016743</td>
       <td>True</td>
     </tr>
     <tr>
       <th>22</th>
       <td>noise_12_impact_code</td>
-      <td>0.414437</td>
-      <td>0.377526</td>
-      <td>-0.067546</td>
-      <td>0.006390</td>
+      <td>0.437313</td>
+      <td>0.411621</td>
+      <td>0.000433</td>
+      <td>-0.005145</td>
       <td>True</td>
     </tr>
     <tr>
       <th>23</th>
       <td>noise_13_impact_code</td>
-      <td>0.438544</td>
-      <td>0.407571</td>
-      <td>-0.018791</td>
-      <td>0.030525</td>
+      <td>0.431276</td>
+      <td>0.403635</td>
+      <td>0.007586</td>
+      <td>0.005632</td>
       <td>True</td>
     </tr>
     <tr>
       <th>24</th>
       <td>noise_14_impact_code</td>
-      <td>0.440079</td>
-      <td>0.407758</td>
-      <td>-0.012259</td>
-      <td>-0.012128</td>
+      <td>0.432003</td>
+      <td>0.401580</td>
+      <td>-0.018066</td>
+      <td>0.004108</td>
       <td>True</td>
     </tr>
     <tr>
       <th>25</th>
       <td>noise_15_impact_code</td>
-      <td>0.429202</td>
-      <td>0.392157</td>
-      <td>-0.017894</td>
-      <td>0.020234</td>
+      <td>0.432230</td>
+      <td>0.398577</td>
+      <td>-0.028103</td>
+      <td>0.014775</td>
       <td>True</td>
     </tr>
     <tr>
       <th>26</th>
       <td>noise_16_impact_code</td>
-      <td>0.427669</td>
-      <td>0.396530</td>
-      <td>-0.027919</td>
-      <td>-0.024763</td>
+      <td>0.455284</td>
+      <td>0.424922</td>
+      <td>0.011684</td>
+      <td>0.012503</td>
       <td>True</td>
     </tr>
     <tr>
       <th>27</th>
       <td>noise_17_impact_code</td>
-      <td>0.426906</td>
-      <td>0.395428</td>
-      <td>-0.017716</td>
-      <td>0.029878</td>
+      <td>0.441482</td>
+      <td>0.406383</td>
+      <td>-0.007502</td>
+      <td>0.039947</td>
       <td>True</td>
     </tr>
     <tr>
       <th>28</th>
       <td>noise_18_impact_code</td>
-      <td>0.451607</td>
-      <td>0.419544</td>
-      <td>0.042701</td>
-      <td>0.025945</td>
+      <td>0.430074</td>
+      <td>0.395139</td>
+      <td>-0.031971</td>
+      <td>0.005061</td>
       <td>True</td>
     </tr>
     <tr>
       <th>29</th>
       <td>noise_19_impact_code</td>
-      <td>0.446308</td>
-      <td>0.410316</td>
-      <td>-0.025135</td>
-      <td>0.005952</td>
+      <td>0.470364</td>
+      <td>0.438032</td>
+      <td>0.053334</td>
+      <td>0.016688</td>
       <td>True</td>
     </tr>
     <tr>
@@ -1141,271 +1141,271 @@ corr_frame
     <tr>
       <th>80</th>
       <td>noise_70_impact_code</td>
-      <td>0.429975</td>
-      <td>0.398612</td>
-      <td>-0.012802</td>
-      <td>0.012836</td>
+      <td>0.430104</td>
+      <td>0.392580</td>
+      <td>-0.008812</td>
+      <td>-0.027274</td>
       <td>True</td>
     </tr>
     <tr>
       <th>81</th>
       <td>noise_71_impact_code</td>
-      <td>0.442892</td>
-      <td>0.407122</td>
-      <td>-0.002996</td>
-      <td>-0.009023</td>
+      <td>0.446653</td>
+      <td>0.417490</td>
+      <td>-0.009932</td>
+      <td>-0.017198</td>
       <td>True</td>
     </tr>
     <tr>
       <th>82</th>
       <td>noise_72_impact_code</td>
-      <td>0.431801</td>
-      <td>0.398520</td>
-      <td>-0.017823</td>
-      <td>0.001748</td>
+      <td>0.448942</td>
+      <td>0.416806</td>
+      <td>0.035325</td>
+      <td>-0.032601</td>
       <td>True</td>
     </tr>
     <tr>
       <th>83</th>
       <td>noise_73_impact_code</td>
-      <td>0.443764</td>
-      <td>0.414423</td>
-      <td>0.006232</td>
-      <td>-0.018436</td>
+      <td>0.446203</td>
+      <td>0.419958</td>
+      <td>0.029622</td>
+      <td>0.013920</td>
       <td>True</td>
     </tr>
     <tr>
       <th>84</th>
       <td>noise_74_impact_code</td>
-      <td>0.437725</td>
-      <td>0.407911</td>
-      <td>0.028112</td>
-      <td>0.046364</td>
+      <td>0.466410</td>
+      <td>0.432077</td>
+      <td>0.046331</td>
+      <td>-0.006496</td>
       <td>True</td>
     </tr>
     <tr>
       <th>85</th>
       <td>noise_75_impact_code</td>
-      <td>0.426404</td>
-      <td>0.392840</td>
-      <td>-0.007590</td>
-      <td>-0.006132</td>
+      <td>0.417365</td>
+      <td>0.386518</td>
+      <td>-0.022967</td>
+      <td>0.016579</td>
       <td>True</td>
     </tr>
     <tr>
       <th>86</th>
       <td>noise_76_impact_code</td>
-      <td>0.442780</td>
-      <td>0.410784</td>
-      <td>0.022923</td>
-      <td>0.018810</td>
+      <td>0.432446</td>
+      <td>0.402527</td>
+      <td>-0.049504</td>
+      <td>-0.027383</td>
       <td>True</td>
     </tr>
     <tr>
       <th>87</th>
       <td>noise_77_impact_code</td>
-      <td>0.455887</td>
-      <td>0.428344</td>
-      <td>0.021716</td>
-      <td>-0.018354</td>
+      <td>0.450455</td>
+      <td>0.414845</td>
+      <td>0.010461</td>
+      <td>0.025775</td>
       <td>True</td>
     </tr>
     <tr>
       <th>88</th>
       <td>noise_78_impact_code</td>
-      <td>0.429144</td>
-      <td>0.398206</td>
-      <td>0.003492</td>
-      <td>-0.005884</td>
+      <td>0.462161</td>
+      <td>0.430833</td>
+      <td>0.023506</td>
+      <td>-0.027556</td>
       <td>True</td>
     </tr>
     <tr>
       <th>89</th>
       <td>noise_79_impact_code</td>
-      <td>0.454408</td>
-      <td>0.426773</td>
-      <td>0.016167</td>
-      <td>-0.004693</td>
+      <td>0.443624</td>
+      <td>0.414319</td>
+      <td>0.014495</td>
+      <td>-0.051524</td>
       <td>True</td>
     </tr>
     <tr>
       <th>90</th>
       <td>noise_80_impact_code</td>
-      <td>0.424959</td>
-      <td>0.390585</td>
-      <td>-0.018181</td>
-      <td>-0.025978</td>
+      <td>0.436850</td>
+      <td>0.405676</td>
+      <td>-0.019893</td>
+      <td>-0.001293</td>
       <td>True</td>
     </tr>
     <tr>
       <th>91</th>
       <td>noise_81_impact_code</td>
-      <td>0.466269</td>
-      <td>0.436475</td>
-      <td>0.028275</td>
-      <td>-0.033592</td>
+      <td>0.462291</td>
+      <td>0.436176</td>
+      <td>0.061565</td>
+      <td>0.009543</td>
       <td>True</td>
     </tr>
     <tr>
       <th>92</th>
       <td>noise_82_impact_code</td>
-      <td>0.440117</td>
-      <td>0.409350</td>
-      <td>-0.010639</td>
-      <td>-0.032945</td>
+      <td>0.464126</td>
+      <td>0.433793</td>
+      <td>0.048270</td>
+      <td>0.010405</td>
       <td>True</td>
     </tr>
     <tr>
       <th>93</th>
       <td>noise_83_impact_code</td>
-      <td>0.443430</td>
-      <td>0.408802</td>
-      <td>0.035951</td>
-      <td>-0.002458</td>
+      <td>0.449701</td>
+      <td>0.417996</td>
+      <td>0.007772</td>
+      <td>-0.004550</td>
       <td>True</td>
     </tr>
     <tr>
       <th>94</th>
       <td>noise_84_impact_code</td>
-      <td>0.435263</td>
-      <td>0.405229</td>
-      <td>0.017726</td>
-      <td>0.006820</td>
+      <td>0.441646</td>
+      <td>0.411434</td>
+      <td>0.026074</td>
+      <td>-0.001416</td>
       <td>True</td>
     </tr>
     <tr>
       <th>95</th>
       <td>noise_85_impact_code</td>
-      <td>0.441118</td>
-      <td>0.408062</td>
-      <td>-0.021455</td>
-      <td>0.012142</td>
+      <td>0.455337</td>
+      <td>0.425115</td>
+      <td>0.044889</td>
+      <td>0.034777</td>
       <td>True</td>
     </tr>
     <tr>
       <th>96</th>
       <td>noise_86_impact_code</td>
-      <td>0.437059</td>
-      <td>0.405814</td>
-      <td>-0.003858</td>
-      <td>-0.004620</td>
+      <td>0.433902</td>
+      <td>0.398871</td>
+      <td>-0.016003</td>
+      <td>-0.031865</td>
       <td>True</td>
     </tr>
     <tr>
       <th>97</th>
       <td>noise_87_impact_code</td>
-      <td>0.464369</td>
-      <td>0.432352</td>
-      <td>0.036833</td>
-      <td>-0.025537</td>
+      <td>0.456591</td>
+      <td>0.423223</td>
+      <td>0.013064</td>
+      <td>0.005138</td>
       <td>True</td>
     </tr>
     <tr>
       <th>98</th>
       <td>noise_88_impact_code</td>
-      <td>0.457550</td>
-      <td>0.423249</td>
-      <td>0.027249</td>
-      <td>-0.023764</td>
+      <td>0.428930</td>
+      <td>0.391945</td>
+      <td>-0.030786</td>
+      <td>-0.017892</td>
       <td>True</td>
     </tr>
     <tr>
       <th>99</th>
       <td>noise_89_impact_code</td>
-      <td>0.432526</td>
-      <td>0.396910</td>
-      <td>-0.026990</td>
-      <td>0.048902</td>
+      <td>0.451824</td>
+      <td>0.415203</td>
+      <td>0.049153</td>
+      <td>0.006819</td>
       <td>True</td>
     </tr>
     <tr>
       <th>100</th>
       <td>noise_90_impact_code</td>
-      <td>0.423632</td>
-      <td>0.387705</td>
-      <td>-0.046140</td>
-      <td>-0.006964</td>
+      <td>0.423548</td>
+      <td>0.394017</td>
+      <td>-0.005003</td>
+      <td>-0.011891</td>
       <td>True</td>
     </tr>
     <tr>
       <th>101</th>
       <td>noise_91_impact_code</td>
-      <td>0.456524</td>
-      <td>0.424754</td>
-      <td>0.018694</td>
-      <td>0.009385</td>
+      <td>0.445310</td>
+      <td>0.412975</td>
+      <td>0.048420</td>
+      <td>0.022945</td>
       <td>True</td>
     </tr>
     <tr>
       <th>102</th>
       <td>noise_92_impact_code</td>
-      <td>0.443327</td>
-      <td>0.411846</td>
-      <td>-0.028164</td>
-      <td>-0.005633</td>
+      <td>0.446973</td>
+      <td>0.416775</td>
+      <td>0.040607</td>
+      <td>-0.053256</td>
       <td>True</td>
     </tr>
     <tr>
       <th>103</th>
       <td>noise_93_impact_code</td>
-      <td>0.478243</td>
-      <td>0.448259</td>
-      <td>0.077066</td>
-      <td>-0.028764</td>
+      <td>0.418886</td>
+      <td>0.381906</td>
+      <td>-0.041899</td>
+      <td>0.016745</td>
       <td>True</td>
     </tr>
     <tr>
       <th>104</th>
       <td>noise_94_impact_code</td>
-      <td>0.437055</td>
-      <td>0.408547</td>
-      <td>-0.011759</td>
-      <td>-0.019852</td>
+      <td>0.441350</td>
+      <td>0.408764</td>
+      <td>0.010847</td>
+      <td>-0.020402</td>
       <td>True</td>
     </tr>
     <tr>
       <th>105</th>
       <td>noise_95_impact_code</td>
-      <td>0.461499</td>
-      <td>0.433211</td>
-      <td>0.014670</td>
-      <td>0.035832</td>
+      <td>0.443247</td>
+      <td>0.415308</td>
+      <td>0.010373</td>
+      <td>0.008060</td>
       <td>True</td>
     </tr>
     <tr>
       <th>106</th>
       <td>noise_96_impact_code</td>
-      <td>0.462444</td>
-      <td>0.430473</td>
-      <td>0.010972</td>
-      <td>0.014855</td>
+      <td>0.457919</td>
+      <td>0.428634</td>
+      <td>0.033622</td>
+      <td>-0.019921</td>
       <td>True</td>
     </tr>
     <tr>
       <th>107</th>
       <td>noise_97_impact_code</td>
-      <td>0.459866</td>
-      <td>0.430345</td>
-      <td>0.042655</td>
-      <td>0.000810</td>
+      <td>0.453013</td>
+      <td>0.415536</td>
+      <td>0.005381</td>
+      <td>0.027916</td>
       <td>True</td>
     </tr>
     <tr>
       <th>108</th>
       <td>noise_98_impact_code</td>
-      <td>0.450753</td>
-      <td>0.412405</td>
-      <td>0.016810</td>
-      <td>-0.003017</td>
+      <td>0.432367</td>
+      <td>0.404039</td>
+      <td>-0.024979</td>
+      <td>-0.005237</td>
       <td>True</td>
     </tr>
     <tr>
       <th>109</th>
       <td>noise_99_impact_code</td>
-      <td>0.450513</td>
-      <td>0.413606</td>
-      <td>0.002333</td>
-      <td>0.001708</td>
+      <td>0.452095</td>
+      <td>0.415402</td>
+      <td>-0.018061</td>
+      <td>-0.016240</td>
       <td>True</td>
     </tr>
   </tbody>
@@ -1425,7 +1425,7 @@ matplotlib.pyplot.ylim(-.2,1)
 matplotlib.pyplot.gca().set_aspect('equal', adjustable='box')
 ```
 
-    (0.8367044120276735, 5.232582447486599e-30)
+    (0.8216353775825459, 4.0110002843803767e-28)
 
 
 
@@ -1442,7 +1442,7 @@ matplotlib.pyplot.ylim(-.2,1)
 matplotlib.pyplot.gca().set_aspect('equal', adjustable='box')
 ```
 
-    (0.8344368404075787, 1.0335060354554691e-29)
+    (0.8144826467457034, 2.7338656166809485e-27)
 
 
 
@@ -1459,7 +1459,7 @@ matplotlib.pyplot.ylim(-.2,1)
 matplotlib.pyplot.gca().set_aspect('equal', adjustable='box')
 ```
 
-    (0.8324368768399079, 1.8678518361774684e-29)
+    (0.7931790631040361, 5.252120745943376e-25)
 
 
 
@@ -1493,6 +1493,7 @@ plan.score_frame_.tail()
     <tr style="text-align: right;">
       <th></th>
       <th>variable</th>
+      <th>orig_variable</th>
       <th>treatment</th>
       <th>y_aware</th>
       <th>has_range</th>
@@ -1506,55 +1507,60 @@ plan.score_frame_.tail()
     <tr>
       <th>105</th>
       <td>noise_95_impact_code</td>
+      <td>noise_95</td>
       <td>impact_code</td>
       <td>True</td>
       <td>True</td>
-      <td>0.014670</td>
-      <td>0.460701</td>
+      <td>0.010373</td>
+      <td>0.600721</td>
       <td>110.0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>106</th>
       <td>noise_96_impact_code</td>
+      <td>noise_96</td>
       <td>impact_code</td>
       <td>True</td>
       <td>True</td>
-      <td>0.010972</td>
-      <td>0.581136</td>
+      <td>0.033622</td>
+      <td>0.089736</td>
       <td>110.0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>107</th>
       <td>noise_97_impact_code</td>
+      <td>noise_97</td>
       <td>impact_code</td>
       <td>True</td>
       <td>True</td>
-      <td>0.042655</td>
-      <td>0.031887</td>
+      <td>0.005381</td>
+      <td>0.786011</td>
       <td>110.0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>108</th>
       <td>noise_98_impact_code</td>
+      <td>noise_98</td>
       <td>impact_code</td>
       <td>True</td>
       <td>True</td>
-      <td>0.016810</td>
-      <td>0.397925</td>
+      <td>-0.024979</td>
+      <td>0.207501</td>
       <td>110.0</td>
       <td>False</td>
     </tr>
     <tr>
       <th>109</th>
       <td>noise_99_impact_code</td>
+      <td>noise_99</td>
       <td>impact_code</td>
       <td>True</td>
       <td>True</td>
-      <td>0.002333</td>
-      <td>0.906629</td>
+      <td>-0.018061</td>
+      <td>0.362136</td>
       <td>110.0</td>
       <td>False</td>
     </tr>
@@ -1583,8 +1589,9 @@ recommended_vars
      'var_7_impact_code',
      'var_8_impact_code',
      'var_9_impact_code',
-     'noise_47_impact_code',
-     'noise_93_impact_code']
+     'noise_11_impact_code',
+     'noise_19_impact_code',
+     'noise_81_impact_code']
 
 
 
@@ -1668,43 +1675,43 @@ plot_test.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>13.173611</td>
-      <td>0.998098</td>
-      <td>-0.029227</td>
-      <td>1.462602</td>
-      <td>1.004548</td>
+      <td>21.609390</td>
+      <td>-5.276038</td>
+      <td>0.525848</td>
+      <td>0.686556</td>
+      <td>2.688831</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>11.143388</td>
-      <td>-2.017126</td>
-      <td>-1.096311</td>
-      <td>0.795206</td>
-      <td>0.655695</td>
+      <td>-11.430131</td>
+      <td>-0.744079</td>
+      <td>-3.162960</td>
+      <td>-2.935260</td>
+      <td>-5.072990</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>-11.141977</td>
-      <td>3.897548</td>
-      <td>3.258649</td>
-      <td>1.526012</td>
-      <td>1.452242</td>
+      <td>29.711234</td>
+      <td>7.972856</td>
+      <td>12.452825</td>
+      <td>0.039935</td>
+      <td>0.772492</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>-12.880687</td>
-      <td>4.356965</td>
-      <td>1.616418</td>
-      <td>1.864823</td>
-      <td>3.279771</td>
+      <td>13.826420</td>
+      <td>-3.398400</td>
+      <td>-4.491066</td>
+      <td>-0.955996</td>
+      <td>-1.191377</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>20.844042</td>
-      <td>10.905027</td>
-      <td>13.402822</td>
-      <td>4.405788</td>
-      <td>6.753046</td>
+      <td>2.787255</td>
+      <td>-9.724369</td>
+      <td>-3.755357</td>
+      <td>-1.106058</td>
+      <td>-1.172688</td>
     </tr>
   </tbody>
 </table>
@@ -1730,7 +1737,7 @@ seaborn.scatterplot(x="predict_naive_empirical_all_vars", y ="y", data = plot_tr
 plt = matplotlib.pyplot.title("Naive empirical prediction on train")
 ```
 
-    3.2437430581263125
+    3.148009362822994
 
 
 
@@ -1744,7 +1751,7 @@ seaborn.scatterplot(x="predict_naive_hierarchical_all_vars", y ="y", data = plot
 plt = matplotlib.pyplot.title("Naive hierarchical prediction on train")
 ```
 
-    4.687901104748199
+    4.642603781688982
 
 
 
@@ -1758,7 +1765,7 @@ seaborn.scatterplot(x="predict_cross_all_vars", y ="y", data = plot_train)
 plt = matplotlib.pyplot.title("Cross prediction on (all vars) train")
 ```
 
-    15.253371570178853
+    14.837879538021449
 
 
 
@@ -1772,7 +1779,7 @@ seaborn.scatterplot(x="predict_cross_recommended_vars", y ="y", data = plot_trai
 plt = matplotlib.pyplot.title("Cross prediction (recommended vars) on train")
 ```
 
-    15.632679155163398
+    15.21001841587104
 
 
 
@@ -1786,7 +1793,7 @@ seaborn.scatterplot(x="predict_naive_empirical_all_vars", y ="y", data = plot_te
 plt = matplotlib.pyplot.title("Naive empirical prediction on test")
 ```
 
-    17.94717031406752
+    17.945143602822135
 
 
 
@@ -1800,7 +1807,7 @@ seaborn.scatterplot(x="predict_naive_hierarchical_all_vars", y ="y", data = plot
 plt = matplotlib.pyplot.title("Naive hierarchical prediction on test")
 ```
 
-    17.681689705718867
+    17.56539958000269
 
 
 
@@ -1814,7 +1821,7 @@ seaborn.scatterplot(x="predict_cross_all_vars", y ="y", data = plot_test)
 plt = matplotlib.pyplot.title("Cross prediction on (all vars) test")
 ```
 
-    15.768320960731803
+    15.9764331468181
 
 
 
@@ -1828,7 +1835,7 @@ seaborn.scatterplot(x="predict_cross_recommended_vars", y ="y", data = plot_test
 plt = matplotlib.pyplot.title("Cross prediction (recommended vars) on test")
 ```
 
-    15.493141572688373
+    15.658332158893971
 
 
 
@@ -1852,22 +1859,22 @@ smf1.summary()
   <th>Dep. Variable:</th>            <td>y</td>        <th>  R-squared:         </th> <td>   0.968</td> 
 </tr>
 <tr>
-  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   0.966</td> 
+  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   0.967</td> 
 </tr>
 <tr>
-  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   664.0</td> 
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   680.3</td> 
 </tr>
 <tr>
   <th>Date:</th>             <td>Fri, 26 Jul 2019</td> <th>  Prob (F-statistic):</th>  <td>  0.00</td>  
 </tr>
 <tr>
-  <th>Time:</th>                 <td>06:56:36</td>     <th>  Log-Likelihood:    </th> <td> -6569.6</td> 
+  <th>Time:</th>                 <td>18:50:54</td>     <th>  Log-Likelihood:    </th> <td> -6537.4</td> 
 </tr>
 <tr>
-  <th>No. Observations:</th>      <td>  2531</td>      <th>  AIC:               </th> <td>1.336e+04</td>
+  <th>No. Observations:</th>      <td>  2548</td>      <th>  AIC:               </th> <td>1.330e+04</td>
 </tr>
 <tr>
-  <th>Df Residuals:</th>          <td>  2420</td>      <th>  BIC:               </th> <td>1.401e+04</td>
+  <th>Df Residuals:</th>          <td>  2437</td>      <th>  BIC:               </th> <td>1.395e+04</td>
 </tr>
 <tr>
   <th>Df Model:</th>              <td>   110</td>      <th>                     </th>     <td> </td>    
@@ -1881,351 +1888,351 @@ smf1.summary()
             <td></td>              <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
 </tr>
 <tr>
-  <th>const</th>                <td>    1.3312</td> <td>    0.066</td> <td>   20.188</td> <td> 0.000</td> <td>    1.202</td> <td>    1.460</td>
+  <th>const</th>                <td>   -0.7378</td> <td>    0.064</td> <td>  -11.570</td> <td> 0.000</td> <td>   -0.863</td> <td>   -0.613</td>
 </tr>
 <tr>
-  <th>var_0_impact_code</th>    <td>    0.0710</td> <td>    0.008</td> <td>    8.361</td> <td> 0.000</td> <td>    0.054</td> <td>    0.088</td>
+  <th>var_0_impact_code</th>    <td>    0.0655</td> <td>    0.008</td> <td>    8.113</td> <td> 0.000</td> <td>    0.050</td> <td>    0.081</td>
 </tr>
 <tr>
-  <th>var_1_impact_code</th>    <td>    0.0540</td> <td>    0.008</td> <td>    6.563</td> <td> 0.000</td> <td>    0.038</td> <td>    0.070</td>
+  <th>var_1_impact_code</th>    <td>    0.0676</td> <td>    0.008</td> <td>    8.228</td> <td> 0.000</td> <td>    0.051</td> <td>    0.084</td>
 </tr>
 <tr>
-  <th>var_2_impact_code</th>    <td>    0.0635</td> <td>    0.008</td> <td>    7.587</td> <td> 0.000</td> <td>    0.047</td> <td>    0.080</td>
+  <th>var_2_impact_code</th>    <td>    0.0535</td> <td>    0.009</td> <td>    6.286</td> <td> 0.000</td> <td>    0.037</td> <td>    0.070</td>
 </tr>
 <tr>
-  <th>var_3_impact_code</th>    <td>    0.0596</td> <td>    0.008</td> <td>    7.148</td> <td> 0.000</td> <td>    0.043</td> <td>    0.076</td>
+  <th>var_3_impact_code</th>    <td>    0.0681</td> <td>    0.008</td> <td>    8.453</td> <td> 0.000</td> <td>    0.052</td> <td>    0.084</td>
 </tr>
 <tr>
-  <th>var_4_impact_code</th>    <td>    0.0580</td> <td>    0.008</td> <td>    6.988</td> <td> 0.000</td> <td>    0.042</td> <td>    0.074</td>
+  <th>var_4_impact_code</th>    <td>    0.0765</td> <td>    0.008</td> <td>    9.468</td> <td> 0.000</td> <td>    0.061</td> <td>    0.092</td>
 </tr>
 <tr>
-  <th>var_5_impact_code</th>    <td>    0.0671</td> <td>    0.008</td> <td>    8.371</td> <td> 0.000</td> <td>    0.051</td> <td>    0.083</td>
+  <th>var_5_impact_code</th>    <td>    0.0647</td> <td>    0.008</td> <td>    8.024</td> <td> 0.000</td> <td>    0.049</td> <td>    0.081</td>
 </tr>
 <tr>
-  <th>var_6_impact_code</th>    <td>    0.0682</td> <td>    0.008</td> <td>    8.376</td> <td> 0.000</td> <td>    0.052</td> <td>    0.084</td>
+  <th>var_6_impact_code</th>    <td>    0.0682</td> <td>    0.008</td> <td>    8.418</td> <td> 0.000</td> <td>    0.052</td> <td>    0.084</td>
 </tr>
 <tr>
-  <th>var_7_impact_code</th>    <td>    0.0583</td> <td>    0.008</td> <td>    7.261</td> <td> 0.000</td> <td>    0.043</td> <td>    0.074</td>
+  <th>var_7_impact_code</th>    <td>    0.0727</td> <td>    0.008</td> <td>    8.918</td> <td> 0.000</td> <td>    0.057</td> <td>    0.089</td>
 </tr>
 <tr>
-  <th>var_8_impact_code</th>    <td>    0.0626</td> <td>    0.008</td> <td>    7.455</td> <td> 0.000</td> <td>    0.046</td> <td>    0.079</td>
+  <th>var_8_impact_code</th>    <td>    0.0564</td> <td>    0.008</td> <td>    6.819</td> <td> 0.000</td> <td>    0.040</td> <td>    0.073</td>
 </tr>
 <tr>
-  <th>var_9_impact_code</th>    <td>    0.0779</td> <td>    0.008</td> <td>    9.338</td> <td> 0.000</td> <td>    0.062</td> <td>    0.094</td>
+  <th>var_9_impact_code</th>    <td>    0.0530</td> <td>    0.008</td> <td>    6.434</td> <td> 0.000</td> <td>    0.037</td> <td>    0.069</td>
 </tr>
 <tr>
-  <th>noise_0_impact_code</th>  <td>    0.0354</td> <td>    0.009</td> <td>    3.800</td> <td> 0.000</td> <td>    0.017</td> <td>    0.054</td>
+  <th>noise_0_impact_code</th>  <td>    0.0481</td> <td>    0.009</td> <td>    5.254</td> <td> 0.000</td> <td>    0.030</td> <td>    0.066</td>
 </tr>
 <tr>
-  <th>noise_1_impact_code</th>  <td>    0.0365</td> <td>    0.009</td> <td>    4.039</td> <td> 0.000</td> <td>    0.019</td> <td>    0.054</td>
+  <th>noise_1_impact_code</th>  <td>    0.0403</td> <td>    0.009</td> <td>    4.341</td> <td> 0.000</td> <td>    0.022</td> <td>    0.059</td>
 </tr>
 <tr>
-  <th>noise_2_impact_code</th>  <td>    0.0408</td> <td>    0.009</td> <td>    4.369</td> <td> 0.000</td> <td>    0.022</td> <td>    0.059</td>
+  <th>noise_2_impact_code</th>  <td>    0.0305</td> <td>    0.009</td> <td>    3.291</td> <td> 0.001</td> <td>    0.012</td> <td>    0.049</td>
 </tr>
 <tr>
-  <th>noise_3_impact_code</th>  <td>    0.0334</td> <td>    0.010</td> <td>    3.494</td> <td> 0.000</td> <td>    0.015</td> <td>    0.052</td>
+  <th>noise_3_impact_code</th>  <td>    0.0343</td> <td>    0.009</td> <td>    3.733</td> <td> 0.000</td> <td>    0.016</td> <td>    0.052</td>
 </tr>
 <tr>
-  <th>noise_4_impact_code</th>  <td>    0.0456</td> <td>    0.010</td> <td>    4.744</td> <td> 0.000</td> <td>    0.027</td> <td>    0.064</td>
+  <th>noise_4_impact_code</th>  <td>    0.0517</td> <td>    0.009</td> <td>    5.562</td> <td> 0.000</td> <td>    0.033</td> <td>    0.070</td>
 </tr>
 <tr>
-  <th>noise_5_impact_code</th>  <td>    0.0369</td> <td>    0.009</td> <td>    4.009</td> <td> 0.000</td> <td>    0.019</td> <td>    0.055</td>
+  <th>noise_5_impact_code</th>  <td>    0.0409</td> <td>    0.010</td> <td>    4.278</td> <td> 0.000</td> <td>    0.022</td> <td>    0.060</td>
 </tr>
 <tr>
-  <th>noise_6_impact_code</th>  <td>    0.0458</td> <td>    0.010</td> <td>    4.808</td> <td> 0.000</td> <td>    0.027</td> <td>    0.065</td>
+  <th>noise_6_impact_code</th>  <td>    0.0562</td> <td>    0.009</td> <td>    6.100</td> <td> 0.000</td> <td>    0.038</td> <td>    0.074</td>
 </tr>
 <tr>
-  <th>noise_7_impact_code</th>  <td>    0.0198</td> <td>    0.010</td> <td>    2.055</td> <td> 0.040</td> <td>    0.001</td> <td>    0.039</td>
+  <th>noise_7_impact_code</th>  <td>    0.0352</td> <td>    0.009</td> <td>    3.849</td> <td> 0.000</td> <td>    0.017</td> <td>    0.053</td>
 </tr>
 <tr>
-  <th>noise_8_impact_code</th>  <td>    0.0381</td> <td>    0.009</td> <td>    4.126</td> <td> 0.000</td> <td>    0.020</td> <td>    0.056</td>
+  <th>noise_8_impact_code</th>  <td>    0.0406</td> <td>    0.010</td> <td>    4.257</td> <td> 0.000</td> <td>    0.022</td> <td>    0.059</td>
 </tr>
 <tr>
-  <th>noise_9_impact_code</th>  <td>    0.0315</td> <td>    0.009</td> <td>    3.320</td> <td> 0.001</td> <td>    0.013</td> <td>    0.050</td>
+  <th>noise_9_impact_code</th>  <td>    0.0282</td> <td>    0.009</td> <td>    3.070</td> <td> 0.002</td> <td>    0.010</td> <td>    0.046</td>
 </tr>
 <tr>
-  <th>noise_10_impact_code</th> <td>    0.0322</td> <td>    0.009</td> <td>    3.432</td> <td> 0.001</td> <td>    0.014</td> <td>    0.051</td>
+  <th>noise_10_impact_code</th> <td>    0.0237</td> <td>    0.009</td> <td>    2.542</td> <td> 0.011</td> <td>    0.005</td> <td>    0.042</td>
 </tr>
 <tr>
-  <th>noise_11_impact_code</th> <td>    0.0479</td> <td>    0.009</td> <td>    5.147</td> <td> 0.000</td> <td>    0.030</td> <td>    0.066</td>
+  <th>noise_11_impact_code</th> <td>    0.0379</td> <td>    0.009</td> <td>    4.367</td> <td> 0.000</td> <td>    0.021</td> <td>    0.055</td>
 </tr>
 <tr>
-  <th>noise_12_impact_code</th> <td>    0.0376</td> <td>    0.010</td> <td>    3.841</td> <td> 0.000</td> <td>    0.018</td> <td>    0.057</td>
+  <th>noise_12_impact_code</th> <td>    0.0485</td> <td>    0.009</td> <td>    5.222</td> <td> 0.000</td> <td>    0.030</td> <td>    0.067</td>
 </tr>
 <tr>
-  <th>noise_13_impact_code</th> <td>    0.0389</td> <td>    0.009</td> <td>    4.139</td> <td> 0.000</td> <td>    0.020</td> <td>    0.057</td>
+  <th>noise_13_impact_code</th> <td>    0.0450</td> <td>    0.009</td> <td>    4.762</td> <td> 0.000</td> <td>    0.026</td> <td>    0.064</td>
 </tr>
 <tr>
-  <th>noise_14_impact_code</th> <td>    0.0423</td> <td>    0.009</td> <td>    4.517</td> <td> 0.000</td> <td>    0.024</td> <td>    0.061</td>
+  <th>noise_14_impact_code</th> <td>    0.0399</td> <td>    0.009</td> <td>    4.247</td> <td> 0.000</td> <td>    0.021</td> <td>    0.058</td>
 </tr>
 <tr>
-  <th>noise_15_impact_code</th> <td>    0.0410</td> <td>    0.010</td> <td>    4.298</td> <td> 0.000</td> <td>    0.022</td> <td>    0.060</td>
+  <th>noise_15_impact_code</th> <td>    0.0477</td> <td>    0.009</td> <td>    5.113</td> <td> 0.000</td> <td>    0.029</td> <td>    0.066</td>
 </tr>
 <tr>
-  <th>noise_16_impact_code</th> <td>    0.0316</td> <td>    0.010</td> <td>    3.290</td> <td> 0.001</td> <td>    0.013</td> <td>    0.050</td>
+  <th>noise_16_impact_code</th> <td>    0.0401</td> <td>    0.009</td> <td>    4.412</td> <td> 0.000</td> <td>    0.022</td> <td>    0.058</td>
 </tr>
 <tr>
-  <th>noise_17_impact_code</th> <td>    0.0452</td> <td>    0.010</td> <td>    4.702</td> <td> 0.000</td> <td>    0.026</td> <td>    0.064</td>
+  <th>noise_17_impact_code</th> <td>    0.0344</td> <td>    0.009</td> <td>    3.709</td> <td> 0.000</td> <td>    0.016</td> <td>    0.053</td>
 </tr>
 <tr>
-  <th>noise_18_impact_code</th> <td>    0.0347</td> <td>    0.009</td> <td>    3.770</td> <td> 0.000</td> <td>    0.017</td> <td>    0.053</td>
+  <th>noise_18_impact_code</th> <td>    0.0413</td> <td>    0.009</td> <td>    4.367</td> <td> 0.000</td> <td>    0.023</td> <td>    0.060</td>
 </tr>
 <tr>
-  <th>noise_19_impact_code</th> <td>    0.0506</td> <td>    0.009</td> <td>    5.457</td> <td> 0.000</td> <td>    0.032</td> <td>    0.069</td>
+  <th>noise_19_impact_code</th> <td>    0.0531</td> <td>    0.009</td> <td>    6.048</td> <td> 0.000</td> <td>    0.036</td> <td>    0.070</td>
 </tr>
 <tr>
-  <th>noise_20_impact_code</th> <td>    0.0544</td> <td>    0.009</td> <td>    6.012</td> <td> 0.000</td> <td>    0.037</td> <td>    0.072</td>
+  <th>noise_20_impact_code</th> <td>    0.0514</td> <td>    0.009</td> <td>    5.568</td> <td> 0.000</td> <td>    0.033</td> <td>    0.069</td>
 </tr>
 <tr>
-  <th>noise_21_impact_code</th> <td>    0.0479</td> <td>    0.010</td> <td>    4.979</td> <td> 0.000</td> <td>    0.029</td> <td>    0.067</td>
+  <th>noise_21_impact_code</th> <td>    0.0479</td> <td>    0.009</td> <td>    5.298</td> <td> 0.000</td> <td>    0.030</td> <td>    0.066</td>
 </tr>
 <tr>
-  <th>noise_22_impact_code</th> <td>    0.0279</td> <td>    0.010</td> <td>    2.880</td> <td> 0.004</td> <td>    0.009</td> <td>    0.047</td>
+  <th>noise_22_impact_code</th> <td>    0.0370</td> <td>    0.009</td> <td>    4.115</td> <td> 0.000</td> <td>    0.019</td> <td>    0.055</td>
 </tr>
 <tr>
-  <th>noise_23_impact_code</th> <td>    0.0438</td> <td>    0.009</td> <td>    4.618</td> <td> 0.000</td> <td>    0.025</td> <td>    0.062</td>
+  <th>noise_23_impact_code</th> <td>    0.0248</td> <td>    0.010</td> <td>    2.604</td> <td> 0.009</td> <td>    0.006</td> <td>    0.043</td>
 </tr>
 <tr>
-  <th>noise_24_impact_code</th> <td>    0.0310</td> <td>    0.009</td> <td>    3.304</td> <td> 0.001</td> <td>    0.013</td> <td>    0.049</td>
+  <th>noise_24_impact_code</th> <td>    0.0356</td> <td>    0.010</td> <td>    3.686</td> <td> 0.000</td> <td>    0.017</td> <td>    0.055</td>
 </tr>
 <tr>
-  <th>noise_25_impact_code</th> <td>    0.0543</td> <td>    0.009</td> <td>    5.778</td> <td> 0.000</td> <td>    0.036</td> <td>    0.073</td>
+  <th>noise_25_impact_code</th> <td>    0.0484</td> <td>    0.009</td> <td>    5.129</td> <td> 0.000</td> <td>    0.030</td> <td>    0.067</td>
 </tr>
 <tr>
-  <th>noise_26_impact_code</th> <td>    0.0557</td> <td>    0.009</td> <td>    6.255</td> <td> 0.000</td> <td>    0.038</td> <td>    0.073</td>
+  <th>noise_26_impact_code</th> <td>    0.0446</td> <td>    0.009</td> <td>    4.916</td> <td> 0.000</td> <td>    0.027</td> <td>    0.062</td>
 </tr>
 <tr>
-  <th>noise_27_impact_code</th> <td>    0.0583</td> <td>    0.009</td> <td>    6.245</td> <td> 0.000</td> <td>    0.040</td> <td>    0.077</td>
+  <th>noise_27_impact_code</th> <td>    0.0285</td> <td>    0.010</td> <td>    2.970</td> <td> 0.003</td> <td>    0.010</td> <td>    0.047</td>
 </tr>
 <tr>
-  <th>noise_28_impact_code</th> <td>    0.0268</td> <td>    0.010</td> <td>    2.793</td> <td> 0.005</td> <td>    0.008</td> <td>    0.046</td>
+  <th>noise_28_impact_code</th> <td>    0.0322</td> <td>    0.010</td> <td>    3.354</td> <td> 0.001</td> <td>    0.013</td> <td>    0.051</td>
 </tr>
 <tr>
-  <th>noise_29_impact_code</th> <td>    0.0292</td> <td>    0.010</td> <td>    3.073</td> <td> 0.002</td> <td>    0.011</td> <td>    0.048</td>
+  <th>noise_29_impact_code</th> <td>    0.0309</td> <td>    0.009</td> <td>    3.422</td> <td> 0.001</td> <td>    0.013</td> <td>    0.049</td>
 </tr>
 <tr>
-  <th>noise_30_impact_code</th> <td>    0.0421</td> <td>    0.009</td> <td>    4.439</td> <td> 0.000</td> <td>    0.024</td> <td>    0.061</td>
+  <th>noise_30_impact_code</th> <td>    0.0500</td> <td>    0.009</td> <td>    5.347</td> <td> 0.000</td> <td>    0.032</td> <td>    0.068</td>
 </tr>
 <tr>
-  <th>noise_31_impact_code</th> <td>    0.0380</td> <td>    0.009</td> <td>    4.166</td> <td> 0.000</td> <td>    0.020</td> <td>    0.056</td>
+  <th>noise_31_impact_code</th> <td>    0.0310</td> <td>    0.009</td> <td>    3.334</td> <td> 0.001</td> <td>    0.013</td> <td>    0.049</td>
 </tr>
 <tr>
-  <th>noise_32_impact_code</th> <td>    0.0448</td> <td>    0.009</td> <td>    4.836</td> <td> 0.000</td> <td>    0.027</td> <td>    0.063</td>
+  <th>noise_32_impact_code</th> <td>    0.0528</td> <td>    0.009</td> <td>    5.740</td> <td> 0.000</td> <td>    0.035</td> <td>    0.071</td>
 </tr>
 <tr>
-  <th>noise_33_impact_code</th> <td>    0.0533</td> <td>    0.009</td> <td>    5.778</td> <td> 0.000</td> <td>    0.035</td> <td>    0.071</td>
+  <th>noise_33_impact_code</th> <td>    0.0517</td> <td>    0.009</td> <td>    5.639</td> <td> 0.000</td> <td>    0.034</td> <td>    0.070</td>
 </tr>
 <tr>
-  <th>noise_34_impact_code</th> <td>    0.0336</td> <td>    0.009</td> <td>    3.572</td> <td> 0.000</td> <td>    0.015</td> <td>    0.052</td>
+  <th>noise_34_impact_code</th> <td>    0.0462</td> <td>    0.009</td> <td>    5.036</td> <td> 0.000</td> <td>    0.028</td> <td>    0.064</td>
 </tr>
 <tr>
-  <th>noise_35_impact_code</th> <td>    0.0340</td> <td>    0.010</td> <td>    3.527</td> <td> 0.000</td> <td>    0.015</td> <td>    0.053</td>
+  <th>noise_35_impact_code</th> <td>    0.0404</td> <td>    0.009</td> <td>    4.384</td> <td> 0.000</td> <td>    0.022</td> <td>    0.058</td>
 </tr>
 <tr>
-  <th>noise_36_impact_code</th> <td>    0.0371</td> <td>    0.009</td> <td>    4.040</td> <td> 0.000</td> <td>    0.019</td> <td>    0.055</td>
+  <th>noise_36_impact_code</th> <td>    0.0454</td> <td>    0.009</td> <td>    5.040</td> <td> 0.000</td> <td>    0.028</td> <td>    0.063</td>
 </tr>
 <tr>
-  <th>noise_37_impact_code</th> <td>    0.0428</td> <td>    0.009</td> <td>    4.558</td> <td> 0.000</td> <td>    0.024</td> <td>    0.061</td>
+  <th>noise_37_impact_code</th> <td>    0.0480</td> <td>    0.010</td> <td>    5.024</td> <td> 0.000</td> <td>    0.029</td> <td>    0.067</td>
 </tr>
 <tr>
-  <th>noise_38_impact_code</th> <td>    0.0410</td> <td>    0.009</td> <td>    4.460</td> <td> 0.000</td> <td>    0.023</td> <td>    0.059</td>
+  <th>noise_38_impact_code</th> <td>    0.0558</td> <td>    0.009</td> <td>    6.256</td> <td> 0.000</td> <td>    0.038</td> <td>    0.073</td>
 </tr>
 <tr>
-  <th>noise_39_impact_code</th> <td>    0.0460</td> <td>    0.009</td> <td>    4.907</td> <td> 0.000</td> <td>    0.028</td> <td>    0.064</td>
+  <th>noise_39_impact_code</th> <td>    0.0276</td> <td>    0.009</td> <td>    3.006</td> <td> 0.003</td> <td>    0.010</td> <td>    0.046</td>
 </tr>
 <tr>
-  <th>noise_40_impact_code</th> <td>    0.0502</td> <td>    0.009</td> <td>    5.299</td> <td> 0.000</td> <td>    0.032</td> <td>    0.069</td>
+  <th>noise_40_impact_code</th> <td>    0.0221</td> <td>    0.010</td> <td>    2.258</td> <td> 0.024</td> <td>    0.003</td> <td>    0.041</td>
 </tr>
 <tr>
-  <th>noise_41_impact_code</th> <td>    0.0486</td> <td>    0.009</td> <td>    5.141</td> <td> 0.000</td> <td>    0.030</td> <td>    0.067</td>
+  <th>noise_41_impact_code</th> <td>    0.0451</td> <td>    0.009</td> <td>    5.099</td> <td> 0.000</td> <td>    0.028</td> <td>    0.062</td>
 </tr>
 <tr>
-  <th>noise_42_impact_code</th> <td>    0.0419</td> <td>    0.009</td> <td>    4.687</td> <td> 0.000</td> <td>    0.024</td> <td>    0.059</td>
+  <th>noise_42_impact_code</th> <td>    0.0431</td> <td>    0.010</td> <td>    4.501</td> <td> 0.000</td> <td>    0.024</td> <td>    0.062</td>
 </tr>
 <tr>
-  <th>noise_43_impact_code</th> <td>    0.0433</td> <td>    0.009</td> <td>    4.564</td> <td> 0.000</td> <td>    0.025</td> <td>    0.062</td>
+  <th>noise_43_impact_code</th> <td>    0.0504</td> <td>    0.009</td> <td>    5.368</td> <td> 0.000</td> <td>    0.032</td> <td>    0.069</td>
 </tr>
 <tr>
-  <th>noise_44_impact_code</th> <td>    0.0430</td> <td>    0.009</td> <td>    4.596</td> <td> 0.000</td> <td>    0.025</td> <td>    0.061</td>
+  <th>noise_44_impact_code</th> <td>    0.0435</td> <td>    0.009</td> <td>    4.756</td> <td> 0.000</td> <td>    0.026</td> <td>    0.061</td>
 </tr>
 <tr>
-  <th>noise_45_impact_code</th> <td>    0.0433</td> <td>    0.009</td> <td>    4.572</td> <td> 0.000</td> <td>    0.025</td> <td>    0.062</td>
+  <th>noise_45_impact_code</th> <td>    0.0393</td> <td>    0.009</td> <td>    4.237</td> <td> 0.000</td> <td>    0.021</td> <td>    0.058</td>
 </tr>
 <tr>
-  <th>noise_46_impact_code</th> <td>    0.0356</td> <td>    0.009</td> <td>    3.781</td> <td> 0.000</td> <td>    0.017</td> <td>    0.054</td>
+  <th>noise_46_impact_code</th> <td>    0.0345</td> <td>    0.009</td> <td>    3.684</td> <td> 0.000</td> <td>    0.016</td> <td>    0.053</td>
 </tr>
 <tr>
-  <th>noise_47_impact_code</th> <td>    0.0428</td> <td>    0.009</td> <td>    4.768</td> <td> 0.000</td> <td>    0.025</td> <td>    0.060</td>
+  <th>noise_47_impact_code</th> <td>    0.0452</td> <td>    0.009</td> <td>    4.931</td> <td> 0.000</td> <td>    0.027</td> <td>    0.063</td>
 </tr>
 <tr>
-  <th>noise_48_impact_code</th> <td>    0.0428</td> <td>    0.009</td> <td>    4.606</td> <td> 0.000</td> <td>    0.025</td> <td>    0.061</td>
+  <th>noise_48_impact_code</th> <td>    0.0197</td> <td>    0.009</td> <td>    2.143</td> <td> 0.032</td> <td>    0.002</td> <td>    0.038</td>
 </tr>
 <tr>
-  <th>noise_49_impact_code</th> <td>    0.0447</td> <td>    0.009</td> <td>    4.788</td> <td> 0.000</td> <td>    0.026</td> <td>    0.063</td>
+  <th>noise_49_impact_code</th> <td>    0.0467</td> <td>    0.009</td> <td>    5.071</td> <td> 0.000</td> <td>    0.029</td> <td>    0.065</td>
 </tr>
 <tr>
-  <th>noise_50_impact_code</th> <td>    0.0350</td> <td>    0.009</td> <td>    3.729</td> <td> 0.000</td> <td>    0.017</td> <td>    0.053</td>
+  <th>noise_50_impact_code</th> <td>    0.0433</td> <td>    0.009</td> <td>    4.775</td> <td> 0.000</td> <td>    0.026</td> <td>    0.061</td>
 </tr>
 <tr>
-  <th>noise_51_impact_code</th> <td>    0.0328</td> <td>    0.009</td> <td>    3.506</td> <td> 0.000</td> <td>    0.014</td> <td>    0.051</td>
+  <th>noise_51_impact_code</th> <td>    0.0341</td> <td>    0.009</td> <td>    3.637</td> <td> 0.000</td> <td>    0.016</td> <td>    0.053</td>
 </tr>
 <tr>
-  <th>noise_52_impact_code</th> <td>    0.0527</td> <td>    0.009</td> <td>    5.654</td> <td> 0.000</td> <td>    0.034</td> <td>    0.071</td>
+  <th>noise_52_impact_code</th> <td>    0.0428</td> <td>    0.009</td> <td>    4.783</td> <td> 0.000</td> <td>    0.025</td> <td>    0.060</td>
 </tr>
 <tr>
-  <th>noise_53_impact_code</th> <td>    0.0453</td> <td>    0.009</td> <td>    4.938</td> <td> 0.000</td> <td>    0.027</td> <td>    0.063</td>
+  <th>noise_53_impact_code</th> <td>    0.0426</td> <td>    0.009</td> <td>    4.601</td> <td> 0.000</td> <td>    0.024</td> <td>    0.061</td>
 </tr>
 <tr>
-  <th>noise_54_impact_code</th> <td>    0.0352</td> <td>    0.009</td> <td>    3.761</td> <td> 0.000</td> <td>    0.017</td> <td>    0.054</td>
+  <th>noise_54_impact_code</th> <td>    0.0514</td> <td>    0.009</td> <td>    5.488</td> <td> 0.000</td> <td>    0.033</td> <td>    0.070</td>
 </tr>
 <tr>
-  <th>noise_55_impact_code</th> <td>    0.0654</td> <td>    0.009</td> <td>    6.951</td> <td> 0.000</td> <td>    0.047</td> <td>    0.084</td>
+  <th>noise_55_impact_code</th> <td>    0.0362</td> <td>    0.009</td> <td>    3.819</td> <td> 0.000</td> <td>    0.018</td> <td>    0.055</td>
 </tr>
 <tr>
-  <th>noise_56_impact_code</th> <td>    0.0355</td> <td>    0.009</td> <td>    3.813</td> <td> 0.000</td> <td>    0.017</td> <td>    0.054</td>
+  <th>noise_56_impact_code</th> <td>    0.0447</td> <td>    0.009</td> <td>    4.946</td> <td> 0.000</td> <td>    0.027</td> <td>    0.062</td>
 </tr>
 <tr>
-  <th>noise_57_impact_code</th> <td>    0.0443</td> <td>    0.010</td> <td>    4.592</td> <td> 0.000</td> <td>    0.025</td> <td>    0.063</td>
+  <th>noise_57_impact_code</th> <td>    0.0363</td> <td>    0.009</td> <td>    3.838</td> <td> 0.000</td> <td>    0.018</td> <td>    0.055</td>
 </tr>
 <tr>
-  <th>noise_58_impact_code</th> <td>    0.0479</td> <td>    0.009</td> <td>    5.194</td> <td> 0.000</td> <td>    0.030</td> <td>    0.066</td>
+  <th>noise_58_impact_code</th> <td>    0.0274</td> <td>    0.009</td> <td>    2.923</td> <td> 0.003</td> <td>    0.009</td> <td>    0.046</td>
 </tr>
 <tr>
-  <th>noise_59_impact_code</th> <td>    0.0507</td> <td>    0.010</td> <td>    5.254</td> <td> 0.000</td> <td>    0.032</td> <td>    0.070</td>
+  <th>noise_59_impact_code</th> <td>    0.0411</td> <td>    0.009</td> <td>    4.515</td> <td> 0.000</td> <td>    0.023</td> <td>    0.059</td>
 </tr>
 <tr>
-  <th>noise_60_impact_code</th> <td>    0.0250</td> <td>    0.010</td> <td>    2.625</td> <td> 0.009</td> <td>    0.006</td> <td>    0.044</td>
+  <th>noise_60_impact_code</th> <td>    0.0395</td> <td>    0.009</td> <td>    4.250</td> <td> 0.000</td> <td>    0.021</td> <td>    0.058</td>
 </tr>
 <tr>
-  <th>noise_61_impact_code</th> <td>    0.0399</td> <td>    0.010</td> <td>    4.191</td> <td> 0.000</td> <td>    0.021</td> <td>    0.059</td>
+  <th>noise_61_impact_code</th> <td>    0.0368</td> <td>    0.009</td> <td>    3.978</td> <td> 0.000</td> <td>    0.019</td> <td>    0.055</td>
 </tr>
 <tr>
-  <th>noise_62_impact_code</th> <td>    0.0332</td> <td>    0.009</td> <td>    3.667</td> <td> 0.000</td> <td>    0.015</td> <td>    0.051</td>
+  <th>noise_62_impact_code</th> <td>    0.0405</td> <td>    0.009</td> <td>    4.310</td> <td> 0.000</td> <td>    0.022</td> <td>    0.059</td>
 </tr>
 <tr>
-  <th>noise_63_impact_code</th> <td>    0.0275</td> <td>    0.010</td> <td>    2.865</td> <td> 0.004</td> <td>    0.009</td> <td>    0.046</td>
+  <th>noise_63_impact_code</th> <td>    0.0433</td> <td>    0.009</td> <td>    4.633</td> <td> 0.000</td> <td>    0.025</td> <td>    0.062</td>
 </tr>
 <tr>
-  <th>noise_64_impact_code</th> <td>    0.0319</td> <td>    0.009</td> <td>    3.506</td> <td> 0.000</td> <td>    0.014</td> <td>    0.050</td>
+  <th>noise_64_impact_code</th> <td>    0.0147</td> <td>    0.009</td> <td>    1.557</td> <td> 0.119</td> <td>   -0.004</td> <td>    0.033</td>
 </tr>
 <tr>
-  <th>noise_65_impact_code</th> <td>    0.0334</td> <td>    0.010</td> <td>    3.499</td> <td> 0.000</td> <td>    0.015</td> <td>    0.052</td>
+  <th>noise_65_impact_code</th> <td>    0.0319</td> <td>    0.009</td> <td>    3.549</td> <td> 0.000</td> <td>    0.014</td> <td>    0.050</td>
 </tr>
 <tr>
-  <th>noise_66_impact_code</th> <td>    0.0197</td> <td>    0.009</td> <td>    2.151</td> <td> 0.032</td> <td>    0.002</td> <td>    0.038</td>
+  <th>noise_66_impact_code</th> <td>    0.0383</td> <td>    0.010</td> <td>    4.000</td> <td> 0.000</td> <td>    0.020</td> <td>    0.057</td>
 </tr>
 <tr>
-  <th>noise_67_impact_code</th> <td>    0.0355</td> <td>    0.009</td> <td>    3.831</td> <td> 0.000</td> <td>    0.017</td> <td>    0.054</td>
+  <th>noise_67_impact_code</th> <td>    0.0461</td> <td>    0.009</td> <td>    5.043</td> <td> 0.000</td> <td>    0.028</td> <td>    0.064</td>
 </tr>
 <tr>
-  <th>noise_68_impact_code</th> <td>    0.0482</td> <td>    0.009</td> <td>    5.270</td> <td> 0.000</td> <td>    0.030</td> <td>    0.066</td>
+  <th>noise_68_impact_code</th> <td>    0.0420</td> <td>    0.009</td> <td>    4.445</td> <td> 0.000</td> <td>    0.023</td> <td>    0.061</td>
 </tr>
 <tr>
-  <th>noise_69_impact_code</th> <td>    0.0217</td> <td>    0.010</td> <td>    2.273</td> <td> 0.023</td> <td>    0.003</td> <td>    0.040</td>
+  <th>noise_69_impact_code</th> <td>    0.0534</td> <td>    0.009</td> <td>    5.664</td> <td> 0.000</td> <td>    0.035</td> <td>    0.072</td>
 </tr>
 <tr>
-  <th>noise_70_impact_code</th> <td>    0.0319</td> <td>    0.010</td> <td>    3.319</td> <td> 0.001</td> <td>    0.013</td> <td>    0.051</td>
+  <th>noise_70_impact_code</th> <td>    0.0388</td> <td>    0.010</td> <td>    4.079</td> <td> 0.000</td> <td>    0.020</td> <td>    0.057</td>
 </tr>
 <tr>
-  <th>noise_71_impact_code</th> <td>    0.0366</td> <td>    0.009</td> <td>    3.926</td> <td> 0.000</td> <td>    0.018</td> <td>    0.055</td>
+  <th>noise_71_impact_code</th> <td>    0.0401</td> <td>    0.009</td> <td>    4.373</td> <td> 0.000</td> <td>    0.022</td> <td>    0.058</td>
 </tr>
 <tr>
-  <th>noise_72_impact_code</th> <td>    0.0347</td> <td>    0.010</td> <td>    3.632</td> <td> 0.000</td> <td>    0.016</td> <td>    0.053</td>
+  <th>noise_72_impact_code</th> <td>    0.0519</td> <td>    0.009</td> <td>    5.682</td> <td> 0.000</td> <td>    0.034</td> <td>    0.070</td>
 </tr>
 <tr>
-  <th>noise_73_impact_code</th> <td>    0.0505</td> <td>    0.009</td> <td>    5.417</td> <td> 0.000</td> <td>    0.032</td> <td>    0.069</td>
+  <th>noise_73_impact_code</th> <td>    0.0446</td> <td>    0.009</td> <td>    4.883</td> <td> 0.000</td> <td>    0.027</td> <td>    0.063</td>
 </tr>
 <tr>
-  <th>noise_74_impact_code</th> <td>    0.0268</td> <td>    0.009</td> <td>    2.841</td> <td> 0.005</td> <td>    0.008</td> <td>    0.045</td>
+  <th>noise_74_impact_code</th> <td>    0.0562</td> <td>    0.009</td> <td>    6.359</td> <td> 0.000</td> <td>    0.039</td> <td>    0.073</td>
 </tr>
 <tr>
-  <th>noise_75_impact_code</th> <td>    0.0454</td> <td>    0.010</td> <td>    4.696</td> <td> 0.000</td> <td>    0.026</td> <td>    0.064</td>
+  <th>noise_75_impact_code</th> <td>    0.0532</td> <td>    0.010</td> <td>    5.520</td> <td> 0.000</td> <td>    0.034</td> <td>    0.072</td>
 </tr>
 <tr>
-  <th>noise_76_impact_code</th> <td>    0.0286</td> <td>    0.009</td> <td>    3.068</td> <td> 0.002</td> <td>    0.010</td> <td>    0.047</td>
+  <th>noise_76_impact_code</th> <td>    0.0121</td> <td>    0.009</td> <td>    1.274</td> <td> 0.203</td> <td>   -0.007</td> <td>    0.031</td>
 </tr>
 <tr>
-  <th>noise_77_impact_code</th> <td>    0.0362</td> <td>    0.009</td> <td>    3.980</td> <td> 0.000</td> <td>    0.018</td> <td>    0.054</td>
+  <th>noise_77_impact_code</th> <td>    0.0380</td> <td>    0.009</td> <td>    4.164</td> <td> 0.000</td> <td>    0.020</td> <td>    0.056</td>
 </tr>
 <tr>
-  <th>noise_78_impact_code</th> <td>    0.0298</td> <td>    0.010</td> <td>    3.110</td> <td> 0.002</td> <td>    0.011</td> <td>    0.049</td>
+  <th>noise_78_impact_code</th> <td>    0.0505</td> <td>    0.009</td> <td>    5.667</td> <td> 0.000</td> <td>    0.033</td> <td>    0.068</td>
 </tr>
 <tr>
-  <th>noise_79_impact_code</th> <td>    0.0409</td> <td>    0.009</td> <td>    4.469</td> <td> 0.000</td> <td>    0.023</td> <td>    0.059</td>
+  <th>noise_79_impact_code</th> <td>    0.0491</td> <td>    0.009</td> <td>    5.337</td> <td> 0.000</td> <td>    0.031</td> <td>    0.067</td>
 </tr>
 <tr>
-  <th>noise_80_impact_code</th> <td>    0.0539</td> <td>    0.010</td> <td>    5.609</td> <td> 0.000</td> <td>    0.035</td> <td>    0.073</td>
+  <th>noise_80_impact_code</th> <td>    0.0358</td> <td>    0.009</td> <td>    3.819</td> <td> 0.000</td> <td>    0.017</td> <td>    0.054</td>
 </tr>
 <tr>
-  <th>noise_81_impact_code</th> <td>    0.0366</td> <td>    0.009</td> <td>    4.065</td> <td> 0.000</td> <td>    0.019</td> <td>    0.054</td>
+  <th>noise_81_impact_code</th> <td>    0.0473</td> <td>    0.009</td> <td>    5.330</td> <td> 0.000</td> <td>    0.030</td> <td>    0.065</td>
 </tr>
 <tr>
-  <th>noise_82_impact_code</th> <td>    0.0356</td> <td>    0.009</td> <td>    3.795</td> <td> 0.000</td> <td>    0.017</td> <td>    0.054</td>
+  <th>noise_82_impact_code</th> <td>    0.0419</td> <td>    0.009</td> <td>    4.727</td> <td> 0.000</td> <td>    0.025</td> <td>    0.059</td>
 </tr>
 <tr>
-  <th>noise_83_impact_code</th> <td>    0.0400</td> <td>    0.009</td> <td>    4.299</td> <td> 0.000</td> <td>    0.022</td> <td>    0.058</td>
+  <th>noise_83_impact_code</th> <td>    0.0262</td> <td>    0.009</td> <td>    2.856</td> <td> 0.004</td> <td>    0.008</td> <td>    0.044</td>
 </tr>
 <tr>
-  <th>noise_84_impact_code</th> <td>    0.0525</td> <td>    0.009</td> <td>    5.542</td> <td> 0.000</td> <td>    0.034</td> <td>    0.071</td>
+  <th>noise_84_impact_code</th> <td>    0.0330</td> <td>    0.009</td> <td>    3.564</td> <td> 0.000</td> <td>    0.015</td> <td>    0.051</td>
 </tr>
 <tr>
-  <th>noise_85_impact_code</th> <td>    0.0319</td> <td>    0.009</td> <td>    3.382</td> <td> 0.001</td> <td>    0.013</td> <td>    0.050</td>
+  <th>noise_85_impact_code</th> <td>    0.0451</td> <td>    0.009</td> <td>    5.005</td> <td> 0.000</td> <td>    0.027</td> <td>    0.063</td>
 </tr>
 <tr>
-  <th>noise_86_impact_code</th> <td>    0.0351</td> <td>    0.009</td> <td>    3.720</td> <td> 0.000</td> <td>    0.017</td> <td>    0.054</td>
+  <th>noise_86_impact_code</th> <td>    0.0329</td> <td>    0.009</td> <td>    3.486</td> <td> 0.000</td> <td>    0.014</td> <td>    0.051</td>
 </tr>
 <tr>
-  <th>noise_87_impact_code</th> <td>    0.0412</td> <td>    0.009</td> <td>    4.580</td> <td> 0.000</td> <td>    0.024</td> <td>    0.059</td>
+  <th>noise_87_impact_code</th> <td>    0.0416</td> <td>    0.009</td> <td>    4.627</td> <td> 0.000</td> <td>    0.024</td> <td>    0.059</td>
 </tr>
 <tr>
-  <th>noise_88_impact_code</th> <td>    0.0579</td> <td>    0.009</td> <td>    6.366</td> <td> 0.000</td> <td>    0.040</td> <td>    0.076</td>
+  <th>noise_88_impact_code</th> <td>    0.0342</td> <td>    0.009</td> <td>    3.633</td> <td> 0.000</td> <td>    0.016</td> <td>    0.053</td>
 </tr>
 <tr>
-  <th>noise_89_impact_code</th> <td>    0.0432</td> <td>    0.010</td> <td>    4.547</td> <td> 0.000</td> <td>    0.025</td> <td>    0.062</td>
+  <th>noise_89_impact_code</th> <td>    0.0169</td> <td>    0.009</td> <td>    1.854</td> <td> 0.064</td> <td>   -0.001</td> <td>    0.035</td>
 </tr>
 <tr>
-  <th>noise_90_impact_code</th> <td>    0.0482</td> <td>    0.010</td> <td>    5.007</td> <td> 0.000</td> <td>    0.029</td> <td>    0.067</td>
+  <th>noise_90_impact_code</th> <td>    0.0460</td> <td>    0.010</td> <td>    4.840</td> <td> 0.000</td> <td>    0.027</td> <td>    0.065</td>
 </tr>
 <tr>
-  <th>noise_91_impact_code</th> <td>    0.0367</td> <td>    0.009</td> <td>    4.028</td> <td> 0.000</td> <td>    0.019</td> <td>    0.055</td>
+  <th>noise_91_impact_code</th> <td>    0.0497</td> <td>    0.009</td> <td>    5.445</td> <td> 0.000</td> <td>    0.032</td> <td>    0.068</td>
 </tr>
 <tr>
-  <th>noise_92_impact_code</th> <td>    0.0387</td> <td>    0.009</td> <td>    4.122</td> <td> 0.000</td> <td>    0.020</td> <td>    0.057</td>
+  <th>noise_92_impact_code</th> <td>    0.0387</td> <td>    0.009</td> <td>    4.243</td> <td> 0.000</td> <td>    0.021</td> <td>    0.057</td>
 </tr>
 <tr>
-  <th>noise_93_impact_code</th> <td>    0.0440</td> <td>    0.009</td> <td>    5.008</td> <td> 0.000</td> <td>    0.027</td> <td>    0.061</td>
+  <th>noise_93_impact_code</th> <td>    0.0448</td> <td>    0.010</td> <td>    4.676</td> <td> 0.000</td> <td>    0.026</td> <td>    0.064</td>
 </tr>
 <tr>
-  <th>noise_94_impact_code</th> <td>    0.0370</td> <td>    0.009</td> <td>    3.921</td> <td> 0.000</td> <td>    0.019</td> <td>    0.056</td>
+  <th>noise_94_impact_code</th> <td>    0.0277</td> <td>    0.009</td> <td>    2.971</td> <td> 0.003</td> <td>    0.009</td> <td>    0.046</td>
 </tr>
 <tr>
-  <th>noise_95_impact_code</th> <td>    0.0393</td> <td>    0.009</td> <td>    4.339</td> <td> 0.000</td> <td>    0.022</td> <td>    0.057</td>
+  <th>noise_95_impact_code</th> <td>    0.0433</td> <td>    0.009</td> <td>    4.679</td> <td> 0.000</td> <td>    0.025</td> <td>    0.061</td>
 </tr>
 <tr>
-  <th>noise_96_impact_code</th> <td>    0.0445</td> <td>    0.009</td> <td>    4.930</td> <td> 0.000</td> <td>    0.027</td> <td>    0.062</td>
+  <th>noise_96_impact_code</th> <td>    0.0495</td> <td>    0.009</td> <td>    5.522</td> <td> 0.000</td> <td>    0.032</td> <td>    0.067</td>
 </tr>
 <tr>
-  <th>noise_97_impact_code</th> <td>    0.0442</td> <td>    0.009</td> <td>    4.891</td> <td> 0.000</td> <td>    0.026</td> <td>    0.062</td>
+  <th>noise_97_impact_code</th> <td>    0.0508</td> <td>    0.009</td> <td>    5.609</td> <td> 0.000</td> <td>    0.033</td> <td>    0.069</td>
 </tr>
 <tr>
-  <th>noise_98_impact_code</th> <td>    0.0337</td> <td>    0.009</td> <td>    3.634</td> <td> 0.000</td> <td>    0.015</td> <td>    0.052</td>
+  <th>noise_98_impact_code</th> <td>    0.0334</td> <td>    0.009</td> <td>    3.556</td> <td> 0.000</td> <td>    0.015</td> <td>    0.052</td>
 </tr>
 <tr>
-  <th>noise_99_impact_code</th> <td>    0.0603</td> <td>    0.009</td> <td>    6.554</td> <td> 0.000</td> <td>    0.042</td> <td>    0.078</td>
+  <th>noise_99_impact_code</th> <td>    0.0337</td> <td>    0.009</td> <td>    3.713</td> <td> 0.000</td> <td>    0.016</td> <td>    0.052</td>
 </tr>
 </table>
 <table class="simpletable">
 <tr>
-  <th>Omnibus:</th>       <td> 3.367</td> <th>  Durbin-Watson:     </th> <td>   1.964</td>
+  <th>Omnibus:</th>       <td> 3.295</td> <th>  Durbin-Watson:     </th> <td>   2.031</td>
 </tr>
 <tr>
-  <th>Prob(Omnibus):</th> <td> 0.186</td> <th>  Jarque-Bera (JB):  </th> <td>   3.549</td>
+  <th>Prob(Omnibus):</th> <td> 0.193</td> <th>  Jarque-Bera (JB):  </th> <td>   3.502</td>
 </tr>
 <tr>
-  <th>Skew:</th>          <td> 0.035</td> <th>  Prob(JB):          </th> <td>   0.170</td>
+  <th>Skew:</th>          <td>-0.028</td> <th>  Prob(JB):          </th> <td>   0.174</td>
 </tr>
 <tr>
-  <th>Kurtosis:</th>      <td> 3.169</td> <th>  Cond. No.          </th> <td>    39.7</td>
+  <th>Kurtosis:</th>      <td> 3.173</td> <th>  Cond. No.          </th> <td>    38.6</td>
 </tr>
 </table><br/><br/>Warnings:<br/>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
 
@@ -2239,7 +2246,7 @@ sklearn.metrics.r2_score(plot_train["y"],plot_train["predict_naive_empirical_all
 
 
 
-    0.9679285560701428
+    0.968462555157565
 
 
 
@@ -2251,7 +2258,7 @@ sklearn.metrics.r2_score(plot_test["y"],plot_test["predict_naive_empirical_all_v
 
 
 
-    0.06528961393944832
+    0.054959350522135186
 
 
 
@@ -2269,25 +2276,25 @@ smf2.summary()
 <table class="simpletable">
 <caption>OLS Regression Results</caption>
 <tr>
-  <th>Dep. Variable:</th>            <td>y</td>        <th>  R-squared:         </th> <td>   0.291</td> 
+  <th>Dep. Variable:</th>            <td>y</td>        <th>  R-squared:         </th> <td>   0.299</td> 
 </tr>
 <tr>
-  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   0.259</td> 
+  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   0.268</td> 
 </tr>
 <tr>
-  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   9.022</td> 
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   9.466</td> 
 </tr>
 <tr>
-  <th>Date:</th>             <td>Fri, 26 Jul 2019</td> <th>  Prob (F-statistic):</th> <td>1.36e-114</td>
+  <th>Date:</th>             <td>Fri, 26 Jul 2019</td> <th>  Prob (F-statistic):</th> <td>1.97e-121</td>
 </tr>
 <tr>
-  <th>Time:</th>                 <td>06:56:36</td>     <th>  Log-Likelihood:    </th> <td> -10488.</td> 
+  <th>Time:</th>                 <td>18:50:54</td>     <th>  Log-Likelihood:    </th> <td> -10488.</td> 
 </tr>
 <tr>
-  <th>No. Observations:</th>      <td>  2531</td>      <th>  AIC:               </th> <td>2.120e+04</td>
+  <th>No. Observations:</th>      <td>  2548</td>      <th>  AIC:               </th> <td>2.120e+04</td>
 </tr>
 <tr>
-  <th>Df Residuals:</th>          <td>  2420</td>      <th>  BIC:               </th> <td>2.185e+04</td>
+  <th>Df Residuals:</th>          <td>  2437</td>      <th>  BIC:               </th> <td>2.185e+04</td>
 </tr>
 <tr>
   <th>Df Model:</th>              <td>   110</td>      <th>                     </th>     <td> </td>    
@@ -2301,351 +2308,351 @@ smf2.summary()
             <td></td>              <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
 </tr>
 <tr>
-  <th>const</th>                <td>    1.4072</td> <td>    0.316</td> <td>    4.459</td> <td> 0.000</td> <td>    0.788</td> <td>    2.026</td>
+  <th>const</th>                <td>   -0.6033</td> <td>    0.306</td> <td>   -1.973</td> <td> 0.049</td> <td>   -1.203</td> <td>   -0.004</td>
 </tr>
 <tr>
-  <th>var_0_impact_code</th>    <td>    0.4141</td> <td>    0.049</td> <td>    8.369</td> <td> 0.000</td> <td>    0.317</td> <td>    0.511</td>
+  <th>var_0_impact_code</th>    <td>    0.4912</td> <td>    0.047</td> <td>   10.458</td> <td> 0.000</td> <td>    0.399</td> <td>    0.583</td>
 </tr>
 <tr>
-  <th>var_1_impact_code</th>    <td>    0.3821</td> <td>    0.045</td> <td>    8.436</td> <td> 0.000</td> <td>    0.293</td> <td>    0.471</td>
+  <th>var_1_impact_code</th>    <td>    0.4072</td> <td>    0.048</td> <td>    8.445</td> <td> 0.000</td> <td>    0.313</td> <td>    0.502</td>
 </tr>
 <tr>
-  <th>var_2_impact_code</th>    <td>    0.4082</td> <td>    0.046</td> <td>    8.794</td> <td> 0.000</td> <td>    0.317</td> <td>    0.499</td>
+  <th>var_2_impact_code</th>    <td>    0.2776</td> <td>    0.052</td> <td>    5.369</td> <td> 0.000</td> <td>    0.176</td> <td>    0.379</td>
 </tr>
 <tr>
-  <th>var_3_impact_code</th>    <td>    0.3654</td> <td>    0.049</td> <td>    7.493</td> <td> 0.000</td> <td>    0.270</td> <td>    0.461</td>
+  <th>var_3_impact_code</th>    <td>    0.5005</td> <td>    0.046</td> <td>   10.832</td> <td> 0.000</td> <td>    0.410</td> <td>    0.591</td>
 </tr>
 <tr>
-  <th>var_4_impact_code</th>    <td>    0.3920</td> <td>    0.048</td> <td>    8.170</td> <td> 0.000</td> <td>    0.298</td> <td>    0.486</td>
+  <th>var_4_impact_code</th>    <td>    0.5155</td> <td>    0.047</td> <td>   10.962</td> <td> 0.000</td> <td>    0.423</td> <td>    0.608</td>
 </tr>
 <tr>
-  <th>var_5_impact_code</th>    <td>    0.4784</td> <td>    0.044</td> <td>   10.816</td> <td> 0.000</td> <td>    0.392</td> <td>    0.565</td>
+  <th>var_5_impact_code</th>    <td>    0.4462</td> <td>    0.045</td> <td>    9.942</td> <td> 0.000</td> <td>    0.358</td> <td>    0.534</td>
 </tr>
 <tr>
-  <th>var_6_impact_code</th>    <td>    0.4373</td> <td>    0.045</td> <td>    9.675</td> <td> 0.000</td> <td>    0.349</td> <td>    0.526</td>
+  <th>var_6_impact_code</th>    <td>    0.4556</td> <td>    0.049</td> <td>    9.368</td> <td> 0.000</td> <td>    0.360</td> <td>    0.551</td>
 </tr>
 <tr>
-  <th>var_7_impact_code</th>    <td>    0.4361</td> <td>    0.044</td> <td>    9.986</td> <td> 0.000</td> <td>    0.350</td> <td>    0.522</td>
+  <th>var_7_impact_code</th>    <td>    0.4614</td> <td>    0.046</td> <td>   10.060</td> <td> 0.000</td> <td>    0.371</td> <td>    0.551</td>
 </tr>
 <tr>
-  <th>var_8_impact_code</th>    <td>    0.3955</td> <td>    0.048</td> <td>    8.230</td> <td> 0.000</td> <td>    0.301</td> <td>    0.490</td>
+  <th>var_8_impact_code</th>    <td>    0.3792</td> <td>    0.049</td> <td>    7.789</td> <td> 0.000</td> <td>    0.284</td> <td>    0.475</td>
 </tr>
 <tr>
-  <th>var_9_impact_code</th>    <td>    0.3835</td> <td>    0.048</td> <td>    8.022</td> <td> 0.000</td> <td>    0.290</td> <td>    0.477</td>
+  <th>var_9_impact_code</th>    <td>    0.3201</td> <td>    0.048</td> <td>    6.685</td> <td> 0.000</td> <td>    0.226</td> <td>    0.414</td>
 </tr>
 <tr>
-  <th>noise_0_impact_code</th>  <td>    0.0126</td> <td>    0.061</td> <td>    0.205</td> <td> 0.838</td> <td>   -0.108</td> <td>    0.133</td>
+  <th>noise_0_impact_code</th>  <td>    0.0464</td> <td>    0.061</td> <td>    0.759</td> <td> 0.448</td> <td>   -0.073</td> <td>    0.166</td>
 </tr>
 <tr>
-  <th>noise_1_impact_code</th>  <td>    0.0169</td> <td>    0.054</td> <td>    0.311</td> <td> 0.756</td> <td>   -0.090</td> <td>    0.124</td>
+  <th>noise_1_impact_code</th>  <td>   -0.0058</td> <td>    0.062</td> <td>   -0.093</td> <td> 0.926</td> <td>   -0.128</td> <td>    0.116</td>
 </tr>
 <tr>
-  <th>noise_2_impact_code</th>  <td>    0.0517</td> <td>    0.060</td> <td>    0.856</td> <td> 0.392</td> <td>   -0.067</td> <td>    0.170</td>
+  <th>noise_2_impact_code</th>  <td>   -0.0414</td> <td>    0.058</td> <td>   -0.711</td> <td> 0.477</td> <td>   -0.156</td> <td>    0.073</td>
 </tr>
 <tr>
-  <th>noise_3_impact_code</th>  <td>   -0.0431</td> <td>    0.058</td> <td>   -0.746</td> <td> 0.456</td> <td>   -0.156</td> <td>    0.070</td>
+  <th>noise_3_impact_code</th>  <td>   -0.0308</td> <td>    0.057</td> <td>   -0.542</td> <td> 0.588</td> <td>   -0.142</td> <td>    0.081</td>
 </tr>
 <tr>
-  <th>noise_4_impact_code</th>  <td>   -0.0668</td> <td>    0.059</td> <td>   -1.130</td> <td> 0.259</td> <td>   -0.183</td> <td>    0.049</td>
+  <th>noise_4_impact_code</th>  <td>    0.0780</td> <td>    0.059</td> <td>    1.330</td> <td> 0.184</td> <td>   -0.037</td> <td>    0.193</td>
 </tr>
 <tr>
-  <th>noise_5_impact_code</th>  <td>    0.0727</td> <td>    0.056</td> <td>    1.303</td> <td> 0.193</td> <td>   -0.037</td> <td>    0.182</td>
+  <th>noise_5_impact_code</th>  <td>   -0.0494</td> <td>    0.063</td> <td>   -0.790</td> <td> 0.430</td> <td>   -0.172</td> <td>    0.073</td>
 </tr>
 <tr>
-  <th>noise_6_impact_code</th>  <td>    0.0114</td> <td>    0.057</td> <td>    0.200</td> <td> 0.842</td> <td>   -0.100</td> <td>    0.123</td>
+  <th>noise_6_impact_code</th>  <td>    0.1061</td> <td>    0.058</td> <td>    1.825</td> <td> 0.068</td> <td>   -0.008</td> <td>    0.220</td>
 </tr>
 <tr>
-  <th>noise_7_impact_code</th>  <td>   -0.0737</td> <td>    0.062</td> <td>   -1.183</td> <td> 0.237</td> <td>   -0.196</td> <td>    0.048</td>
+  <th>noise_7_impact_code</th>  <td>    0.0147</td> <td>    0.056</td> <td>    0.262</td> <td> 0.793</td> <td>   -0.095</td> <td>    0.124</td>
 </tr>
 <tr>
-  <th>noise_8_impact_code</th>  <td>    0.1413</td> <td>    0.057</td> <td>    2.500</td> <td> 0.012</td> <td>    0.030</td> <td>    0.252</td>
+  <th>noise_8_impact_code</th>  <td>   -0.0473</td> <td>    0.061</td> <td>   -0.780</td> <td> 0.436</td> <td>   -0.166</td> <td>    0.072</td>
 </tr>
 <tr>
-  <th>noise_9_impact_code</th>  <td>   -0.0822</td> <td>    0.061</td> <td>   -1.348</td> <td> 0.178</td> <td>   -0.202</td> <td>    0.037</td>
+  <th>noise_9_impact_code</th>  <td>    0.0491</td> <td>    0.059</td> <td>    0.839</td> <td> 0.402</td> <td>   -0.066</td> <td>    0.164</td>
 </tr>
 <tr>
-  <th>noise_10_impact_code</th> <td>   -0.0523</td> <td>    0.061</td> <td>   -0.861</td> <td> 0.390</td> <td>   -0.171</td> <td>    0.067</td>
+  <th>noise_10_impact_code</th> <td>    0.0237</td> <td>    0.059</td> <td>    0.400</td> <td> 0.689</td> <td>   -0.092</td> <td>    0.140</td>
 </tr>
 <tr>
-  <th>noise_11_impact_code</th> <td>   -0.0121</td> <td>    0.058</td> <td>   -0.210</td> <td> 0.834</td> <td>   -0.126</td> <td>    0.101</td>
+  <th>noise_11_impact_code</th> <td>    0.1177</td> <td>    0.054</td> <td>    2.172</td> <td> 0.030</td> <td>    0.011</td> <td>    0.224</td>
 </tr>
 <tr>
-  <th>noise_12_impact_code</th> <td>   -0.2130</td> <td>    0.062</td> <td>   -3.422</td> <td> 0.001</td> <td>   -0.335</td> <td>   -0.091</td>
+  <th>noise_12_impact_code</th> <td>    0.0657</td> <td>    0.059</td> <td>    1.120</td> <td> 0.263</td> <td>   -0.049</td> <td>    0.181</td>
 </tr>
 <tr>
-  <th>noise_13_impact_code</th> <td>   -0.0388</td> <td>    0.058</td> <td>   -0.670</td> <td> 0.503</td> <td>   -0.152</td> <td>    0.075</td>
+  <th>noise_13_impact_code</th> <td>    0.0104</td> <td>    0.061</td> <td>    0.169</td> <td> 0.866</td> <td>   -0.110</td> <td>    0.131</td>
 </tr>
 <tr>
-  <th>noise_14_impact_code</th> <td>   -0.0503</td> <td>    0.059</td> <td>   -0.855</td> <td> 0.393</td> <td>   -0.166</td> <td>    0.065</td>
+  <th>noise_14_impact_code</th> <td>   -0.0246</td> <td>    0.060</td> <td>   -0.413</td> <td> 0.680</td> <td>   -0.141</td> <td>    0.092</td>
 </tr>
 <tr>
-  <th>noise_15_impact_code</th> <td>    0.0004</td> <td>    0.057</td> <td>    0.006</td> <td> 0.995</td> <td>   -0.112</td> <td>    0.113</td>
+  <th>noise_15_impact_code</th> <td>   -0.0717</td> <td>    0.060</td> <td>   -1.192</td> <td> 0.234</td> <td>   -0.190</td> <td>    0.046</td>
 </tr>
 <tr>
-  <th>noise_16_impact_code</th> <td>   -0.0348</td> <td>    0.060</td> <td>   -0.578</td> <td> 0.563</td> <td>   -0.153</td> <td>    0.083</td>
+  <th>noise_16_impact_code</th> <td>    0.0480</td> <td>    0.056</td> <td>    0.852</td> <td> 0.394</td> <td>   -0.063</td> <td>    0.159</td>
 </tr>
 <tr>
-  <th>noise_17_impact_code</th> <td>    0.0113</td> <td>    0.057</td> <td>    0.199</td> <td> 0.842</td> <td>   -0.100</td> <td>    0.123</td>
+  <th>noise_17_impact_code</th> <td>   -0.0283</td> <td>    0.055</td> <td>   -0.512</td> <td> 0.609</td> <td>   -0.136</td> <td>    0.080</td>
 </tr>
 <tr>
-  <th>noise_18_impact_code</th> <td>    0.1067</td> <td>    0.058</td> <td>    1.839</td> <td> 0.066</td> <td>   -0.007</td> <td>    0.221</td>
+  <th>noise_18_impact_code</th> <td>   -0.0556</td> <td>    0.060</td> <td>   -0.921</td> <td> 0.357</td> <td>   -0.174</td> <td>    0.063</td>
 </tr>
 <tr>
-  <th>noise_19_impact_code</th> <td>   -0.0402</td> <td>    0.056</td> <td>   -0.713</td> <td> 0.476</td> <td>   -0.151</td> <td>    0.070</td>
+  <th>noise_19_impact_code</th> <td>    0.0857</td> <td>    0.055</td> <td>    1.571</td> <td> 0.116</td> <td>   -0.021</td> <td>    0.193</td>
 </tr>
 <tr>
-  <th>noise_20_impact_code</th> <td>    0.0613</td> <td>    0.057</td> <td>    1.080</td> <td> 0.280</td> <td>   -0.050</td> <td>    0.173</td>
+  <th>noise_20_impact_code</th> <td>    0.0754</td> <td>    0.058</td> <td>    1.298</td> <td> 0.194</td> <td>   -0.039</td> <td>    0.189</td>
 </tr>
 <tr>
-  <th>noise_21_impact_code</th> <td>   -0.0879</td> <td>    0.059</td> <td>   -1.482</td> <td> 0.139</td> <td>   -0.204</td> <td>    0.028</td>
+  <th>noise_21_impact_code</th> <td>    0.0744</td> <td>    0.057</td> <td>    1.307</td> <td> 0.191</td> <td>   -0.037</td> <td>    0.186</td>
 </tr>
 <tr>
-  <th>noise_22_impact_code</th> <td>   -0.1077</td> <td>    0.058</td> <td>   -1.844</td> <td> 0.065</td> <td>   -0.222</td> <td>    0.007</td>
+  <th>noise_22_impact_code</th> <td>    0.0479</td> <td>    0.054</td> <td>    0.889</td> <td> 0.374</td> <td>   -0.058</td> <td>    0.154</td>
 </tr>
 <tr>
-  <th>noise_23_impact_code</th> <td>   -0.0557</td> <td>    0.057</td> <td>   -0.976</td> <td> 0.329</td> <td>   -0.168</td> <td>    0.056</td>
+  <th>noise_23_impact_code</th> <td>   -0.0524</td> <td>    0.061</td> <td>   -0.866</td> <td> 0.386</td> <td>   -0.171</td> <td>    0.066</td>
 </tr>
 <tr>
-  <th>noise_24_impact_code</th> <td>   -0.0321</td> <td>    0.056</td> <td>   -0.569</td> <td> 0.569</td> <td>   -0.142</td> <td>    0.078</td>
+  <th>noise_24_impact_code</th> <td>   -0.0763</td> <td>    0.066</td> <td>   -1.157</td> <td> 0.248</td> <td>   -0.206</td> <td>    0.053</td>
 </tr>
 <tr>
-  <th>noise_25_impact_code</th> <td>   -0.0159</td> <td>    0.057</td> <td>   -0.279</td> <td> 0.781</td> <td>   -0.128</td> <td>    0.096</td>
+  <th>noise_25_impact_code</th> <td>    0.0036</td> <td>    0.059</td> <td>    0.061</td> <td> 0.951</td> <td>   -0.111</td> <td>    0.118</td>
 </tr>
 <tr>
-  <th>noise_26_impact_code</th> <td>    0.0443</td> <td>    0.055</td> <td>    0.807</td> <td> 0.420</td> <td>   -0.063</td> <td>    0.152</td>
+  <th>noise_26_impact_code</th> <td>    0.0851</td> <td>    0.054</td> <td>    1.587</td> <td> 0.113</td> <td>   -0.020</td> <td>    0.190</td>
 </tr>
 <tr>
-  <th>noise_27_impact_code</th> <td>    0.0185</td> <td>    0.060</td> <td>    0.307</td> <td> 0.759</td> <td>   -0.099</td> <td>    0.136</td>
+  <th>noise_27_impact_code</th> <td>   -0.1658</td> <td>    0.058</td> <td>   -2.845</td> <td> 0.004</td> <td>   -0.280</td> <td>   -0.052</td>
 </tr>
 <tr>
-  <th>noise_28_impact_code</th> <td>   -0.0661</td> <td>    0.060</td> <td>   -1.096</td> <td> 0.273</td> <td>   -0.184</td> <td>    0.052</td>
+  <th>noise_28_impact_code</th> <td>   -0.1395</td> <td>    0.061</td> <td>   -2.274</td> <td> 0.023</td> <td>   -0.260</td> <td>   -0.019</td>
 </tr>
 <tr>
-  <th>noise_29_impact_code</th> <td>   -0.0772</td> <td>    0.059</td> <td>   -1.317</td> <td> 0.188</td> <td>   -0.192</td> <td>    0.038</td>
+  <th>noise_29_impact_code</th> <td>    0.0223</td> <td>    0.054</td> <td>    0.410</td> <td> 0.682</td> <td>   -0.084</td> <td>    0.129</td>
 </tr>
 <tr>
-  <th>noise_30_impact_code</th> <td>   -0.0319</td> <td>    0.062</td> <td>   -0.514</td> <td> 0.607</td> <td>   -0.153</td> <td>    0.090</td>
+  <th>noise_30_impact_code</th> <td>    0.0343</td> <td>    0.059</td> <td>    0.583</td> <td> 0.560</td> <td>   -0.081</td> <td>    0.150</td>
 </tr>
 <tr>
-  <th>noise_31_impact_code</th> <td>    0.0752</td> <td>    0.056</td> <td>    1.341</td> <td> 0.180</td> <td>   -0.035</td> <td>    0.185</td>
+  <th>noise_31_impact_code</th> <td>    0.0369</td> <td>    0.059</td> <td>    0.626</td> <td> 0.531</td> <td>   -0.079</td> <td>    0.152</td>
 </tr>
 <tr>
-  <th>noise_32_impact_code</th> <td>   -0.0195</td> <td>    0.059</td> <td>   -0.334</td> <td> 0.739</td> <td>   -0.134</td> <td>    0.095</td>
+  <th>noise_32_impact_code</th> <td>   -0.0161</td> <td>    0.056</td> <td>   -0.287</td> <td> 0.774</td> <td>   -0.126</td> <td>    0.094</td>
 </tr>
 <tr>
-  <th>noise_33_impact_code</th> <td>   -0.0128</td> <td>    0.054</td> <td>   -0.236</td> <td> 0.813</td> <td>   -0.119</td> <td>    0.094</td>
+  <th>noise_33_impact_code</th> <td>    0.0063</td> <td>    0.059</td> <td>    0.107</td> <td> 0.915</td> <td>   -0.109</td> <td>    0.122</td>
 </tr>
 <tr>
-  <th>noise_34_impact_code</th> <td>    0.0690</td> <td>    0.057</td> <td>    1.207</td> <td> 0.228</td> <td>   -0.043</td> <td>    0.181</td>
+  <th>noise_34_impact_code</th> <td>    0.0384</td> <td>    0.055</td> <td>    0.695</td> <td> 0.487</td> <td>   -0.070</td> <td>    0.147</td>
 </tr>
 <tr>
-  <th>noise_35_impact_code</th> <td>   -0.0245</td> <td>    0.058</td> <td>   -0.425</td> <td> 0.671</td> <td>   -0.138</td> <td>    0.089</td>
+  <th>noise_35_impact_code</th> <td>    0.0052</td> <td>    0.058</td> <td>    0.090</td> <td> 0.928</td> <td>   -0.108</td> <td>    0.119</td>
 </tr>
 <tr>
-  <th>noise_36_impact_code</th> <td>    0.0423</td> <td>    0.055</td> <td>    0.763</td> <td> 0.446</td> <td>   -0.066</td> <td>    0.151</td>
+  <th>noise_36_impact_code</th> <td>    0.1045</td> <td>    0.057</td> <td>    1.832</td> <td> 0.067</td> <td>   -0.007</td> <td>    0.216</td>
 </tr>
 <tr>
-  <th>noise_37_impact_code</th> <td>   -0.0346</td> <td>    0.060</td> <td>   -0.582</td> <td> 0.561</td> <td>   -0.151</td> <td>    0.082</td>
+  <th>noise_37_impact_code</th> <td>   -0.0787</td> <td>    0.057</td> <td>   -1.376</td> <td> 0.169</td> <td>   -0.191</td> <td>    0.034</td>
 </tr>
 <tr>
-  <th>noise_38_impact_code</th> <td>    0.0355</td> <td>    0.058</td> <td>    0.616</td> <td> 0.538</td> <td>   -0.077</td> <td>    0.148</td>
+  <th>noise_38_impact_code</th> <td>    0.0842</td> <td>    0.055</td> <td>    1.520</td> <td> 0.129</td> <td>   -0.024</td> <td>    0.193</td>
 </tr>
 <tr>
-  <th>noise_39_impact_code</th> <td>    0.0113</td> <td>    0.056</td> <td>    0.202</td> <td> 0.840</td> <td>   -0.098</td> <td>    0.121</td>
+  <th>noise_39_impact_code</th> <td>   -0.0209</td> <td>    0.057</td> <td>   -0.364</td> <td> 0.716</td> <td>   -0.133</td> <td>    0.092</td>
 </tr>
 <tr>
-  <th>noise_40_impact_code</th> <td>    0.0257</td> <td>    0.058</td> <td>    0.446</td> <td> 0.655</td> <td>   -0.087</td> <td>    0.139</td>
+  <th>noise_40_impact_code</th> <td>   -0.1129</td> <td>    0.066</td> <td>   -1.724</td> <td> 0.085</td> <td>   -0.241</td> <td>    0.016</td>
 </tr>
 <tr>
-  <th>noise_41_impact_code</th> <td>   -0.0015</td> <td>    0.059</td> <td>   -0.025</td> <td> 0.980</td> <td>   -0.117</td> <td>    0.114</td>
+  <th>noise_41_impact_code</th> <td>    0.0568</td> <td>    0.054</td> <td>    1.057</td> <td> 0.291</td> <td>   -0.049</td> <td>    0.162</td>
 </tr>
 <tr>
-  <th>noise_42_impact_code</th> <td>    0.0896</td> <td>    0.054</td> <td>    1.644</td> <td> 0.100</td> <td>   -0.017</td> <td>    0.196</td>
+  <th>noise_42_impact_code</th> <td>   -0.0706</td> <td>    0.060</td> <td>   -1.169</td> <td> 0.242</td> <td>   -0.189</td> <td>    0.048</td>
 </tr>
 <tr>
-  <th>noise_43_impact_code</th> <td>   -0.0691</td> <td>    0.057</td> <td>   -1.214</td> <td> 0.225</td> <td>   -0.181</td> <td>    0.042</td>
+  <th>noise_43_impact_code</th> <td>   -0.0226</td> <td>    0.060</td> <td>   -0.379</td> <td> 0.704</td> <td>   -0.140</td> <td>    0.094</td>
 </tr>
 <tr>
-  <th>noise_44_impact_code</th> <td>    0.0036</td> <td>    0.059</td> <td>    0.060</td> <td> 0.952</td> <td>   -0.113</td> <td>    0.120</td>
+  <th>noise_44_impact_code</th> <td>   -0.0064</td> <td>    0.058</td> <td>   -0.110</td> <td> 0.912</td> <td>   -0.121</td> <td>    0.108</td>
 </tr>
 <tr>
-  <th>noise_45_impact_code</th> <td>   -0.0347</td> <td>    0.063</td> <td>   -0.554</td> <td> 0.579</td> <td>   -0.158</td> <td>    0.088</td>
+  <th>noise_45_impact_code</th> <td>   -0.0302</td> <td>    0.061</td> <td>   -0.496</td> <td> 0.620</td> <td>   -0.150</td> <td>    0.089</td>
 </tr>
 <tr>
-  <th>noise_46_impact_code</th> <td>   -0.0365</td> <td>    0.060</td> <td>   -0.610</td> <td> 0.542</td> <td>   -0.154</td> <td>    0.081</td>
+  <th>noise_46_impact_code</th> <td>   -0.1051</td> <td>    0.059</td> <td>   -1.775</td> <td> 0.076</td> <td>   -0.221</td> <td>    0.011</td>
 </tr>
 <tr>
-  <th>noise_47_impact_code</th> <td>    0.0878</td> <td>    0.056</td> <td>    1.561</td> <td> 0.119</td> <td>   -0.022</td> <td>    0.198</td>
+  <th>noise_47_impact_code</th> <td>   -0.0469</td> <td>    0.055</td> <td>   -0.849</td> <td> 0.396</td> <td>   -0.155</td> <td>    0.062</td>
 </tr>
 <tr>
-  <th>noise_48_impact_code</th> <td>    0.1114</td> <td>    0.058</td> <td>    1.905</td> <td> 0.057</td> <td>   -0.003</td> <td>    0.226</td>
+  <th>noise_48_impact_code</th> <td>   -0.0023</td> <td>    0.058</td> <td>   -0.040</td> <td> 0.968</td> <td>   -0.116</td> <td>    0.111</td>
 </tr>
 <tr>
-  <th>noise_49_impact_code</th> <td>   -0.0212</td> <td>    0.057</td> <td>   -0.372</td> <td> 0.710</td> <td>   -0.133</td> <td>    0.091</td>
+  <th>noise_49_impact_code</th> <td>    0.0440</td> <td>    0.056</td> <td>    0.786</td> <td> 0.432</td> <td>   -0.066</td> <td>    0.154</td>
 </tr>
 <tr>
-  <th>noise_50_impact_code</th> <td>    0.0117</td> <td>    0.057</td> <td>    0.204</td> <td> 0.838</td> <td>   -0.101</td> <td>    0.124</td>
+  <th>noise_50_impact_code</th> <td>    0.0031</td> <td>    0.058</td> <td>    0.053</td> <td> 0.958</td> <td>   -0.110</td> <td>    0.116</td>
 </tr>
 <tr>
-  <th>noise_51_impact_code</th> <td>   -0.0353</td> <td>    0.057</td> <td>   -0.615</td> <td> 0.539</td> <td>   -0.148</td> <td>    0.077</td>
+  <th>noise_51_impact_code</th> <td>   -0.0713</td> <td>    0.058</td> <td>   -1.228</td> <td> 0.220</td> <td>   -0.185</td> <td>    0.043</td>
 </tr>
 <tr>
-  <th>noise_52_impact_code</th> <td>   -0.0187</td> <td>    0.058</td> <td>   -0.321</td> <td> 0.748</td> <td>   -0.133</td> <td>    0.095</td>
+  <th>noise_52_impact_code</th> <td>    0.0470</td> <td>    0.054</td> <td>    0.873</td> <td> 0.383</td> <td>   -0.058</td> <td>    0.152</td>
 </tr>
 <tr>
-  <th>noise_53_impact_code</th> <td>    0.0426</td> <td>    0.057</td> <td>    0.748</td> <td> 0.455</td> <td>   -0.069</td> <td>    0.154</td>
+  <th>noise_53_impact_code</th> <td>    0.0959</td> <td>    0.060</td> <td>    1.596</td> <td> 0.111</td> <td>   -0.022</td> <td>    0.214</td>
 </tr>
 <tr>
-  <th>noise_54_impact_code</th> <td>    0.0012</td> <td>    0.058</td> <td>    0.020</td> <td> 0.984</td> <td>   -0.112</td> <td>    0.114</td>
+  <th>noise_54_impact_code</th> <td>    0.0454</td> <td>    0.059</td> <td>    0.775</td> <td> 0.439</td> <td>   -0.069</td> <td>    0.160</td>
 </tr>
 <tr>
-  <th>noise_55_impact_code</th> <td>    0.0496</td> <td>    0.056</td> <td>    0.892</td> <td> 0.372</td> <td>   -0.059</td> <td>    0.159</td>
+  <th>noise_55_impact_code</th> <td>   -0.0426</td> <td>    0.058</td> <td>   -0.731</td> <td> 0.465</td> <td>   -0.157</td> <td>    0.072</td>
 </tr>
 <tr>
-  <th>noise_56_impact_code</th> <td>   -0.0151</td> <td>    0.059</td> <td>   -0.255</td> <td> 0.799</td> <td>   -0.131</td> <td>    0.101</td>
+  <th>noise_56_impact_code</th> <td>    0.1417</td> <td>    0.056</td> <td>    2.513</td> <td> 0.012</td> <td>    0.031</td> <td>    0.252</td>
 </tr>
 <tr>
-  <th>noise_57_impact_code</th> <td>   -0.0757</td> <td>    0.061</td> <td>   -1.244</td> <td> 0.213</td> <td>   -0.195</td> <td>    0.044</td>
+  <th>noise_57_impact_code</th> <td>   -0.0255</td> <td>    0.060</td> <td>   -0.424</td> <td> 0.671</td> <td>   -0.143</td> <td>    0.092</td>
 </tr>
 <tr>
-  <th>noise_58_impact_code</th> <td>    0.0726</td> <td>    0.058</td> <td>    1.246</td> <td> 0.213</td> <td>   -0.042</td> <td>    0.187</td>
+  <th>noise_58_impact_code</th> <td>    0.0147</td> <td>    0.057</td> <td>    0.257</td> <td> 0.797</td> <td>   -0.097</td> <td>    0.127</td>
 </tr>
 <tr>
-  <th>noise_59_impact_code</th> <td>    0.0656</td> <td>    0.063</td> <td>    1.039</td> <td> 0.299</td> <td>   -0.058</td> <td>    0.189</td>
+  <th>noise_59_impact_code</th> <td>    0.0398</td> <td>    0.053</td> <td>    0.756</td> <td> 0.450</td> <td>   -0.063</td> <td>    0.143</td>
 </tr>
 <tr>
-  <th>noise_60_impact_code</th> <td>   -0.1550</td> <td>    0.060</td> <td>   -2.598</td> <td> 0.009</td> <td>   -0.272</td> <td>   -0.038</td>
+  <th>noise_60_impact_code</th> <td>   -0.0179</td> <td>    0.056</td> <td>   -0.317</td> <td> 0.751</td> <td>   -0.129</td> <td>    0.093</td>
 </tr>
 <tr>
-  <th>noise_61_impact_code</th> <td>   -0.0610</td> <td>    0.059</td> <td>   -1.036</td> <td> 0.301</td> <td>   -0.177</td> <td>    0.055</td>
+  <th>noise_61_impact_code</th> <td>   -0.0672</td> <td>    0.057</td> <td>   -1.185</td> <td> 0.236</td> <td>   -0.179</td> <td>    0.044</td>
 </tr>
 <tr>
-  <th>noise_62_impact_code</th> <td>    0.0309</td> <td>    0.059</td> <td>    0.527</td> <td> 0.598</td> <td>   -0.084</td> <td>    0.146</td>
+  <th>noise_62_impact_code</th> <td>   -0.0658</td> <td>    0.061</td> <td>   -1.072</td> <td> 0.284</td> <td>   -0.186</td> <td>    0.055</td>
 </tr>
 <tr>
-  <th>noise_63_impact_code</th> <td>   -0.0074</td> <td>    0.059</td> <td>   -0.126</td> <td> 0.899</td> <td>   -0.123</td> <td>    0.108</td>
+  <th>noise_63_impact_code</th> <td>   -0.0067</td> <td>    0.058</td> <td>   -0.115</td> <td> 0.908</td> <td>   -0.120</td> <td>    0.107</td>
 </tr>
 <tr>
-  <th>noise_64_impact_code</th> <td>    0.0227</td> <td>    0.056</td> <td>    0.407</td> <td> 0.684</td> <td>   -0.087</td> <td>    0.132</td>
+  <th>noise_64_impact_code</th> <td>   -0.0613</td> <td>    0.059</td> <td>   -1.045</td> <td> 0.296</td> <td>   -0.176</td> <td>    0.054</td>
 </tr>
 <tr>
-  <th>noise_65_impact_code</th> <td>   -0.1022</td> <td>    0.056</td> <td>   -1.823</td> <td> 0.068</td> <td>   -0.212</td> <td>    0.008</td>
+  <th>noise_65_impact_code</th> <td>    0.0813</td> <td>    0.056</td> <td>    1.441</td> <td> 0.150</td> <td>   -0.029</td> <td>    0.192</td>
 </tr>
 <tr>
-  <th>noise_66_impact_code</th> <td>   -0.0137</td> <td>    0.054</td> <td>   -0.256</td> <td> 0.798</td> <td>   -0.119</td> <td>    0.091</td>
+  <th>noise_66_impact_code</th> <td>   -0.1028</td> <td>    0.059</td> <td>   -1.744</td> <td> 0.081</td> <td>   -0.218</td> <td>    0.013</td>
 </tr>
 <tr>
-  <th>noise_67_impact_code</th> <td>   -0.0350</td> <td>    0.058</td> <td>   -0.604</td> <td> 0.546</td> <td>   -0.149</td> <td>    0.079</td>
+  <th>noise_67_impact_code</th> <td>    0.0877</td> <td>    0.060</td> <td>    1.472</td> <td> 0.141</td> <td>   -0.029</td> <td>    0.204</td>
 </tr>
 <tr>
-  <th>noise_68_impact_code</th> <td>   -0.0125</td> <td>    0.058</td> <td>   -0.216</td> <td> 0.829</td> <td>   -0.126</td> <td>    0.101</td>
+  <th>noise_68_impact_code</th> <td>    0.0214</td> <td>    0.059</td> <td>    0.361</td> <td> 0.718</td> <td>   -0.095</td> <td>    0.137</td>
 </tr>
 <tr>
-  <th>noise_69_impact_code</th> <td>   -0.1775</td> <td>    0.059</td> <td>   -3.018</td> <td> 0.003</td> <td>   -0.293</td> <td>   -0.062</td>
+  <th>noise_69_impact_code</th> <td>   -0.0639</td> <td>    0.059</td> <td>   -1.078</td> <td> 0.281</td> <td>   -0.180</td> <td>    0.052</td>
 </tr>
 <tr>
-  <th>noise_70_impact_code</th> <td>   -0.0053</td> <td>    0.060</td> <td>   -0.088</td> <td> 0.930</td> <td>   -0.123</td> <td>    0.112</td>
+  <th>noise_70_impact_code</th> <td>   -0.0135</td> <td>    0.062</td> <td>   -0.218</td> <td> 0.827</td> <td>   -0.135</td> <td>    0.108</td>
 </tr>
 <tr>
-  <th>noise_71_impact_code</th> <td>   -0.0268</td> <td>    0.056</td> <td>   -0.476</td> <td> 0.634</td> <td>   -0.137</td> <td>    0.083</td>
+  <th>noise_71_impact_code</th> <td>   -0.0413</td> <td>    0.056</td> <td>   -0.743</td> <td> 0.458</td> <td>   -0.150</td> <td>    0.068</td>
 </tr>
 <tr>
-  <th>noise_72_impact_code</th> <td>   -0.0183</td> <td>    0.057</td> <td>   -0.321</td> <td> 0.748</td> <td>   -0.130</td> <td>    0.093</td>
+  <th>noise_72_impact_code</th> <td>    0.1000</td> <td>    0.058</td> <td>    1.725</td> <td> 0.085</td> <td>   -0.014</td> <td>    0.214</td>
 </tr>
 <tr>
-  <th>noise_73_impact_code</th> <td>    0.0160</td> <td>    0.057</td> <td>    0.279</td> <td> 0.781</td> <td>   -0.096</td> <td>    0.128</td>
+  <th>noise_73_impact_code</th> <td>    0.0633</td> <td>    0.056</td> <td>    1.122</td> <td> 0.262</td> <td>   -0.047</td> <td>    0.174</td>
 </tr>
 <tr>
-  <th>noise_74_impact_code</th> <td>    0.0669</td> <td>    0.061</td> <td>    1.095</td> <td> 0.273</td> <td>   -0.053</td> <td>    0.187</td>
+  <th>noise_74_impact_code</th> <td>    0.1108</td> <td>    0.055</td> <td>    2.011</td> <td> 0.044</td> <td>    0.003</td> <td>    0.219</td>
 </tr>
 <tr>
-  <th>noise_75_impact_code</th> <td>   -0.0748</td> <td>    0.063</td> <td>   -1.188</td> <td> 0.235</td> <td>   -0.198</td> <td>    0.049</td>
+  <th>noise_75_impact_code</th> <td>   -0.0238</td> <td>    0.059</td> <td>   -0.402</td> <td> 0.688</td> <td>   -0.140</td> <td>    0.092</td>
 </tr>
 <tr>
-  <th>noise_76_impact_code</th> <td>    0.0508</td> <td>    0.055</td> <td>    0.919</td> <td> 0.358</td> <td>   -0.058</td> <td>    0.159</td>
+  <th>noise_76_impact_code</th> <td>   -0.1181</td> <td>    0.061</td> <td>   -1.935</td> <td> 0.053</td> <td>   -0.238</td> <td>    0.002</td>
 </tr>
 <tr>
-  <th>noise_77_impact_code</th> <td>    0.0462</td> <td>    0.057</td> <td>    0.812</td> <td> 0.417</td> <td>   -0.065</td> <td>    0.158</td>
+  <th>noise_77_impact_code</th> <td>   -0.0042</td> <td>    0.057</td> <td>   -0.073</td> <td> 0.941</td> <td>   -0.115</td> <td>    0.107</td>
 </tr>
 <tr>
-  <th>noise_78_impact_code</th> <td>    0.0545</td> <td>    0.057</td> <td>    0.955</td> <td> 0.340</td> <td>   -0.057</td> <td>    0.166</td>
+  <th>noise_78_impact_code</th> <td>    0.0711</td> <td>    0.057</td> <td>    1.238</td> <td> 0.216</td> <td>   -0.042</td> <td>    0.184</td>
 </tr>
 <tr>
-  <th>noise_79_impact_code</th> <td>    0.0162</td> <td>    0.058</td> <td>    0.280</td> <td> 0.780</td> <td>   -0.097</td> <td>    0.129</td>
+  <th>noise_79_impact_code</th> <td>    0.0360</td> <td>    0.060</td> <td>    0.597</td> <td> 0.550</td> <td>   -0.082</td> <td>    0.154</td>
 </tr>
 <tr>
-  <th>noise_80_impact_code</th> <td>   -0.0590</td> <td>    0.061</td> <td>   -0.963</td> <td> 0.336</td> <td>   -0.179</td> <td>    0.061</td>
+  <th>noise_80_impact_code</th> <td>   -0.0244</td> <td>    0.059</td> <td>   -0.413</td> <td> 0.680</td> <td>   -0.140</td> <td>    0.091</td>
 </tr>
 <tr>
-  <th>noise_81_impact_code</th> <td>    0.0500</td> <td>    0.056</td> <td>    0.887</td> <td> 0.375</td> <td>   -0.060</td> <td>    0.160</td>
+  <th>noise_81_impact_code</th> <td>    0.1284</td> <td>    0.055</td> <td>    2.317</td> <td> 0.021</td> <td>    0.020</td> <td>    0.237</td>
 </tr>
 <tr>
-  <th>noise_82_impact_code</th> <td>   -0.0614</td> <td>    0.056</td> <td>   -1.090</td> <td> 0.276</td> <td>   -0.172</td> <td>    0.049</td>
+  <th>noise_82_impact_code</th> <td>    0.1219</td> <td>    0.054</td> <td>    2.240</td> <td> 0.025</td> <td>    0.015</td> <td>    0.229</td>
 </tr>
 <tr>
-  <th>noise_83_impact_code</th> <td>    0.0776</td> <td>    0.055</td> <td>    1.403</td> <td> 0.161</td> <td>   -0.031</td> <td>    0.186</td>
+  <th>noise_83_impact_code</th> <td>    0.0240</td> <td>    0.057</td> <td>    0.419</td> <td> 0.675</td> <td>   -0.088</td> <td>    0.136</td>
 </tr>
 <tr>
-  <th>noise_84_impact_code</th> <td>    0.0649</td> <td>    0.059</td> <td>    1.108</td> <td> 0.268</td> <td>   -0.050</td> <td>    0.180</td>
+  <th>noise_84_impact_code</th> <td>    0.0909</td> <td>    0.060</td> <td>    1.513</td> <td> 0.130</td> <td>   -0.027</td> <td>    0.209</td>
 </tr>
 <tr>
-  <th>noise_85_impact_code</th> <td>   -0.0900</td> <td>    0.061</td> <td>   -1.467</td> <td> 0.143</td> <td>   -0.210</td> <td>    0.030</td>
+  <th>noise_85_impact_code</th> <td>    0.0730</td> <td>    0.059</td> <td>    1.245</td> <td> 0.213</td> <td>   -0.042</td> <td>    0.188</td>
 </tr>
 <tr>
-  <th>noise_86_impact_code</th> <td>    0.0564</td> <td>    0.058</td> <td>    0.976</td> <td> 0.329</td> <td>   -0.057</td> <td>    0.170</td>
+  <th>noise_86_impact_code</th> <td>    0.0018</td> <td>    0.058</td> <td>    0.031</td> <td> 0.975</td> <td>   -0.112</td> <td>    0.116</td>
 </tr>
 <tr>
-  <th>noise_87_impact_code</th> <td>    0.1159</td> <td>    0.053</td> <td>    2.190</td> <td> 0.029</td> <td>    0.012</td> <td>    0.220</td>
+  <th>noise_87_impact_code</th> <td>    0.0142</td> <td>    0.059</td> <td>    0.239</td> <td> 0.811</td> <td>   -0.102</td> <td>    0.131</td>
 </tr>
 <tr>
-  <th>noise_88_impact_code</th> <td>    0.0868</td> <td>    0.057</td> <td>    1.533</td> <td> 0.125</td> <td>   -0.024</td> <td>    0.198</td>
+  <th>noise_88_impact_code</th> <td>   -0.0213</td> <td>    0.059</td> <td>   -0.360</td> <td> 0.719</td> <td>   -0.137</td> <td>    0.095</td>
 </tr>
 <tr>
-  <th>noise_89_impact_code</th> <td>   -0.0855</td> <td>    0.058</td> <td>   -1.462</td> <td> 0.144</td> <td>   -0.200</td> <td>    0.029</td>
+  <th>noise_89_impact_code</th> <td>    0.0658</td> <td>    0.058</td> <td>    1.129</td> <td> 0.259</td> <td>   -0.049</td> <td>    0.180</td>
 </tr>
 <tr>
-  <th>noise_90_impact_code</th> <td>   -0.1549</td> <td>    0.062</td> <td>   -2.505</td> <td> 0.012</td> <td>   -0.276</td> <td>   -0.034</td>
+  <th>noise_90_impact_code</th> <td>    0.0104</td> <td>    0.061</td> <td>    0.169</td> <td> 0.866</td> <td>   -0.110</td> <td>    0.131</td>
 </tr>
 <tr>
-  <th>noise_91_impact_code</th> <td>    0.0358</td> <td>    0.053</td> <td>    0.670</td> <td> 0.503</td> <td>   -0.069</td> <td>    0.141</td>
+  <th>noise_91_impact_code</th> <td>    0.0967</td> <td>    0.059</td> <td>    1.631</td> <td> 0.103</td> <td>   -0.020</td> <td>    0.213</td>
 </tr>
 <tr>
-  <th>noise_92_impact_code</th> <td>   -0.0938</td> <td>    0.058</td> <td>   -1.614</td> <td> 0.107</td> <td>   -0.208</td> <td>    0.020</td>
+  <th>noise_92_impact_code</th> <td>    0.0988</td> <td>    0.057</td> <td>    1.720</td> <td> 0.086</td> <td>   -0.014</td> <td>    0.211</td>
 </tr>
 <tr>
-  <th>noise_93_impact_code</th> <td>    0.1404</td> <td>    0.053</td> <td>    2.664</td> <td> 0.008</td> <td>    0.037</td> <td>    0.244</td>
+  <th>noise_93_impact_code</th> <td>   -0.0561</td> <td>    0.062</td> <td>   -0.910</td> <td> 0.363</td> <td>   -0.177</td> <td>    0.065</td>
 </tr>
 <tr>
-  <th>noise_94_impact_code</th> <td>   -0.0052</td> <td>    0.058</td> <td>   -0.089</td> <td> 0.929</td> <td>   -0.119</td> <td>    0.109</td>
+  <th>noise_94_impact_code</th> <td>    0.0147</td> <td>    0.056</td> <td>    0.265</td> <td> 0.791</td> <td>   -0.094</td> <td>    0.124</td>
 </tr>
 <tr>
-  <th>noise_95_impact_code</th> <td>   -0.0151</td> <td>    0.056</td> <td>   -0.267</td> <td> 0.790</td> <td>   -0.126</td> <td>    0.096</td>
+  <th>noise_95_impact_code</th> <td>    0.0377</td> <td>    0.059</td> <td>    0.640</td> <td> 0.522</td> <td>   -0.078</td> <td>    0.153</td>
 </tr>
 <tr>
-  <th>noise_96_impact_code</th> <td>    0.0114</td> <td>    0.055</td> <td>    0.207</td> <td> 0.836</td> <td>   -0.096</td> <td>    0.119</td>
+  <th>noise_96_impact_code</th> <td>    0.1024</td> <td>    0.055</td> <td>    1.875</td> <td> 0.061</td> <td>   -0.005</td> <td>    0.210</td>
 </tr>
 <tr>
-  <th>noise_97_impact_code</th> <td>    0.0623</td> <td>    0.055</td> <td>    1.132</td> <td> 0.258</td> <td>   -0.046</td> <td>    0.170</td>
+  <th>noise_97_impact_code</th> <td>    0.0068</td> <td>    0.055</td> <td>    0.123</td> <td> 0.902</td> <td>   -0.101</td> <td>    0.115</td>
 </tr>
 <tr>
-  <th>noise_98_impact_code</th> <td>   -0.0212</td> <td>    0.055</td> <td>   -0.383</td> <td> 0.702</td> <td>   -0.130</td> <td>    0.087</td>
+  <th>noise_98_impact_code</th> <td>   -0.0980</td> <td>    0.060</td> <td>   -1.643</td> <td> 0.100</td> <td>   -0.215</td> <td>    0.019</td>
 </tr>
 <tr>
-  <th>noise_99_impact_code</th> <td>    0.0558</td> <td>    0.058</td> <td>    0.966</td> <td> 0.334</td> <td>   -0.057</td> <td>    0.169</td>
+  <th>noise_99_impact_code</th> <td>   -0.0661</td> <td>    0.056</td> <td>   -1.177</td> <td> 0.239</td> <td>   -0.176</td> <td>    0.044</td>
 </tr>
 </table>
 <table class="simpletable">
 <tr>
-  <th>Omnibus:</th>       <td> 4.778</td> <th>  Durbin-Watson:     </th> <td>   1.952</td>
+  <th>Omnibus:</th>       <td> 3.749</td> <th>  Durbin-Watson:     </th> <td>   2.055</td>
 </tr>
 <tr>
-  <th>Prob(Omnibus):</th> <td> 0.092</td> <th>  Jarque-Bera (JB):  </th> <td>   4.760</td>
+  <th>Prob(Omnibus):</th> <td> 0.153</td> <th>  Jarque-Bera (JB):  </th> <td>   3.752</td>
 </tr>
 <tr>
-  <th>Skew:</th>          <td> 0.089</td> <th>  Prob(JB):          </th> <td>  0.0926</td>
+  <th>Skew:</th>          <td>-0.094</td> <th>  Prob(JB):          </th> <td>   0.153</td>
 </tr>
 <tr>
-  <th>Kurtosis:</th>      <td> 2.885</td> <th>  Cond. No.          </th> <td>    7.77</td>
+  <th>Kurtosis:</th>      <td> 2.991</td> <th>  Cond. No.          </th> <td>    7.22</td>
 </tr>
 </table><br/><br/>Warnings:<br/>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
 
@@ -2659,7 +2666,7 @@ sklearn.metrics.r2_score(plot_train["y"],plot_train["predict_cross_all_vars"])
 
 
 
-    0.29081862513775736
+    0.29935479356295913
 
 
 
@@ -2671,7 +2678,7 @@ sklearn.metrics.r2_score(plot_test["y"],plot_test["predict_cross_all_vars"])
 
 
 
-    0.278467325722243
+    0.2509405864802372
 
 
 
@@ -2689,28 +2696,28 @@ smf3.summary()
 <table class="simpletable">
 <caption>OLS Regression Results</caption>
 <tr>
-  <th>Dep. Variable:</th>            <td>y</td>        <th>  R-squared:         </th> <td>   0.255</td> 
+  <th>Dep. Variable:</th>            <td>y</td>        <th>  R-squared:         </th> <td>   0.264</td> 
 </tr>
 <tr>
-  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   0.252</td> 
+  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   0.260</td> 
 </tr>
 <tr>
-  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   71.86</td> 
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   69.84</td> 
 </tr>
 <tr>
-  <th>Date:</th>             <td>Fri, 26 Jul 2019</td> <th>  Prob (F-statistic):</th> <td>2.69e-151</td>
+  <th>Date:</th>             <td>Fri, 26 Jul 2019</td> <th>  Prob (F-statistic):</th> <td>8.73e-158</td>
 </tr>
 <tr>
-  <th>Time:</th>                 <td>06:56:36</td>     <th>  Log-Likelihood:    </th> <td> -10550.</td> 
+  <th>Time:</th>                 <td>18:50:54</td>     <th>  Log-Likelihood:    </th> <td> -10551.</td> 
 </tr>
 <tr>
-  <th>No. Observations:</th>      <td>  2531</td>      <th>  AIC:               </th> <td>2.113e+04</td>
+  <th>No. Observations:</th>      <td>  2548</td>      <th>  AIC:               </th> <td>2.113e+04</td>
 </tr>
 <tr>
-  <th>Df Residuals:</th>          <td>  2518</td>      <th>  BIC:               </th> <td>2.120e+04</td>
+  <th>Df Residuals:</th>          <td>  2534</td>      <th>  BIC:               </th> <td>2.121e+04</td>
 </tr>
 <tr>
-  <th>Df Model:</th>              <td>    12</td>      <th>                     </th>     <td> </td>    
+  <th>Df Model:</th>              <td>    13</td>      <th>                     </th>     <td> </td>    
 </tr>
 <tr>
   <th>Covariance Type:</th>      <td>nonrobust</td>    <th>                     </th>     <td> </td>    
@@ -2721,57 +2728,60 @@ smf3.summary()
             <td></td>              <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
 </tr>
 <tr>
-  <th>const</th>                <td>    1.4013</td> <td>    0.312</td> <td>    4.494</td> <td> 0.000</td> <td>    0.790</td> <td>    2.013</td>
+  <th>const</th>                <td>   -0.6580</td> <td>    0.303</td> <td>   -2.174</td> <td> 0.030</td> <td>   -1.252</td> <td>   -0.064</td>
 </tr>
 <tr>
-  <th>var_0_impact_code</th>    <td>    0.4064</td> <td>    0.049</td> <td>    8.328</td> <td> 0.000</td> <td>    0.311</td> <td>    0.502</td>
+  <th>var_0_impact_code</th>    <td>    0.5021</td> <td>    0.046</td> <td>   10.841</td> <td> 0.000</td> <td>    0.411</td> <td>    0.593</td>
 </tr>
 <tr>
-  <th>var_1_impact_code</th>    <td>    0.3970</td> <td>    0.045</td> <td>    8.918</td> <td> 0.000</td> <td>    0.310</td> <td>    0.484</td>
+  <th>var_1_impact_code</th>    <td>    0.4137</td> <td>    0.048</td> <td>    8.709</td> <td> 0.000</td> <td>    0.321</td> <td>    0.507</td>
 </tr>
 <tr>
-  <th>var_2_impact_code</th>    <td>    0.4142</td> <td>    0.046</td> <td>    9.048</td> <td> 0.000</td> <td>    0.324</td> <td>    0.504</td>
+  <th>var_2_impact_code</th>    <td>    0.3071</td> <td>    0.051</td> <td>    6.024</td> <td> 0.000</td> <td>    0.207</td> <td>    0.407</td>
 </tr>
 <tr>
-  <th>var_3_impact_code</th>    <td>    0.3878</td> <td>    0.048</td> <td>    8.035</td> <td> 0.000</td> <td>    0.293</td> <td>    0.482</td>
+  <th>var_3_impact_code</th>    <td>    0.5248</td> <td>    0.046</td> <td>   11.506</td> <td> 0.000</td> <td>    0.435</td> <td>    0.614</td>
 </tr>
 <tr>
-  <th>var_4_impact_code</th>    <td>    0.3827</td> <td>    0.047</td> <td>    8.140</td> <td> 0.000</td> <td>    0.290</td> <td>    0.475</td>
+  <th>var_4_impact_code</th>    <td>    0.5113</td> <td>    0.046</td> <td>   11.040</td> <td> 0.000</td> <td>    0.421</td> <td>    0.602</td>
 </tr>
 <tr>
-  <th>var_5_impact_code</th>    <td>    0.4875</td> <td>    0.044</td> <td>   11.186</td> <td> 0.000</td> <td>    0.402</td> <td>    0.573</td>
+  <th>var_5_impact_code</th>    <td>    0.4550</td> <td>    0.044</td> <td>   10.267</td> <td> 0.000</td> <td>    0.368</td> <td>    0.542</td>
 </tr>
 <tr>
-  <th>var_6_impact_code</th>    <td>    0.4440</td> <td>    0.045</td> <td>    9.953</td> <td> 0.000</td> <td>    0.357</td> <td>    0.531</td>
+  <th>var_6_impact_code</th>    <td>    0.4714</td> <td>    0.048</td> <td>    9.874</td> <td> 0.000</td> <td>    0.378</td> <td>    0.565</td>
 </tr>
 <tr>
-  <th>var_7_impact_code</th>    <td>    0.4238</td> <td>    0.043</td> <td>    9.896</td> <td> 0.000</td> <td>    0.340</td> <td>    0.508</td>
+  <th>var_7_impact_code</th>    <td>    0.4736</td> <td>    0.045</td> <td>   10.425</td> <td> 0.000</td> <td>    0.385</td> <td>    0.563</td>
 </tr>
 <tr>
-  <th>var_8_impact_code</th>    <td>    0.3859</td> <td>    0.047</td> <td>    8.130</td> <td> 0.000</td> <td>    0.293</td> <td>    0.479</td>
+  <th>var_8_impact_code</th>    <td>    0.3941</td> <td>    0.048</td> <td>    8.260</td> <td> 0.000</td> <td>    0.301</td> <td>    0.488</td>
 </tr>
 <tr>
-  <th>var_9_impact_code</th>    <td>    0.3795</td> <td>    0.047</td> <td>    8.102</td> <td> 0.000</td> <td>    0.288</td> <td>    0.471</td>
+  <th>var_9_impact_code</th>    <td>    0.3393</td> <td>    0.047</td> <td>    7.183</td> <td> 0.000</td> <td>    0.247</td> <td>    0.432</td>
 </tr>
 <tr>
-  <th>noise_47_impact_code</th> <td>    0.1028</td> <td>    0.055</td> <td>    1.853</td> <td> 0.064</td> <td>   -0.006</td> <td>    0.212</td>
+  <th>noise_11_impact_code</th> <td>    0.1268</td> <td>    0.054</td> <td>    2.365</td> <td> 0.018</td> <td>    0.022</td> <td>    0.232</td>
 </tr>
 <tr>
-  <th>noise_93_impact_code</th> <td>    0.1541</td> <td>    0.052</td> <td>    2.955</td> <td> 0.003</td> <td>    0.052</td> <td>    0.256</td>
+  <th>noise_19_impact_code</th> <td>    0.0973</td> <td>    0.054</td> <td>    1.804</td> <td> 0.071</td> <td>   -0.008</td> <td>    0.203</td>
+</tr>
+<tr>
+  <th>noise_81_impact_code</th> <td>    0.1240</td> <td>    0.055</td> <td>    2.264</td> <td> 0.024</td> <td>    0.017</td> <td>    0.231</td>
 </tr>
 </table>
 <table class="simpletable">
 <tr>
-  <th>Omnibus:</th>       <td> 4.497</td> <th>  Durbin-Watson:     </th> <td>   1.922</td>
+  <th>Omnibus:</th>       <td> 3.832</td> <th>  Durbin-Watson:     </th> <td>   2.053</td>
 </tr>
 <tr>
-  <th>Prob(Omnibus):</th> <td> 0.106</td> <th>  Jarque-Bera (JB):  </th> <td>   4.364</td>
+  <th>Prob(Omnibus):</th> <td> 0.147</td> <th>  Jarque-Bera (JB):  </th> <td>   3.886</td>
 </tr>
 <tr>
-  <th>Skew:</th>          <td> 0.074</td> <th>  Prob(JB):          </th> <td>   0.113</td>
+  <th>Skew:</th>          <td>-0.089</td> <th>  Prob(JB):          </th> <td>   0.143</td>
 </tr>
 <tr>
-  <th>Kurtosis:</th>      <td> 2.860</td> <th>  Cond. No.          </th> <td>    7.43</td>
+  <th>Kurtosis:</th>      <td> 2.931</td> <th>  Cond. No.          </th> <td>    6.94</td>
 </tr>
 </table><br/><br/>Warnings:<br/>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
 
@@ -2785,7 +2795,7 @@ sklearn.metrics.r2_score(plot_train["y"],plot_train["predict_cross_recommended_v
 
 
 
-    0.25510947375181725
+    0.26376924929240864
 
 
 
@@ -2797,7 +2807,7 @@ sklearn.metrics.r2_score(plot_test["y"],plot_test["predict_cross_recommended_var
 
 
 
-    0.30343110262504314
+    0.28047213688877426
 
 
 
