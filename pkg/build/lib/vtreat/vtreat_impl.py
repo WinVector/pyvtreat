@@ -604,3 +604,23 @@ def score_plan_variables(cross_frame, outcome, plan):
             ),
         ))
     return score_frame
+
+def pseudo_score_plan_variables(cross_frame, plan):
+    def describe(xf):
+        description = pandas.DataFrame({
+            "variable": xf.derived_column_names_})
+        description["orig_variable"] = xf.incoming_column_name_
+        description["treatment"] = xf.treatment_
+        description["y_aware"] = xf.need_cross_treatment_
+        return description
+
+    score_frame = pandas.concat([describe(xf) for xf in plan["xforms"]])
+    score_frame.reset_index(inplace=True, drop=True)
+    score_frame["has_range"] = [numpy.max(cross_frame[c]) > numpy.min(cross_frame[c]) for c in score_frame['variable']]
+    score_frame["PearsonR"] = numpy.nan
+    score_frame["significance"] = numpy.nan
+    score_frame["recommended"] = score_frame["has_range"].copy()
+    score_frame["_one"] = 1.0
+    score_frame["vcount"] = score_frame.groupby("treatment")["_one"].transform("sum")
+    score_frame.drop(["_one"], axis=1, inplace=True)
+    return score_frame

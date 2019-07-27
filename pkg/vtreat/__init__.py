@@ -300,30 +300,35 @@ class UnsupervisedTreatment:
         self.cols_to_copy_ = cols_to_copy.copy()
         self.params_ = params.copy()
         self.plan_ = None
+        self.score_frame_ = None
 
     def fit(self, X, y=None):
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
         if y is not None:
             raise Exception("y should be None")
-        # model for independent transforms
+        self.fit_transform(X)
+        return self
+
+    def transform(self, X):
+        if not isinstance(X, pandas.DataFrame):
+            raise Exception("X should be a Pandas DataFrame")
+        res = vtreat_impl.perform_transform(x=X, transform=self)
+        res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
+        return res
+
+    def fit_transform(self, X, y=None):
+        if y is not None:
+            raise Exception("y should be None")
         self.plan_ = None
         self.plan_ = vtreat_impl.fit_unsupervised_treatment(
             X=X,
             var_list=self.var_list_,
             outcome_name=self.outcome_name_,
             cols_to_copy=self.cols_to_copy_,
-            params = self.params_
+            params=self.params_
         )
-        return self
-
-    def transform(self, X):
-        if not isinstance(X, pandas.DataFrame):
-            raise Exception("X should be a Pandas DataFrame")
-        return vtreat_impl.perform_transform(x=X, transform=self)
-
-    def fit_transform(self, X, y=None):
-        if y is not None:
-            raise Exception("y should be None")
-        self.fit(X=X)
-        return self.transform(X)
+        res = vtreat_impl.perform_transform(x=X, transform=self)
+        self.score_frame_ = vtreat_impl.pseudo_score_plan_variables(res, self.plan_)
+        res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
+        return res
