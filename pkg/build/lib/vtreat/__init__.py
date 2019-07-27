@@ -176,8 +176,6 @@ class BinomialOutcomeTreatment:
             y = X[self.outcome_name_]
         if not X.shape[0] == len(y):
             raise Exception("X.shape[0] should equal len(y)")
-        if numpy.isnan(y).sum() > 0:
-            raise Exception("y should not have any missing/NA/NaN values")
         # model for independent transforms
         self.plan_ = None
         self.score_frame_ = None
@@ -250,8 +248,6 @@ class MultinomialOutcomeTreatment:
             y = X[self.outcome_name_]
         if not X.shape[0] == len(y):
             raise Exception("X.shape[0] should equal len(y)")
-        if numpy.isnan(y).sum() > 0:
-            raise Exception("y should not have any missing/NA/NaN values")
         # model for independent transforms
         self.plan_ = None
         self.score_frame_ = None

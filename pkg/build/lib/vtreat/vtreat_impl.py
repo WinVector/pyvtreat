@@ -509,9 +509,8 @@ def perform_transform(*, x, transform):
     x = x.reset_index(inplace=False, drop=True)
     new_frames = [xfi.transform(x) for xfi in plan["xforms"]]
     # see if we want to copy over any columns
-    cols = set([c for c in x.columns])
-    to_copy = set(plan["cols_to_copy"].copy())
-    to_copy = list(to_copy.intersection(cols))
+    copy_set = set(plan["cols_to_copy"])
+    to_copy = [ci for ci in x.columns if ci in copy_set]
     if len(to_copy) > 0:
         cp = x.loc[:, to_copy].copy()
         new_frames = [cp] + new_frames
@@ -525,12 +524,11 @@ def perform_transform(*, x, transform):
 def limit_to_appropriate_columns(*, res, transform):
     plan = transform.plan_
     to_copy = set(plan["cols_to_copy"])
-    cols = [c for c in res.columns]
     if transform.params_['filter_to_recommended']:
         to_take = set([ci for ci in transform.score_frame_['variable'][transform.score_frame_['recommended']]])
     else:
         to_take = set([ci for ci in transform.score_frame_['variable'][transform.score_frame_['has_range']]])
-    cols_to_keep = [ci for ci in cols if ci in to_copy or ci in to_take]
+    cols_to_keep = [ci for ci in res.columns if ci in to_copy or ci in to_take]
     if len(cols_to_keep) <= 0:
         raise Exception("no columns retained")
     return res[cols_to_keep]
