@@ -2,7 +2,7 @@ import pandas
 
 
 class UserTransform:
-    """base class for user transforms"""
+    """base class for user transforms, should express taking a set of k inputs to k outputs independently"""
 
     def __init__(self, treatment):
         self.y_aware_ = True

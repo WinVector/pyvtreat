@@ -633,7 +633,7 @@ def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
             [pi for pi in patches if pi is not None]
         )
         if numpy.isnan(avg):
-            avg = numpy.nanmean(res[derived_column_name])
+            avg = 0
         res[derived_column_name] = avg
         for i in range(len(cross_plan)):
             pi = patches[i]
@@ -680,7 +680,7 @@ def cross_patch_user_y_aware_cols(*, x, y, res, params, cross_plan):
                 [pi.loc[:, [col]] for pi in patches if pi is not None]
             )
             if numpy.isnan(avg):
-                avg = numpy.nanmean(res[col])
+                avg = 0
             res[col] = avg
             for i in range(len(cross_plan)):
                 pi = patches[i]
