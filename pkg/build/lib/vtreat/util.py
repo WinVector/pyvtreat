@@ -14,18 +14,24 @@ import scipy.stats
 import statistics
 
 
+def can_convert_v_to_numeric(x):
+    """check if non-empty vector can convert to numeric"""
+    try:
+        x + 0
+        return True
+    except:
+        return False
+
+
 def k_way_cross_plan(n_rows, k_folds):
     """randomly split range(n_rows) into k_folds disjoint groups"""
-    n2 = int(numpy.floor(n_rows/2))
+    n2 = int(numpy.floor(n_rows / 2))
     if k_folds > n2:
         k_folds = n2
     if n_rows <= 1 or k_folds <= 1:
         # degenerate overlap cases
         plan = [
-            {
-                "train": [i for i in range(n_rows)],
-                "app": [i for i in range(n_rows)],
-            }
+            {"train": [i for i in range(n_rows)], "app": [i for i in range(n_rows)]}
         ]
         return plan
     # first assign groups modulo k (ensuring at least one in each group)
@@ -67,7 +73,7 @@ def grouped_by_x_statistics(x, y):
     if sum(sf["_var"].isnull()) < len(sf["_var"]):
         avg_var = numpy.nanmean(sf["_var"])
     sf.loc[sf["_var"].isnull(), "_var"] = avg_var
-    if sf.shape[0]>1:
+    if sf.shape[0] > 1:
         sf["_vb"] = statistics.variance(sf["_group_mean"]) + eps
     else:
         sf["_vb"] = eps
@@ -98,11 +104,21 @@ def score_variables(cross_frame, variables, outcome):
             with warnings.catch_warnings():
                 est = scipy.stats.pearsonr(cross_frame[v], outcome)
                 sfi = pandas.DataFrame(
-                    {"variable": [v], "has_range": True, "PearsonR": est[0], "significance": est[1]}
+                    {
+                        "variable": [v],
+                        "has_range": True,
+                        "PearsonR": est[0],
+                        "significance": est[1],
+                    }
                 )
         else:
             sfi = pandas.DataFrame(
-                {"variable": [v], "has_range": False, "PearsonR": numpy.NaN, "significance": 1}
+                {
+                    "variable": [v],
+                    "has_range": False,
+                    "PearsonR": numpy.NaN,
+                    "significance": 1,
+                }
             )
         return sfi
 

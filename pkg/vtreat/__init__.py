@@ -12,6 +12,7 @@ import numpy
 
 import vtreat.vtreat_impl as vtreat_impl
 import vtreat.util
+import vtreat.cross_plan
 
 # had been getting Future warnings on seemining correct (no missing values) use of
 # Pandas indexing from vtreat.vtreat_impl.cross_patch_refit_y_aware_cols
@@ -38,42 +39,26 @@ import warnings
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
 
-class CrossValidationPlan:
-    """Data splitting plan"""
-
-    def __init__(self):
-        pass
-
-    def split_plan(self, *, n_rows=None, k_folds=None, data=None, y=None):
-        raise Exception("base class called")
-
-
-class KWayCrossPlan(CrossValidationPlan):
-    """K-way cross validation plan"""
-
-    def __init__(self):
-        CrossValidationPlan.__init__(self)
-
-    def split_plan(self, *, n_rows=None, k_folds=None, data=None, y=None):
-        return vtreat.util.k_way_cross_plan(n_rows=n_rows, k_folds=k_folds)
-
-
 def vtreat_parameters(user_params=None):
     """build a vtreat parmaters dictionary, adding in user choices"""
 
-    params = {'use_hierarchical_estimate': True,
-              'coders': {'clean_copy',
-                         'missing_indicator',
-                         'indicator_code',
-                         'impact_code',
-                         'deviance_code',
-                         'logit_code',
-                         'prevalence_code'},
-              'filter_to_recommended': True,
-              'indicator_min_fracton': 0.1,
-              'cross_validation_plan': KWayCrossPlan(),
-              'cross_validation_k': 5
-              }
+    params = {
+        "use_hierarchical_estimate": True,
+        "coders": {
+            "clean_copy",
+            "missing_indicator",
+            "indicator_code",
+            "impact_code",
+            "deviance_code",
+            "logit_code",
+            "prevalence_code",
+        },
+        "filter_to_recommended": True,
+        "indicator_min_fracton": 0.1,
+        "cross_validation_plan": vtreat.cross_plan.KWayCrossPlan(),
+        "cross_validation_k": 5,
+        "user_transforms": [],
+    }
     if user_params is not None:
         pkeys = set(params.keys())
         for k in user_params.keys():
@@ -86,7 +71,9 @@ def vtreat_parameters(user_params=None):
 class NumericOutcomeTreatment:
     """manage a treatment plan for a numeric outcome (regression)"""
 
-    def __init__(self, *, var_list=None, outcome_name=None, cols_to_copy=None, params=None):
+    def __init__(
+        self, *, var_list=None, outcome_name=None, cols_to_copy=None, params=None
+    ):
         params = vtreat_parameters(params)
         if var_list is None:
             var_list = []
@@ -115,7 +102,7 @@ class NumericOutcomeTreatment:
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
-        res = vtreat_impl.perform_transform(x=X, transform=self)
+        res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
         return res
 
@@ -138,22 +125,30 @@ class NumericOutcomeTreatment:
             var_list=self.var_list_,
             outcome_name=self.outcome_name_,
             cols_to_copy=self.cols_to_copy_,
-            params=self.params_
+            params=self.params_,
         )
-        res = vtreat_impl.perform_transform(x=X, transform=self)
+        res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         # patch in cross-frame versions of complex columns such as impact
-        self.cross_plan_ = self.params_['cross_validation_plan'].split_plan(
-            n_rows=X.shape[0],
-            k_folds=self.params_['cross_validation_k'],
-            data=X,
-            y=y)
+        self.cross_plan_ = self.params_["cross_validation_plan"].split_plan(
+            n_rows=X.shape[0], k_folds=self.params_["cross_validation_k"], data=X, y=y
+        )
         cross_frame = vtreat_impl.cross_patch_refit_y_aware_cols(
             x=X, y=y, res=res, plan=self.plan_, cross_plan=self.cross_plan_
         )
+        cross_frame = vtreat_impl.cross_patch_user_y_aware_cols(
+            x=cross_frame,
+            y=y,
+            res=res,
+            params=self.params_,
+            cross_plan=self.cross_plan_,
+        )
         # use cross_frame to compute variable effects
         self.score_frame_ = vtreat_impl.score_plan_variables(
-            cross_frame=cross_frame, outcome=y, plan=self.plan_)
-        cross_frame = vtreat_impl.limit_to_appropriate_columns(res=cross_frame, transform=self)
+            cross_frame=cross_frame, outcome=y, plan=self.plan_, params=self.params_
+        )
+        cross_frame = vtreat_impl.limit_to_appropriate_columns(
+            res=cross_frame, transform=self
+        )
         return cross_frame
 
 
@@ -161,7 +156,13 @@ class BinomialOutcomeTreatment:
     """manage a treatment plan for a target outcome (binomial classification)"""
 
     def __init__(
-        self, *, var_list=None, outcome_name=None, outcome_target, cols_to_copy=None, params=None
+        self,
+        *,
+        var_list=None,
+        outcome_name=None,
+        outcome_target,
+        cols_to_copy=None,
+        params=None
     ):
         params = vtreat_parameters(params)
         if cols_to_copy is None:
@@ -192,7 +193,7 @@ class BinomialOutcomeTreatment:
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
-        res = vtreat_impl.perform_transform(x=X, transform=self)
+        res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
         return res
 
@@ -213,32 +214,44 @@ class BinomialOutcomeTreatment:
             var_list=self.var_list_,
             outcome_name=self.outcome_name_,
             cols_to_copy=self.cols_to_copy_,
-            params=self.params_
+            params=self.params_,
         )
-        res = vtreat_impl.perform_transform(x=X, transform=self)
+        res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         # patch in cross-frame versions of complex columns such as impact
-        self.cross_plan_ = self.params_['cross_validation_plan'].split_plan(
-            n_rows=X.shape[0],
-            k_folds=self.params_['cross_validation_k'],
-            data=X,
-            y=y)
+        self.cross_plan_ = self.params_["cross_validation_plan"].split_plan(
+            n_rows=X.shape[0], k_folds=self.params_["cross_validation_k"], data=X, y=y
+        )
         cross_frame = vtreat_impl.cross_patch_refit_y_aware_cols(
             x=X, y=y, res=res, plan=self.plan_, cross_plan=self.cross_plan_
+        )
+        cross_frame = vtreat_impl.cross_patch_user_y_aware_cols(
+            x=cross_frame,
+            y=y,
+            res=res,
+            params=self.params_,
+            cross_plan=self.cross_plan_,
         )
         # use cross_frame to compute variable effects
         self.score_frame_ = vtreat_impl.score_plan_variables(
             cross_frame=cross_frame,
-            outcome=numpy.asarray(numpy.asarray(y) == self.outcome_target_, dtype=numpy.float64),
-            plan=self.plan_
+            outcome=numpy.asarray(
+                numpy.asarray(y) == self.outcome_target_, dtype=numpy.float64
+            ),
+            plan=self.plan_,
+            params=self.params_,
         )
-        cross_frame = vtreat_impl.limit_to_appropriate_columns(res=cross_frame, transform=self)
+        cross_frame = vtreat_impl.limit_to_appropriate_columns(
+            res=cross_frame, transform=self
+        )
         return cross_frame
 
 
 class MultinomialOutcomeTreatment:
     """manage a treatment plan for a set of outcomes (multinomial classification)"""
 
-    def __init__(self, *, var_list=None, outcome_name=None, cols_to_copy=None, params=None):
+    def __init__(
+        self, *, var_list=None, outcome_name=None, cols_to_copy=None, params=None
+    ):
         params = vtreat_parameters(params)
         if var_list is None:
             var_list = []
@@ -268,7 +281,7 @@ class MultinomialOutcomeTreatment:
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
-        res = vtreat_impl.perform_transform(x=X, transform=self)
+        res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
         return res
 
@@ -289,17 +302,22 @@ class MultinomialOutcomeTreatment:
             var_list=self.var_list_,
             outcome_name=self.outcome_name_,
             cols_to_copy=self.cols_to_copy_,
-            params=self.params_
+            params=self.params_,
         )
-        res = vtreat_impl.perform_transform(x=X, transform=self)
+        res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         # patch in cross-frame versions of complex columns such as impact
-        self.cross_plan_ = self.params_['cross_validation_plan'].split_plan(
-            n_rows=X.shape[0],
-            k_folds=self.params_['cross_validation_k'],
-            data=X,
-            y=y)
+        self.cross_plan_ = self.params_["cross_validation_plan"].split_plan(
+            n_rows=X.shape[0], k_folds=self.params_["cross_validation_k"], data=X, y=y
+        )
         cross_frame = vtreat_impl.cross_patch_refit_y_aware_cols(
             x=X, y=y, res=res, plan=self.plan_, cross_plan=self.cross_plan_
+        )
+        cross_frame = vtreat_impl.cross_patch_user_y_aware_cols(
+            x=cross_frame,
+            y=y,
+            res=res,
+            params=self.params_,
+            cross_plan=self.cross_plan_,
         )
         # use cross_frame to compute variable effects
 
@@ -307,20 +325,27 @@ class MultinomialOutcomeTreatment:
             sf = vtreat_impl.score_plan_variables(
                 cross_frame=cross_frame,
                 outcome=numpy.asarray(numpy.asarray(y) == oi, dtype=numpy.float64),
-                plan=self.plan_)
+                plan=self.plan_,
+                params=self.params_,
+            )
             sf["outcome_target"] = oi
             return sf
+
         score_frames = [si(oi) for oi in self.outcomes_]
         self.score_frame_ = pandas.concat(score_frames, axis=0)
         self.score_frame_.reset_index(inplace=True, drop=True)
-        cross_frame = vtreat_impl.limit_to_appropriate_columns(res=cross_frame, transform=self)
+        cross_frame = vtreat_impl.limit_to_appropriate_columns(
+            res=cross_frame, transform=self
+        )
         return cross_frame
 
 
 class UnsupervisedTreatment:
     """manage an unsupervised treatment plan"""
 
-    def __init__(self, *, var_list=None, outcome_name=None, cols_to_copy=None, params=None):
+    def __init__(
+        self, *, var_list=None, outcome_name=None, cols_to_copy=None, params=None
+    ):
         params = vtreat_parameters(params)
         if var_list is None:
             var_list = []
@@ -346,7 +371,7 @@ class UnsupervisedTreatment:
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
-        res = vtreat_impl.perform_transform(x=X, transform=self)
+        res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
         return res
 
@@ -359,9 +384,11 @@ class UnsupervisedTreatment:
             var_list=self.var_list_,
             outcome_name=self.outcome_name_,
             cols_to_copy=self.cols_to_copy_,
-            params=self.params_
+            params=self.params_,
         )
-        res = vtreat_impl.perform_transform(x=X, transform=self)
-        self.score_frame_ = vtreat_impl.pseudo_score_plan_variables(res, self.plan_)
+        res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
+        self.score_frame_ = vtreat_impl.pseudo_score_plan_variables(cross_frame=res,
+                                                                    plan=self.plan_,
+                                                                    params=self.params_)
         res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
         return res
