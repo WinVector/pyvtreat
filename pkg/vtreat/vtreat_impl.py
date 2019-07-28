@@ -42,9 +42,69 @@ def characterize_numeric(x):
     }
 
 
-class CleanNumericTransform(vtreat.transform.VarTransform):
+class VarTransform:
+    """build a treatment plan for a numeric outcome (regression)"""
+
+    def __init__(self, incoming_column_name, derived_column_names, treatment):
+        self.incoming_column_name_ = incoming_column_name
+        self.derived_column_names_ = derived_column_names.copy()
+        self.treatment_ = treatment
+        self.need_cross_treatment_ = False
+        self.refitter_ = None
+
+    def transform(self, data_frame):
+        raise Exception("base method called")
+
+
+class MappedCodeTransform(VarTransform):
+    def __init__(self, incoming_column_name, derived_column_name, treatment, code_book):
+        VarTransform.__init__(
+            self, incoming_column_name, [derived_column_name], treatment
+        )
+        self.code_book_ = code_book
+
+    def transform(self, data_frame):
+        incoming_column_name = self.incoming_column_name_
+        derived_column_name = self.derived_column_names_[0]
+        sf = pandas.DataFrame({incoming_column_name: data_frame[incoming_column_name]})
+        na_posns = sf[incoming_column_name].isnull()
+        sf.loc[na_posns, incoming_column_name] = "_NA_"
+        res = pandas.merge(
+            sf, self.code_book_, on=[self.incoming_column_name_], how="left", sort=False
+        )  # ordered by left table rows
+        res = res[[derived_column_name]].copy()
+        res.loc[res[derived_column_name].isnull(), derived_column_name] = 0
+        return res
+
+
+class YAwareMappedCodeTransform(MappedCodeTransform):
+    def __init__(
+            self,
+            incoming_column_name,
+            derived_column_name,
+            treatment,
+            code_book,
+            refitter,
+            extra_args,
+            params,
+    ):
+        MappedCodeTransform.__init__(
+            self,
+            incoming_column_name=incoming_column_name,
+            derived_column_name=derived_column_name,
+            treatment=treatment,
+            code_book=code_book,
+        )
+        self.need_cross_treatment_ = True
+        self.refitter_ = refitter
+        self.extra_args_ = extra_args
+        self.params_ = params
+
+
+
+class CleanNumericTransform(VarTransform):
     def __init__(self, incoming_column_name, replacement_value):
-        vtreat.transform.VarTransform.__init__(
+        VarTransform.__init__(
             self, incoming_column_name, [incoming_column_name], "clean_copy"
         )
         self.replacement_value_ = replacement_value
@@ -57,9 +117,9 @@ class CleanNumericTransform(vtreat.transform.VarTransform):
         return res
 
 
-class IndicateMissingTransform(vtreat.transform.VarTransform):
+class IndicateMissingTransform(VarTransform):
     def __init__(self, incoming_column_name, derived_column_name):
-        vtreat.transform.VarTransform.__init__(
+        VarTransform.__init__(
             self, incoming_column_name, [derived_column_name], "missing_indicator"
         )
 
@@ -89,7 +149,7 @@ def fit_regression_impact_code(*, incoming_column_name, x, y, extra_args, params
     sf = sf.loc[:, ["x", "_impact_code"]].copy()
     newcol = incoming_column_name + "_impact_code"
     sf.columns = [incoming_column_name, newcol]
-    return vtreat.transform.YAwareMappedCodeTransform(
+    return YAwareMappedCodeTransform(
         incoming_column_name=incoming_column_name,
         derived_column_name=newcol,
         treatment="impact_code",
@@ -108,7 +168,7 @@ def fit_regression_deviation_code(*, incoming_column_name, x, y, extra_args, par
     sf = sf.loc[:, ["x", "_deviance_code"]].copy()
     newcol = incoming_column_name + "_deviance_code"
     sf.columns = [incoming_column_name, newcol]
-    return vtreat.transform.YAwareMappedCodeTransform(
+    return YAwareMappedCodeTransform(
         incoming_column_name=incoming_column_name,
         derived_column_name=newcol,
         treatment="deviance_code",
@@ -133,7 +193,7 @@ def fit_binomial_impact_code(*, incoming_column_name, x, y, extra_args, params):
     sf = sf.loc[:, ["x", "_logit_code"]].copy()
     newcol = incoming_column_name + "_logit_code" + var_suffix
     sf.columns = [incoming_column_name, newcol]
-    return vtreat.transform.YAwareMappedCodeTransform(
+    return YAwareMappedCodeTransform(
         incoming_column_name=incoming_column_name,
         derived_column_name=newcol,
         treatment="logit_code",
@@ -144,9 +204,9 @@ def fit_binomial_impact_code(*, incoming_column_name, x, y, extra_args, params):
     )
 
 
-class IndicatorCodeTransform(vtreat.transform.VarTransform):
+class IndicatorCodeTransform(VarTransform):
     def __init__(self, incoming_column_name, derived_column_names, levels):
-        vtreat.transform.VarTransform.__init__(
+        VarTransform.__init__(
             self, incoming_column_name, derived_column_names, "indicator_code"
         )
         self.levels_ = levels
@@ -205,7 +265,7 @@ def fit_prevalence_code(incoming_column_name, x):
     sf.columns = [incoming_column_name, newcol]
     sf[incoming_column_name] = sf[incoming_column_name].astype(str)
     sf.reset_index(inplace=True, drop=True)
-    return vtreat.transform.MappedCodeTransform(
+    return MappedCodeTransform(
         incoming_column_name, newcol, treatment="prevalence_code", code_book=sf
     )
 
