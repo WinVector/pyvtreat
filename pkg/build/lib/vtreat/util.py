@@ -67,7 +67,7 @@ def grouped_by_x_statistics(x, y):
     if sum(sf["_var"].isnull()) < len(sf["_var"]):
         avg_var = numpy.nanmean(sf["_var"])
     sf.loc[sf["_var"].isnull(), "_var"] = avg_var
-    if sf.shape[0]>1:
+    if sf.shape[0] > 1:
         sf["_vb"] = statistics.variance(sf["_group_mean"]) + eps
     else:
         sf["_vb"] = eps
