@@ -160,7 +160,7 @@ treatments.fit(d[['x', 'z']], d['yN'])
 
 
 
-    <vtreat.NumericOutcomeTreatment at 0x1a19f37748>
+    <vtreat.NumericOutcomeTreatment at 0x1a1896a470>
 
 
 
@@ -241,7 +241,7 @@ treatments.score_frame_
       <td>-0.094491</td>
       <td>0.879869</td>
       <td>1.0</td>
-      <td>False</td>
+      <td>True</td>
     </tr>
     <tr>
       <th>3</th>
@@ -249,9 +249,9 @@ treatments.score_frame_
       <td>x</td>
       <td>impact_code</td>
       <td>True</td>
-      <td>True</td>
-      <td>0.468462</td>
-      <td>0.426133</td>
+      <td>False</td>
+      <td>NaN</td>
+      <td>1.000000</td>
       <td>1.0</td>
       <td>False</td>
     </tr>
@@ -262,10 +262,10 @@ treatments.score_frame_
       <td>deviance_code</td>
       <td>True</td>
       <td>True</td>
-      <td>-0.508002</td>
-      <td>0.382203</td>
+      <td>0.250000</td>
+      <td>0.685038</td>
       <td>1.0</td>
-      <td>False</td>
+      <td>True</td>
     </tr>
     <tr>
       <th>5</th>
@@ -277,22 +277,10 @@ treatments.score_frame_
       <td>-0.250000</td>
       <td>0.685038</td>
       <td>1.0</td>
-      <td>False</td>
+      <td>True</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>x_lev_a</td>
-      <td>x</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>0.408248</td>
-      <td>0.495025</td>
-      <td>3.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>7</th>
       <td>x_lev_b</td>
       <td>x</td>
       <td>indicator_code</td>
@@ -300,6 +288,18 @@ treatments.score_frame_
       <td>True</td>
       <td>-0.612372</td>
       <td>0.272228</td>
+      <td>3.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>x_lev_a</td>
+      <td>x</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.408248</td>
+      <td>0.495025</td>
       <td>3.0</td>
       <td>False</td>
     </tr>
@@ -357,11 +357,10 @@ dTreated
       <th>x_is_bad</th>
       <th>z_is_bad</th>
       <th>z</th>
-      <th>x_impact_code</th>
       <th>x_deviance_code</th>
       <th>x_prevalence_code</th>
-      <th>x_lev_a</th>
       <th>x_lev_b</th>
+      <th>x_lev_a</th>
       <th>x_lev__NA_</th>
     </tr>
   </thead>
@@ -372,11 +371,10 @@ dTreated
       <td>0.0</td>
       <td>0.0</td>
       <td>0.00</td>
-      <td>1.976562e-01</td>
       <td>0.031623</td>
       <td>0.2</td>
-      <td>1</td>
       <td>0</td>
+      <td>1</td>
       <td>0</td>
     </tr>
     <tr>
@@ -385,11 +383,10 @@ dTreated
       <td>0.0</td>
       <td>0.0</td>
       <td>1.00</td>
-      <td>1.976562e-01</td>
       <td>0.031623</td>
       <td>0.2</td>
-      <td>1</td>
       <td>0</td>
+      <td>1</td>
       <td>0</td>
     </tr>
     <tr>
@@ -398,11 +395,10 @@ dTreated
       <td>0.0</td>
       <td>0.0</td>
       <td>2.00</td>
-      <td>-4.322323e-02</td>
       <td>0.707814</td>
       <td>0.2</td>
-      <td>0</td>
       <td>1</td>
+      <td>0</td>
       <td>0</td>
     </tr>
     <tr>
@@ -411,11 +407,10 @@ dTreated
       <td>0.0</td>
       <td>1.0</td>
       <td>1.75</td>
-      <td>-4.322323e-02</td>
       <td>0.707814</td>
       <td>0.2</td>
-      <td>0</td>
       <td>1</td>
+      <td>0</td>
       <td>0</td>
     </tr>
     <tr>
@@ -424,7 +419,6 @@ dTreated
       <td>1.0</td>
       <td>0.0</td>
       <td>4.00</td>
-      <td>-1.110223e-16</td>
       <td>0.500999</td>
       <td>0.0</td>
       <td>0</td>
@@ -473,7 +467,7 @@ treatments.fit(d[['x', 'z']], d['y'])
 
 
 
-    <vtreat.BinomialOutcomeTreatment at 0x1a19f8cef0>
+    <vtreat.BinomialOutcomeTreatment at 0x1a189b4080>
 
 
 
@@ -554,7 +548,7 @@ treatments.score_frame_
       <td>-0.094491</td>
       <td>0.879869</td>
       <td>1.0</td>
-      <td>False</td>
+      <td>True</td>
     </tr>
     <tr>
       <th>3</th>
@@ -562,9 +556,9 @@ treatments.score_frame_
       <td>x</td>
       <td>logit_code</td>
       <td>True</td>
-      <td>True</td>
-      <td>0.475449</td>
-      <td>0.418291</td>
+      <td>False</td>
+      <td>NaN</td>
+      <td>1.000000</td>
       <td>1.0</td>
       <td>False</td>
     </tr>
@@ -578,22 +572,10 @@ treatments.score_frame_
       <td>-0.250000</td>
       <td>0.685038</td>
       <td>1.0</td>
-      <td>False</td>
+      <td>True</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>x_lev_a</td>
-      <td>x</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>0.408248</td>
-      <td>0.495025</td>
-      <td>3.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>6</th>
       <td>x_lev_b</td>
       <td>x</td>
       <td>indicator_code</td>
@@ -601,6 +583,18 @@ treatments.score_frame_
       <td>True</td>
       <td>-0.612372</td>
       <td>0.272228</td>
+      <td>3.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>x_lev_a</td>
+      <td>x</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.408248</td>
+      <td>0.495025</td>
       <td>3.0</td>
       <td>False</td>
     </tr>
@@ -658,10 +652,9 @@ dTreated
       <th>x_is_bad</th>
       <th>z_is_bad</th>
       <th>z</th>
-      <th>x_logit_code</th>
       <th>x_prevalence_code</th>
-      <th>x_lev_a</th>
       <th>x_lev_b</th>
+      <th>x_lev_a</th>
       <th>x_lev__NA_</th>
     </tr>
   </thead>
@@ -672,10 +665,9 @@ dTreated
       <td>0.0</td>
       <td>0.0</td>
       <td>0.00</td>
-      <td>2.207971e-01</td>
       <td>0.2</td>
-      <td>1</td>
       <td>0</td>
+      <td>1</td>
       <td>0</td>
     </tr>
     <tr>
@@ -684,10 +676,9 @@ dTreated
       <td>0.0</td>
       <td>0.0</td>
       <td>1.00</td>
-      <td>2.207971e-01</td>
       <td>0.2</td>
-      <td>1</td>
       <td>0</td>
+      <td>1</td>
       <td>0</td>
     </tr>
     <tr>
@@ -696,10 +687,9 @@ dTreated
       <td>0.0</td>
       <td>0.0</td>
       <td>2.00</td>
-      <td>-5.554341e-02</td>
       <td>0.2</td>
-      <td>0</td>
       <td>1</td>
+      <td>0</td>
       <td>0</td>
     </tr>
     <tr>
@@ -708,10 +698,9 @@ dTreated
       <td>0.0</td>
       <td>1.0</td>
       <td>1.75</td>
-      <td>-5.554341e-02</td>
       <td>0.2</td>
-      <td>0</td>
       <td>1</td>
+      <td>0</td>
       <td>0</td>
     </tr>
     <tr>
@@ -720,7 +709,6 @@ dTreated
       <td>1.0</td>
       <td>0.0</td>
       <td>4.00</td>
-      <td>-1.387779e-16</td>
       <td>0.0</td>
       <td>0</td>
       <td>0</td>
@@ -764,7 +752,7 @@ treatments.fit(d[['x', 'z']])
 
 
 
-    <vtreat.UnsupervisedTreatment at 0x1a19fd71d0>
+    <vtreat.UnsupervisedTreatment at 0x1a18a01908>
 
 
 
@@ -804,8 +792,8 @@ dTreated
       <th>z_is_bad</th>
       <th>z</th>
       <th>x_prevalence_code</th>
-      <th>x_lev_a</th>
       <th>x_lev_b</th>
+      <th>x_lev_a</th>
       <th>x_lev__NA_</th>
     </tr>
   </thead>
@@ -816,8 +804,8 @@ dTreated
       <td>0.0</td>
       <td>0.00</td>
       <td>0.2</td>
-      <td>1</td>
       <td>0</td>
+      <td>1</td>
       <td>0</td>
     </tr>
     <tr>
@@ -826,8 +814,8 @@ dTreated
       <td>0.0</td>
       <td>1.00</td>
       <td>0.2</td>
-      <td>1</td>
       <td>0</td>
+      <td>1</td>
       <td>0</td>
     </tr>
     <tr>
@@ -836,8 +824,8 @@ dTreated
       <td>0.0</td>
       <td>2.00</td>
       <td>0.2</td>
-      <td>0</td>
       <td>1</td>
+      <td>0</td>
       <td>0</td>
     </tr>
     <tr>
@@ -846,8 +834,8 @@ dTreated
       <td>1.0</td>
       <td>1.75</td>
       <td>0.2</td>
-      <td>0</td>
       <td>1</td>
+      <td>0</td>
       <td>0</td>
     </tr>
     <tr>
@@ -911,11 +899,9 @@ treatments.fit_transform(d[['x', 'z']], d['yN'])
       <th>x_is_bad</th>
       <th>z_is_bad</th>
       <th>z</th>
-      <th>x_impact_code</th>
-      <th>x_deviance_code</th>
       <th>x_prevalence_code</th>
-      <th>x_lev_a</th>
       <th>x_lev_b</th>
+      <th>x_lev_a</th>
       <th>x_lev__NA_</th>
     </tr>
   </thead>
@@ -925,11 +911,9 @@ treatments.fit_transform(d[['x', 'z']], d['yN'])
       <td>0.0</td>
       <td>0.0</td>
       <td>0.00</td>
-      <td>1.976562e-01</td>
-      <td>0.031623</td>
       <td>0.2</td>
-      <td>1</td>
       <td>0</td>
+      <td>1</td>
       <td>0</td>
     </tr>
     <tr>
@@ -937,11 +921,9 @@ treatments.fit_transform(d[['x', 'z']], d['yN'])
       <td>0.0</td>
       <td>0.0</td>
       <td>1.00</td>
-      <td>1.976562e-01</td>
-      <td>0.031623</td>
       <td>0.2</td>
-      <td>1</td>
       <td>0</td>
+      <td>1</td>
       <td>0</td>
     </tr>
     <tr>
@@ -949,11 +931,9 @@ treatments.fit_transform(d[['x', 'z']], d['yN'])
       <td>0.0</td>
       <td>0.0</td>
       <td>2.00</td>
-      <td>-4.322323e-02</td>
-      <td>0.707814</td>
       <td>0.2</td>
-      <td>0</td>
       <td>1</td>
+      <td>0</td>
       <td>0</td>
     </tr>
     <tr>
@@ -961,11 +941,9 @@ treatments.fit_transform(d[['x', 'z']], d['yN'])
       <td>0.0</td>
       <td>1.0</td>
       <td>1.75</td>
-      <td>-4.322323e-02</td>
-      <td>0.707814</td>
       <td>0.2</td>
-      <td>0</td>
       <td>1</td>
+      <td>0</td>
       <td>0</td>
     </tr>
     <tr>
@@ -973,8 +951,6 @@ treatments.fit_transform(d[['x', 'z']], d['yN'])
       <td>1.0</td>
       <td>0.0</td>
       <td>4.00</td>
-      <td>-1.110223e-16</td>
-      <td>0.500999</td>
       <td>0.0</td>
       <td>0</td>
       <td>0</td>
@@ -1058,7 +1034,7 @@ treatments.score_frame_
       <td>-0.094491</td>
       <td>0.879869</td>
       <td>1.0</td>
-      <td>False</td>
+      <td>True</td>
     </tr>
     <tr>
       <th>3</th>
@@ -1066,9 +1042,9 @@ treatments.score_frame_
       <td>x</td>
       <td>impact_code</td>
       <td>True</td>
-      <td>True</td>
-      <td>0.468462</td>
-      <td>0.426133</td>
+      <td>False</td>
+      <td>NaN</td>
+      <td>1.000000</td>
       <td>1.0</td>
       <td>False</td>
     </tr>
@@ -1078,9 +1054,9 @@ treatments.score_frame_
       <td>x</td>
       <td>deviance_code</td>
       <td>True</td>
-      <td>True</td>
-      <td>-0.508002</td>
-      <td>0.382203</td>
+      <td>False</td>
+      <td>NaN</td>
+      <td>1.000000</td>
       <td>1.0</td>
       <td>False</td>
     </tr>
@@ -1094,22 +1070,10 @@ treatments.score_frame_
       <td>-0.250000</td>
       <td>0.685038</td>
       <td>1.0</td>
-      <td>False</td>
+      <td>True</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>x_lev_a</td>
-      <td>x</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>0.408248</td>
-      <td>0.495025</td>
-      <td>3.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>7</th>
       <td>x_lev_b</td>
       <td>x</td>
       <td>indicator_code</td>
@@ -1117,6 +1081,18 @@ treatments.score_frame_
       <td>True</td>
       <td>-0.612372</td>
       <td>0.272228</td>
+      <td>3.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>x_lev_a</td>
+      <td>x</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.408248</td>
+      <td>0.495025</td>
       <td>3.0</td>
       <td>False</td>
     </tr>
@@ -1189,10 +1165,9 @@ treatments.fit_transform(d[['x', 'z']], d['y'])
       <th>x_is_bad</th>
       <th>z_is_bad</th>
       <th>z</th>
-      <th>x_logit_code</th>
       <th>x_prevalence_code</th>
-      <th>x_lev_a</th>
       <th>x_lev_b</th>
+      <th>x_lev_a</th>
       <th>x_lev__NA_</th>
     </tr>
   </thead>
@@ -1202,10 +1177,9 @@ treatments.fit_transform(d[['x', 'z']], d['y'])
       <td>0.0</td>
       <td>0.0</td>
       <td>0.00</td>
-      <td>2.207971e-01</td>
       <td>0.2</td>
-      <td>1</td>
       <td>0</td>
+      <td>1</td>
       <td>0</td>
     </tr>
     <tr>
@@ -1213,10 +1187,9 @@ treatments.fit_transform(d[['x', 'z']], d['y'])
       <td>0.0</td>
       <td>0.0</td>
       <td>1.00</td>
-      <td>2.207971e-01</td>
       <td>0.2</td>
-      <td>1</td>
       <td>0</td>
+      <td>1</td>
       <td>0</td>
     </tr>
     <tr>
@@ -1224,10 +1197,9 @@ treatments.fit_transform(d[['x', 'z']], d['y'])
       <td>0.0</td>
       <td>0.0</td>
       <td>2.00</td>
-      <td>-5.554341e-02</td>
       <td>0.2</td>
-      <td>0</td>
       <td>1</td>
+      <td>0</td>
       <td>0</td>
     </tr>
     <tr>
@@ -1235,10 +1207,9 @@ treatments.fit_transform(d[['x', 'z']], d['y'])
       <td>0.0</td>
       <td>1.0</td>
       <td>1.75</td>
-      <td>-5.554341e-02</td>
       <td>0.2</td>
-      <td>0</td>
       <td>1</td>
+      <td>0</td>
       <td>0</td>
     </tr>
     <tr>
@@ -1246,7 +1217,6 @@ treatments.fit_transform(d[['x', 'z']], d['y'])
       <td>1.0</td>
       <td>0.0</td>
       <td>4.00</td>
-      <td>-1.387779e-16</td>
       <td>0.0</td>
       <td>0</td>
       <td>0</td>
@@ -1330,7 +1300,7 @@ treatments.score_frame_
       <td>-0.094491</td>
       <td>0.879869</td>
       <td>1.0</td>
-      <td>False</td>
+      <td>True</td>
     </tr>
     <tr>
       <th>3</th>
@@ -1338,9 +1308,9 @@ treatments.score_frame_
       <td>x</td>
       <td>logit_code</td>
       <td>True</td>
-      <td>True</td>
-      <td>0.475449</td>
-      <td>0.418291</td>
+      <td>False</td>
+      <td>NaN</td>
+      <td>1.000000</td>
       <td>1.0</td>
       <td>False</td>
     </tr>
@@ -1354,22 +1324,10 @@ treatments.score_frame_
       <td>-0.250000</td>
       <td>0.685038</td>
       <td>1.0</td>
-      <td>False</td>
+      <td>True</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>x_lev_a</td>
-      <td>x</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>0.408248</td>
-      <td>0.495025</td>
-      <td>3.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>6</th>
       <td>x_lev_b</td>
       <td>x</td>
       <td>indicator_code</td>
@@ -1377,6 +1335,18 @@ treatments.score_frame_
       <td>True</td>
       <td>-0.612372</td>
       <td>0.272228</td>
+      <td>3.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>x_lev_a</td>
+      <td>x</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.408248</td>
+      <td>0.495025</td>
       <td>3.0</td>
       <td>False</td>
     </tr>
@@ -1418,9 +1388,9 @@ vtreat.util.k_way_cross_plan(10, 3)
 
 
 
-    [{'train': [0, 2, 4, 5, 6, 7], 'app': [1, 3, 8, 9]},
-     {'train': [0, 1, 3, 5, 6, 8, 9], 'app': [2, 4, 7]},
-     {'train': [1, 2, 3, 4, 7, 8, 9], 'app': [0, 5, 6]}]
+    [{'train': [0, 1, 3, 4, 6, 9], 'app': [2, 5, 7, 8]},
+     {'train': [0, 1, 2, 5, 6, 7, 8], 'app': [3, 4, 9]},
+     {'train': [2, 3, 4, 5, 7, 8, 9], 'app': [0, 1, 6]}]
 
 
 

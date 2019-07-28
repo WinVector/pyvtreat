@@ -70,7 +70,7 @@ def vtreat_parameters(user_params=None):
                          'logit_code',
                          'prevalence_code'},
               'filter_to_recommended': True,
-              'indicator_min_fracton': 0.05,
+              'indicator_min_fracton': 0.1,
               'cross_validation_plan': KWayCrossPlan(),
               'cross_validation_k': 5
               }
@@ -217,7 +217,7 @@ class BinomialOutcomeTreatment:
         )
         res = vtreat_impl.perform_transform(x=X, transform=self)
         # patch in cross-frame versions of complex columns such as impact
-        self.cross_plan_ = vtreat.util.self.params_['cross_validation_plan'].split_plan(
+        self.cross_plan_ = self.params_['cross_validation_plan'].split_plan(
             n_rows=X.shape[0],
             k_folds=self.params_['cross_validation_k'],
             data=X,

@@ -213,16 +213,16 @@ msleep_prepared.head()
       <th>awake</th>
       <th>brainwt</th>
       <th>...</th>
-      <th>order_lev_Rodentia</th>
-      <th>order_lev_Primates</th>
-      <th>order_lev_Carnivora</th>
-      <th>order_lev_Artiodactyla</th>
-      <th>order_lev_Soricomorpha</th>
+      <th>order_lev_Pilosa</th>
+      <th>order_lev_Scandentia</th>
       <th>conservation_prevalence_code</th>
       <th>conservation_lev__NA_</th>
       <th>conservation_lev_lc</th>
       <th>conservation_lev_domesticated</th>
       <th>conservation_lev_vu</th>
+      <th>conservation_lev_en</th>
+      <th>conservation_lev_nt</th>
+      <th>conservation_lev_cd</th>
     </tr>
   </thead>
   <tbody>
@@ -241,12 +241,12 @@ msleep_prepared.head()
       <td>...</td>
       <td>0</td>
       <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
       <td>0.313253</td>
       <td>0</td>
       <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
     </tr>
@@ -264,12 +264,12 @@ msleep_prepared.head()
       <td>0.015500</td>
       <td>...</td>
       <td>0</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
       <td>0</td>
       <td>0.337349</td>
       <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -287,15 +287,15 @@ msleep_prepared.head()
       <td>9.6</td>
       <td>0.281581</td>
       <td>...</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>0.036145</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
       <td>0</td>
     </tr>
     <tr>
@@ -313,12 +313,12 @@ msleep_prepared.head()
       <td>...</td>
       <td>0</td>
       <td>0</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
       <td>0.313253</td>
       <td>0</td>
       <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
     </tr>
@@ -337,18 +337,18 @@ msleep_prepared.head()
       <td>...</td>
       <td>0</td>
       <td>0</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
       <td>0.108434</td>
       <td>0</td>
       <td>0</td>
       <td>1</td>
       <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 29 columns</p>
+<p>5 rows × 206 columns</p>
 </div>
 
 
@@ -363,15 +363,14 @@ msleep_prepared.columns
 
     Index(['vore_is_bad', 'conservation_is_bad', 'sleep_rem_is_bad',
            'sleep_cycle_is_bad', 'brainwt_is_bad', 'sleep_total', 'sleep_rem',
-           'sleep_cycle', 'awake', 'brainwt', 'bodywt', 'genus_prevalence_code',
-           'vore_prevalence_code', 'vore_lev_herbi', 'vore_lev_omni',
-           'vore_lev_carni', 'vore_lev__NA_', 'vore_lev_insecti',
-           'order_prevalence_code', 'order_lev_Rodentia', 'order_lev_Primates',
-           'order_lev_Carnivora', 'order_lev_Artiodactyla',
-           'order_lev_Soricomorpha', 'conservation_prevalence_code',
-           'conservation_lev__NA_', 'conservation_lev_lc',
-           'conservation_lev_domesticated', 'conservation_lev_vu'],
-          dtype='object')
+           'sleep_cycle', 'awake', 'brainwt',
+           ...
+           'order_lev_Pilosa', 'order_lev_Scandentia',
+           'conservation_prevalence_code', 'conservation_lev__NA_',
+           'conservation_lev_lc', 'conservation_lev_domesticated',
+           'conservation_lev_vu', 'conservation_lev_en', 'conservation_lev_nt',
+           'conservation_lev_cd'],
+          dtype='object', length=206)
 
 
 
@@ -533,7 +532,6 @@ df_treated
     <tr style="text-align: right;">
       <th></th>
       <th>y</th>
-      <th>x_impact_code</th>
       <th>x_lev_a</th>
       <th>x_lev_c</th>
     </tr>
@@ -542,42 +540,36 @@ df_treated
     <tr>
       <th>0</th>
       <td>1</td>
-      <td>-1.777432</td>
       <td>1</td>
       <td>0</td>
     </tr>
     <tr>
       <th>1</th>
       <td>2</td>
-      <td>-1.777432</td>
       <td>1</td>
       <td>0</td>
     </tr>
     <tr>
       <th>2</th>
       <td>3</td>
-      <td>0.000000</td>
       <td>0</td>
       <td>0</td>
     </tr>
     <tr>
       <th>3</th>
       <td>4</td>
-      <td>0.000000</td>
       <td>0</td>
       <td>0</td>
     </tr>
     <tr>
       <th>4</th>
       <td>5</td>
-      <td>1.777432</td>
       <td>0</td>
       <td>1</td>
     </tr>
     <tr>
       <th>5</th>
       <td>6</td>
-      <td>1.777432</td>
       <td>0</td>
       <td>1</td>
     </tr>
@@ -683,7 +675,6 @@ newdata_treated
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>x_impact_code</th>
       <th>x_lev_a</th>
       <th>x_lev_c</th>
     </tr>
@@ -691,25 +682,21 @@ newdata_treated
   <tbody>
     <tr>
       <th>0</th>
-      <td>-1.777432</td>
       <td>1</td>
       <td>0</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>0.000000</td>
       <td>0</td>
       <td>0</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>1.777432</td>
       <td>0</td>
       <td>1</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>0.000000</td>
       <td>0</td>
       <td>0</td>
     </tr>
@@ -909,6 +896,21 @@ d_treated.head()
       <th>zip_lev_z00002</th>
       <th>zip_lev_z00003</th>
       <th>zip_lev_z00001</th>
+      <th>zip_lev_z00012</th>
+      <th>zip_lev_z00023</th>
+      <th>zip_lev_z00018</th>
+      <th>zip_lev_z00024</th>
+      <th>...</th>
+      <th>zip_lev_z00017</th>
+      <th>zip_lev_z00014</th>
+      <th>zip_lev_z00025</th>
+      <th>zip_lev_z00019</th>
+      <th>zip_lev_z00016</th>
+      <th>zip_lev_z00020</th>
+      <th>zip_lev_z00021</th>
+      <th>zip_lev_z00011</th>
+      <th>zip_lev_z00013</th>
+      <th>zip_lev_z00015</th>
     </tr>
   </thead>
   <tbody>
@@ -917,6 +919,21 @@ d_treated.head()
       <td>18.522012</td>
       <td>12.660483</td>
       <td>0.013</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -929,6 +946,21 @@ d_treated.head()
       <td>1</td>
       <td>0</td>
       <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>2</th>
@@ -938,12 +970,42 @@ d_treated.head()
       <td>0</td>
       <td>0</td>
       <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>3</th>
       <td>17.157941</td>
       <td>12.776066</td>
       <td>0.013</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -956,9 +1018,25 @@ d_treated.head()
       <td>1</td>
       <td>0</td>
       <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
     </tr>
   </tbody>
 </table>
+<p>5 rows × 22 columns</p>
 </div>
 
 
@@ -1051,7 +1129,7 @@ treatplan.score_frame_
       <td>True</td>
       <td>-0.283480</td>
       <td>6.165256e-20</td>
-      <td>3.0</td>
+      <td>25.0</td>
       <td>True</td>
     </tr>
     <tr>
@@ -1063,7 +1141,7 @@ treatplan.score_frame_
       <td>True</td>
       <td>-0.179725</td>
       <td>1.046927e-08</td>
-      <td>3.0</td>
+      <td>25.0</td>
       <td>True</td>
     </tr>
     <tr>
@@ -1075,8 +1153,272 @@ treatplan.score_frame_
       <td>True</td>
       <td>-0.348631</td>
       <td>5.932392e-30</td>
-      <td>3.0</td>
+      <td>25.0</td>
       <td>True</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>zip_lev_z00012</td>
+      <td>zip</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.159533</td>
+      <td>3.955782e-07</td>
+      <td>25.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>zip_lev_z00023</td>
+      <td>zip</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.361729</td>
+      <td>2.817448e-32</td>
+      <td>25.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>zip_lev_z00004</td>
+      <td>zip</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>-0.013068</td>
+      <td>6.797935e-01</td>
+      <td>25.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>zip_lev_z00018</td>
+      <td>zip</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.244797</td>
+      <td>4.119259e-15</td>
+      <td>25.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>zip_lev_z00024</td>
+      <td>zip</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.349375</td>
+      <td>4.407041e-30</td>
+      <td>25.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>zip_lev_z00010</td>
+      <td>zip</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.091084</td>
+      <td>3.942487e-03</td>
+      <td>25.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>zip_lev_z00022</td>
+      <td>zip</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.280011</td>
+      <td>1.800585e-19</td>
+      <td>25.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>zip_lev_z00017</td>
+      <td>zip</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.216666</td>
+      <td>4.346269e-12</td>
+      <td>25.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>zip_lev_z00014</td>
+      <td>zip</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.162564</td>
+      <td>2.356959e-07</td>
+      <td>25.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>zip_lev_z00008</td>
+      <td>zip</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.049708</td>
+      <td>1.162027e-01</td>
+      <td>25.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>zip_lev_z00025</td>
+      <td>zip</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.323785</td>
+      <td>7.720982e-26</td>
+      <td>25.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>zip_lev_z00019</td>
+      <td>zip</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.210323</td>
+      <td>1.842657e-11</td>
+      <td>25.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>zip_lev_z00006</td>
+      <td>zip</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.022183</td>
+      <td>4.834863e-01</td>
+      <td>25.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>zip_lev_z00016</td>
+      <td>zip</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.156226</td>
+      <td>6.882512e-07</td>
+      <td>25.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>zip_lev_z00020</td>
+      <td>zip</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.215453</td>
+      <td>5.748880e-12</td>
+      <td>25.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>zip_lev_z00021</td>
+      <td>zip</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.233421</td>
+      <td>7.679792e-14</td>
+      <td>25.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>zip_lev_z00007</td>
+      <td>zip</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.029732</td>
+      <td>3.476047e-01</td>
+      <td>25.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>zip_lev_z00011</td>
+      <td>zip</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.075193</td>
+      <td>1.739734e-02</td>
+      <td>25.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>zip_lev_z00013</td>
+      <td>zip</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.092634</td>
+      <td>3.368149e-03</td>
+      <td>25.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>zip_lev_z00005</td>
+      <td>zip</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.003113</td>
+      <td>9.216751e-01</td>
+      <td>25.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>zip_lev_z00015</td>
+      <td>zip</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.134073</td>
+      <td>2.102995e-05</td>
+      <td>25.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>zip_lev_z00009</td>
+      <td>zip</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.052971</td>
+      <td>9.409883e-02</td>
+      <td>25.0</td>
+      <td>False</td>
     </tr>
   </tbody>
 </table>
@@ -1106,7 +1448,7 @@ matplotlib.pyplot.plot([min, max], [min, max], color = 'red', alpha=0.5)
 
 
 
-    [<matplotlib.lines.Line2D at 0x1a1d3de160>]
+    [<matplotlib.lines.Line2D at 0x1a1bc4ff28>]
 
 
 
@@ -1222,8 +1564,17 @@ dtreated.head()
       <th></th>
       <th>zip_impact_code</th>
       <th>zip_prevalence_code</th>
+      <th>zip_lev_z00003</th>
       <th>zip_lev_z00001</th>
       <th>zip_lev_z00002</th>
+      <th>zip_lev_z00013</th>
+      <th>zip_lev_z00019</th>
+      <th>zip_lev_z00020</th>
+      <th>zip_lev_z00015</th>
+      <th>zip_lev_z00024</th>
+      <th>zip_lev_z00021</th>
+      <th>zip_lev_z00018</th>
+      <th>zip_lev_z00022</th>
       <th>zip</th>
     </tr>
   </thead>
@@ -1232,7 +1583,16 @@ dtreated.head()
       <th>0</th>
       <td>-4.152427</td>
       <td>0.25</td>
+      <td>0</td>
       <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>z00001</td>
     </tr>
@@ -1241,13 +1601,31 @@ dtreated.head()
       <td>-3.061531</td>
       <td>0.20</td>
       <td>0</td>
+      <td>0</td>
       <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>z00002</td>
     </tr>
     <tr>
       <th>2</th>
       <td>-1.925327</td>
       <td>0.26</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>z00003</td>
@@ -1258,12 +1636,30 @@ dtreated.head()
       <td>0.00</td>
       <td>0</td>
       <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>z00004</td>
     </tr>
     <tr>
       <th>4</th>
       <td>0.517125</td>
       <td>0.04</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>z00005</td>
@@ -1307,8 +1703,17 @@ dtreated.loc[[zi in omitted for zi in dnew["zip"]], :].head()
       <th></th>
       <th>zip_impact_code</th>
       <th>zip_prevalence_code</th>
+      <th>zip_lev_z00003</th>
       <th>zip_lev_z00001</th>
       <th>zip_lev_z00002</th>
+      <th>zip_lev_z00013</th>
+      <th>zip_lev_z00019</th>
+      <th>zip_lev_z00020</th>
+      <th>zip_lev_z00015</th>
+      <th>zip_lev_z00024</th>
+      <th>zip_lev_z00021</th>
+      <th>zip_lev_z00018</th>
+      <th>zip_lev_z00022</th>
       <th>zip</th>
     </tr>
   </thead>
@@ -1319,12 +1724,30 @@ dtreated.loc[[zi in omitted for zi in dnew["zip"]], :].head()
       <td>0.0</td>
       <td>0</td>
       <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>z00004</td>
     </tr>
     <tr>
       <th>5</th>
       <td>0.0</td>
       <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>z00006</td>
@@ -1335,6 +1758,15 @@ dtreated.loc[[zi in omitted for zi in dnew["zip"]], :].head()
       <td>0.0</td>
       <td>0</td>
       <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>z00008</td>
     </tr>
     <tr>
@@ -1343,12 +1775,30 @@ dtreated.loc[[zi in omitted for zi in dnew["zip"]], :].head()
       <td>0.0</td>
       <td>0</td>
       <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>z00009</td>
     </tr>
     <tr>
       <th>13</th>
       <td>0.0</td>
       <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>z00014</td>
@@ -1589,8 +2039,8 @@ dTrainTreated.head()
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>rgroup</th>
       <th>y</th>
+      <th>rgroup</th>
       <th>xBad1_logit_code</th>
       <th>xBad2_logit_code</th>
       <th>xGood1_logit_code</th>
@@ -1600,8 +2050,8 @@ dTrainTreated.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>train</td>
       <td>False</td>
+      <td>train</td>
       <td>-0.422173</td>
       <td>-0.107654</td>
       <td>-5.964618</td>
@@ -1609,8 +2059,8 @@ dTrainTreated.head()
     </tr>
     <tr>
       <th>1</th>
-      <td>train</td>
       <td>False</td>
+      <td>train</td>
       <td>-5.284120</td>
       <td>-0.213989</td>
       <td>0.151001</td>
@@ -1618,8 +2068,8 @@ dTrainTreated.head()
     </tr>
     <tr>
       <th>2</th>
-      <td>train</td>
       <td>True</td>
+      <td>train</td>
       <td>0.276804</td>
       <td>0.187307</td>
       <td>0.669948</td>
@@ -1627,8 +2077,8 @@ dTrainTreated.head()
     </tr>
     <tr>
       <th>3</th>
-      <td>cal</td>
       <td>True</td>
+      <td>cal</td>
       <td>-0.098380</td>
       <td>0.187307</td>
       <td>0.669112</td>
@@ -1636,8 +2086,8 @@ dTrainTreated.head()
     </tr>
     <tr>
       <th>4</th>
-      <td>train</td>
       <td>True</td>
+      <td>train</td>
       <td>-0.184089</td>
       <td>0.278142</td>
       <td>0.667862</td>
@@ -2087,6 +2537,10 @@ Python version
 treatplan = vtreat.NumericOutcomeTreatment(outcome_name='y') 
 treatplan.fit(df, df['y'])
 treatplan.score_frame_
+sframe = treatplan.score_frame_.copy()
+sframe = sframe.loc[sframe['treatment']!='indicator_code', :]
+sframe.reset_index(inplace=True, drop=True)
+sframe
 ```
 
 
@@ -2239,7 +2693,6 @@ Python version
 
 
 ```python
-sframe = treatplan.score_frame_.copy()
 sframe["varType"] = [ "signal" if v in set(['sN', 'sC']) else "noise" for v in sframe["orig_variable"]]
 sframe
 ```
@@ -2385,7 +2838,7 @@ seaborn.scatterplot(x='significance', y='variable', hue = 'varType', data=sframe
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x1a1e3ab780>
+    <matplotlib.axes._subplots.AxesSubplot at 0x1a1bf194a8>
 
 
 

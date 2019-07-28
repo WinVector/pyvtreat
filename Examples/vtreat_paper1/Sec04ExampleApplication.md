@@ -210,7 +210,7 @@ seaborn.lineplot(x='year', y='gdp.pc', data=plotFrame, hue='country',
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x1a18bc51d0>
+    <matplotlib.axes._subplots.AxesSubplot at 0x1a172bb358>
 
 
 
@@ -444,8 +444,8 @@ scoreFrame
       <td>impact_code</td>
       <td>True</td>
       <td>True</td>
-      <td>0.962853</td>
-      <td>1.119532e-46</td>
+      <td>0.969850</td>
+      <td>3.363709e-50</td>
       <td>1.0</td>
       <td>True</td>
     </tr>
@@ -456,8 +456,8 @@ scoreFrame
       <td>deviance_code</td>
       <td>True</td>
       <td>True</td>
-      <td>0.903797</td>
-      <td>7.507563e-31</td>
+      <td>0.889717</td>
+      <td>1.252582e-28</td>
       <td>1.0</td>
       <td>True</td>
     </tr>
@@ -475,54 +475,6 @@ scoreFrame
     </tr>
     <tr>
       <th>9</th>
-      <td>country_lev_Philippines</td>
-      <td>country</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.066973</td>
-      <td>5.524737e-01</td>
-      <td>9.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>10</th>
-      <td>country_lev_Malaysia</td>
-      <td>country</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>0.261598</td>
-      <td>1.832314e-02</td>
-      <td>9.0</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>11</th>
-      <td>country_lev_Pakistan</td>
-      <td>country</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.213975</td>
-      <td>5.509552e-02</td>
-      <td>9.0</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>12</th>
-      <td>country_lev_SriLanka</td>
-      <td>country</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.186324</td>
-      <td>9.581950e-02</td>
-      <td>9.0</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>13</th>
       <td>country_lev_India</td>
       <td>country</td>
       <td>indicator_code</td>
@@ -534,7 +486,7 @@ scoreFrame
       <td>True</td>
     </tr>
     <tr>
-      <th>14</th>
+      <th>10</th>
       <td>country_lev_Indonesia</td>
       <td>country</td>
       <td>indicator_code</td>
@@ -546,19 +498,7 @@ scoreFrame
       <td>False</td>
     </tr>
     <tr>
-      <th>15</th>
-      <td>country_lev_Nepal</td>
-      <td>country</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.261041</td>
-      <td>1.858159e-02</td>
-      <td>9.0</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>16</th>
+      <th>11</th>
       <td>country_lev_Korea</td>
       <td>country</td>
       <td>indicator_code</td>
@@ -570,7 +510,19 @@ scoreFrame
       <td>True</td>
     </tr>
     <tr>
-      <th>17</th>
+      <th>12</th>
+      <td>country_lev_Malaysia</td>
+      <td>country</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.261598</td>
+      <td>1.832314e-02</td>
+      <td>9.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>13</th>
       <td>country_lev_Thailand</td>
       <td>country</td>
       <td>indicator_code</td>
@@ -580,6 +532,54 @@ scoreFrame
       <td>9.833534e-01</td>
       <td>9.0</td>
       <td>False</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>country_lev_Philippines</td>
+      <td>country</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>-0.066973</td>
+      <td>5.524737e-01</td>
+      <td>9.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>country_lev_SriLanka</td>
+      <td>country</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>-0.186324</td>
+      <td>9.581950e-02</td>
+      <td>9.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>country_lev_Nepal</td>
+      <td>country</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>-0.261041</td>
+      <td>1.858159e-02</td>
+      <td>9.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>country_lev_Pakistan</td>
+      <td>country</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>-0.213975</td>
+      <td>5.509552e-02</td>
+      <td>9.0</td>
+      <td>True</td>
     </tr>
   </tbody>
 </table>
@@ -622,15 +622,15 @@ trainTreated.head()
       <th>year</th>
       <th>country_impact_code</th>
       <th>country_deviance_code</th>
-      <th>country_lev_Philippines</th>
-      <th>country_lev_Malaysia</th>
-      <th>country_lev_Pakistan</th>
-      <th>country_lev_SriLanka</th>
       <th>country_lev_India</th>
       <th>country_lev_Indonesia</th>
-      <th>country_lev_Nepal</th>
       <th>country_lev_Korea</th>
+      <th>country_lev_Malaysia</th>
       <th>country_lev_Thailand</th>
+      <th>country_lev_Philippines</th>
+      <th>country_lev_SriLanka</th>
+      <th>country_lev_Nepal</th>
+      <th>country_lev_Pakistan</th>
     </tr>
   </thead>
   <tbody>
@@ -643,15 +643,15 @@ trainTreated.head()
       <td>6.0</td>
       <td>14988000.0</td>
       <td>1981.0</td>
-      <td>-949.446530</td>
-      <td>11.032452</td>
+      <td>-915.929567</td>
+      <td>26.744720</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
       <td>0</td>
       <td>0</td>
     </tr>
@@ -664,15 +664,15 @@ trainTreated.head()
       <td>5.0</td>
       <td>15189000.0</td>
       <td>1982.0</td>
-      <td>-949.446530</td>
-      <td>11.032452</td>
+      <td>-915.929567</td>
+      <td>26.744720</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
       <td>0</td>
       <td>0</td>
     </tr>
@@ -685,15 +685,15 @@ trainTreated.head()
       <td>5.0</td>
       <td>15417000.0</td>
       <td>1983.0</td>
-      <td>-949.446530</td>
-      <td>11.032452</td>
+      <td>-780.682458</td>
+      <td>36.200030</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
       <td>0</td>
       <td>0</td>
     </tr>
@@ -706,15 +706,15 @@ trainTreated.head()
       <td>5.0</td>
       <td>15599000.0</td>
       <td>1984.0</td>
-      <td>-949.446530</td>
-      <td>11.032452</td>
+      <td>-870.398910</td>
+      <td>35.544266</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
       <td>0</td>
       <td>0</td>
     </tr>
@@ -727,15 +727,15 @@ trainTreated.head()
       <td>5.0</td>
       <td>15837000.0</td>
       <td>1985.0</td>
-      <td>-707.960497</td>
-      <td>35.385890</td>
+      <td>-915.929567</td>
+      <td>26.744720</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>1</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0</td>
       <td>0</td>
       <td>0</td>
     </tr>
@@ -813,7 +813,7 @@ testTreated.head()
       <td>33.342945</td>
       <td>1990.0</td>
       <td>579.954834</td>
-      <td>907.710837</td>
+      <td>854.400260</td>
     </tr>
     <tr>
       <th>1</th>
@@ -825,7 +825,7 @@ testTreated.head()
       <td>33.342945</td>
       <td>1991.0</td>
       <td>597.698730</td>
-      <td>979.710161</td>
+      <td>921.421186</td>
     </tr>
     <tr>
       <th>2</th>
@@ -837,7 +837,7 @@ testTreated.head()
       <td>33.342945</td>
       <td>1992.0</td>
       <td>618.332947</td>
-      <td>1052.865353</td>
+      <td>988.979159</td>
     </tr>
     <tr>
       <th>3</th>
@@ -849,7 +849,7 @@ testTreated.head()
       <td>33.342945</td>
       <td>1993.0</td>
       <td>652.620483</td>
-      <td>1123.478741</td>
+      <td>1055.352361</td>
     </tr>
     <tr>
       <th>4</th>
@@ -861,7 +861,7 @@ testTreated.head()
       <td>33.342945</td>
       <td>1994.0</td>
       <td>680.040833</td>
-      <td>1188.085308</td>
+      <td>1118.922026</td>
     </tr>
   </tbody>
 </table>
@@ -1245,54 +1245,6 @@ scoreFrame
     </tr>
     <tr>
       <th>9</th>
-      <td>country_lev_Philippines</td>
-      <td>country</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.066973</td>
-      <td>5.524737e-01</td>
-      <td>9.0</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>10</th>
-      <td>country_lev_Malaysia</td>
-      <td>country</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>0.261598</td>
-      <td>1.832314e-02</td>
-      <td>9.0</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>11</th>
-      <td>country_lev_Pakistan</td>
-      <td>country</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.213975</td>
-      <td>5.509552e-02</td>
-      <td>9.0</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>12</th>
-      <td>country_lev_SriLanka</td>
-      <td>country</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.186324</td>
-      <td>9.581950e-02</td>
-      <td>9.0</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>13</th>
       <td>country_lev_India</td>
       <td>country</td>
       <td>indicator_code</td>
@@ -1304,7 +1256,7 @@ scoreFrame
       <td>True</td>
     </tr>
     <tr>
-      <th>14</th>
+      <th>10</th>
       <td>country_lev_Indonesia</td>
       <td>country</td>
       <td>indicator_code</td>
@@ -1316,19 +1268,7 @@ scoreFrame
       <td>False</td>
     </tr>
     <tr>
-      <th>15</th>
-      <td>country_lev_Nepal</td>
-      <td>country</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.261041</td>
-      <td>1.858159e-02</td>
-      <td>9.0</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>16</th>
+      <th>11</th>
       <td>country_lev_Korea</td>
       <td>country</td>
       <td>indicator_code</td>
@@ -1340,7 +1280,19 @@ scoreFrame
       <td>True</td>
     </tr>
     <tr>
-      <th>17</th>
+      <th>12</th>
+      <td>country_lev_Malaysia</td>
+      <td>country</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.261598</td>
+      <td>1.832314e-02</td>
+      <td>9.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>13</th>
       <td>country_lev_Thailand</td>
       <td>country</td>
       <td>indicator_code</td>
@@ -1350,6 +1302,54 @@ scoreFrame
       <td>9.833534e-01</td>
       <td>9.0</td>
       <td>False</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>country_lev_Philippines</td>
+      <td>country</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>-0.066973</td>
+      <td>5.524737e-01</td>
+      <td>9.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>country_lev_SriLanka</td>
+      <td>country</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>-0.186324</td>
+      <td>9.581950e-02</td>
+      <td>9.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>country_lev_Nepal</td>
+      <td>country</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>-0.261041</td>
+      <td>1.858159e-02</td>
+      <td>9.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>country_lev_Pakistan</td>
+      <td>country</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>-0.213975</td>
+      <td>5.509552e-02</td>
+      <td>9.0</td>
+      <td>True</td>
     </tr>
   </tbody>
 </table>

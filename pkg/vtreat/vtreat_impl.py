@@ -229,13 +229,13 @@ class IndicatorCodeTransform(VarTransform):
         return res
 
 
-def fit_indicator_code(*, incoming_column_name, x, min_fraction = 0.05):
+def fit_indicator_code(*, incoming_column_name, x, min_fraction):
     sf = pandas.DataFrame({incoming_column_name: x})
     na_posns = sf[incoming_column_name].isnull()
     sf.loc[na_posns, incoming_column_name] = "_NA_"
     counts = sf[incoming_column_name].value_counts()
     n = sf.shape[0]
-    counts = counts[counts >= min_fraction]  # no more than 20 symbols
+    counts = counts[counts >= min_fraction*n]  # no more than 1/min_fraction symbols
     levels = [v for v in counts.index]
     if len(levels) < 1:
         return None

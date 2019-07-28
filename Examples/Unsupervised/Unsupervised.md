@@ -1,6 +1,38 @@
 
 
 ```python
+
+```
+
+
+```python
+# To install:
+!pip install /Users/johnmount/Documents/work/pyvtreat/pkg/dist/vtreat-0.1.tar.gz
+#!pip install https://github.com/WinVector/pyvtreat/raw/master/pkg/dist/vtreat-0.1.tar.gz
+```
+
+    Processing /Users/johnmount/Documents/work/pyvtreat/pkg/dist/vtreat-0.1.tar.gz
+    Requirement already satisfied: numpy in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from vtreat==0.1) (1.16.4)
+    Requirement already satisfied: pandas in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from vtreat==0.1) (0.24.2)
+    Requirement already satisfied: statistics in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from vtreat==0.1) (1.0.3.5)
+    Requirement already satisfied: scipy in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from vtreat==0.1) (1.2.1)
+    Requirement already satisfied: python-dateutil>=2.5.0 in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from pandas->vtreat==0.1) (2.8.0)
+    Requirement already satisfied: pytz>=2011k in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from pandas->vtreat==0.1) (2019.1)
+    Requirement already satisfied: docutils>=0.3 in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from statistics->vtreat==0.1) (0.14)
+    Requirement already satisfied: six>=1.5 in /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages (from python-dateutil>=2.5.0->pandas->vtreat==0.1) (1.12.0)
+    Building wheels for collected packages: vtreat
+      Building wheel for vtreat (setup.py) ... [?25ldone
+    [?25h  Stored in directory: /Users/johnmount/Library/Caches/pip/wheels/cf/06/fc/6b2552717486fb6401f19308eec24381555e456e3bd9cfb103
+    Successfully built vtreat
+    Installing collected packages: vtreat
+      Found existing installation: vtreat 0.1
+        Uninstalling vtreat-0.1:
+          Successfully uninstalled vtreat-0.1
+    Successfully installed vtreat-0.1
+
+
+
+```python
 import numpy.random
 import pandas
 import seaborn
@@ -80,7 +112,33 @@ d.head()
 
 
 ```python
-transform = vtreat.UnsupervisedTreatment()
+transform = vtreat.UnsupervisedTreatment(
+    params=vtreat.vtreat_parameters({
+        'indicator_min_fracton': 0.01,
+    }))
+transform.params_
+```
+
+
+
+
+    {'use_hierarchical_estimate': True,
+     'coders': {'clean_copy',
+      'deviance_code',
+      'impact_code',
+      'indicator_code',
+      'logit_code',
+      'missing_indicator',
+      'prevalence_code'},
+     'filter_to_recommended': True,
+     'indicator_min_fracton': 0.01,
+     'cross_validation_plan': <vtreat.KWayCrossPlan at 0x104b2a2b0>,
+     'cross_validation_k': 5}
+
+
+
+
+```python
 d_treated = transform.fit_transform(d)
 d_treated.head()
 ```
@@ -113,13 +171,13 @@ d_treated.head()
       <th>zip_lev_z00013</th>
       <th>zip_lev_z00003</th>
       <th>zip_lev_z00008</th>
-      <th>zip_lev_z00004</th>
       <th>zip_lev_z00015</th>
+      <th>zip_lev_z00004</th>
       <th>zip_lev_z00005</th>
-      <th>zip_lev_z00014</th>
       <th>zip_lev_z00001</th>
-      <th>zip_lev_z00006</th>
+      <th>zip_lev_z00014</th>
       <th>zip_lev_z00012</th>
+      <th>zip_lev_z00006</th>
       <th>zip_lev_z00002</th>
       <th>zip_lev_z00010</th>
     </tr>
@@ -153,8 +211,8 @@ d_treated.head()
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>0</td>
       <td>1</td>
+      <td>0</td>
       <td>0</td>
       <td>0</td>
       <td>0</td>
@@ -196,8 +254,8 @@ d_treated.head()
       <td>0</td>
       <td>0</td>
       <td>0</td>
-      <td>1</td>
       <td>0</td>
+      <td>1</td>
       <td>0</td>
       <td>0</td>
     </tr>
@@ -350,7 +408,7 @@ transform.score_frame_
     </tr>
     <tr>
       <th>7</th>
-      <td>zip_lev_z00004</td>
+      <td>zip_lev_z00015</td>
       <td>zip</td>
       <td>indicator_code</td>
       <td>False</td>
@@ -362,7 +420,7 @@ transform.score_frame_
     </tr>
     <tr>
       <th>8</th>
-      <td>zip_lev_z00015</td>
+      <td>zip_lev_z00004</td>
       <td>zip</td>
       <td>indicator_code</td>
       <td>False</td>
@@ -386,18 +444,6 @@ transform.score_frame_
     </tr>
     <tr>
       <th>10</th>
-      <td>zip_lev_z00014</td>
-      <td>zip</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>True</td>
-      <td>16.0</td>
-    </tr>
-    <tr>
-      <th>11</th>
       <td>zip_lev_z00001</td>
       <td>zip</td>
       <td>indicator_code</td>
@@ -409,8 +455,20 @@ transform.score_frame_
       <td>16.0</td>
     </tr>
     <tr>
+      <th>11</th>
+      <td>zip_lev_z00014</td>
+      <td>zip</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>16.0</td>
+    </tr>
+    <tr>
       <th>12</th>
-      <td>zip_lev_z00006</td>
+      <td>zip_lev_z00012</td>
       <td>zip</td>
       <td>indicator_code</td>
       <td>False</td>
@@ -422,7 +480,7 @@ transform.score_frame_
     </tr>
     <tr>
       <th>13</th>
-      <td>zip_lev_z00012</td>
+      <td>zip_lev_z00006</td>
       <td>zip</td>
       <td>indicator_code</td>
       <td>False</td>
