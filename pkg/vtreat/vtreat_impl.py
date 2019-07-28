@@ -394,8 +394,8 @@ def fit_binomial_outcome_treatment(
                 )
             ]
     xforms = [xf for xf in xforms if xf is not None]
-    if len(xforms) <= 0:
-        raise Exception("no variables created")
+    for stp in params["user_transforms"]:
+        stp.fit(X=X[var_list], y=y)
     return {
         "outcome_name": outcome_name,
         "cols_to_copy": cols_to_copy,
@@ -468,6 +468,8 @@ def fit_multinomial_outcome_treatment(
     xforms = [xf for xf in xforms if xf is not None]
     if len(xforms) <= 0:
         raise Exception("no variables created")
+    for stp in params["user_transforms"]:
+        stp.fit(X=X[var_list], y=y)
     return {
         "outcome_name": outcome_name,
         "cols_to_copy": cols_to_copy,
@@ -520,8 +522,8 @@ def fit_unsupervised_treatment(*, X, var_list, outcome_name, cols_to_copy, param
                 )
             ]
     xforms = [xf for xf in xforms if xf is not None]
-    if len(xforms) <= 0:
-        raise Exception("no variables created")
+    for stp in params["user_transforms"]:
+        stp.fit(X=X[var_list], y=None)
     return {
         "outcome_name": outcome_name,
         "cols_to_copy": cols_to_copy,
@@ -577,10 +579,6 @@ def limit_to_appropriate_columns(*, res, transform):
     return res[cols_to_keep]
 
 
-# TODO: user transforms for Binomial case
-# TODO: user transforms for Multinomial case
-# TODO: user transforms for Unsupervised case
-
 # val_list is a list single column Pandas data frames
 def mean_of_single_column_pandas_list(val_list):
     if val_list is None or len(val_list) <= 0:
@@ -618,14 +616,20 @@ def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
                 + " -> "
                 + derived_column_name
             )
+        def maybe_transform(*, fit, X):
+            if fit is None:
+                return None
+            return fit.transform(X)
+
         patches = [
-            xf.refitter_(
-                incoming_column_name=incoming_column_name,
-                x=x[incoming_column_name][cp["train"]],
-                y=y[cp["train"]],
-                extra_args=xf.extra_args_,
-                params=xf.params_,
-            ).transform(x.loc[cp["app"], [incoming_column_name]])
+            maybe_transform(
+                fit = xf.refitter_(
+                    incoming_column_name=incoming_column_name,
+                    x=x[incoming_column_name][cp["train"]],
+                    y=y[cp["train"]],
+                    extra_args=xf.extra_args_,
+                    params=xf.params_),
+                X = x.loc[cp["app"], [incoming_column_name]])
             for cp in cross_plan
         ]
         # replace any missing sections with global average (slight data leak potential)
@@ -746,15 +750,29 @@ def score_plan_variables(cross_frame, outcome, plan, params):
     return score_frame
 
 
-def pseudo_score_plan_variables(cross_frame, plan):
-    def describe(xf):
+def pseudo_score_plan_variables(*, cross_frame, plan, params):
+    def describe_xf(xf):
         description = pandas.DataFrame({"variable": xf.derived_column_names_})
         description["orig_variable"] = xf.incoming_column_name_
         description["treatment"] = xf.treatment_
         description["y_aware"] = xf.need_cross_treatment_
         return description
 
-    score_frame = pandas.concat([describe(xf) for xf in plan["xforms"]])
+    def describe_ut(ut):
+        description = pandas.DataFrame(
+            {"orig_variable": ut.incoming_vars_, "variable": ut.derived_vars_}
+        )
+        description["treatment"] = ut.treatment_
+        description["y_aware"] = ut.y_aware_
+        return description
+
+    score_frame = pandas.concat([describe_xf(xf) for xf in plan["xforms"]] +
+                                [
+                                    describe_ut(ut)
+                                    for ut in params["user_transforms"]
+                                    if len(ut.incoming_vars_) > 0
+                                ]
+                                )
     score_frame.reset_index(inplace=True, drop=True)
     score_frame["has_range"] = [
         numpy.max(cross_frame[c]) > numpy.min(cross_frame[c])

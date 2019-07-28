@@ -387,6 +387,8 @@ class UnsupervisedTreatment:
             params=self.params_,
         )
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
-        self.score_frame_ = vtreat_impl.pseudo_score_plan_variables(res, self.plan_)
+        self.score_frame_ = vtreat_impl.pseudo_score_plan_variables(cross_frame=res,
+                                                                    plan=self.plan_,
+                                                                    params=self.params_)
         res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
         return res
