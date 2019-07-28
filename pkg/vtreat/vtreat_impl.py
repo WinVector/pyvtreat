@@ -129,15 +129,6 @@ class IndicateMissingTransform(VarTransform):
         return res.astype(float)
 
 
-def can_convert_v_to_numeric(x):
-    """check if non-empty vector can convert to numeric"""
-    try:
-        x + 0
-        return True
-    except:
-        return False
-
-
 def fit_regression_impact_code(*, incoming_column_name, x, y, extra_args, params):
     sf = vtreat.util.grouped_by_x_statistics(x, y)
     if sf.shape[0] <= 1:
@@ -292,7 +283,7 @@ def fit_numeric_outcome_treatment(
                     )
                 ]
     var_list = [co for co in var_list if (not (co in set(all_null)))]
-    num_list = [co for co in var_list if can_convert_v_to_numeric(X[co])]
+    num_list = [co for co in var_list if vtreat.util.can_convert_v_to_numeric(X[co])]
     cat_list = [co for co in var_list if co not in set(num_list)]
     if 'clean_copy' in params['coders']:
         for vi in num_list:
@@ -327,8 +318,8 @@ def fit_numeric_outcome_treatment(
                                    min_fraction=params['indicator_min_fracton'])
             ]
     xforms = [xf for xf in xforms if xf is not None]
-    if len(xforms) <= 0:
-        raise Exception("no variables created")
+    for stp in params['user_transforms']:
+        stp.fit(X=X[var_list], y=y)
     return {"outcome_name": outcome_name, "cols_to_copy": cols_to_copy, "xforms": xforms}
 
 
@@ -354,7 +345,7 @@ def fit_binomial_outcome_treatment(
                     )
                 ]
     var_list = [co for co in var_list if (not (co in set(all_null)))]
-    num_list = [co for co in var_list if can_convert_v_to_numeric(X[co])]
+    num_list = [co for co in var_list if vtreat.util.can_convert_v_to_numeric(X[co])]
     cat_list = [co for co in var_list if co not in set(num_list)]
     if 'clean_copy' in params['coders']:
         for vi in num_list:
@@ -416,7 +407,7 @@ def fit_multinomial_outcome_treatment(
                 ]
     outcomes = [oi for oi in set(y)]
     var_list = [co for co in var_list if (not (co in set(all_null)))]
-    num_list = [co for co in var_list if can_convert_v_to_numeric(X[co])]
+    num_list = [co for co in var_list if vtreat.util.can_convert_v_to_numeric(X[co])]
     cat_list = [co for co in var_list if co not in set(num_list)]
     if 'clean_copy' in params['coders']:
         for vi in num_list:
@@ -478,7 +469,7 @@ def fit_unsupervised_treatment(
                     )
                 ]
     var_list = [co for co in var_list if (not (co in set(all_null)))]
-    num_list = [co for co in var_list if can_convert_v_to_numeric(X[co])]
+    num_list = [co for co in var_list if vtreat.util.can_convert_v_to_numeric(X[co])]
     cat_list = [co for co in var_list if co not in set(num_list)]
     if 'clean_copy' in params['coders']:
         for vi in num_list:
@@ -506,10 +497,14 @@ def fit_unsupervised_treatment(
     return {"outcome_name": outcome_name, "cols_to_copy": cols_to_copy, "xforms": xforms}
 
 
-def perform_transform(*, x, transform):
+def perform_transform(*, x, transform, params):
     plan = transform.plan_
     x = x.reset_index(inplace=False, drop=True)
     new_frames = [xfi.transform(x) for xfi in plan["xforms"]]
+    for stp in params['user_transforms']:
+        frm = stp.transform(X=x)
+        if frm is not None and frm.shape[1]>0:
+            new_frames = new_frames + [ frm ]
     # see if we want to copy over any columns
     copy_set = set(plan["cols_to_copy"])
     to_copy = [ci for ci in x.columns if ci in copy_set]
@@ -584,8 +579,8 @@ def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
     return res
 
 
-def score_plan_variables(cross_frame, outcome, plan):
-    def describe(xf):
+def score_plan_variables(cross_frame, outcome, plan, params):
+    def describe_xf(xf):
         description = pandas.DataFrame({
             "variable": xf.derived_column_names_})
         description["orig_variable"] = xf.incoming_column_name_
@@ -593,7 +588,17 @@ def score_plan_variables(cross_frame, outcome, plan):
         description["y_aware"] = xf.need_cross_treatment_
         return description
 
-    var_table = pandas.concat([describe(xf) for xf in plan["xforms"]])
+    def describe_ut(ut):
+        description = pandas.DataFrame({
+            "orig_variable": ut.incoming_vars_,
+            "variable": ut.derived_vars_})
+        description["treatment"] = ut.treatment_
+        description["y_aware"] = ut.y_aware_
+        return description
+
+    var_table = pandas.concat(
+        [describe_xf(xf) for xf in plan["xforms"]] +
+        [describe_ut(ut) for ut in params['user_transforms'] if len(ut.incoming_vars_)>0 ])
     var_table.reset_index(inplace=True, drop=True)
     sf = vtreat.util.score_variables(
         cross_frame, variables=var_table["variable"], outcome=outcome

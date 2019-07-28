@@ -97,7 +97,7 @@ class NumericOutcomeTreatment:
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
-        res = vtreat_impl.perform_transform(x=X, transform=self)
+        res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
         return res
 
@@ -122,7 +122,7 @@ class NumericOutcomeTreatment:
             cols_to_copy=self.cols_to_copy_,
             params=self.params_
         )
-        res = vtreat_impl.perform_transform(x=X, transform=self)
+        res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         # patch in cross-frame versions of complex columns such as impact
         self.cross_plan_ = self.params_['cross_validation_plan'].split_plan(
             n_rows=X.shape[0],
@@ -134,7 +134,10 @@ class NumericOutcomeTreatment:
         )
         # use cross_frame to compute variable effects
         self.score_frame_ = vtreat_impl.score_plan_variables(
-            cross_frame=cross_frame, outcome=y, plan=self.plan_)
+            cross_frame=cross_frame,
+            outcome=y,
+            plan=self.plan_,
+            params=self.params_)
         cross_frame = vtreat_impl.limit_to_appropriate_columns(res=cross_frame, transform=self)
         return cross_frame
 
@@ -174,7 +177,7 @@ class BinomialOutcomeTreatment:
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
-        res = vtreat_impl.perform_transform(x=X, transform=self)
+        res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
         return res
 
@@ -197,7 +200,7 @@ class BinomialOutcomeTreatment:
             cols_to_copy=self.cols_to_copy_,
             params=self.params_
         )
-        res = vtreat_impl.perform_transform(x=X, transform=self)
+        res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         # patch in cross-frame versions of complex columns such as impact
         self.cross_plan_ = self.params_['cross_validation_plan'].split_plan(
             n_rows=X.shape[0],
@@ -211,8 +214,8 @@ class BinomialOutcomeTreatment:
         self.score_frame_ = vtreat_impl.score_plan_variables(
             cross_frame=cross_frame,
             outcome=numpy.asarray(numpy.asarray(y) == self.outcome_target_, dtype=numpy.float64),
-            plan=self.plan_
-        )
+            plan=self.plan_,
+            params=self.params_)
         cross_frame = vtreat_impl.limit_to_appropriate_columns(res=cross_frame, transform=self)
         return cross_frame
 
@@ -250,7 +253,7 @@ class MultinomialOutcomeTreatment:
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
-        res = vtreat_impl.perform_transform(x=X, transform=self)
+        res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
         return res
 
@@ -273,7 +276,7 @@ class MultinomialOutcomeTreatment:
             cols_to_copy=self.cols_to_copy_,
             params=self.params_
         )
-        res = vtreat_impl.perform_transform(x=X, transform=self)
+        res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         # patch in cross-frame versions of complex columns such as impact
         self.cross_plan_ = self.params_['cross_validation_plan'].split_plan(
             n_rows=X.shape[0],
@@ -289,7 +292,8 @@ class MultinomialOutcomeTreatment:
             sf = vtreat_impl.score_plan_variables(
                 cross_frame=cross_frame,
                 outcome=numpy.asarray(numpy.asarray(y) == oi, dtype=numpy.float64),
-                plan=self.plan_)
+                plan=self.plan_,
+                params=self.params_)
             sf["outcome_target"] = oi
             return sf
         score_frames = [si(oi) for oi in self.outcomes_]
@@ -328,7 +332,7 @@ class UnsupervisedTreatment:
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
             raise Exception("X should be a Pandas DataFrame")
-        res = vtreat_impl.perform_transform(x=X, transform=self)
+        res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
         return res
 
@@ -343,7 +347,7 @@ class UnsupervisedTreatment:
             cols_to_copy=self.cols_to_copy_,
             params=self.params_
         )
-        res = vtreat_impl.perform_transform(x=X, transform=self)
+        res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         self.score_frame_ = vtreat_impl.pseudo_score_plan_variables(res, self.plan_)
         res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
         return res

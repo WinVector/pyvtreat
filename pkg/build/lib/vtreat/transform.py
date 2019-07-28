@@ -6,11 +6,11 @@ import pandas
 class UserTransform:
     """base class for user transforms"""
 
-    def __init__(self, incoming_column_name, derived_column_names, treatment):
-        self.incoming_column_name_ = incoming_column_name
-        self.derived_column_names_ = derived_column_names.copy()
+    def __init__(self, treatment):
+        self.y_aware_ = True
         self.treatment_ = treatment
-        self.need_cross_treatment_ = True
+        self.incoming_vars_ = []
+        self.derived_vars_ = []
 
     def fit(self, X, y):
         raise Exception("base method called")

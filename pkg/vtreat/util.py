@@ -14,6 +14,15 @@ import scipy.stats
 import statistics
 
 
+def can_convert_v_to_numeric(x):
+    """check if non-empty vector can convert to numeric"""
+    try:
+        x + 0
+        return True
+    except:
+        return False
+
+
 def k_way_cross_plan(n_rows, k_folds):
     """randomly split range(n_rows) into k_folds disjoint groups"""
     n2 = int(numpy.floor(n_rows/2))
