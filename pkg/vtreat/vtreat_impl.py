@@ -530,9 +530,13 @@ def limit_to_appropriate_columns(*, res, transform):
         raise Exception("no columns retained")
     return res[cols_to_keep]
 
+# TODO: user transforms for Binomial case
+# TODO: user transforms for Multinomial case
+# TODO: user transforms for Unsupervised case
 
 # assumes each y-aware variable produces one derived column
 # also clears out refitter_ values to None
+# TODO: patch in user transforms
 def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
     if cross_plan is None or len(cross_plan) <= 1:
         for xf in plan["xforms"]:
