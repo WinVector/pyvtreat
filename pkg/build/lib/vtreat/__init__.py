@@ -132,6 +132,9 @@ class NumericOutcomeTreatment:
         cross_frame = vtreat_impl.cross_patch_refit_y_aware_cols(
             x=X, y=y, res=res, plan=self.plan_, cross_plan=self.cross_plan_
         )
+        cross_frame = vtreat_impl.cross_patch_user_y_aware_cols(
+            x=cross_frame, y=y, res=res, params=self.params_, cross_plan=self.cross_plan_
+        )
         # use cross_frame to compute variable effects
         self.score_frame_ = vtreat_impl.score_plan_variables(
             cross_frame=cross_frame,
@@ -210,6 +213,9 @@ class BinomialOutcomeTreatment:
         cross_frame = vtreat_impl.cross_patch_refit_y_aware_cols(
             x=X, y=y, res=res, plan=self.plan_, cross_plan=self.cross_plan_
         )
+        cross_frame = vtreat_impl.cross_patch_user_y_aware_cols(
+            x=cross_frame, y=y, res=res, params=self.params_, cross_plan=self.cross_plan_
+        )
         # use cross_frame to compute variable effects
         self.score_frame_ = vtreat_impl.score_plan_variables(
             cross_frame=cross_frame,
@@ -285,6 +291,9 @@ class MultinomialOutcomeTreatment:
             y=y)
         cross_frame = vtreat_impl.cross_patch_refit_y_aware_cols(
             x=X, y=y, res=res, plan=self.plan_, cross_plan=self.cross_plan_
+        )
+        cross_frame = vtreat_impl.cross_patch_user_y_aware_cols(
+            x=cross_frame, y=y, res=res, params=self.params_, cross_plan=self.cross_plan_
         )
         # use cross_frame to compute variable effects
 

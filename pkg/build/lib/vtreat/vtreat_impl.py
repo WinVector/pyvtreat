@@ -534,9 +534,19 @@ def limit_to_appropriate_columns(*, res, transform):
 # TODO: user transforms for Multinomial case
 # TODO: user transforms for Unsupervised case
 
+# val_list is a list single column Pandas data frames
+def mean_of_single_column_pandas_list(val_list):
+    if val_list is None or len(val_list)<=0:
+        return numpy.nan
+    d = pandas.concat(val_list, axis=0)
+    col = d.columns[0]
+    d = d.loc[numpy.logical_not(d[col].isnull()), [col]]
+    if d.shape[0]<1:
+        return numpy.nan
+    return numpy.mean(d[col])
+
 # assumes each y-aware variable produces one derived column
 # also clears out refitter_ values to None
-# TODO: patch in user transforms
 def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
     if cross_plan is None or len(cross_plan) <= 1:
         for xf in plan["xforms"]:
@@ -566,21 +576,61 @@ def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
             for cp in cross_plan
         ]
         # replace any missing sections with global average (slight data leak potential)
-        vals = pandas.concat([pi for pi in patches if pi is not None], axis=0)
-        avg = numpy.mean(
-            vals[numpy.logical_not(numpy.asarray(vals[derived_column_name].isnull()))]
-        )[0]
-        res[derived_column_name] = numpy.nan
+        avg = mean_of_single_column_pandas_list([pi for pi in patches if pi is not None])
+        if numpy.isnan(avg):
+            avg = numpy.nanmean(res[derived_column_name])
+        res[derived_column_name] = avg
         for i in range(len(cross_plan)):
             pi = patches[i]
             if pi is None:
                 continue
             pi.reset_index(inplace=True, drop=True)
             cp = cross_plan[i]
-            res.loc[cp["app"], derived_column_name] = numpy.asarray(pi).reshape((len(pi)))
+            res.loc[cp["app"], derived_column_name] = numpy.asarray(pi[derived_column_name]).reshape((len(pi)))
         res.loc[res[derived_column_name].isnull(), derived_column_name] = avg
     for xf in plan["xforms"]:
         xf.refitter_ = None
+    return res
+
+
+def cross_patch_user_y_aware_cols(*, x, y, res, params, cross_plan):
+    if cross_plan is None or len(cross_plan) <= 1:
+        return res
+    incoming_colset = set(x.columns)
+    derived_colset = set(res.columns)
+    if len(derived_colset)<=0:
+        return res
+    for ut in params["user_transforms"]:
+        if not ut.y_aware_:
+            continue
+        instersect_in = incoming_colset.intersection(set(ut.incoming_vars_))
+        instersect_out = derived_colset.intersection(set(ut.derived_vars_))
+        if len(instersect_out)<=0:
+            continue
+        if len(instersect_out) != len(ut.derived_vars_):
+            raise Exception("not all derived columns are in res frame")
+        if len(instersect_in) != len(ut.incoming_vars_):
+            raise Exception("missing required columns")
+        patches = [
+            ut.fit(
+                X=x.loc[cp["train"],  ut.incoming_vars_],
+                y=y[cp["train"]]).transform(X=x.loc[cp["app"], ut.incoming_vars_])
+            for cp in cross_plan
+        ]
+        for col in ut.derived_vars_:
+            # replace any missing sections with global average (slight data leak potential)
+            avg = mean_of_single_column_pandas_list([pi.loc[:, [col]] for pi in patches if pi is not None])
+            if numpy.isnan(avg):
+                avg = numpy.nanmean(res[col])
+            res[col] = avg
+            for i in range(len(cross_plan)):
+                pi = patches[i]
+                if pi is None:
+                    continue
+                pi.reset_index(inplace=True, drop=True)
+                cp = cross_plan[i]
+                res.loc[cp["app"], col] = numpy.asarray(pi[col]).reshape((len(pi)))
+            res.loc[res[col].isnull(), col] = avg
     return res
 
 
