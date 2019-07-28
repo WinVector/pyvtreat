@@ -565,7 +565,7 @@ def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
             ).transform(x.loc[cp["app"], [incoming_column_name]])
             for cp in cross_plan
         ]
-        # replace any missing sections with global average (sligth data leak potential)
+        # replace any missing sections with global average (slight data leak potential)
         vals = pandas.concat([pi for pi in patches if pi is not None], axis=0)
         avg = numpy.mean(
             vals[numpy.logical_not(numpy.asarray(vals[derived_column_name].isnull()))]
@@ -575,6 +575,7 @@ def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
             pi = patches[i]
             if pi is None:
                 continue
+            pi.reset_index(inplace=True, drop=True)
             cp = cross_plan[i]
             res.loc[cp["app"], derived_column_name] = numpy.asarray(pi).reshape((len(pi)))
         res.loc[res[derived_column_name].isnull(), derived_column_name] = avg
