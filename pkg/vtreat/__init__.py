@@ -12,6 +12,7 @@ import numpy
 
 import vtreat.vtreat_impl as vtreat_impl
 import vtreat.util
+import vtreat.cross_plan
 
 # had been getting Future warnings on seemining correct (no missing values) use of
 # Pandas indexing from vtreat.vtreat_impl.cross_patch_refit_y_aware_cols
@@ -38,26 +39,6 @@ import warnings
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
 
-class CrossValidationPlan:
-    """Data splitting plan"""
-
-    def __init__(self):
-        pass
-
-    def split_plan(self, *, n_rows=None, k_folds=None, data=None, y=None):
-        raise Exception("base class called")
-
-
-class KWayCrossPlan(CrossValidationPlan):
-    """K-way cross validation plan"""
-
-    def __init__(self):
-        CrossValidationPlan.__init__(self)
-
-    def split_plan(self, *, n_rows=None, k_folds=None, data=None, y=None):
-        return vtreat.util.k_way_cross_plan(n_rows=n_rows, k_folds=k_folds)
-
-
 def vtreat_parameters(user_params=None):
     """build a vtreat parmaters dictionary, adding in user choices"""
 
@@ -71,7 +52,7 @@ def vtreat_parameters(user_params=None):
                          'prevalence_code'},
               'filter_to_recommended': True,
               'indicator_min_fracton': 0.1,
-              'cross_validation_plan': KWayCrossPlan(),
+              'cross_validation_plan': vtreat.cross_plan.KWayCrossPlan(),
               'cross_validation_k': 5
               }
     if user_params is not None:
