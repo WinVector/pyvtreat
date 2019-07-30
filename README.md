@@ -8,7 +8,8 @@ prepares real-world data for predictive modeling in a statistically
 sound manner.
 
 For more detail please see here: [arXiv:1611.09477
-stat.AP](https://arxiv.org/abs/1611.09477).
+stat.AP](https://arxiv.org/abs/1611.09477) (the documentation describes the `R` version,
+however all of the examples can be found worked in `Python` [here](https://github.com/WinVector/pyvtreat/tree/master/Examples/vtreat_paper1)).
 
 ‘vtreat’ is supplied by [Win-Vector LLC](http://www.win-vector.com)
 under a [BSD 3-clause license](LICENSE), without warranty. We are also developing
