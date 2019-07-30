@@ -1,7 +1,7 @@
 
 
-[This](https://github.com/WinVector/pyvtreat) is the Python version of the 
-[`R` `vtreat`](http://winvector.github.io/vtreat/) package.
+[This](https://github.com/WinVector/pyvtreat) is the Python version of the `vtreat` data preparation system
+(also available as an [`R` package](http://winvector.github.io/vtreat/)).
 
 In each case: `vtreat` is an data.frame processor/conditioner that
 prepares real-world data for predictive modeling in a statistically
