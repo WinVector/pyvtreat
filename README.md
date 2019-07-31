@@ -3,7 +3,7 @@
 [This](https://github.com/WinVector/pyvtreat) is the Python version of the `vtreat` data preparation system
 (also available as an [`R` package](http://winvector.github.io/vtreat/)).
 
-In each case: `vtreat` is an data.frame processor/conditioner that
+In each case: `vtreat` is an DataFrame processor/conditioner that
 prepares real-world data for predictive modeling in a statistically
 sound manner.
 
@@ -24,7 +24,7 @@ Some operational examples can be found [here](https://github.com/WinVector/pyvtr
 We are working on new documentation. But for now understand `vtreat` is used by instantiating one of the classes
 `vtreat.NumericOutcomeTreatment`, `vtreat.BinomialOutcomeTreatment`, `vtreat.MultinomialOutcomeTreatment`, or `vtreat.UnsupervisedTreatment`.
 Each of these implements the [`sklearn.pipeline.Pipeline`](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html) interfaces
-expecting a [Pandas Data.Frame](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html) as input. The `vtreat` steps are intended to
+expecting a [Pandas DataFrame](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html) as input. The `vtreat` steps are intended to
 be a "one step fix" that works well with [`sklearn.preprocessing`](https://scikit-learn.org/stable/modules/preprocessing.html) stages.
 
 The `vtreat` `Pipeline.fit_transform()`
@@ -1021,7 +1021,7 @@ The purpose of ‘vtreat’ library is to reliably prepare data for
 supervised machine learning. We try to leave as much as possible to the
 machine learning algorithms themselves, but cover most of the truly
 necessary typically ignored precautions. The library is designed to
-produce a ‘data.frame’ that is entirely numeric and takes common
+produce a ‘DataFrame’ that is entirely numeric and takes common
 precautions to guard against the following real world data issues:
 
   - Categorical variables with very many levels.
@@ -1074,7 +1074,10 @@ the steps taught in chapters 4 and 6 of [*Practical Data Science with R*
 [very short
 worksheet](https://github.com/WinVector/pyvtreat/blob/master/Examples/KDD2009Example/KDD2009Example.md) (though we
 think for understanding it is *essential* to work all the steps by hand
-as we did in the book). The idea is: ‘data.frame’s prepared with the
+as we did in the book).  The 2nd edition of *Practical Data Science with R* covers
+using `vtreat` in `R` in chapter 8 "Advanced Data Preparation."
+
+The idea is: ‘DataFrame’s prepared with the
 ’vtreat’ library are somewhat safe to train on as some precaution has
 been taken against all of the above issues. Also of interest are the
 ‘vtreat’ variable significances (help in initial variable pruning, a
