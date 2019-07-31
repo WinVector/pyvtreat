@@ -204,6 +204,9 @@ class BinomialOutcomeTreatment:
             y = X[self.outcome_name_]
         if not X.shape[0] == len(y):
             raise Exception("X.shape[0] should equal len(y)")
+        y_mean = numpy.mean(X[self.outcome_name_]==self.outcome_target_)
+        if y_mean<=0 or y_mean>=1:
+            raise Exception("y does not vary")
         # model for independent transforms
         self.plan_ = None
         self.score_frame_ = None

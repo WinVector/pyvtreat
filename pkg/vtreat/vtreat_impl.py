@@ -176,10 +176,11 @@ def fit_binomial_impact_code(*, incoming_column_name, x, y, extra_args, params):
     sf = vtreat.util.grouped_by_x_statistics(x, y)
     if sf.shape[0] <= 1:
         return None
+    eps = 1.0e-3
     if params["use_hierarchical_estimate"]:
-        sf["_logit_code"] = numpy.log(sf["_hest"]) - numpy.log(sf["_gm"])
+        sf["_logit_code"] = numpy.log((sf["_hest"]+eps)/(sf["_gm"]+eps))
     else:
-        sf["_logit_code"] = numpy.log(sf["_group_mean"]) - numpy.log(sf["_gm"])
+        sf["_logit_code"] = numpy.log((sf["_group_mean"]+eps)/(sf["_gm"]+eps))
     sf = sf.loc[:, ["x", "_logit_code"]].copy()
     newcol = incoming_column_name + "_logit_code" + var_suffix
     sf.columns = [incoming_column_name, newcol]
