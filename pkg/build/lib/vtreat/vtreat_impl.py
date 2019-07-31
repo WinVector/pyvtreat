@@ -268,6 +268,8 @@ def fit_numeric_outcome_treatment(
         var_list = [co for co in X.columns]
     copy_set = set(cols_to_copy)
     var_list = [co for co in var_list if (not (co in copy_set))]
+    if len(var_list)<=0:
+        raise Exception("no variables")
     xforms = []
     n = X.shape[0]
     all_null = []
@@ -344,6 +346,8 @@ def fit_binomial_outcome_treatment(
         var_list = [co for co in X.columns]
     copy_set = set(cols_to_copy)
     var_list = [co for co in var_list if (not (co in copy_set))]
+    if len(var_list)<=0:
+        raise Exception("no variables")
     xforms = []
     n = X.shape[0]
     all_null = []
@@ -411,6 +415,8 @@ def fit_multinomial_outcome_treatment(
         var_list = [co for co in X.columns]
     copy_set = set(cols_to_copy)
     var_list = [co for co in var_list if (not (co in copy_set))]
+    if len(var_list)<=0:
+        raise Exception("no variables")
     xforms = []
     n = X.shape[0]
     all_null = []
@@ -483,6 +489,8 @@ def fit_unsupervised_treatment(*, X, var_list, outcome_name, cols_to_copy, param
         var_list = [co for co in X.columns]
     copy_set = set(cols_to_copy)
     var_list = [co for co in var_list if (not (co in copy_set))]
+    if len(var_list)<=0:
+        raise Exception("no variables")
     xforms = []
     n = X.shape[0]
     all_null = []

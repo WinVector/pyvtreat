@@ -81,7 +81,7 @@ class NumericOutcomeTreatment:
             cols_to_copy = []
         if outcome_name not in set(cols_to_copy):
             cols_to_copy = cols_to_copy + [outcome_name]
-        self.var_list_ = var_list.copy()
+        self.var_list_ = [vi for vi in var_list if not vi in set(cols_to_copy)]
         self.outcome_name_ = outcome_name
         self.cols_to_copy_ = cols_to_copy.copy()
         self.params_ = params.copy()
@@ -116,6 +116,8 @@ class NumericOutcomeTreatment:
         y = numpy.asarray(y, dtype=numpy.float64)
         if numpy.isnan(y).sum() > 0:
             raise Exception("y should not have any missing/NA/NaN values")
+        if numpy.max(y)<=numpy.min(y):
+            raise Exception("y does not vary")
         # model for independent transforms
         self.plan_ = None
         self.score_frame_ = None
@@ -171,7 +173,7 @@ class BinomialOutcomeTreatment:
             var_list = []
         if outcome_name not in set(cols_to_copy):
             cols_to_copy = cols_to_copy + [outcome_name]
-        self.var_list_ = var_list.copy()
+        self.var_list_ = [vi for vi in var_list if not vi in set(cols_to_copy)]
         self.outcome_name_ = outcome_name
         self.outcome_target_ = outcome_target
         self.cols_to_copy_ = cols_to_copy.copy()
@@ -204,9 +206,9 @@ class BinomialOutcomeTreatment:
             y = X[self.outcome_name_]
         if not X.shape[0] == len(y):
             raise Exception("X.shape[0] should equal len(y)")
-        y_mean = numpy.mean(X[self.outcome_name_]==self.outcome_target_)
+        y_mean = numpy.mean(y==self.outcome_target_)
         if y_mean<=0 or y_mean>=1:
-            raise Exception("y does not vary")
+            raise Exception("y==outcome_target does not vary")
         # model for independent transforms
         self.plan_ = None
         self.score_frame_ = None
@@ -262,7 +264,7 @@ class MultinomialOutcomeTreatment:
             cols_to_copy = []
         if outcome_name not in set(cols_to_copy):
             cols_to_copy = cols_to_copy + [outcome_name]
-        self.var_list_ = var_list.copy()
+        self.var_list_ = [vi for vi in var_list if not vi in set(cols_to_copy)]
         self.outcome_name_ = outcome_name
         self.outcomes_ = None
         self.cols_to_copy_ = cols_to_copy.copy()
@@ -295,6 +297,8 @@ class MultinomialOutcomeTreatment:
             y = X[self.outcome_name_]
         if not X.shape[0] == len(y):
             raise Exception("X.shape[0] should equal len(y)")
+        if len(numpy.unique(y))<=1:
+            raise Exception("y must take on at least 2 values")
         # model for independent transforms
         self.plan_ = None
         self.score_frame_ = None
@@ -356,7 +360,7 @@ class UnsupervisedTreatment:
             cols_to_copy = []
         if outcome_name not in set(cols_to_copy):
             cols_to_copy = cols_to_copy + [outcome_name]
-        self.var_list_ = var_list.copy()
+        self.var_list_ = [vi for vi in var_list if not vi in set(cols_to_copy)]
         self.outcome_name_ = outcome_name
         self.cols_to_copy_ = cols_to_copy.copy()
         self.params_ = params.copy()
