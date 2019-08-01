@@ -88,6 +88,7 @@ class NumericOutcomeTreatment:
         self.plan_ = None
         self.score_frame_ = None
         self.cross_plan_ = None
+        self.n_training_rows_ = None
 
     def fit(self, X, y):
         if not isinstance(X, pandas.DataFrame):
@@ -121,6 +122,7 @@ class NumericOutcomeTreatment:
         # model for independent transforms
         self.plan_ = None
         self.score_frame_ = None
+        self.n_training_rows_ = X.shape[0]
         self.plan_ = vtreat_impl.fit_numeric_outcome_treatment(
             X=X,
             y=y,
@@ -181,6 +183,7 @@ class BinomialOutcomeTreatment:
         self.plan_ = None
         self.score_frame_ = None
         self.cross_plan_ = None
+        self.n_training_rows_ = None
 
     def fit(self, X, y):
         if not isinstance(X, pandas.DataFrame):
@@ -212,6 +215,7 @@ class BinomialOutcomeTreatment:
         # model for independent transforms
         self.plan_ = None
         self.score_frame_ = None
+        self.n_training_rows_ = X.shape[0]
         self.plan_ = vtreat_impl.fit_binomial_outcome_treatment(
             X=X,
             y=y,
@@ -272,6 +276,7 @@ class MultinomialOutcomeTreatment:
         self.plan_ = None
         self.score_frame_ = None
         self.cross_plan_ = None
+        self.n_training_rows_ = None
 
     def fit(self, X, y):
         if not isinstance(X, pandas.DataFrame):
@@ -302,6 +307,7 @@ class MultinomialOutcomeTreatment:
         # model for independent transforms
         self.plan_ = None
         self.score_frame_ = None
+        self.n_training_rows_ = X.shape[0]
         self.outcomes_ = numpy.unique(y)
         self.plan_ = vtreat_impl.fit_multinomial_outcome_treatment(
             X=X,
@@ -366,6 +372,7 @@ class UnsupervisedTreatment:
         self.params_ = params.copy()
         self.plan_ = None
         self.score_frame_ = None
+        self.n_training_rows_ = None
 
     def fit(self, X, y=None):
         if not isinstance(X, pandas.DataFrame):
@@ -385,7 +392,7 @@ class UnsupervisedTreatment:
     def fit_transform(self, X, y=None):
         if y is not None:
             raise Exception("y should be None")
-        self.plan_ = None
+        self.n_training_rows_ = X.shape[0]
         self.plan_ = vtreat_impl.fit_unsupervised_treatment(
             X=X,
             var_list=self.var_list_,
