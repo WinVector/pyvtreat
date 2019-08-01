@@ -48,6 +48,14 @@ def k_way_cross_plan(n_rows, k_folds):
     return plan
 
 
+def support_indicator(n_rows, cross_plan):
+    """return a vector indicating which rows had app assignments"""
+    support = numpy.full(n_rows, False, dtype=bool)
+    for ci in cross_plan:
+        support[ci['app']] = True
+    return support
+
+
 def grouped_by_x_statistics(x, y):
     """compute some grouped by x vector summaries of numeric y vector (no missing values in y)"""
     n = len(x)
