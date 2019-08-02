@@ -178,9 +178,9 @@ def fit_binomial_impact_code(*, incoming_column_name, x, y, extra_args, params):
         return None
     eps = 1.0e-3
     if params["use_hierarchical_estimate"]:
-        sf["_logit_code"] = numpy.log((sf["_hest"]+eps)/(sf["_gm"]+eps))
+        sf["_logit_code"] = numpy.log((sf["_hest"] + eps) / (sf["_gm"] + eps))
     else:
-        sf["_logit_code"] = numpy.log((sf["_group_mean"]+eps)/(sf["_gm"]+eps))
+        sf["_logit_code"] = numpy.log((sf["_group_mean"] + eps) / (sf["_gm"] + eps))
     sf = sf.loc[:, ["x", "_logit_code"]].copy()
     newcol = incoming_column_name + "_logit_code" + var_suffix
     sf.columns = [incoming_column_name, newcol]
@@ -268,7 +268,7 @@ def fit_numeric_outcome_treatment(
         var_list = [co for co in X.columns]
     copy_set = set(cols_to_copy)
     var_list = [co for co in var_list if (not (co in copy_set))]
-    if len(var_list)<=0:
+    if len(var_list) <= 0:
         raise Exception("no variables")
     xforms = []
     n = X.shape[0]
@@ -346,7 +346,7 @@ def fit_binomial_outcome_treatment(
         var_list = [co for co in X.columns]
     copy_set = set(cols_to_copy)
     var_list = [co for co in var_list if (not (co in copy_set))]
-    if len(var_list)<=0:
+    if len(var_list) <= 0:
         raise Exception("no variables")
     xforms = []
     n = X.shape[0]
@@ -415,7 +415,7 @@ def fit_multinomial_outcome_treatment(
         var_list = [co for co in X.columns]
     copy_set = set(cols_to_copy)
     var_list = [co for co in var_list if (not (co in copy_set))]
-    if len(var_list)<=0:
+    if len(var_list) <= 0:
         raise Exception("no variables")
     xforms = []
     n = X.shape[0]
@@ -489,7 +489,7 @@ def fit_unsupervised_treatment(*, X, var_list, outcome_name, cols_to_copy, param
         var_list = [co for co in X.columns]
     copy_set = set(cols_to_copy)
     var_list = [co for co in var_list if (not (co in copy_set))]
-    if len(var_list)<=0:
+    if len(var_list) <= 0:
         raise Exception("no variables")
     xforms = []
     n = X.shape[0]
@@ -625,6 +625,7 @@ def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
                 + " -> "
                 + derived_column_name
             )
+
         def maybe_transform(*, fit, X):
             if fit is None:
                 return None
@@ -632,13 +633,15 @@ def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
 
         patches = [
             maybe_transform(
-                fit = xf.refitter_(
+                fit=xf.refitter_(
                     incoming_column_name=incoming_column_name,
                     x=x[incoming_column_name][cp["train"]],
                     y=y[cp["train"]],
                     extra_args=xf.extra_args_,
-                    params=xf.params_),
-                X = x.loc[cp["app"], [incoming_column_name]])
+                    params=xf.params_,
+                ),
+                X=x.loc[cp["app"], [incoming_column_name]],
+            )
             for cp in cross_plan
         ]
         # replace any missing sections with global average (slight data leak potential)
@@ -775,13 +778,14 @@ def pseudo_score_plan_variables(*, cross_frame, plan, params):
         description["y_aware"] = ut.y_aware_
         return description
 
-    score_frame = pandas.concat([describe_xf(xf) for xf in plan["xforms"]] +
-                                [
-                                    describe_ut(ut)
-                                    for ut in params["user_transforms"]
-                                    if len(ut.incoming_vars_) > 0
-                                ]
-                                )
+    score_frame = pandas.concat(
+        [describe_xf(xf) for xf in plan["xforms"]]
+        + [
+            describe_ut(ut)
+            for ut in params["user_transforms"]
+            if len(ut.incoming_vars_) > 0
+        ]
+    )
     score_frame.reset_index(inplace=True, drop=True)
     score_frame["has_range"] = [
         numpy.max(cross_frame[c]) > numpy.min(cross_frame[c])

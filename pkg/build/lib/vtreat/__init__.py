@@ -117,7 +117,7 @@ class NumericOutcomeTreatment:
         y = numpy.asarray(y, dtype=numpy.float64)
         if numpy.isnan(y).sum() > 0:
             raise Exception("y should not have any missing/NA/NaN values")
-        if numpy.max(y)<=numpy.min(y):
+        if numpy.max(y) <= numpy.min(y):
             raise Exception("y does not vary")
         # model for independent transforms
         self.plan_ = None
@@ -209,8 +209,8 @@ class BinomialOutcomeTreatment:
             y = X[self.outcome_name_]
         if not X.shape[0] == len(y):
             raise Exception("X.shape[0] should equal len(y)")
-        y_mean = numpy.mean(y==self.outcome_target_)
-        if y_mean<=0 or y_mean>=1:
+        y_mean = numpy.mean(y == self.outcome_target_)
+        if y_mean <= 0 or y_mean >= 1:
             raise Exception("y==outcome_target does not vary")
         # model for independent transforms
         self.plan_ = None
@@ -302,7 +302,7 @@ class MultinomialOutcomeTreatment:
             y = X[self.outcome_name_]
         if not X.shape[0] == len(y):
             raise Exception("X.shape[0] should equal len(y)")
-        if len(numpy.unique(y))<=1:
+        if len(numpy.unique(y)) <= 1:
             raise Exception("y must take on at least 2 values")
         # model for independent transforms
         self.plan_ = None
@@ -401,8 +401,8 @@ class UnsupervisedTreatment:
             params=self.params_,
         )
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
-        self.score_frame_ = vtreat_impl.pseudo_score_plan_variables(cross_frame=res,
-                                                                    plan=self.plan_,
-                                                                    params=self.params_)
+        self.score_frame_ = vtreat_impl.pseudo_score_plan_variables(
+            cross_frame=res, plan=self.plan_, params=self.params_
+        )
         res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
         return res

@@ -1,5 +1,3 @@
-
-
 class UserTransform:
     """base class for user transforms, should express taking a set of k inputs to k outputs independently"""
 
