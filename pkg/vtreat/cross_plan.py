@@ -98,7 +98,41 @@ class KWayCrossPlanYStratified(CrossValidationPlan):
     """K-way cross validation plan, attempting an even y-distribution"""
 
     def __init__(self):
-        KWayCrossPlanYStratified.__init__(self)
+        CrossValidationPlan.__init__(self)
 
     def split_plan(self, *, n_rows=None, k_folds=None, data=None, y=None):
         return k_way_cross_plan_y_stratified(n_rows=n_rows, k_folds=k_folds, y=y)
+
+
+class OrderedCrosPlan(CrossValidationPlan):
+    """ordered cross-validation plan"""
+
+    def __init__(self, order_column_name):
+        CrossValidationPlan.__init__(self)
+        self.order_column_name_ = order_column_name
+
+    def split_plan(self, *, n_rows=None, k_folds=None, data=None, y=None):
+        n_rows = data.shape[0]
+        order_series = data[self.order_column_name_]
+        order_values = numpy.sort(numpy.unique(order_series))
+        mid = len(order_values)/2
+        ov_left = [order_values[i] for i in range(len(order_values)) if i<mid]
+        ov_right = [order_values[i] for i in range(len(order_values)) if i>=mid]
+        if len(ov_left)<1 or len(ov_right)<1:
+            # degenerate case, fall back to simple method
+            return k_way_cross_plan(n_rows=n_rows, k_folds=5)
+        plan = [
+            {
+                "train": [i for i in range(n_rows) if order_series[i]>ov],
+                "app": [i for i in range(n_rows) if order_series[i]==ov],
+            }
+            for ov in ov_left
+        ] + [
+            {
+                "train": [i for i in range(n_rows) if order_series[i]<ov],
+                "app": [i for i in range(n_rows) if order_series[i]==ov],
+            }
+            for ov in ov_right
+        ]
+        return plan
+
