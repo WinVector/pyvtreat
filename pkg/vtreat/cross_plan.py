@@ -104,7 +104,49 @@ class KWayCrossPlanYStratified(CrossValidationPlan):
         return k_way_cross_plan_y_stratified(n_rows=n_rows, k_folds=k_folds, y=y)
 
 
-class OrderedCrosPlan(CrossValidationPlan):
+def order_cross_plan(k_folds, order_vector):
+    """Build a k_folds cross validation plan based on the ordered series"""
+
+    n_rows = len(order_vector)
+    # see if we can build about k intervals of the order values
+    order_vector = numpy.asarray(order_vector)
+    order_values = numpy.asarray(numpy.sort(numpy.unique(order_vector)))
+    nv = len(order_values)
+    if k_folds>nv:
+        k_folds = nv
+    group_size = n_rows/k_folds
+    group_frame = pandas.DataFrame({
+        'v':order_values,
+        'g':[numpy.floor(i/group_size) for i in range(nv)]
+    })
+    groups = numpy.asarray(numpy.sort(numpy.unique(group_frame['g'])))
+    n_groups = len(groups)
+    if n_groups <= 1:
+        # degenerate case, fall back to simple method
+        return k_way_cross_plan(n_rows=n_rows, k_folds=k_folds)
+    left_sets = [set(group_frame['v'][group_frame['g'] < g]) for g in groups]
+    match_sets = [set(group_frame['v'][group_frame['g'] == g]) for g in groups]
+    right_sets = [set(group_frame['v'][group_frame['g'] > g]) for g in groups]
+    mid = (n_groups - 1) / 2
+    idx_left = [i for i in range(n_groups) if i < mid]
+    idx_right = [i for i in range(n_groups) if i >= mid]
+    plan = [
+               { # train using future data
+                   "train": [i for i in range(n_rows) if order_vector[i] in right_sets[idx]],
+                   "app": [i for i in range(n_rows) if order_vector[i] in match_sets[idx]],
+               }
+               for idx in idx_left
+           ] + [
+               { # train using past data
+                   "train": [i for i in range(n_rows) if order_vector[i] in left_sets[idx]],
+                   "app": [i for i in range(n_rows) if order_vector[i] in match_sets[idx]],
+               }
+               for idx in idx_right
+           ]
+    return plan
+
+
+class OrderedCrossPlan(CrossValidationPlan):
     """ordered cross-validation plan"""
 
     def __init__(self, order_column_name):
@@ -112,27 +154,5 @@ class OrderedCrosPlan(CrossValidationPlan):
         self.order_column_name_ = order_column_name
 
     def split_plan(self, *, n_rows=None, k_folds=None, data=None, y=None):
-        n_rows = data.shape[0]
-        order_series = data[self.order_column_name_]
-        order_values = numpy.sort(numpy.unique(order_series))
-        mid = len(order_values)/2
-        ov_left = [order_values[i] for i in range(len(order_values)) if i<mid]
-        ov_right = [order_values[i] for i in range(len(order_values)) if i>=mid]
-        if len(ov_left)<1 or len(ov_right)<1:
-            # degenerate case, fall back to simple method
-            return k_way_cross_plan(n_rows=n_rows, k_folds=5)
-        plan = [
-            {
-                "train": [i for i in range(n_rows) if order_series[i]>ov],
-                "app": [i for i in range(n_rows) if order_series[i]==ov],
-            }
-            for ov in ov_left
-        ] + [
-            {
-                "train": [i for i in range(n_rows) if order_series[i]<ov],
-                "app": [i for i in range(n_rows) if order_series[i]==ov],
-            }
-            for ov in ov_right
-        ]
-        return plan
-
+        order_vector = data[self.order_column_name_]
+        return order_cross_plan(k_folds=k_folds, order_vector=order_vector)
