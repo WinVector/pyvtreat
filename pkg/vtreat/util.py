@@ -53,7 +53,7 @@ def grouped_by_x_statistics(x, y):
     else:
         sf["_vb"] = eps
     sf["_gm"] = global_mean
-    # heirarchical model is in:
+    # hierarchical model is in:
     # http://www.win-vector.com/blog/2017/09/partial-pooling-for-lower-variance-variable-encoding/
     # using naive empirical estimates of variances
     # adjusted from ni to ni-1 and +eps variance to make

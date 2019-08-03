@@ -1,4 +1,3 @@
-
 import numpy
 import numpy.random
 import pandas
@@ -16,7 +15,7 @@ class CrossValidationPlan:
     """Data splitting plan"""
 
     def __init__(self):
-        pass
+        self.verbose_ = False
 
     def split_plan(self, *, n_rows=None, k_folds=None, data=None, y=None):
         raise Exception("base class called")
@@ -54,6 +53,10 @@ class KWayCrossPlan(CrossValidationPlan):
         CrossValidationPlan.__init__(self)
 
     def split_plan(self, *, n_rows=None, k_folds=None, data=None, y=None):
+        if n_rows is None:
+            raise Exception("n_rows must not be None")
+        if k_folds is None:
+            raise Exception("k_folds must not be None")
         return k_way_cross_plan(n_rows=n_rows, k_folds=k_folds)
 
 
@@ -69,21 +72,25 @@ def k_way_cross_plan_y_stratified(n_rows, k_folds, y):
         ]
         return plan
     # first sort by y plus a random key
-    d = pandas.DataFrame({'y':y,
-                          'i':[i for i in range(n_rows)],
-                          'r':numpy.random.uniform(size=n_rows)})
-    d.sort_values(by = ['y', 'r'], inplace=True)
+    d = pandas.DataFrame(
+        {
+            "y": y,
+            "i": [i for i in range(n_rows)],
+            "r": numpy.random.uniform(size=n_rows),
+        }
+    )
+    d.sort_values(by=["y", "r"], inplace=True)
     d.reset_index(inplace=True, drop=True)
     # assign y-blocks to lose fine details of y
-    fold_size = n_rows/k_folds
-    d['block'] = [numpy.floor(i/fold_size) for i in range(n_rows)]
-    d.sort_values(by=['block', 'r'], inplace=True)
+    fold_size = n_rows / k_folds
+    d["block"] = [numpy.floor(i / fold_size) for i in range(n_rows)]
+    d.sort_values(by=["block", "r"], inplace=True)
     d.reset_index(inplace=True, drop=True)
     # now assign groups modulo k (ensuring at least one in each group)
-    d['grp'] = [i % k_folds for i in range(n_rows)]
-    d.sort_values(by=['i'], inplace=True)
+    d["grp"] = [i % k_folds for i in range(n_rows)]
+    d.sort_values(by=["i"], inplace=True)
     d.reset_index(inplace=True, drop=True)
-    grp = numpy.asarray(d['grp'])
+    grp = numpy.asarray(d["grp"])
     plan = [
         {
             "train": [i for i in range(n_rows) if grp[i] != j],
@@ -101,6 +108,12 @@ class KWayCrossPlanYStratified(CrossValidationPlan):
         CrossValidationPlan.__init__(self)
 
     def split_plan(self, *, n_rows=None, k_folds=None, data=None, y=None):
+        if n_rows is None:
+            raise Exception("n_rows must not be None")
+        if k_folds is None:
+            raise Exception("k_folds must not be None")
+        if y is None:
+            raise Exception("y must not be None")
         return k_way_cross_plan_y_stratified(n_rows=n_rows, k_folds=k_folds, y=y)
 
 
@@ -112,37 +125,36 @@ def order_cross_plan(k_folds, order_vector):
     order_vector = numpy.asarray(order_vector)
     order_values = numpy.asarray(numpy.sort(numpy.unique(order_vector)))
     nv = len(order_values)
-    if k_folds>nv:
+    if k_folds > nv:
         k_folds = nv
-    group_size = n_rows/k_folds
-    group_frame = pandas.DataFrame({
-        'v':order_values,
-        'g':[numpy.floor(i/group_size) for i in range(nv)]
-    })
-    groups = numpy.asarray(numpy.sort(numpy.unique(group_frame['g'])))
+    group_size = n_rows / k_folds
+    group_frame = pandas.DataFrame(
+        {"v": order_values, "g": [numpy.floor(i / group_size) for i in range(nv)]}
+    )
+    groups = numpy.asarray(numpy.sort(numpy.unique(group_frame["g"])))
     n_groups = len(groups)
     if n_groups <= 1:
         # degenerate case, fall back to simple method
         return k_way_cross_plan(n_rows=n_rows, k_folds=k_folds)
-    left_sets = [set(group_frame['v'][group_frame['g'] < g]) for g in groups]
-    match_sets = [set(group_frame['v'][group_frame['g'] == g]) for g in groups]
-    right_sets = [set(group_frame['v'][group_frame['g'] > g]) for g in groups]
+    left_sets = [set(group_frame["v"][group_frame["g"] < g]) for g in groups]
+    match_sets = [set(group_frame["v"][group_frame["g"] == g]) for g in groups]
+    right_sets = [set(group_frame["v"][group_frame["g"] > g]) for g in groups]
     mid = (n_groups - 1) / 2
     idx_left = [i for i in range(n_groups) if i < mid]
     idx_right = [i for i in range(n_groups) if i >= mid]
     plan = [
-               { # train using future data
-                   "train": [i for i in range(n_rows) if order_vector[i] in right_sets[idx]],
-                   "app": [i for i in range(n_rows) if order_vector[i] in match_sets[idx]],
-               }
-               for idx in idx_left
-           ] + [
-               { # train using past data
-                   "train": [i for i in range(n_rows) if order_vector[i] in left_sets[idx]],
-                   "app": [i for i in range(n_rows) if order_vector[i] in match_sets[idx]],
-               }
-               for idx in idx_right
-           ]
+        {  # train using future data
+            "train": [i for i in range(n_rows) if order_vector[i] in right_sets[idx]],
+            "app": [i for i in range(n_rows) if order_vector[i] in match_sets[idx]],
+        }
+        for idx in idx_left
+    ] + [
+        {  # train using past data
+            "train": [i for i in range(n_rows) if order_vector[i] in left_sets[idx]],
+            "app": [i for i in range(n_rows) if order_vector[i] in match_sets[idx]],
+        }
+        for idx in idx_right
+    ]
     return plan
 
 
@@ -154,5 +166,7 @@ class OrderedCrossPlan(CrossValidationPlan):
         self.order_column_name_ = order_column_name
 
     def split_plan(self, *, n_rows=None, k_folds=None, data=None, y=None):
+        if k_folds is None:
+            raise Exception("k_folds must not be None")
         order_vector = data[self.order_column_name_]
         return order_cross_plan(k_folds=k_folds, order_vector=order_vector)

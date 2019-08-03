@@ -68,9 +68,7 @@ def vtreat_parameters(user_params=None):
     return params
 
 
-class NumericOutcomeTreatment:
-    """manage a treatment plan for a numeric outcome (regression)"""
-
+class VariableTreatment:
     def __init__(
         self, *, var_list=None, outcome_name=None, cols_to_copy=None, params=None
     ):
@@ -79,16 +77,31 @@ class NumericOutcomeTreatment:
             var_list = []
         if cols_to_copy is None:
             cols_to_copy = []
-        if outcome_name not in set(cols_to_copy):
+        if outcome_name is not None and outcome_name not in set(cols_to_copy):
             cols_to_copy = cols_to_copy + [outcome_name]
-        self.var_list_ = [vi for vi in var_list if not vi in set(cols_to_copy)]
         self.outcome_name_ = outcome_name
+        self.var_list_ = [vi for vi in var_list if vi not in set(cols_to_copy)]
         self.cols_to_copy_ = cols_to_copy.copy()
         self.params_ = params.copy()
         self.plan_ = None
         self.score_frame_ = None
         self.cross_plan_ = None
         self.n_training_rows_ = None
+
+
+class NumericOutcomeTreatment(VariableTreatment):
+    """manage a treatment plan for a numeric outcome (regression)"""
+
+    def __init__(
+        self, *, var_list=None, outcome_name=None, cols_to_copy=None, params=None
+    ):
+        VariableTreatment.__init__(
+            self,
+            var_list=var_list,
+            outcome_name=outcome_name,
+            cols_to_copy=cols_to_copy,
+            params=params,
+        )
 
     def fit(self, X, y):
         if not isinstance(X, pandas.DataFrame):
@@ -156,7 +169,7 @@ class NumericOutcomeTreatment:
         return cross_frame
 
 
-class BinomialOutcomeTreatment:
+class BinomialOutcomeTreatment(VariableTreatment):
     """manage a treatment plan for a target outcome (binomial classification)"""
 
     def __init__(
@@ -168,22 +181,14 @@ class BinomialOutcomeTreatment:
         cols_to_copy=None,
         params=None
     ):
-        params = vtreat_parameters(params)
-        if cols_to_copy is None:
-            cols_to_copy = []
-        if var_list is None:
-            var_list = []
-        if outcome_name not in set(cols_to_copy):
-            cols_to_copy = cols_to_copy + [outcome_name]
-        self.var_list_ = [vi for vi in var_list if not vi in set(cols_to_copy)]
-        self.outcome_name_ = outcome_name
+        VariableTreatment.__init__(
+            self,
+            var_list=var_list,
+            outcome_name=outcome_name,
+            cols_to_copy=cols_to_copy,
+            params=params,
+        )
         self.outcome_target_ = outcome_target
-        self.cols_to_copy_ = cols_to_copy.copy()
-        self.params_ = params.copy()
-        self.plan_ = None
-        self.score_frame_ = None
-        self.cross_plan_ = None
-        self.n_training_rows_ = None
 
     def fit(self, X, y):
         if not isinstance(X, pandas.DataFrame):
@@ -255,28 +260,20 @@ class BinomialOutcomeTreatment:
         return cross_frame
 
 
-class MultinomialOutcomeTreatment:
+class MultinomialOutcomeTreatment(VariableTreatment):
     """manage a treatment plan for a set of outcomes (multinomial classification)"""
 
     def __init__(
         self, *, var_list=None, outcome_name=None, cols_to_copy=None, params=None
     ):
-        params = vtreat_parameters(params)
-        if var_list is None:
-            var_list = []
-        if cols_to_copy is None:
-            cols_to_copy = []
-        if outcome_name not in set(cols_to_copy):
-            cols_to_copy = cols_to_copy + [outcome_name]
-        self.var_list_ = [vi for vi in var_list if not vi in set(cols_to_copy)]
-        self.outcome_name_ = outcome_name
+        VariableTreatment.__init__(
+            self,
+            var_list=var_list,
+            outcome_name=outcome_name,
+            cols_to_copy=cols_to_copy,
+            params=params,
+        )
         self.outcomes_ = None
-        self.cols_to_copy_ = cols_to_copy.copy()
-        self.params_ = params.copy()
-        self.plan_ = None
-        self.score_frame_ = None
-        self.cross_plan_ = None
-        self.n_training_rows_ = None
 
     def fit(self, X, y):
         if not isinstance(X, pandas.DataFrame):
@@ -353,26 +350,17 @@ class MultinomialOutcomeTreatment:
         return cross_frame
 
 
-class UnsupervisedTreatment:
+class UnsupervisedTreatment(VariableTreatment):
     """manage an unsupervised treatment plan"""
 
-    def __init__(
-        self, *, var_list=None, outcome_name=None, cols_to_copy=None, params=None
-    ):
-        params = vtreat_parameters(params)
-        if var_list is None:
-            var_list = []
-        if cols_to_copy is None:
-            cols_to_copy = []
-        if outcome_name not in set(cols_to_copy):
-            cols_to_copy = cols_to_copy + [outcome_name]
-        self.var_list_ = [vi for vi in var_list if not vi in set(cols_to_copy)]
-        self.outcome_name_ = outcome_name
-        self.cols_to_copy_ = cols_to_copy.copy()
-        self.params_ = params.copy()
-        self.plan_ = None
-        self.score_frame_ = None
-        self.n_training_rows_ = None
+    def __init__(self, *, var_list=None, cols_to_copy=None, params=None):
+        VariableTreatment.__init__(
+            self,
+            var_list=var_list,
+            outcome_name=None,
+            cols_to_copy=cols_to_copy,
+            params=params,
+        )
 
     def fit(self, X, y=None):
         if not isinstance(X, pandas.DataFrame):
