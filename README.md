@@ -99,8 +99,10 @@ This is an supervised classification example taken from the KDD 2009 cup.  A cop
 
 ```python
 # To install:
-!pip install https://github.com/WinVector/pyvtreat/raw/master/pkg/dist/vtreat-0.2.1.tar.gz
-!pip install https://github.com/WinVector/wvpy/raw/master/pkg/dist/wvpy-0.2.1.tar.gz
+pip install vtreat
+pip install wvpy
+# or: !pip install https://github.com/WinVector/pyvtreat/raw/master/pkg/dist/vtreat-0.2.2.tar.gz
+# 
 ```
 
 Load our packages/modules.
