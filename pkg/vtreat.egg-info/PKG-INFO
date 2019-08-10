@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: vtreat
-Version: 0.2.1
+Version: 0.2.2
 Summary: UNKNOWN
 Home-page: https://github.com/WinVector/pyvtreat
 Author: John Mount
@@ -8,4 +8,10 @@ Author-email: jmount@win-vector.com
 License: UNKNOWN
 Description: UNKNOWN
 Platform: UNKNOWN
-Classifier: License :: OSI Approved :: BSD-3-Clause
+Classifier: Intended Audience :: Science/Research
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: License :: OSI Approved :: BSD License
