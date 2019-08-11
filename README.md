@@ -1118,6 +1118,8 @@ We intend to add better Python documentation and a certification suite going for
 
 To install, from inside `R` please run:
 
-```
-!pip install https://github.com/WinVector/pyvtreat/raw/master/pkg/dist/vtreat-0.1.tar.gz
+```python
+# To install:
+pip install vtreat
+# or: !pip install https://github.com/WinVector/pyvtreat/raw/master/pkg/dist/vtreat-0.2.2.tar.gz
 ```
