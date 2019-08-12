@@ -1116,10 +1116,16 @@ We intend to add better Python documentation and a certification suite going for
 
 ## Installation
 
-To install, from inside `R` please run:
+To install, please run:
 
 ```python
 # To install:
 pip install vtreat
 # or: !pip install https://github.com/WinVector/pyvtreat/raw/master/pkg/dist/vtreat-0.2.2.tar.gz
 ```
+
+## Note on data types.
+
+`.fit_transform()` expects the first argument to be a `pandas.DataFrame` with trivial row-indexing, (i.e. `.reset_index(inplace=True, drop=True)`) and the second to be a vector-like object with a `len()` equal to the number of rows of the first argument.
+
+
