@@ -13,7 +13,7 @@ however all of the examples can be found worked in `Python` [here](https://githu
 
 ‘vtreat’ is supplied by [Win-Vector LLC](http://www.win-vector.com)
 under a [BSD 3-clause license](LICENSE), without warranty. We are also developing
-a [Python version of ‘vtreat’]().
+an [R version of ‘vtreat’](https://github.com/WinVector/vtreat).
 
 ![](https://github.com/WinVector/vtreat/raw/master/tools/vtreat.png)
 
