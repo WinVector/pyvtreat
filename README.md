@@ -3,7 +3,7 @@
 [This](https://github.com/WinVector/pyvtreat) is the Python version of the `vtreat` data preparation system
 (also available as an [`R` package](http://winvector.github.io/vtreat/)).
 
-In each case: `vtreat` is an DataFrame processor/conditioner that
+In each case: `vtreat` is an `DataFrame` processor/conditioner that
 prepares real-world data for predictive modeling in a statistically
 sound manner.
 
@@ -11,9 +11,9 @@ For more detail please see here: [arXiv:1611.09477
 stat.AP](https://arxiv.org/abs/1611.09477) (the documentation describes the `R` version,
 however all of the examples can be found worked in `Python` [here](https://github.com/WinVector/pyvtreat/tree/master/Examples/vtreat_paper1)).
 
-‘vtreat’ is supplied by [Win-Vector LLC](http://www.win-vector.com)
+`vtreat` is supplied by [Win-Vector LLC](http://www.win-vector.com)
 under a [BSD 3-clause license](LICENSE), without warranty. We are also developing
-an [R version of ‘vtreat’](https://github.com/WinVector/vtreat).
+an [R version of `vtreat`](https://github.com/WinVector/vtreat).
 
 ![](https://github.com/WinVector/vtreat/raw/master/tools/vtreat.png)
 
@@ -101,8 +101,6 @@ This is an supervised classification example taken from the KDD 2009 cup.  A cop
 # To install:
 pip install vtreat
 pip install wvpy
-# or: !pip install https://github.com/WinVector/pyvtreat/raw/master/pkg/dist/vtreat-0.2.2.tar.gz
-# 
 ```
 
 Load our packages/modules.
@@ -117,7 +115,7 @@ import numpy.random
 import wvpy.util
 ```
 
-Read in explanitory variables.
+Read in explanatory variables.
 
 
 ```python
@@ -386,7 +384,7 @@ We start by building our treatment plan, this has the `sklearn.pipeline.Pipeline
 plan = vtreat.BinomialOutcomeTreatment(outcome_target=True)
 ```
 
-Use `.fit_transform()` to get a special copy of the treated training data that has cross-validated mitigations againsst nested model bias. We call this a "cross frame." `.fit_transform()` is deliberately a different `DataFrame` than what would be returned by `.fit().transform()` (the `.fit().transform()` would damage the modeling effort due nested model bias, the `.fit_transform()` "cross frame" uses cross-validation techniques similar to "stacking" to mitigate these issues).
+Use `.fit_transform()` to get a special copy of the treated training data that has cross-validated mitigations against nested model bias. We call this a "cross frame." `.fit_transform()` is deliberately a different `DataFrame` than what would be returned by `.fit().transform()` (the `.fit().transform()` would damage the modeling effort due nested model bias, the `.fit_transform()` "cross frame" uses cross-validation techniques similar to "stacking" to mitigate these issues).
 
 
 ```python
@@ -1019,11 +1017,11 @@ Note the naive test performance is worse, despite its far better training perfor
 Some `vreat` data treatments are “y-aware” (use distribution relations between
 independent variables and the dependent variable).
 
-The purpose of ‘vtreat’ library is to reliably prepare data for
+The purpose of `vtreat` library is to reliably prepare data for
 supervised machine learning. We try to leave as much as possible to the
 machine learning algorithms themselves, but cover most of the truly
 necessary typically ignored precautions. The library is designed to
-produce a ‘DataFrame’ that is entirely numeric and takes common
+produce a `DataFrame` that is entirely numeric and takes common
 precautions to guard against the following real world data issues:
 
   - Categorical variables with very many levels.
@@ -1079,16 +1077,16 @@ think for understanding it is *essential* to work all the steps by hand
 as we did in the book).  The 2nd edition of *Practical Data Science with R* covers
 using `vtreat` in `R` in chapter 8 "Advanced Data Preparation."
 
-The idea is: ‘DataFrame’s prepared with the
+The idea is: `DataFrame`s prepared with the
 ’vtreat’ library are somewhat safe to train on as some precaution has
 been taken against all of the above issues. Also of interest are the
-‘vtreat’ variable significances (help in initial variable pruning, a
+`vtreat` variable significances (help in initial variable pruning, a
 necessity when there are a large number of columns) and
 ‘vtreat::prepare(scale=TRUE)’ which re-encodes all variables into
 effect units making them suitable for y-aware dimension reduction
 (variable clustering, or principal component analysis) and for geometry
 sensitive machine learning techniques (k-means, knn, linear SVM, and
-more). You may want to do more than the ‘vtreat’ library does (such as
+more). You may want to do more than the `vtreat` library does (such as
 Bayesian imputation, variable clustering, and more) but you certainly do
 not want to do less.
 
@@ -1121,11 +1119,9 @@ To install, please run:
 ```python
 # To install:
 pip install vtreat
-# or: !pip install https://github.com/WinVector/pyvtreat/raw/master/pkg/dist/vtreat-0.2.2.tar.gz
 ```
 
 ## Note on data types.
 
-`.fit_transform()` expects the first argument to be a `pandas.DataFrame` with trivial row-indexing, (i.e. `.reset_index(inplace=True, drop=True)`) and the second to be a vector-like object with a `len()` equal to the number of rows of the first argument.
-
+`.fit_transform()` expects the first argument to be a `pandas.DataFrame` with trivial row-indexing, (i.e. `.reset_index(inplace=True, drop=True)`) and the second to be a vector-like object with a `len()` equal to the number of rows of the first argument. We are working on supporting column types other than string and numeric at this time.
 
