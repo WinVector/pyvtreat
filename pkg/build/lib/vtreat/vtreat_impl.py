@@ -540,9 +540,25 @@ def fit_unsupervised_treatment(*, X, var_list, outcome_name, cols_to_copy, param
     }
 
 
+def pre_prep_frame(x, cols_to_copy):
+    """ reset index and convert all columns, other than columns to copy, to numeric or string"""
+    x = x.reset_index(inplace=False, drop=True)
+    cset = set(cols_to_copy)
+    for c in x.columns:
+        if c in cset:
+            continue
+        na_ind = x[c].isnull()
+        if vtreat.util.can_convert_v_to_numeric(x[c]):
+            x[c] = x[c] + 0
+        else:
+            # https://stackoverflow.com/questions/22231592/pandas-change-data-type-of-series-to-string
+            x[c] = x[c].apply(str)
+        x.loc[na_ind, c] = numpy.nan
+    return x
+
+
 def perform_transform(*, x, transform, params):
     plan = transform.plan_
-    x = x.reset_index(inplace=False, drop=True)
     new_frames = [xfi.transform(x) for xfi in plan["xforms"]]
     for stp in params["user_transforms"]:
         frm = stp.transform(X=x)
