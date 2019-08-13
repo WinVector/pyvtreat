@@ -1,4 +1,3 @@
-README.md
 setup.py
 vtreat/__init__.py
 vtreat/cross_plan.py
