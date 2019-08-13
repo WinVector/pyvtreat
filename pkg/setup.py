@@ -4,11 +4,6 @@ import setuptools
 DESCRIPTION = """
 vtreat is a pandas.DataFrame processor/conditioner that prepares real-world data for predictive modeling in a statistically sound manner. 
 """
-LONG_DESCRIPTION = """
-vtreat prepares variables so that data has fewer exceptional cases, making it easier to safely use models in production. 
-Common problems vtreat defends against: Inf, NA, too many categorical levels, rare categorical levels, and new categorical levels (levels seen during application, but not during training). 
-Reference: "vtreat: a data.frame Processor for Predictive Modeling", Zumel, Mount, 2016, <doi:10.5281/zenodo.1173313>.
-"""
 
 setuptools.setup(
     name='vtreat',
@@ -21,10 +16,11 @@ setuptools.setup(
         'numpy',
         'pandas',
         'statistics',
-        'scipy'
+        'scipy',
     ],
+    platforms=['any'],
+    license='License :: OSI Approved :: BSD 3-clause License',
     description=DESCRIPTION,
-    long_description=LONG_DESCRIPTION,
     classifiers=[
           'Intended Audience :: Science/Research',
           'Programming Language :: Python',
