@@ -2,7 +2,7 @@
 import setuptools
 
 DESCRIPTION = """
-A pandas.DataFrame processor/conditioner that prepares real-world data for predictive modeling in a statistically sound manner. 
+vtreat is a pandas.DataFrame processor/conditioner that prepares real-world data for predictive modeling in a statistically sound manner. 
 """
 LONG_DESCRIPTION = """
 vtreat prepares variables so that data has fewer exceptional cases, making it easier to safely use models in production. 

@@ -1,18 +1,14 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Jul 20 11:40:41 2019
-
-@author: johnmount
-"""
-
 
 import pandas
 import numpy
 
-
 import vtreat.vtreat_impl as vtreat_impl
 import vtreat.util
 import vtreat.cross_plan
+
+
+__doc__ = "vtreat is a pandas.DataFrame processor/conditioner that prepares real-world data for predictive modeling in a statistically sound manner."
+__version__ = "0.2.3"
 
 # had been getting Future warnings on seemining correct (no missing values) use of
 # Pandas indexing from vtreat.vtreat_impl.cross_patch_refit_y_aware_cols
