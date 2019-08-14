@@ -15,7 +15,7 @@ values).  Other input columns are possible explanatory variables
 have missing values) that the user later wants to use to predict "y".
 In practice such an input `DataFrame` may not be immediately suitable
 for machine learning procedures that often expect only numeric
-explanatory variables, and may not tolerate missing value.
+explanatory variables, and may not tolerate missing values.
 
 To solve this, `vtreat` builds a transformed `DataFrame` where all
 explanatory variable columns have been transformed into a number of
