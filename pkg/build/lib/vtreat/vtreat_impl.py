@@ -196,11 +196,12 @@ def fit_binomial_impact_code(*, incoming_column_name, x, y, extra_args, params):
 
 
 class IndicatorCodeTransform(VarTransform):
-    def __init__(self, incoming_column_name, derived_column_names, levels):
+    def __init__(self, incoming_column_name, derived_column_names, levels, *, sparse_indicators=False):
         VarTransform.__init__(
             self, incoming_column_name, derived_column_names, "indicator_code"
         )
         self.levels_ = levels
+        self.sparse_indicators_ = sparse_indicators
 
     def transform(self, data_frame):
         incoming_column_name = self.incoming_column_name_
@@ -210,8 +211,10 @@ class IndicatorCodeTransform(VarTransform):
         col = sf[self.incoming_column_name_]
 
         def f(i):
-            v = col == self.levels_[i]
-            return numpy.asarray(v) + 0
+            v = numpy.asarray(col == self.levels_[i]) + 0
+            if self.sparse_indicators_:
+                v = pandas.SparseArray(v)
+            return v
 
         res = [
             pandas.DataFrame({self.derived_column_names_[i]: f(i)})
