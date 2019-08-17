@@ -211,9 +211,9 @@ class IndicatorCodeTransform(VarTransform):
         col = sf[self.incoming_column_name_]
 
         def f(i):
-            v = numpy.asarray(col == self.levels_[i]) + 0
+            v = numpy.asarray(col == self.levels_[i]) + 0.0
             if self.sparse_indicators_:
-                v = pandas.SparseArray(v)
+                v = pandas.SparseArray(v, fill_value=0.0)
             return v
 
         res = [
@@ -225,7 +225,7 @@ class IndicatorCodeTransform(VarTransform):
         return res
 
 
-def fit_indicator_code(*, incoming_column_name, x, min_fraction):
+def fit_indicator_code(*, incoming_column_name, x, min_fraction, sparse_indicators=False):
     sf = pandas.DataFrame({incoming_column_name: x})
     na_posns = sf[incoming_column_name].isnull()
     sf.loc[na_posns, incoming_column_name] = "_NA_"
@@ -239,6 +239,7 @@ def fit_indicator_code(*, incoming_column_name, x, min_fraction):
         incoming_column_name,
         [incoming_column_name + "_lev_" + lev for lev in levels],
         levels=levels,
+        sparse_indicators=sparse_indicators
     )
 
 
@@ -330,6 +331,7 @@ def fit_numeric_outcome_treatment(
                     incoming_column_name=vi,
                     x=numpy.asarray(X[vi]),
                     min_fraction=params["indicator_min_fracton"],
+                    sparse_indicators=params["sparse_indicators"]
                 )
             ]
     xforms = [xf for xf in xforms if xf is not None]
@@ -399,6 +401,7 @@ def fit_binomial_outcome_treatment(
                     incoming_column_name=vi,
                     x=numpy.asarray(X[vi]),
                     min_fraction=params["indicator_min_fracton"],
+                    sparse_indicators=params["sparse_indicators"]
                 )
             ]
     xforms = [xf for xf in xforms if xf is not None]
@@ -473,6 +476,7 @@ def fit_multinomial_outcome_treatment(
                     incoming_column_name=vi,
                     x=numpy.asarray(X[vi]),
                     min_fraction=params["indicator_min_fracton"],
+                    sparse_indicators=params["sparse_indicators"]
                 )
             ]
     xforms = [xf for xf in xforms if xf is not None]
@@ -531,6 +535,7 @@ def fit_unsupervised_treatment(*, X, var_list, outcome_name, cols_to_copy, param
                     incoming_column_name=vi,
                     x=numpy.asarray(X[vi]),
                     min_fraction=params["indicator_min_fracton"],
+                    sparse_indicators=params["sparse_indicators"]
                 )
             ]
     xforms = [xf for xf in xforms if xf is not None]
@@ -552,12 +557,13 @@ def pre_prep_frame(x, *, col_list, cols_to_copy):
         cols_to_copy = []
     if (col_list is None) or (len(col_list) <= 0):
         col_list = [co for co in x.columns]
+    x_set = set(x.columns)
     col_set = set(col_list)
     for ci in cols_to_copy:
-        if not ci in col_set:
+        if (ci in x_set) and (not ci in col_set):
             col_list = col_list + [ci]
     col_set = set(col_list)
-    missing_cols = col_set - set(x.columns)
+    missing_cols = col_set - x_set
     if len(missing_cols)>0:
         raise Exception("referred to not-present columns " + str(missing_cols))
     cset = set(cols_to_copy)
@@ -570,7 +576,7 @@ def pre_prep_frame(x, *, col_list, cols_to_copy):
             continue
         na_ind = x[c].isnull()
         if vtreat.util.can_convert_v_to_numeric(x[c]):
-            x[c] = x[c] + 0
+            x[c] = x[c] + 0.0
         else:
             # https://stackoverflow.com/questions/22231592/pandas-change-data-type-of-series-to-string
             x[c] = x[c].apply(str)
@@ -824,10 +830,11 @@ def pseudo_score_plan_variables(*, cross_frame, plan, params):
         ]
     )
     score_frame.reset_index(inplace=True, drop=True)
-    score_frame["has_range"] = [
-        numpy.max(cross_frame[c]) > numpy.min(cross_frame[c])
-        for c in score_frame["variable"]
-    ]
+    def has_range(x):
+        x = numpy.asarray(x)
+        return numpy.max(x) > numpy.min(x)
+
+    score_frame["has_range"] = [has_range(cross_frame[c]) for c in score_frame["variable"]]
     score_frame["PearsonR"] = numpy.nan
     score_frame["significance"] = numpy.nan
     score_frame["recommended"] = score_frame["has_range"].copy()

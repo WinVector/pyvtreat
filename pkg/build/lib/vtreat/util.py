@@ -17,7 +17,7 @@ import statistics
 def can_convert_v_to_numeric(x):
     """check if non-empty vector can convert to numeric"""
     try:
-        x + 0
+        x + 0.0
         return True
     except:
         return False
@@ -75,6 +75,7 @@ def score_variables(cross_frame, variables, outcome):
 
     def f(v):
         col = cross_frame[v]
+        col = numpy.asarray(col)
         if n > 0 and numpy.max(col) > numpy.min(col):
             with warnings.catch_warnings():
                 est = scipy.stats.pearsonr(cross_frame[v], outcome)
