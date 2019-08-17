@@ -124,14 +124,10 @@ To help explain the methods we have prepared some documentation:
 
 
 
-
 This is an supervised classification example taken from the KDD 2009 cup.  A copy of the data and details can be found here: [https://github.com/WinVector/PDSwR2/tree/master/KDD2009](https://github.com/WinVector/PDSwR2/tree/master/KDD2009).  The problem was to predict account cancellation ("churn") from very messy data (column names not given, numeric and categorical variables, many missing values, some categorical variables with a large number of possible levels).  In this example we show how to quickly use `vtreat` to prepare the data for modeling.  `vtreat` takes in `Pandas` `DataFrame`s and returns both a treatment plan and a clean `Pandas` `DataFrame` ready for modeling.
-
-```python
-# To install:
-pip install vtreat
-pip install wvpy
-```
+# to install
+!pip install vtreat
+!pip install wvpy
 
 Load our packages/modules.
 
@@ -140,12 +136,12 @@ Load our packages/modules.
 import pandas
 import xgboost
 import vtreat
-import numpy
 import numpy.random
 import wvpy.util
+import scipy.sparse
 ```
 
-Read in explanatory variables.
+Read in explanitory variables.
 
 
 ```python
@@ -223,6 +219,19 @@ d_train.head()
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -252,6 +261,30 @@ d_train.head()
   </thead>
   <tbody>
     <tr>
+      <th>0</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1526.0</td>
+      <td>7.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>oslk</td>
+      <td>fXVEsaq</td>
+      <td>jySVZNlOJy</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>xb3V</td>
+      <td>RAYp</td>
+      <td>F2FyR07IdsN7I</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
       <th>1</th>
       <td>NaN</td>
       <td>NaN</td>
@@ -273,30 +306,6 @@ d_train.head()
       <td>RAYp</td>
       <td>F2FyR07IdsN7I</td>
       <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>5236.0</td>
-      <td>7.0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>...</td>
-      <td>Al6ZaUT</td>
-      <td>NKv4yOc</td>
-      <td>jySVZNlOJy</td>
-      <td>NaN</td>
-      <td>kG3k</td>
-      <td>Qu4f</td>
-      <td>02N6s8f</td>
-      <td>ib5G6X1eUxUn6</td>
-      <td>am7c</td>
       <td>NaN</td>
     </tr>
     <tr>
@@ -386,7 +395,7 @@ d_train.shape
 
 
 
-    (44955, 230)
+    (44889, 230)
 
 
 
@@ -414,7 +423,7 @@ We start by building our treatment plan, this has the `sklearn.pipeline.Pipeline
 plan = vtreat.BinomialOutcomeTreatment(outcome_target=True)
 ```
 
-Use `.fit_transform()` to get a special copy of the treated training data that has cross-validated mitigations against nested model bias. We call this a "cross frame." `.fit_transform()` is deliberately a different `DataFrame` than what would be returned by `.fit().transform()` (the `.fit().transform()` would damage the modeling effort due nested model bias, the `.fit_transform()` "cross frame" uses cross-validation techniques similar to "stacking" to mitigate these issues).
+Use `.fit_transform()` to get a special copy of the treated training data that has cross-validated mitigations againsst nested model bias. We call this a "cross frame." `.fit_transform()` is deliberately a different `DataFrame` than what would be returned by `.fit().transform()` (the `.fit().transform()` would damage the modeling effort due nested model bias, the `.fit_transform()` "cross frame" uses cross-validation techniques similar to "stacking" to mitigate these issues).
 
 
 ```python
@@ -432,6 +441,19 @@ cross_frame.head()
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -447,12 +469,12 @@ cross_frame.head()
       <th>Var13_is_bad</th>
       <th>Var14_is_bad</th>
       <th>...</th>
-      <th>Var226_lev_FSa2</th>
-      <th>Var227_prevalence_code</th>
       <th>Var227_lev_RAYp</th>
       <th>Var227_lev_ZI9m</th>
+      <th>Var228_logit_code</th>
       <th>Var228_prevalence_code</th>
       <th>Var228_lev_F2FyR07IdsN7I</th>
+      <th>Var229_logit_code</th>
       <th>Var229_prevalence_code</th>
       <th>Var229_lev__NA_</th>
       <th>Var229_lev_am7c</th>
@@ -473,16 +495,16 @@ cross_frame.head()
       <td>0.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>0</td>
-      <td>0.702369</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0.653453</td>
-      <td>1</td>
-      <td>0.569147</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.153982</td>
+      <td>0.653946</td>
+      <td>1.0</td>
+      <td>0.168175</td>
+      <td>0.568803</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>1</th>
@@ -497,16 +519,16 @@ cross_frame.head()
       <td>0.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>0</td>
-      <td>0.047158</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0.053075</td>
-      <td>0</td>
-      <td>0.233211</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.155491</td>
+      <td>0.653946</td>
+      <td>1.0</td>
+      <td>0.162767</td>
+      <td>0.568803</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>2</th>
@@ -521,16 +543,16 @@ cross_frame.head()
       <td>0.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>1</td>
-      <td>0.702369</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0.653453</td>
-      <td>1</td>
-      <td>0.569147</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.149346</td>
+      <td>0.653946</td>
+      <td>1.0</td>
+      <td>0.167901</td>
+      <td>0.568803</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>3</th>
@@ -545,16 +567,16 @@ cross_frame.head()
       <td>0.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>1</td>
-      <td>0.702369</td>
-      <td>1</td>
-      <td>0</td>
-      <td>0.653453</td>
-      <td>1</td>
-      <td>0.196063</td>
-      <td>0</td>
-      <td>0</td>
-      <td>1</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.149920</td>
+      <td>0.653946</td>
+      <td>1.0</td>
+      <td>-0.280542</td>
+      <td>0.196685</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
       <th>4</th>
@@ -569,20 +591,20 @@ cross_frame.head()
       <td>0.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>0</td>
-      <td>0.047158</td>
-      <td>0</td>
-      <td>0</td>
-      <td>0.018841</td>
-      <td>0</td>
-      <td>0.233211</td>
-      <td>0</td>
-      <td>1</td>
-      <td>0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-0.203034</td>
+      <td>0.018557</td>
+      <td>0.0</td>
+      <td>-0.248614</td>
+      <td>0.233042</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 209 columns</p>
+<p>5 rows × 235 columns</p>
 </div>
 
 
@@ -595,7 +617,7 @@ cross_frame.shape
 
 
 
-    (44955, 209)
+    (44889, 235)
 
 
 
@@ -610,6 +632,19 @@ plan.score_frame_.head()
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -633,9 +668,9 @@ plan.score_frame_.head()
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.003308</td>
-      <td>0.483072</td>
-      <td>192.0</td>
+      <td>0.003478</td>
+      <td>0.461192</td>
+      <td>193.0</td>
       <td>False</td>
     </tr>
     <tr>
@@ -645,9 +680,9 @@ plan.score_frame_.head()
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.016913</td>
-      <td>0.000336</td>
-      <td>192.0</td>
+      <td>0.019965</td>
+      <td>0.000023</td>
+      <td>193.0</td>
       <td>True</td>
     </tr>
     <tr>
@@ -657,9 +692,9 @@ plan.score_frame_.head()
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.016913</td>
-      <td>0.000336</td>
-      <td>192.0</td>
+      <td>0.019933</td>
+      <td>0.000024</td>
+      <td>193.0</td>
       <td>True</td>
     </tr>
     <tr>
@@ -669,9 +704,9 @@ plan.score_frame_.head()
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.017624</td>
-      <td>0.000186</td>
-      <td>192.0</td>
+      <td>0.017994</td>
+      <td>0.000138</td>
+      <td>193.0</td>
       <td>True</td>
     </tr>
     <tr>
@@ -681,9 +716,9 @@ plan.score_frame_.head()
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.017745</td>
-      <td>0.000168</td>
-      <td>192.0</td>
+      <td>0.018151</td>
+      <td>0.000120</td>
+      <td>193.0</td>
       <td>True</td>
     </tr>
   </tbody>
@@ -701,7 +736,7 @@ len(model_vars)
 
 
 
-    209
+    235
 
 
 
@@ -709,7 +744,69 @@ Fit the model
 
 
 ```python
-fd = xgboost.DMatrix(data=cross_frame.loc[:, model_vars], label=churn_train)
+cross_frame.dtypes
+```
+
+
+
+
+    Var2_is_bad                            float64
+    Var3_is_bad                            float64
+    Var4_is_bad                            float64
+    Var5_is_bad                            float64
+    Var6_is_bad                            float64
+                                      ...         
+    Var229_logit_code                      float64
+    Var229_prevalence_code                 float64
+    Var229_lev__NA_           Sparse[float64, 0.0]
+    Var229_lev_am7c           Sparse[float64, 0.0]
+    Var229_lev_mj86           Sparse[float64, 0.0]
+    Length: 235, dtype: object
+
+
+
+
+```python
+# fails due to sparse columns
+# can also work around this by setting the vtreat parameter 'sparse_indicators' to False
+try:
+    cross_sparse = xgboost.DMatrix(data=cross_frame.loc[:, model_vars], label=churn_train)
+except Exception as ex:
+    print(ex)
+```
+
+    DataFrame.dtypes for data must be int, float or bool.
+                    Did not expect the data types in fields Var191_lev__NA_, Var193_lev_RO12, Var193_lev_2Knk1KF, Var194_lev__NA_, Var194_lev_SEuy, Var195_lev_taul, Var200_lev__NA_, Var201_lev__NA_, Var201_lev_smXZ, Var205_lev_VpdQ, Var205_lev_09_Q, Var206_lev_IYzP, Var206_lev_zm5i, Var206_lev__NA_, Var207_lev_me75fM6ugJ, Var207_lev_7M47J5GA0pTYIFxg5uy, Var210_lev_uKAI, Var211_lev_L84s, Var211_lev_Mtgm, Var212_lev_NhsEn4L, Var212_lev_XfqtO3UdzaXh_, Var213_lev__NA_, Var214_lev__NA_, Var218_lev_cJvF, Var218_lev_UYBR, Var219_lev_FzaX, Var221_lev_oslk, Var221_lev_zCkv, Var225_lev__NA_, Var225_lev_ELof, Var225_lev_kG3k, Var226_lev_FSa2, Var227_lev_RAYp, Var227_lev_ZI9m, Var228_lev_F2FyR07IdsN7I, Var229_lev__NA_, Var229_lev_am7c, Var229_lev_mj86
+
+
+
+```python
+# also fails
+try:
+    cross_sparse = scipy.sparse.csc_matrix(cross_frame[model_vars])
+except Exception as ex:
+    print(ex)
+```
+
+    no supported conversion for types: (dtype('O'),)
+
+
+
+```python
+# works
+cross_sparse = scipy.sparse.hstack([scipy.sparse.csc_matrix(cross_frame[[vi]]) for vi in model_vars])
+```
+
+
+```python
+# https://xgboost.readthedocs.io/en/latest/python/python_intro.html
+fd = xgboost.DMatrix(
+    data=cross_sparse, 
+    label=churn_train)
+```
+
+
+```python
 x_parameters = {"max_depth":3, "objective":'binary:logistic'}
 cv = xgboost.cv(x_parameters, fd, num_boost_round=100, verbose_eval=False)
 ```
@@ -723,6 +820,19 @@ cv.head()
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -736,38 +846,38 @@ cv.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>0.072873</td>
-      <td>0.000623</td>
-      <td>0.073496</td>
-      <td>0.001215</td>
+      <td>0.073114</td>
+      <td>0.000804</td>
+      <td>0.073493</td>
+      <td>0.001764</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>0.073018</td>
-      <td>0.000538</td>
-      <td>0.073073</td>
-      <td>0.001021</td>
+      <td>0.073125</td>
+      <td>0.000783</td>
+      <td>0.073247</td>
+      <td>0.001554</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.072995</td>
-      <td>0.000557</td>
-      <td>0.073051</td>
-      <td>0.000999</td>
+      <td>0.073114</td>
+      <td>0.000795</td>
+      <td>0.073203</td>
+      <td>0.001506</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>0.073006</td>
-      <td>0.000547</td>
-      <td>0.073073</td>
-      <td>0.001021</td>
+      <td>0.073158</td>
+      <td>0.000749</td>
+      <td>0.073247</td>
+      <td>0.001554</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>0.072784</td>
-      <td>0.000697</td>
-      <td>0.073006</td>
-      <td>0.000851</td>
+      <td>0.073136</td>
+      <td>0.000780</td>
+      <td>0.073247</td>
+      <td>0.001554</td>
     </tr>
   </tbody>
 </table>
@@ -787,6 +897,19 @@ best
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -799,11 +922,11 @@ best
   </thead>
   <tbody>
     <tr>
-      <th>51</th>
-      <td>0.070982</td>
-      <td>0.00045</td>
-      <td>0.07245</td>
-      <td>0.00096</td>
+      <th>42</th>
+      <td>0.071365</td>
+      <td>0.000614</td>
+      <td>0.073025</td>
+      <td>0.001584</td>
     </tr>
   </tbody>
 </table>
@@ -820,7 +943,7 @@ ntree
 
 
 
-    51
+    42
 
 
 
@@ -834,17 +957,18 @@ fitter
 
 
     XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
-                  colsample_bytree=1, gamma=0, learning_rate=0.1, max_delta_step=0,
-                  max_depth=3, min_child_weight=1, missing=None, n_estimators=51,
-                  n_jobs=1, nthread=None, objective='binary:logistic',
-                  random_state=0, reg_alpha=0, reg_lambda=1, scale_pos_weight=1,
-                  seed=None, silent=True, subsample=1)
+                  colsample_bynode=1, colsample_bytree=1, gamma=0,
+                  learning_rate=0.1, max_delta_step=0, max_depth=3,
+                  min_child_weight=1, missing=None, n_estimators=42, n_jobs=1,
+                  nthread=None, objective='binary:logistic', random_state=0,
+                  reg_alpha=0, reg_lambda=1, scale_pos_weight=1, seed=None,
+                  silent=None, subsample=1, verbosity=1)
 
 
 
 
 ```python
-model = fitter.fit(cross_frame.loc[:, model_vars], churn_train)
+model = fitter.fit(cross_sparse, churn_train)
 ```
 
 Apply the data transform to our held-out data.
@@ -859,18 +983,18 @@ Plot the quality of the model on training data (a biased measure of performance)
 
 ```python
 pf_train = pandas.DataFrame({"churn":churn_train})
-pf_train["pred"] = model.predict_proba(cross_frame.loc[:, model_vars])[:, 1]
+pf_train["pred"] = model.predict_proba(cross_sparse)[:, 1]
 wvpy.util.plot_roc(pf_train["pred"], pf_train["churn"], title="Model on Train")
 ```
 
 
-![](https://raw.githubusercontent.com/WinVector/pyvtreat/master/output_38_0.png)
+![](https://raw.githubusercontent.com/WinVector/pyvtreat/master/Examples/KDD2009Example/output_43_0.png)
 
 
 
 
 
-    0.7549132069434445
+    0.7587430928578458
 
 
 
@@ -878,19 +1002,20 @@ Plot the quality of the model score on the held-out data.  This AUC is not great
 
 
 ```python
+test_sparse = scipy.sparse.hstack([scipy.sparse.csc_matrix(test_processed[[vi]]) for vi in model_vars])
 pf = pandas.DataFrame({"churn":churn_test})
-pf["pred"] = model.predict_proba(test_processed.loc[:, model_vars])[:, 1]
+pf["pred"] = model.predict_proba(test_sparse)[:, 1]
 wvpy.util.plot_roc(pf["pred"], pf["churn"], title="Model on Test")
 ```
 
 
-![](https://raw.githubusercontent.com/WinVector/pyvtreat/master/output_40_0.png)
+![](https://raw.githubusercontent.com/WinVector/pyvtreat/master/Examples/KDD2009Example/output_45_0.png)
 
 
 
 
 
-    0.7501286997003295
+    0.7421327720100466
 
 
 
@@ -916,7 +1041,12 @@ naive_frame = plan_naive.transform(d_train)
 
 
 ```python
-fd_naive = xgboost.DMatrix(data=naive_frame, label=churn_train)
+naive_sparse = scipy.sparse.hstack([scipy.sparse.csc_matrix(naive_frame[[vi]]) for vi in model_vars])
+```
+
+
+```python
+fd_naive = xgboost.DMatrix(data=naive_sparse, label=churn_train)
 x_parameters = {"max_depth":3, "objective":'binary:logistic'}
 cvn = xgboost.cv(x_parameters, fd_naive, num_boost_round=100, verbose_eval=False)
 ```
@@ -931,6 +1061,19 @@ bestn
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -943,11 +1086,11 @@ bestn
   </thead>
   <tbody>
     <tr>
-      <th>88</th>
-      <td>0.045301</td>
-      <td>0.001092</td>
-      <td>0.054232</td>
-      <td>0.001402</td>
+      <th>98</th>
+      <td>0.044721</td>
+      <td>0.000088</td>
+      <td>0.055225</td>
+      <td>0.000492</td>
     </tr>
   </tbody>
 </table>
@@ -964,7 +1107,7 @@ ntreen
 
 
 
-    88
+    98
 
 
 
@@ -978,39 +1121,41 @@ fittern
 
 
     XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
-                  colsample_bytree=1, gamma=0, learning_rate=0.1, max_delta_step=0,
-                  max_depth=3, min_child_weight=1, missing=None, n_estimators=88,
-                  n_jobs=1, nthread=None, objective='binary:logistic',
-                  random_state=0, reg_alpha=0, reg_lambda=1, scale_pos_weight=1,
-                  seed=None, silent=True, subsample=1)
+                  colsample_bynode=1, colsample_bytree=1, gamma=0,
+                  learning_rate=0.1, max_delta_step=0, max_depth=3,
+                  min_child_weight=1, missing=None, n_estimators=98, n_jobs=1,
+                  nthread=None, objective='binary:logistic', random_state=0,
+                  reg_alpha=0, reg_lambda=1, scale_pos_weight=1, seed=None,
+                  silent=None, subsample=1, verbosity=1)
 
 
 
 
 ```python
-modeln = fittern.fit(naive_frame, churn_train)
+modeln = fittern.fit(naive_sparse, churn_train)
 ```
 
 
 ```python
 test_processedn = plan_naive.transform(d_test)
+test_processedn = scipy.sparse.hstack([scipy.sparse.csc_matrix(test_processedn[[vi]]) for vi in model_vars])
 ```
 
 
 ```python
 pfn_train = pandas.DataFrame({"churn":churn_train})
-pfn_train["pred_naive"] = modeln.predict_proba(naive_frame)[:, 1]
+pfn_train["pred_naive"] = modeln.predict_proba(naive_sparse)[:, 1]
 wvpy.util.plot_roc(pfn_train["pred_naive"], pfn_train["churn"], title="Overfit Model on Train")
 ```
 
 
-![](https://raw.githubusercontent.com/WinVector/pyvtreat/master/output_52_0.png)
+![](https://raw.githubusercontent.com/WinVector/pyvtreat/master/Examples/KDD2009Example/output_58_0.png)
 
 
 
 
 
-    0.955455267688174
+    0.9580470801240263
 
 
 
@@ -1022,22 +1167,18 @@ wvpy.util.plot_roc(pfn["pred_naive"], pfn["churn"], title="Overfit Model on Test
 ```
 
 
-![](https://raw.githubusercontent.com/WinVector/pyvtreat/master/output_53_0.png)
+![](https://raw.githubusercontent.com/WinVector/pyvtreat/master/Examples/KDD2009Example/output_59_0.png)
 
 
 
 
 
-    0.5895797067200105
+    0.5966161219229353
 
 
 
 Note the naive test performance is worse, despite its far better training performance.  This is over-fit due to the nested model bias of using the same data to build the treatment plan and model without any cross-frame mitigations.
 
-
-```python
-
-```
 
 
 
