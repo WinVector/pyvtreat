@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: vtreat
-Version: 0.2.3
+Version: 0.2.4
 Summary: 
 vtreat is a pandas.DataFrame processor/conditioner that prepares real-world data for predictive modeling in a statistically sound manner. 
 
