@@ -540,10 +540,28 @@ def fit_unsupervised_treatment(*, X, var_list, outcome_name, cols_to_copy, param
     }
 
 
-def pre_prep_frame(x, cols_to_copy):
-    """ reset index and convert all columns, other than columns to copy, to numeric or string"""
-    x = x.reset_index(inplace=False, drop=True)
+def pre_prep_frame(x, *, col_list, cols_to_copy):
+    """Create a copy of pandas.DataFrame x restricted to col_list union cols_to_copy with col_list - cols_to_copy
+    converted to only string and numeric types.  New pandas.DataFrame has trivial indexing.  If col_list
+    is empty it is interpreted as all columns."""
+
+    if cols_to_copy is None:
+        cols_to_copy = []
+    if (col_list is None) or (len(col_list) <= 0):
+        col_list = [co for co in x.columns]
+    col_set = set(col_list)
+    for ci in cols_to_copy:
+        if not ci in col_set:
+            col_list = col_list + [ci]
+    col_set = set(col_list)
+    missing_cols = col_set - set(x.columns)
+    if len(missing_cols)>0:
+        raise Exception("referred to not-present columns " + str(missing_cols))
     cset = set(cols_to_copy)
+    if len(col_list) <= 0:
+        raise Exception("no variables")
+    x = x.loc[:, col_list]
+    x = x.reset_index(inplace=False, drop=True)
     for c in x.columns:
         if c in cset:
             continue
