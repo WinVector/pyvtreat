@@ -781,8 +781,10 @@ def score_plan_variables(cross_frame, outcome, plan, params):
         cross_frame, variables=var_table["variable"], outcome=outcome
     )
     score_frame = pandas.merge(var_table, sf, how="left", on=["variable"], sort=False)
+    num_treatment_types = len(score_frame["treatment"].unique())
     score_frame["_one"] = 1.0
     score_frame["vcount"] = score_frame.groupby("treatment")["_one"].transform("sum")
+    score_frame["default_threshold"] = 1.0/(score_frame["vcount"] * num_treatment_types)
     score_frame.drop(["_one"], axis=1, inplace=True)
     score_frame["recommended"] = numpy.logical_and(
         score_frame["has_range"],
@@ -794,9 +796,9 @@ def score_plan_variables(cross_frame, outcome, plan, params):
                 )
             ),
             numpy.logical_and(
-                score_frame["significance"] < 1 / score_frame["vcount"],
+                score_frame["significance"] < score_frame["default_threshold"],
                 numpy.logical_or(
-                    score_frame["PearsonR"] > 0,
+                    score_frame["PearsonR"] > 0.0,
                     numpy.logical_not(score_frame["y_aware"]),
                 ),
             ),
