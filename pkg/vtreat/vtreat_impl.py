@@ -330,7 +330,7 @@ def fit_numeric_outcome_treatment(
                 fit_indicator_code(
                     incoming_column_name=vi,
                     x=numpy.asarray(X[vi]),
-                    min_fraction=params["indicator_min_fracton"],
+                    min_fraction=params["indicator_min_fraction"],
                     sparse_indicators=params["sparse_indicators"]
                 )
             ]
@@ -400,7 +400,7 @@ def fit_binomial_outcome_treatment(
                 fit_indicator_code(
                     incoming_column_name=vi,
                     x=numpy.asarray(X[vi]),
-                    min_fraction=params["indicator_min_fracton"],
+                    min_fraction=params["indicator_min_fraction"],
                     sparse_indicators=params["sparse_indicators"]
                 )
             ]
@@ -475,7 +475,7 @@ def fit_multinomial_outcome_treatment(
                 fit_indicator_code(
                     incoming_column_name=vi,
                     x=numpy.asarray(X[vi]),
-                    min_fraction=params["indicator_min_fracton"],
+                    min_fraction=params["indicator_min_fraction"],
                     sparse_indicators=params["sparse_indicators"]
                 )
             ]
@@ -534,7 +534,7 @@ def fit_unsupervised_treatment(*, X, var_list, outcome_name, cols_to_copy, param
                 fit_indicator_code(
                     incoming_column_name=vi,
                     x=numpy.asarray(X[vi]),
-                    min_fraction=params["indicator_min_fracton"],
+                    min_fraction=params["indicator_min_fraction"],
                     sparse_indicators=params["sparse_indicators"]
                 )
             ]

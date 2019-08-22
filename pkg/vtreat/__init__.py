@@ -50,7 +50,7 @@ def vtreat_parameters(user_params=None):
             "prevalence_code",
         },
         "filter_to_recommended": True,
-        "indicator_min_fracton": 0.1,
+        "indicator_min_fraction": 0.1,
         "cross_validation_plan": vtreat.cross_plan.KWayCrossPlan(),
         "cross_validation_k": 5,
         "user_transforms": [],
