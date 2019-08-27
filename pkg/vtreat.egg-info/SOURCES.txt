@@ -1,7 +1,5 @@
 README.md
 setup.py
-tests/__init__.py
-tests/test_util.py
 vtreat/__init__.py
 vtreat/cross_plan.py
 vtreat/transform.py

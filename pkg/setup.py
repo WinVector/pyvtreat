@@ -11,7 +11,7 @@ setuptools.setup(
     author='John Mount, Nina Zumel',
     author_email='jmount@win-vector.com',
     url='https://github.com/WinVector/pyvtreat',
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages(where='.', exclude=['tests']),
     install_requires=[
         'numpy',
         'pandas',
