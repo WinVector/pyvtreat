@@ -7,12 +7,15 @@ class UserTransform:
         self.incoming_vars_ = []
         self.derived_vars_ = []
 
+    # noinspection PyPep8Naming
     def fit(self, X, y):
         raise Exception("base method called")
 
+    # noinspection PyPep8Naming
     def transform(self, X):
         raise Exception("base method called")
 
+    # noinspection PyPep8Naming
     def fit_transform(self, X, y):
         self.fit(X, y)
         return self.transform(X)

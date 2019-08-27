@@ -19,7 +19,7 @@ def can_convert_v_to_numeric(x):
     try:
         x + 0.0
         return True
-    except:
+    except TypeError:
         return False
 
 

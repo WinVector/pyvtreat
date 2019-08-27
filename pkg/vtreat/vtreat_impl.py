@@ -196,7 +196,14 @@ def fit_binomial_impact_code(*, incoming_column_name, x, y, extra_args, params):
 
 
 class IndicatorCodeTransform(VarTransform):
-    def __init__(self, incoming_column_name, derived_column_names, levels, *, sparse_indicators=False):
+    def __init__(
+        self,
+        incoming_column_name,
+        derived_column_names,
+        levels,
+        *,
+        sparse_indicators=False
+    ):
         VarTransform.__init__(
             self, incoming_column_name, derived_column_names, "indicator_code"
         )
@@ -225,7 +232,9 @@ class IndicatorCodeTransform(VarTransform):
         return res
 
 
-def fit_indicator_code(*, incoming_column_name, x, min_fraction, sparse_indicators=False):
+def fit_indicator_code(
+    *, incoming_column_name, x, min_fraction, sparse_indicators=False
+):
     sf = pandas.DataFrame({incoming_column_name: x})
     na_posns = sf[incoming_column_name].isnull()
     sf.loc[na_posns, incoming_column_name] = "_NA_"
@@ -239,7 +248,7 @@ def fit_indicator_code(*, incoming_column_name, x, min_fraction, sparse_indicato
         incoming_column_name,
         [incoming_column_name + "_lev_" + lev for lev in levels],
         levels=levels,
-        sparse_indicators=sparse_indicators
+        sparse_indicators=sparse_indicators,
     )
 
 
@@ -265,6 +274,7 @@ def fit_prevalence_code(incoming_column_name, x):
     )
 
 
+# noinspection PyPep8Naming
 def fit_numeric_outcome_treatment(
     *, X, y, var_list, outcome_name, cols_to_copy, params
 ):
@@ -302,6 +312,7 @@ def fit_numeric_outcome_treatment(
                 ]
     for vi in cat_list:
         if "impact_code" in params["coders"]:
+            # noinspection PyTypeChecker
             xforms = xforms + [
                 fit_regression_impact_code(
                     incoming_column_name=vi,
@@ -312,6 +323,7 @@ def fit_numeric_outcome_treatment(
                 )
             ]
         if "deviance_code" in params["coders"]:
+            # noinspection PyTypeChecker
             xforms = xforms + [
                 fit_regression_deviation_code(
                     incoming_column_name=vi,
@@ -322,16 +334,18 @@ def fit_numeric_outcome_treatment(
                 )
             ]
         if "prevalence_code" in params["coders"]:
+            # noinspection PyTypeChecker
             xforms = xforms + [
                 fit_prevalence_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
             ]
         if "indicator_code" in params["coders"]:
+            # noinspection PyTypeChecker
             xforms = xforms + [
                 fit_indicator_code(
                     incoming_column_name=vi,
                     x=numpy.asarray(X[vi]),
                     min_fraction=params["indicator_min_fraction"],
-                    sparse_indicators=params["sparse_indicators"]
+                    sparse_indicators=params["sparse_indicators"],
                 )
             ]
     xforms = [xf for xf in xforms if xf is not None]
@@ -344,6 +358,7 @@ def fit_numeric_outcome_treatment(
     }
 
 
+# noinspection PyPep8Naming
 def fit_binomial_outcome_treatment(
     *, X, y, outcome_target, var_list, outcome_name, cols_to_copy, params
 ):
@@ -362,6 +377,7 @@ def fit_binomial_outcome_treatment(
             all_null = all_null + [vi]
         if (n_null > 0) and (n_null < n):
             if "missing_indicator" in params["coders"]:
+                # noinspection PyTypeChecker
                 xforms = xforms + [
                     IndicateMissingTransform(
                         incoming_column_name=vi, derived_column_name=vi + "_is_bad"
@@ -374,6 +390,7 @@ def fit_binomial_outcome_treatment(
         for vi in num_list:
             summaryi = characterize_numeric(X[vi])
             if summaryi["varies"] and summaryi["has_range"]:
+                # noinspection PyTypeChecker
                 xforms = xforms + [
                     CleanNumericTransform(
                         incoming_column_name=vi, replacement_value=summaryi["mean"]
@@ -382,6 +399,7 @@ def fit_binomial_outcome_treatment(
     extra_args = {"outcome_target": outcome_target, "var_suffix": ""}
     for vi in cat_list:
         if "logit_code" in params["coders"]:
+            # noinspection PyTypeChecker
             xforms = xforms + [
                 fit_binomial_impact_code(
                     incoming_column_name=vi,
@@ -392,16 +410,18 @@ def fit_binomial_outcome_treatment(
                 )
             ]
         if "prevalence_code" in params["coders"]:
+            # noinspection PyTypeChecker
             xforms = xforms + [
                 fit_prevalence_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
             ]
         if "indicator_code" in params["coders"]:
+            # noinspection PyTypeChecker
             xforms = xforms + [
                 fit_indicator_code(
                     incoming_column_name=vi,
                     x=numpy.asarray(X[vi]),
                     min_fraction=params["indicator_min_fraction"],
-                    sparse_indicators=params["sparse_indicators"]
+                    sparse_indicators=params["sparse_indicators"],
                 )
             ]
     xforms = [xf for xf in xforms if xf is not None]
@@ -414,6 +434,7 @@ def fit_binomial_outcome_treatment(
     }
 
 
+# noinspection PyPep8Naming
 def fit_multinomial_outcome_treatment(
     *, X, y, var_list, outcome_name, cols_to_copy, params
 ):
@@ -432,6 +453,7 @@ def fit_multinomial_outcome_treatment(
             all_null = all_null + [vi]
         if (n_null > 0) and (n_null < n):
             if "missing_indicator" in params["coders"]:
+                # noinspection PyTypeChecker
                 xforms = xforms + [
                     IndicateMissingTransform(
                         incoming_column_name=vi, derived_column_name=vi + "_is_bad"
@@ -445,6 +467,7 @@ def fit_multinomial_outcome_treatment(
         for vi in num_list:
             summaryi = characterize_numeric(X[vi])
             if summaryi["varies"] and summaryi["has_range"]:
+                # noinspection PyTypeChecker
                 xforms = xforms + [
                     CleanNumericTransform(
                         incoming_column_name=vi, replacement_value=summaryi["mean"]
@@ -457,6 +480,7 @@ def fit_multinomial_outcome_treatment(
                     "outcome_target": outcome,
                     "var_suffix": ("_" + str(outcome)),
                 }
+                # noinspection PyTypeChecker
                 xforms = xforms + [
                     fit_binomial_impact_code(
                         incoming_column_name=vi,
@@ -467,16 +491,18 @@ def fit_multinomial_outcome_treatment(
                     )
                 ]
         if "prevalence_code" in params["coders"]:
+            # noinspection PyTypeChecker
             xforms = xforms + [
                 fit_prevalence_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
             ]
         if "indicator_code" in params["coders"]:
+            # noinspection PyTypeChecker
             xforms = xforms + [
                 fit_indicator_code(
                     incoming_column_name=vi,
                     x=numpy.asarray(X[vi]),
                     min_fraction=params["indicator_min_fraction"],
-                    sparse_indicators=params["sparse_indicators"]
+                    sparse_indicators=params["sparse_indicators"],
                 )
             ]
     xforms = [xf for xf in xforms if xf is not None]
@@ -491,6 +517,7 @@ def fit_multinomial_outcome_treatment(
     }
 
 
+# noinspection PyPep8Naming
 def fit_unsupervised_treatment(*, X, var_list, outcome_name, cols_to_copy, params):
     if (var_list is None) or (len(var_list) <= 0):
         var_list = [co for co in X.columns]
@@ -507,6 +534,7 @@ def fit_unsupervised_treatment(*, X, var_list, outcome_name, cols_to_copy, param
             all_null = all_null + [vi]
         if (n_null > 0) and (n_null < n):
             if "missing_indicator" in params["coders"]:
+                # noinspection PyTypeChecker
                 xforms = xforms + [
                     IndicateMissingTransform(
                         incoming_column_name=vi, derived_column_name=vi + "_is_bad"
@@ -519,6 +547,7 @@ def fit_unsupervised_treatment(*, X, var_list, outcome_name, cols_to_copy, param
         for vi in num_list:
             summaryi = characterize_numeric(X[vi])
             if summaryi["varies"] and summaryi["has_range"]:
+                # noinspection PyTypeChecker
                 xforms = xforms + [
                     CleanNumericTransform(
                         incoming_column_name=vi, replacement_value=summaryi["mean"]
@@ -526,6 +555,7 @@ def fit_unsupervised_treatment(*, X, var_list, outcome_name, cols_to_copy, param
                 ]
     for vi in cat_list:
         if "prevalence_code" in params["coders"]:
+            # noinspection PyTypeChecker
             xforms = xforms + [
                 fit_prevalence_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
             ]
@@ -535,7 +565,7 @@ def fit_unsupervised_treatment(*, X, var_list, outcome_name, cols_to_copy, param
                     incoming_column_name=vi,
                     x=numpy.asarray(X[vi]),
                     min_fraction=params["indicator_min_fraction"],
-                    sparse_indicators=params["sparse_indicators"]
+                    sparse_indicators=params["sparse_indicators"],
                 )
             ]
     xforms = [xf for xf in xforms if xf is not None]
@@ -560,11 +590,11 @@ def pre_prep_frame(x, *, col_list, cols_to_copy):
     x_set = set(x.columns)
     col_set = set(col_list)
     for ci in cols_to_copy:
-        if (ci in x_set) and (not ci in col_set):
+        if (ci in x_set) and (ci not in col_set):
             col_list = col_list + [ci]
     col_set = set(col_list)
     missing_cols = col_set - x_set
-    if len(missing_cols)>0:
+    if len(missing_cols) > 0:
         raise Exception("referred to not-present columns " + str(missing_cols))
     cset = set(cols_to_copy)
     if len(col_list) <= 0:
@@ -669,6 +699,7 @@ def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
                 + derived_column_name
             )
 
+        # noinspection PyPep8Naming
         def maybe_transform(*, fit, X):
             if fit is None:
                 return None
@@ -784,7 +815,9 @@ def score_plan_variables(cross_frame, outcome, plan, params):
     num_treatment_types = len(score_frame["treatment"].unique())
     score_frame["_one"] = 1.0
     score_frame["vcount"] = score_frame.groupby("treatment")["_one"].transform("sum")
-    score_frame["default_threshold"] = 1.0/(score_frame["vcount"] * num_treatment_types)
+    score_frame["default_threshold"] = 1.0 / (
+        score_frame["vcount"] * num_treatment_types
+    )
     score_frame.drop(["_one"], axis=1, inplace=True)
     score_frame["recommended"] = numpy.logical_and(
         score_frame["has_range"],
@@ -832,11 +865,14 @@ def pseudo_score_plan_variables(*, cross_frame, plan, params):
         ]
     )
     score_frame.reset_index(inplace=True, drop=True)
+
     def has_range(x):
         x = numpy.asarray(x)
         return numpy.max(x) > numpy.min(x)
 
-    score_frame["has_range"] = [has_range(cross_frame[c]) for c in score_frame["variable"]]
+    score_frame["has_range"] = [
+        has_range(cross_frame[c]) for c in score_frame["variable"]
+    ]
     score_frame["PearsonR"] = numpy.nan
     score_frame["significance"] = numpy.nan
     score_frame["recommended"] = score_frame["has_range"].copy()
