@@ -13,3 +13,4 @@ def test_can_convert_v_to_numeric():
     assert vtreat.util.can_convert_v_to_numeric(pandas.DataFrame({'x': [1, numpy.nan]})['x']) == True
     assert vtreat.util.can_convert_v_to_numeric(pandas.DataFrame({'x': ['a', 'b']})['x']) == False
     assert vtreat.util.can_convert_v_to_numeric(pandas.DataFrame({'x': ['a', numpy.nan]})['x']) == False
+
