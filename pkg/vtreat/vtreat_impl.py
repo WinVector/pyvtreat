@@ -261,9 +261,7 @@ def fit_prevalence_code(incoming_column_name, x):
     sf["_ni"] = 1.0
     sf = pandas.DataFrame(sf.groupby("x")["_ni"].sum())
     sf.reset_index(inplace=True, drop=False)
-    # adjusted from ni to ni-1 lto make
-    # rare levels look like new levels.
-    sf["_hest"] = (sf["_ni"] - 1.0) / n
+    sf["_hest"] = sf["_ni"] / n
     sf = sf.loc[:, ["x", "_hest"]].copy()
     newcol = incoming_column_name + "_prevalence_code"
     sf.columns = [incoming_column_name, newcol]
