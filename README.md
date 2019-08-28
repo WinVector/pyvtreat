@@ -7,6 +7,15 @@
 real-world data for supervised machine learning or predictive modeling
 in a statistically sound manner.
 
+# Installing
+
+Install `vtreat` with either of:
+
+  * `pip install vtreat`
+  * `pip install https://github.com/WinVector/pyvtreat/raw/master/pkg/dist/vtreat-0.2.5.tar.gz`
+
+# Details
+
 `vtreat` takes an input `DataFrame`
 that has a specified column called "the outcome variable" (or "y")
 that is the quantity to be predicted (and must not have missing
