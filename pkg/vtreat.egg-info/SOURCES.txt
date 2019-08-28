@@ -4,6 +4,7 @@ vtreat/__init__.py
 vtreat/cross_plan.py
 vtreat/transform.py
 vtreat/util.py
+vtreat/vtreat_api.py
 vtreat/vtreat_impl.py
 vtreat.egg-info/PKG-INFO
 vtreat.egg-info/SOURCES.txt
