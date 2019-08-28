@@ -17,7 +17,7 @@ def vtreat_parameters(user_params=None):
             "missing_indicator",
             "indicator_code",
             "impact_code",
-            "deviance_code",
+            "deviation_code",
             "logit_code",
             "prevalence_code",
         },

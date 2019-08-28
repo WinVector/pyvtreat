@@ -154,14 +154,14 @@ def fit_regression_deviation_code(*, incoming_column_name, x, y, extra_args, par
     sf = vtreat.util.grouped_by_x_statistics(x, y)
     if sf.shape[0] <= 1:
         return None
-    sf["_deviance_code"] = numpy.sqrt(sf["_var"])
-    sf = sf.loc[:, ["x", "_deviance_code"]].copy()
-    newcol = incoming_column_name + "_deviance_code"
+    sf["_deviation_code"] = numpy.sqrt(sf["_var"])
+    sf = sf.loc[:, ["x", "_deviation_code"]].copy()
+    newcol = incoming_column_name + "_deviation_code"
     sf.columns = [incoming_column_name, newcol]
     return YAwareMappedCodeTransform(
         incoming_column_name=incoming_column_name,
         derived_column_name=newcol,
-        treatment="deviance_code",
+        treatment="deviation_code",
         code_book=sf,
         refitter=fit_regression_deviation_code,
         extra_args=extra_args,
@@ -320,7 +320,7 @@ def fit_numeric_outcome_treatment(
                     params=params,
                 )
             ]
-        if "deviance_code" in params["coders"]:
+        if "deviation_code" in params["coders"]:
             # noinspection PyTypeChecker
             xforms = xforms + [
                 fit_regression_deviation_code(
