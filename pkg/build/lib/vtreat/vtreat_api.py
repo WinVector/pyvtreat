@@ -1,4 +1,3 @@
-
 import pandas
 import numpy
 
@@ -8,7 +7,7 @@ import vtreat.cross_plan
 
 
 def vtreat_parameters(user_params=None):
-    """build a vtreat parmaters dictionary, adding in user choices"""
+    """build a vtreat parameters dictionary, adding in user choices"""
 
     params = {
         "use_hierarchical_estimate": True,
@@ -37,11 +36,33 @@ def vtreat_parameters(user_params=None):
     return params
 
 
+def unsupervised_parameters(user_params=None):
+    """build a vtreat parameters dictionary for unsupervised tasks, adding in user choices"""
+
+    params = {
+        "coders": {
+            "clean_copy",
+            "missing_indicator",
+            "indicator_code",
+            "prevalence_code",
+        },
+        "indicator_min_fraction": 0.0,
+        "user_transforms": [],
+        "sparse_indicators": True,
+    }
+    if user_params is not None:
+        pkeys = set(params.keys())
+        for k in user_params.keys():
+            if k not in pkeys:
+                raise Exception("paramater key " + str(k) + " not recognized")
+            params[k] = user_params[k]
+    return params
+
+
 class VariableTreatment:
     def __init__(
         self, *, var_list=None, outcome_name=None, cols_to_copy=None, params=None
     ):
-        params = vtreat_parameters(params)
         if var_list is None:
             var_list = []
         if cols_to_copy is None:
@@ -61,9 +82,15 @@ class VariableTreatment:
 class NumericOutcomeTreatment(VariableTreatment):
     """manage a treatment plan for a numeric outcome (regression)"""
 
-    def __init__(
-        self, *, var_list=None, outcome_name=None, cols_to_copy=None, params=None
-    ):
+    def __init__(self, *, var_list=None, outcome_name, cols_to_copy=None, params=None):
+        """
+
+         :param var_list: list or touple of column names
+         :param outcome_name: name of column containing dependent variable
+         :param cols_to_copy: list or touple of column names
+         :param params: vtreat.vtreat_parameters()
+        """
+        params = vtreat_parameters(params)
         VariableTreatment.__init__(
             self,
             var_list=var_list,
@@ -156,11 +183,20 @@ class BinomialOutcomeTreatment(VariableTreatment):
         self,
         *,
         var_list=None,
-        outcome_name=None,
+        outcome_name,
         outcome_target,
         cols_to_copy=None,
         params=None
     ):
+        """
+
+         :param var_list: list or touple of column names
+         :param outcome_name: name of column containing dependent variable
+         :param outcome_target: value of outcome to consider "positive"
+         :param cols_to_copy: list or touple of column names
+         :param params: vtreat.vtreat_parameters()
+        """
+        params = vtreat_parameters(params)
         VariableTreatment.__init__(
             self,
             var_list=var_list,
@@ -254,9 +290,16 @@ class BinomialOutcomeTreatment(VariableTreatment):
 class MultinomialOutcomeTreatment(VariableTreatment):
     """manage a treatment plan for a set of outcomes (multinomial classification)"""
 
-    def __init__(
-        self, *, var_list=None, outcome_name=None, cols_to_copy=None, params=None
-    ):
+    def __init__(self, *, var_list=None, outcome_name, cols_to_copy=None, params=None):
+        """
+
+         :param var_list: list or touple of column names
+         :param outcome_name: name of column containing dependent variable
+         :param cols_to_copy: list or touple of column names
+         :param params: vtreat.vtreat_parameters()
+        """
+
+        params = vtreat_parameters(params)
         VariableTreatment.__init__(
             self,
             var_list=var_list,
@@ -356,6 +399,13 @@ class UnsupervisedTreatment(VariableTreatment):
     """manage an unsupervised treatment plan"""
 
     def __init__(self, *, var_list=None, cols_to_copy=None, params=None):
+        """
+
+        :param var_list: list or touple of column names
+        :param cols_to_copy: list or touple of column names
+        :param params: vtreat.unsupervised_parameters()
+        """
+        params = unsupervised_parameters(params)
         VariableTreatment.__init__(
             self,
             var_list=var_list,

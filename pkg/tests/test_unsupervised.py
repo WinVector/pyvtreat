@@ -10,7 +10,7 @@ def test_unsupervised():
     d["const2"] = "b"
 
     transform = vtreat.UnsupervisedTreatment(
-        params=vtreat.vtreat_parameters({
+        params=vtreat.unsupervised_parameters({
             'indicator_min_fraction': 0.01,
         }))
 
