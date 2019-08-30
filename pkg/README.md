@@ -47,9 +47,8 @@ To get started with `vtreat` please check out our documentation:
 
   * [Getting started using `vtreat` for classification](https://github.com/WinVector/pyvtreat/blob/master/Examples/Classification/Classification.ipynb).
   * [Getting started using `vtreat` for regression](https://github.com/WinVector/pyvtreat/blob/master/Examples/Regression/Regression.ipynb).
-  * [The original `vtreat` paper](https://arxiv.org/abs/1611.09477) (the documentation describes the `R` version,
-however all of the examples can be found worked in `Python` [here](https://github.com/WinVector/pyvtreat/tree/master/Examples/vtreat_paper1)).
-  * Coming soon: Getting started using `vtreat` for unsupervised tasks (until then there is a basic example [here](https://github.com/WinVector/pyvtreat/blob/master/Examples/Unsupervised/Unsupervised.ipynb)).
+  * [Getting started using `vtreat` for unsupervised tasks](https://github.com/WinVector/pyvtreat/blob/master/Examples/Unsupervised/Unsupervised.ipynb)).
+  * [The original `vtreat` paper](https://arxiv.org/abs/1611.09477) this note describes the methodology and theory. (The article describes the `R` version, however all of the examples can be found worked in `Python` [here](https://github.com/WinVector/pyvtreat/tree/master/Examples/vtreat_paper1)).
   * Coming soon: Getting started using `vtreat` for multi-category classification (until then there is a basic example [here](https://github.com/WinVector/pyvtreat/blob/master/Examples/Multinomial/MultinomialExample.ipynb)).
 
 
