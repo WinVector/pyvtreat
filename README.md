@@ -43,11 +43,15 @@ learning using documented methods using `vtreat`.  Incorporating
 `vtreat` into your machine learning workflow lets you quickly work
 with very diverse structured data.
 
-Worked examples can be found [here](https://github.com/WinVector/pyvtreat/tree/master/Examples).
+To get started with `vtreat` please check out our documentation:
 
-For more detail please see here: [arXiv:1611.09477
-stat.AP](https://arxiv.org/abs/1611.09477) (the documentation describes the `R` version,
+  * [Getting started using `vtreat` for classification](https://github.com/WinVector/pyvtreat/blob/master/Examples/Classification/Classification.ipynb).
+  * [Getting started using `vtreat` for regression](https://github.com/WinVector/pyvtreat/blob/master/Examples/Regression/Regression.ipynb).
+  * [The original `vtreat` paper](https://arxiv.org/abs/1611.09477) (the documentation describes the `R` version,
 however all of the examples can be found worked in `Python` [here](https://github.com/WinVector/pyvtreat/tree/master/Examples/vtreat_paper1)).
+  * Coming soon: Getting started using `vtreat` for unsupervised tasks (until then there is a basic example [here](https://github.com/WinVector/pyvtreat/blob/master/Examples/Unsupervised/Unsupervised.ipynb)).
+  * Coming soon: Getting started using `vtreat` for multi-category classification (until then there is a basic example [here](https://github.com/WinVector/pyvtreat/blob/master/Examples/Multinomial/MultinomialExample.ipynb)).
+
 
 `vtreat` is available
 as a [`Python`/`Pandas` package](https://github.com/WinVector/vtreat),
@@ -58,9 +62,7 @@ and also as an [`R` package](https://github.com/WinVector/vtreat).
 
 (logo: Julie Mount, source: “The Harvest” by Boris Kustodiev 1914)
 
-Some operational examples can be found [here](https://github.com/WinVector/pyvtreat/tree/master/Examples).
-
-We are working on new documentation. But for now understand `vtreat` is used by instantiating one of the classes
+`vtreat` is used by instantiating one of the classes
 `vtreat.NumericOutcomeTreatment`, `vtreat.BinomialOutcomeTreatment`, `vtreat.MultinomialOutcomeTreatment`, or `vtreat.UnsupervisedTreatment`.
 Each of these implements the [`sklearn.pipeline.Pipeline`](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html) interfaces
 expecting a [Pandas DataFrame](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html) as input. The `vtreat` steps are intended to
@@ -150,7 +152,7 @@ import wvpy.util
 import scipy.sparse
 ```
 
-Read in explanitory variables.
+Read in explanatory variables.
 
 
 ```python
@@ -432,7 +434,7 @@ We start by building our treatment plan, this has the `sklearn.pipeline.Pipeline
 plan = vtreat.BinomialOutcomeTreatment(outcome_target=True)
 ```
 
-Use `.fit_transform()` to get a special copy of the treated training data that has cross-validated mitigations againsst nested model bias. We call this a "cross frame." `.fit_transform()` is deliberately a different `DataFrame` than what would be returned by `.fit().transform()` (the `.fit().transform()` would damage the modeling effort due nested model bias, the `.fit_transform()` "cross frame" uses cross-validation techniques similar to "stacking" to mitigate these issues).
+Use `.fit_transform()` to get a special copy of the treated training data that has cross-validated mitigations against nested model bias. We call this a "cross frame." `.fit_transform()` is deliberately a different `DataFrame` than what would be returned by `.fit().transform()` (the `.fit().transform()` would damage the modeling effort due nested model bias, the `.fit_transform()` "cross frame" uses cross-validation techniques similar to "stacking" to mitigate these issues).
 
 
 ```python
