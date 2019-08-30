@@ -635,7 +635,9 @@ def perform_transform(*, x, transform, params):
 def limit_to_appropriate_columns(*, res, transform):
     plan = transform.plan_
     to_copy = set(plan["cols_to_copy"])
-    if ("filter_to_recommended" in  transform.params_.keys()) and transform.params_["filter_to_recommended"]:
+    if ("filter_to_recommended" in transform.params_.keys()) and transform.params_[
+        "filter_to_recommended"
+    ]:
         to_take = set(
             [
                 ci

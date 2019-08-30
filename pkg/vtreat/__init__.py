@@ -1,7 +1,9 @@
 # noinspection PyUnresolvedReferences
 import pandas
+
 # noinspection PyUnresolvedReferences
 import numpy
+
 # noinspection PyUnresolvedReferences
 import scipy
 
@@ -32,7 +34,7 @@ warnings.simplefilter(action="ignore", category=FutureWarning)
 from vtreat.vtreat_api import *
 
 __docformat__ = "restructuredtext"
-__version__ = '0.2.6'
+__version__ = "0.2.6"
 
 __doc__ = """
 This<https://github.com/WinVector/pyvtreat> is the Python version of the vtreat data preparation system
