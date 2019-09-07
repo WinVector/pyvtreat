@@ -28,9 +28,17 @@ def test_classification():
 
     d_prepared = transform.fit_transform(d, d["y"])
 
+    for c in d_prepared.columns:
+        assert vtreat.util.can_convert_v_to_numeric(d_prepared[c])
+        assert sum(vtreat.util.is_bad(d_prepared[c])) == 0
+
     dtest = make_data(450)
 
     dtest_prepared = transform.transform(dtest)
+
+    for c in dtest_prepared.columns:
+        assert vtreat.util.can_convert_v_to_numeric(dtest_prepared[c])
+        assert sum(vtreat.util.is_bad(dtest_prepared[c])) == 0
 
     sf = transform.score_frame_
 

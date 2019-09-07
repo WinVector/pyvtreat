@@ -16,4 +16,8 @@ def test_unsupervised():
 
     d_treated = transform.fit_transform(d)
 
+    for c in d_treated.columns:
+        assert vtreat.util.can_convert_v_to_numeric(d_treated[c])
+        assert sum(vtreat.util.is_bad(d_treated[c])) == 0
+
     sf = transform.score_frame_

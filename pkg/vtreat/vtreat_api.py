@@ -130,7 +130,7 @@ class NumericOutcomeTreatment(VariableTreatment):
         if not X.shape[0] == len(y):
             raise Exception("X.shape[0] should equal len(y)")
         y = numpy.asarray(y, dtype=numpy.float64)
-        if numpy.isnan(y).sum() > 0:
+        if vtreat.util.is_bad(y).sum() > 0:
             raise Exception("y should not have any missing/NA/NaN values")
         if numpy.max(y) <= numpy.min(y):
             raise Exception("y does not vary")

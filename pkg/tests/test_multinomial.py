@@ -34,6 +34,12 @@ def test_multinomial():
 
     treatment = vtreat.MultinomialOutcomeTreatment(outcome_name="y")
     cross_frame = treatment.fit_transform(d, d["y"])
+
+    for c in cross_frame.columns:
+        if not c == 'y':
+            assert vtreat.util.can_convert_v_to_numeric(cross_frame[c])
+            assert sum(vtreat.util.is_bad(cross_frame[c])) == 0
+
     sf = treatment.score_frame_
 
     targets = sf.loc[

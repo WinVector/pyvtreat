@@ -23,6 +23,48 @@ def can_convert_v_to_numeric(x):
         return False
 
 
+def is_bad(x):
+    """ for numeric vector x, return logical vector of positions that are null, NaN, infinite"""
+    if can_convert_v_to_numeric(x):
+        return numpy.logical_or(
+            pandas.isnull(x),
+            numpy.logical_or(
+                numpy.isnan(x),
+                numpy.isinf(x)
+            ))
+    return pandas.isnull(x)
+
+
+def characterize_numeric(x):
+    """compute na count, min,max,mean of a numeric vector"""
+    x = numpy.asarray(x).astype(float)
+    not_bad = numpy.logical_not(is_bad(x))
+    n_not_bad = sum(not_bad)
+    n = len(x)
+    if n_not_bad <= 0:
+        return {
+            "n": n,
+            "n_not_bad": n_not_bad,
+            "min": None,
+            "mean": None,
+            "max": None,
+            "varies": False,
+            "has_range": False,
+        }
+    x = x[not_bad]
+    mn = numpy.min(x)
+    mx = numpy.max(x)
+    return {
+        "n": n,
+        "n_not_bad": n_not_bad,
+        "min": mn,
+        "mean": numpy.mean(x),
+        "max": mx,
+        "varies": (mx > mn) or ((n_not_bad > 0) and (n_not_bad < n)),
+        "has_range": (mx > mn),
+    }
+
+
 def grouped_by_x_statistics(x, y):
     """compute some grouped by x vector summaries of numeric y vector (no missing values in y)"""
     n = len(x)
@@ -33,8 +75,8 @@ def grouped_by_x_statistics(x, y):
     eps = 1.0e-3
     sf = pandas.DataFrame({"x": x, "y": y})
     sf.reset_index(inplace=True, drop=True)
-    na_posns = sf["x"].isnull()
-    sf.loc[na_posns, "x"] = "_NA_"
+    bad_posns = pandas.isnull(sf["x"])
+    sf.loc[bad_posns, "x"] = "_NA_"
     global_mean = sf["y"].mean()
     sf["_group_mean"] = sf.groupby("x")["y"].transform("mean")
     sf["_var"] = (sf["y"] - sf["_group_mean"]) ** 2
@@ -45,9 +87,10 @@ def grouped_by_x_statistics(x, y):
     sf["_group_mean"] = sf["_group_mean"] / sf["_ni"]
     sf["_var"] = sf["_var"] / (sf["_ni"] - 1) + eps
     avg_var = 0
-    if sum(sf["_var"].isnull()) < len(sf["_var"]):
+    bad_vars = is_bad(sf["_var"])
+    if sum(bad_vars) < len(sf["_var"]):
         avg_var = numpy.nanmean(sf["_var"])
-    sf.loc[sf["_var"].isnull(), "_var"] = avg_var
+    sf.loc[bad_vars, "_var"] = avg_var
     if sf.shape[0] > 1:
         sf["_vb"] = statistics.variance(sf["_group_mean"]) + eps
     else:

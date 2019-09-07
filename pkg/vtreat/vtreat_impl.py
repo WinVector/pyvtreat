@@ -12,36 +12,6 @@ import vtreat.util
 import vtreat.transform
 
 
-def characterize_numeric(x):
-    """compute na count, min,max,mean of a numeric vector"""
-    x = numpy.asarray(x).astype(float)
-    not_nan = numpy.logical_not(numpy.isnan(x))
-    n_not_nan = sum(not_nan)
-    n = len(x)
-    if n_not_nan <= 0:
-        return {
-            "n": n,
-            "n_not_nan": n_not_nan,
-            "min": None,
-            "mean": None,
-            "max": None,
-            "varies": False,
-            "has_range": False,
-        }
-    x = x[not_nan]
-    mn = numpy.min(x)
-    mx = numpy.max(x)
-    return {
-        "n": n,
-        "n_not_nan": n_not_nan,
-        "min": mn,
-        "mean": numpy.mean(x),
-        "max": mx,
-        "varies": (mx > mn) or ((n_not_nan > 0) and (n_not_nan < n)),
-        "has_range": (mx > mn),
-    }
-
-
 class VarTransform:
     """build a treatment plan for a numeric outcome (regression)"""
 
@@ -67,13 +37,13 @@ class MappedCodeTransform(VarTransform):
         incoming_column_name = self.incoming_column_name_
         derived_column_name = self.derived_column_names_[0]
         sf = pandas.DataFrame({incoming_column_name: data_frame[incoming_column_name]})
-        na_posns = sf[incoming_column_name].isnull()
-        sf.loc[na_posns, incoming_column_name] = "_NA_"
+        bad_posns = vtreat.util.is_bad(sf[incoming_column_name])
+        sf.loc[bad_posns, incoming_column_name] = "_NA_"
         res = pandas.merge(
             sf, self.code_book_, on=[self.incoming_column_name_], how="left", sort=False
         )  # ordered by left table rows
         res = res[[derived_column_name]].copy()
-        res.loc[res[derived_column_name].isnull(), derived_column_name] = 0
+        res.loc[vtreat.util.is_bad(res[derived_column_name]), derived_column_name] = 0
         return res
 
 
@@ -110,8 +80,8 @@ class CleanNumericTransform(VarTransform):
 
     def transform(self, data_frame):
         col = numpy.asarray(data_frame[self.incoming_column_name_].copy()).astype(float)
-        na_posns = numpy.isnan(col)
-        col[na_posns] = self.replacement_value_
+        bad_posns = vtreat.util.is_bad(col)
+        col[bad_posns] = self.replacement_value_
         res = pandas.DataFrame({self.derived_column_names_[0]: col})
         return res
 
@@ -123,7 +93,7 @@ class IndicateMissingTransform(VarTransform):
         )
 
     def transform(self, data_frame):
-        col = data_frame[self.incoming_column_name_].isnull()
+        col = vtreat.util.is_bad(data_frame[self.incoming_column_name_])
         res = pandas.DataFrame({self.derived_column_names_[0]: col})
         return res.astype(float)
 
@@ -213,8 +183,8 @@ class IndicatorCodeTransform(VarTransform):
     def transform(self, data_frame):
         incoming_column_name = self.incoming_column_name_
         sf = pandas.DataFrame({incoming_column_name: data_frame[incoming_column_name]})
-        na_posns = sf[incoming_column_name].isnull()
-        sf.loc[na_posns, incoming_column_name] = "_NA_"
+        bad_posns = vtreat.util.is_bad(sf[incoming_column_name])
+        sf.loc[bad_posns, incoming_column_name] = "_NA_"
         col = sf[self.incoming_column_name_]
 
         def f(i):
@@ -236,8 +206,8 @@ def fit_indicator_code(
     *, incoming_column_name, x, min_fraction, sparse_indicators=False
 ):
     sf = pandas.DataFrame({incoming_column_name: x})
-    na_posns = sf[incoming_column_name].isnull()
-    sf.loc[na_posns, incoming_column_name] = "_NA_"
+    bad_posns = vtreat.util.is_bad(sf[incoming_column_name])
+    sf.loc[bad_posns, incoming_column_name] = "_NA_"
     counts = sf[incoming_column_name].value_counts()
     n = sf.shape[0]
     counts = counts[counts >= min_fraction * n]  # no more than 1/min_fraction symbols
@@ -254,8 +224,8 @@ def fit_indicator_code(
 
 def fit_prevalence_code(incoming_column_name, x):
     sf = pandas.DataFrame({"x": x})
-    na_posns = sf["x"].isnull()
-    sf.loc[na_posns, "x"] = "_NA_"
+    bad_posns = vtreat.util.is_bad(sf["x"])
+    sf.loc[bad_posns, "x"] = "_NA_"
     sf.reset_index(inplace=True, drop=True)
     n = sf.shape[0]
     sf["_ni"] = 1.0
@@ -284,24 +254,24 @@ def fit_numeric_outcome_treatment(
         raise Exception("no variables")
     xforms = []
     n = X.shape[0]
-    all_null = []
+    all_bad = []
     for vi in var_list:
-        n_null = sum(X[vi].isnull())
-        if n_null >= n:
-            all_null = all_null + [vi]
-        if (n_null > 0) and (n_null < n):
+        n_bad = sum(vtreat.util.is_bad(X[vi]))
+        if n_bad >= n:
+            all_bad = all_bad + [vi]
+        if (n_bad > 0) and (n_bad < n):
             if "missing_indicator" in params["coders"]:
                 xforms = xforms + [
                     IndicateMissingTransform(
                         incoming_column_name=vi, derived_column_name=vi + "_is_bad"
                     )
                 ]
-    var_list = [co for co in var_list if (not (co in set(all_null)))]
+    var_list = [co for co in var_list if (not (co in set(all_bad)))]
     num_list = [co for co in var_list if vtreat.util.can_convert_v_to_numeric(X[co])]
     cat_list = [co for co in var_list if co not in set(num_list)]
     if "clean_copy" in params["coders"]:
         for vi in num_list:
-            summaryi = characterize_numeric(X[vi])
+            summaryi = vtreat.util.characterize_numeric(X[vi])
             if summaryi["varies"] and summaryi["has_range"]:
                 xforms = xforms + [
                     CleanNumericTransform(
@@ -368,12 +338,12 @@ def fit_binomial_outcome_treatment(
         raise Exception("no variables")
     xforms = []
     n = X.shape[0]
-    all_null = []
+    all_badd = []
     for vi in var_list:
-        n_null = sum(X[vi].isnull())
-        if n_null >= n:
-            all_null = all_null + [vi]
-        if (n_null > 0) and (n_null < n):
+        n_bad = sum(vtreat.util.is_bad(X[vi]))
+        if n_bad >= n:
+            all_badd = all_badd + [vi]
+        if (n_bad > 0) and (n_bad < n):
             if "missing_indicator" in params["coders"]:
                 # noinspection PyTypeChecker
                 xforms = xforms + [
@@ -381,12 +351,12 @@ def fit_binomial_outcome_treatment(
                         incoming_column_name=vi, derived_column_name=vi + "_is_bad"
                     )
                 ]
-    var_list = [co for co in var_list if (not (co in set(all_null)))]
+    var_list = [co for co in var_list if (not (co in set(all_badd)))]
     num_list = [co for co in var_list if vtreat.util.can_convert_v_to_numeric(X[co])]
     cat_list = [co for co in var_list if co not in set(num_list)]
     if "clean_copy" in params["coders"]:
         for vi in num_list:
-            summaryi = characterize_numeric(X[vi])
+            summaryi = vtreat.util.characterize_numeric(X[vi])
             if summaryi["varies"] and summaryi["has_range"]:
                 # noinspection PyTypeChecker
                 xforms = xforms + [
@@ -444,12 +414,12 @@ def fit_multinomial_outcome_treatment(
         raise Exception("no variables")
     xforms = []
     n = X.shape[0]
-    all_null = []
+    all_bad = []
     for vi in var_list:
-        n_null = sum(X[vi].isnull())
-        if n_null >= n:
-            all_null = all_null + [vi]
-        if (n_null > 0) and (n_null < n):
+        n_bad = sum(vtreat.util.is_bad(X[vi]))
+        if n_bad >= n:
+            all_bad = all_bad + [vi]
+        if (n_bad > 0) and (n_bad < n):
             if "missing_indicator" in params["coders"]:
                 # noinspection PyTypeChecker
                 xforms = xforms + [
@@ -458,12 +428,12 @@ def fit_multinomial_outcome_treatment(
                     )
                 ]
     outcomes = [oi for oi in set(y)]
-    var_list = [co for co in var_list if (not (co in set(all_null)))]
+    var_list = [co for co in var_list if (not (co in set(all_bad)))]
     num_list = [co for co in var_list if vtreat.util.can_convert_v_to_numeric(X[co])]
     cat_list = [co for co in var_list if co not in set(num_list)]
     if "clean_copy" in params["coders"]:
         for vi in num_list:
-            summaryi = characterize_numeric(X[vi])
+            summaryi = vtreat.util.characterize_numeric(X[vi])
             if summaryi["varies"] and summaryi["has_range"]:
                 # noinspection PyTypeChecker
                 xforms = xforms + [
@@ -525,12 +495,12 @@ def fit_unsupervised_treatment(*, X, var_list, outcome_name, cols_to_copy, param
         raise Exception("no variables")
     xforms = []
     n = X.shape[0]
-    all_null = []
+    all_bad = []
     for vi in var_list:
-        n_null = sum(X[vi].isnull())
-        if n_null >= n:
-            all_null = all_null + [vi]
-        if (n_null > 0) and (n_null < n):
+        n_bad = sum(vtreat.util.is_bad(X[vi]))
+        if n_bad >= n:
+            all_bad = all_bad + [vi]
+        if (n_bad > 0) and (n_bad < n):
             if "missing_indicator" in params["coders"]:
                 # noinspection PyTypeChecker
                 xforms = xforms + [
@@ -538,12 +508,12 @@ def fit_unsupervised_treatment(*, X, var_list, outcome_name, cols_to_copy, param
                         incoming_column_name=vi, derived_column_name=vi + "_is_bad"
                     )
                 ]
-    var_list = [co for co in var_list if (not (co in set(all_null)))]
+    var_list = [co for co in var_list if (not (co in set(all_bad)))]
     num_list = [co for co in var_list if vtreat.util.can_convert_v_to_numeric(X[co])]
     cat_list = [co for co in var_list if co not in set(num_list)]
     if "clean_copy" in params["coders"]:
         for vi in num_list:
-            summaryi = characterize_numeric(X[vi])
+            summaryi = vtreat.util.characterize_numeric(X[vi])
             if summaryi["varies"] and summaryi["has_range"]:
                 # noinspection PyTypeChecker
                 xforms = xforms + [
@@ -602,13 +572,13 @@ def pre_prep_frame(x, *, col_list, cols_to_copy):
     for c in x.columns:
         if c in cset:
             continue
-        na_ind = x[c].isnull()
+        bad_ind = vtreat.util.is_bad(x[c])
         if vtreat.util.can_convert_v_to_numeric(x[c]):
             x[c] = x[c] + 0.0
         else:
             # https://stackoverflow.com/questions/22231592/pandas-change-data-type-of-series-to-string
             x[c] = x[c].apply(str)
-        x.loc[na_ind, c] = numpy.nan
+        x.loc[bad_ind, c] = numpy.nan
     return x
 
 
@@ -667,7 +637,7 @@ def mean_of_single_column_pandas_list(val_list):
         return numpy.nan
     d = pandas.concat(val_list, axis=0)
     col = d.columns[0]
-    d = d.loc[numpy.logical_not(d[col].isnull()), [col]]
+    d = d.loc[numpy.logical_not(vtreat.util.is_bad(d[col])), [col]]
     if d.shape[0] < 1:
         return numpy.nan
     return numpy.mean(d[col])
@@ -734,7 +704,7 @@ def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
             res.loc[cp["app"], derived_column_name] = numpy.asarray(
                 pi[derived_column_name]
             ).reshape((len(pi)))
-        res.loc[res[derived_column_name].isnull(), derived_column_name] = avg
+        res.loc[vtreat.util.is_bad(res[derived_column_name]), derived_column_name] = avg
     for xf in plan["xforms"]:
         xf.refitter_ = None
     return res
@@ -779,7 +749,7 @@ def cross_patch_user_y_aware_cols(*, x, y, res, params, cross_plan):
                 pi.reset_index(inplace=True, drop=True)
                 cp = cross_plan[i]
                 res.loc[cp["app"], col] = numpy.asarray(pi[col]).reshape((len(pi)))
-            res.loc[res[col].isnull(), col] = avg
+            res.loc[vtreat.util.is_bad(res[col]), col] = avg
     return res
 
 
