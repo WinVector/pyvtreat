@@ -197,7 +197,7 @@ class IndicatorCodeTransform(VarTransform):
             pandas.DataFrame({self.derived_column_names_[i]: f(i)})
             for i in range(len(self.levels_))
         ]
-        res = pandas.concat(res, axis=1)
+        res = pandas.concat(res, axis=1, sort=False)
         res.reset_index(inplace=True, drop=True)
         return res
 
@@ -574,10 +574,10 @@ def pre_prep_frame(x, *, col_list, cols_to_copy):
             continue
         bad_ind = vtreat.util.is_bad(x[c])
         if vtreat.util.can_convert_v_to_numeric(x[c]):
-            x[c] = x[c] + 0.0
+            x[c] = numpy.asarray(x[c]+0, dtype=float)
         else:
             # https://stackoverflow.com/questions/22231592/pandas-change-data-type-of-series-to-string
-            x[c] = x[c].apply(str)
+            x[c] = numpy.asarray(x[c].apply(str), dtype=str)
         x.loc[bad_ind, c] = numpy.nan
     return x
 
@@ -597,7 +597,7 @@ def perform_transform(*, x, transform, params):
         new_frames = [cp] + new_frames
     if len(new_frames) <= 0:
         raise Exception("no columns transformed")
-    res = pandas.concat(new_frames, axis=1)
+    res = pandas.concat(new_frames, axis=1, sort=False)
     res.reset_index(inplace=True, drop=True)
     return res
 
@@ -635,7 +635,7 @@ def limit_to_appropriate_columns(*, res, transform):
 def mean_of_single_column_pandas_list(val_list):
     if val_list is None or len(val_list) <= 0:
         return numpy.nan
-    d = pandas.concat(val_list, axis=0)
+    d = pandas.concat(val_list, axis=0, sort=False)
     col = d.columns[0]
     d = d.loc[numpy.logical_not(vtreat.util.is_bad(d[col])), [col]]
     if d.shape[0] < 1:
@@ -775,7 +775,8 @@ def score_plan_variables(cross_frame, outcome, plan, params):
             describe_ut(ut)
             for ut in params["user_transforms"]
             if len(ut.incoming_vars_) > 0
-        ]
+        ],
+        sort = False
     )
     var_table.reset_index(inplace=True, drop=True)
     sf = vtreat.util.score_variables(
@@ -832,7 +833,8 @@ def pseudo_score_plan_variables(*, cross_frame, plan, params):
             describe_ut(ut)
             for ut in params["user_transforms"]
             if len(ut.incoming_vars_) > 0
-        ]
+        ],
+        sort=False
     )
     score_frame.reset_index(inplace=True, drop=True)
 

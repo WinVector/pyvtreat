@@ -82,7 +82,7 @@ class VariableTreatment:
 class NumericOutcomeTreatment(VariableTreatment):
     """manage a treatment plan for a numeric outcome (regression)"""
 
-    def __init__(self, *, var_list=None, outcome_name, cols_to_copy=None, params=None):
+    def __init__(self, *, var_list=None, outcome_name=None, cols_to_copy=None, params=None):
         """
 
          :param var_list: list or touple of column names
@@ -183,7 +183,7 @@ class BinomialOutcomeTreatment(VariableTreatment):
         self,
         *,
         var_list=None,
-        outcome_name,
+        outcome_name=None,
         outcome_target,
         cols_to_copy=None,
         params=None
@@ -290,7 +290,7 @@ class BinomialOutcomeTreatment(VariableTreatment):
 class MultinomialOutcomeTreatment(VariableTreatment):
     """manage a treatment plan for a set of outcomes (multinomial classification)"""
 
-    def __init__(self, *, var_list=None, outcome_name, cols_to_copy=None, params=None):
+    def __init__(self, *, var_list=None, outcome_name=None, cols_to_copy=None, params=None):
         """
 
          :param var_list: list or touple of column names

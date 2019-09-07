@@ -136,30 +136,6 @@ d_train.head()
   </thead>
   <tbody>
     <tr>
-      <th>0</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>1526.0</td>
-      <td>7.0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>...</td>
-      <td>oslk</td>
-      <td>fXVEsaq</td>
-      <td>jySVZNlOJy</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>xb3V</td>
-      <td>RAYp</td>
-      <td>F2FyR07IdsN7I</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
       <th>1</th>
       <td>NaN</td>
       <td>NaN</td>
@@ -181,6 +157,30 @@ d_train.head()
       <td>RAYp</td>
       <td>F2FyR07IdsN7I</td>
       <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>5236.0</td>
+      <td>7.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>Al6ZaUT</td>
+      <td>NKv4yOc</td>
+      <td>jySVZNlOJy</td>
+      <td>NaN</td>
+      <td>kG3k</td>
+      <td>Qu4f</td>
+      <td>02N6s8f</td>
+      <td>ib5G6X1eUxUn6</td>
+      <td>am7c</td>
       <td>NaN</td>
     </tr>
     <tr>
@@ -270,7 +270,7 @@ d_train.shape
 
 
 
-    (44889, 230)
+    (44999, 230)
 
 
 
@@ -372,11 +372,11 @@ cross_frame.head()
       <td>...</td>
       <td>1.0</td>
       <td>0.0</td>
-      <td>0.153982</td>
-      <td>0.653946</td>
+      <td>0.140709</td>
+      <td>0.653948</td>
       <td>1.0</td>
-      <td>0.168175</td>
-      <td>0.568803</td>
+      <td>0.161622</td>
+      <td>0.568168</td>
       <td>1.0</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -394,15 +394,15 @@ cross_frame.head()
       <td>0.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>1.0</td>
       <td>0.0</td>
-      <td>0.155491</td>
-      <td>0.653946</td>
-      <td>1.0</td>
-      <td>0.162767</td>
-      <td>0.568803</td>
-      <td>1.0</td>
       <td>0.0</td>
+      <td>-0.505610</td>
+      <td>0.053512</td>
+      <td>0.0</td>
+      <td>-0.246583</td>
+      <td>0.233627</td>
+      <td>0.0</td>
+      <td>1.0</td>
       <td>0.0</td>
     </tr>
     <tr>
@@ -420,11 +420,11 @@ cross_frame.head()
       <td>...</td>
       <td>1.0</td>
       <td>0.0</td>
-      <td>0.149346</td>
-      <td>0.653946</td>
+      <td>0.140709</td>
+      <td>0.653948</td>
       <td>1.0</td>
-      <td>0.167901</td>
-      <td>0.568803</td>
+      <td>0.161622</td>
+      <td>0.568168</td>
       <td>1.0</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -444,11 +444,11 @@ cross_frame.head()
       <td>...</td>
       <td>1.0</td>
       <td>0.0</td>
-      <td>0.149920</td>
-      <td>0.653946</td>
+      <td>0.140709</td>
+      <td>0.653948</td>
       <td>1.0</td>
-      <td>-0.280542</td>
-      <td>0.196685</td>
+      <td>-0.279741</td>
+      <td>0.196804</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
@@ -468,18 +468,18 @@ cross_frame.head()
       <td>...</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>-0.203034</td>
-      <td>0.018557</td>
+      <td>-0.171294</td>
+      <td>0.019134</td>
       <td>0.0</td>
-      <td>-0.248614</td>
-      <td>0.233042</td>
+      <td>-0.253889</td>
+      <td>0.233627</td>
       <td>0.0</td>
       <td>1.0</td>
       <td>0.0</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 235 columns</p>
+<p>5 rows × 222 columns</p>
 </div>
 
 
@@ -492,7 +492,7 @@ cross_frame.shape
 
 
 
-    (44889, 235)
+    (44999, 222)
 
 
 
@@ -532,6 +532,7 @@ plan.score_frame_.head()
       <th>PearsonR</th>
       <th>significance</th>
       <th>vcount</th>
+      <th>default_threshold</th>
       <th>recommended</th>
     </tr>
   </thead>
@@ -543,9 +544,10 @@ plan.score_frame_.head()
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.003478</td>
-      <td>0.461192</td>
-      <td>193.0</td>
+      <td>0.002700</td>
+      <td>0.566802</td>
+      <td>192.0</td>
+      <td>0.001042</td>
       <td>False</td>
     </tr>
     <tr>
@@ -555,9 +557,10 @@ plan.score_frame_.head()
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.019965</td>
-      <td>0.000023</td>
-      <td>193.0</td>
+      <td>0.020073</td>
+      <td>0.000021</td>
+      <td>192.0</td>
+      <td>0.001042</td>
       <td>True</td>
     </tr>
     <tr>
@@ -567,9 +570,10 @@ plan.score_frame_.head()
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.019933</td>
-      <td>0.000024</td>
-      <td>193.0</td>
+      <td>0.020042</td>
+      <td>0.000021</td>
+      <td>192.0</td>
+      <td>0.001042</td>
       <td>True</td>
     </tr>
     <tr>
@@ -579,9 +583,10 @@ plan.score_frame_.head()
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.017994</td>
-      <td>0.000138</td>
-      <td>193.0</td>
+      <td>0.017835</td>
+      <td>0.000155</td>
+      <td>192.0</td>
+      <td>0.001042</td>
       <td>True</td>
     </tr>
     <tr>
@@ -591,9 +596,10 @@ plan.score_frame_.head()
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.018151</td>
-      <td>0.000120</td>
-      <td>193.0</td>
+      <td>0.020403</td>
+      <td>0.000015</td>
+      <td>192.0</td>
+      <td>0.001042</td>
       <td>True</td>
     </tr>
   </tbody>
@@ -611,7 +617,7 @@ len(model_vars)
 
 
 
-    235
+    222
 
 
 
@@ -636,7 +642,7 @@ cross_frame.dtypes
     Var229_lev__NA_           Sparse[float64, 0.0]
     Var229_lev_am7c           Sparse[float64, 0.0]
     Var229_lev_mj86           Sparse[float64, 0.0]
-    Length: 235, dtype: object
+    Length: 222, dtype: object
 
 
 
@@ -651,7 +657,7 @@ except Exception as ex:
 ```
 
     DataFrame.dtypes for data must be int, float or bool.
-                    Did not expect the data types in fields Var191_lev__NA_, Var193_lev_RO12, Var193_lev_2Knk1KF, Var194_lev__NA_, Var194_lev_SEuy, Var195_lev_taul, Var200_lev__NA_, Var201_lev__NA_, Var201_lev_smXZ, Var205_lev_VpdQ, Var205_lev_09_Q, Var206_lev_IYzP, Var206_lev_zm5i, Var206_lev__NA_, Var207_lev_me75fM6ugJ, Var207_lev_7M47J5GA0pTYIFxg5uy, Var210_lev_uKAI, Var211_lev_L84s, Var211_lev_Mtgm, Var212_lev_NhsEn4L, Var212_lev_XfqtO3UdzaXh_, Var213_lev__NA_, Var214_lev__NA_, Var218_lev_cJvF, Var218_lev_UYBR, Var219_lev_FzaX, Var221_lev_oslk, Var221_lev_zCkv, Var225_lev__NA_, Var225_lev_ELof, Var225_lev_kG3k, Var226_lev_FSa2, Var227_lev_RAYp, Var227_lev_ZI9m, Var228_lev_F2FyR07IdsN7I, Var229_lev__NA_, Var229_lev_am7c, Var229_lev_mj86
+                    Did not expect the data types in fields Var193_lev_RO12, Var193_lev_2Knk1KF, Var194_lev__NA_, Var194_lev_SEuy, Var195_lev_taul, Var200_lev__NA_, Var201_lev__NA_, Var201_lev_smXZ, Var205_lev_VpdQ, Var206_lev_IYzP, Var206_lev_zm5i, Var206_lev__NA_, Var207_lev_me75fM6ugJ, Var207_lev_7M47J5GA0pTYIFxg5uy, Var210_lev_uKAI, Var211_lev_L84s, Var211_lev_Mtgm, Var212_lev_NhsEn4L, Var212_lev_XfqtO3UdzaXh_, Var213_lev__NA_, Var214_lev__NA_, Var218_lev_cJvF, Var218_lev_UYBR, Var221_lev_oslk, Var221_lev_zCkv, Var225_lev__NA_, Var225_lev_ELof, Var226_lev_FSa2, Var227_lev_RAYp, Var227_lev_ZI9m, Var228_lev_F2FyR07IdsN7I, Var229_lev__NA_, Var229_lev_am7c, Var229_lev_mj86
 
 
 
@@ -721,38 +727,38 @@ cv.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>0.073114</td>
-      <td>0.000804</td>
-      <td>0.073493</td>
-      <td>0.001764</td>
+      <td>0.072546</td>
+      <td>0.000165</td>
+      <td>0.073246</td>
+      <td>0.000406</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>0.073125</td>
-      <td>0.000783</td>
-      <td>0.073247</td>
-      <td>0.001554</td>
+      <td>0.072757</td>
+      <td>0.000312</td>
+      <td>0.073002</td>
+      <td>0.000626</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.073114</td>
-      <td>0.000795</td>
-      <td>0.073203</td>
-      <td>0.001506</td>
+      <td>0.072713</td>
+      <td>0.000317</td>
+      <td>0.073024</td>
+      <td>0.000600</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>0.073158</td>
-      <td>0.000749</td>
-      <td>0.073247</td>
-      <td>0.001554</td>
+      <td>0.072790</td>
+      <td>0.000317</td>
+      <td>0.072957</td>
+      <td>0.000634</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>0.073136</td>
-      <td>0.000780</td>
-      <td>0.073247</td>
-      <td>0.001554</td>
+      <td>0.072813</td>
+      <td>0.000287</td>
+      <td>0.072935</td>
+      <td>0.000640</td>
     </tr>
   </tbody>
 </table>
@@ -797,11 +803,11 @@ best
   </thead>
   <tbody>
     <tr>
-      <th>42</th>
-      <td>0.071365</td>
-      <td>0.000614</td>
-      <td>0.073025</td>
-      <td>0.001584</td>
+      <th>53</th>
+      <td>0.070468</td>
+      <td>0.000354</td>
+      <td>0.072357</td>
+      <td>0.000115</td>
     </tr>
   </tbody>
 </table>
@@ -818,7 +824,7 @@ ntree
 
 
 
-    42
+    53
 
 
 
@@ -834,7 +840,7 @@ fitter
     XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
                   colsample_bynode=1, colsample_bytree=1, gamma=0,
                   learning_rate=0.1, max_delta_step=0, max_depth=3,
-                  min_child_weight=1, missing=None, n_estimators=42, n_jobs=1,
+                  min_child_weight=1, missing=None, n_estimators=53, n_jobs=1,
                   nthread=None, objective='binary:logistic', random_state=0,
                   reg_alpha=0, reg_lambda=1, scale_pos_weight=1, seed=None,
                   silent=None, subsample=1, verbosity=1)
@@ -869,7 +875,7 @@ wvpy.util.plot_roc(pf_train["pred"], pf_train["churn"], title="Model on Train")
 
 
 
-    0.7587430928578458
+    0.7641722874118888
 
 
 
@@ -890,7 +896,7 @@ wvpy.util.plot_roc(pf["pred"], pf["churn"], title="Model on Test")
 
 
 
-    0.7421327720100466
+    0.7481851169628191
 
 
 
@@ -961,11 +967,11 @@ bestn
   </thead>
   <tbody>
     <tr>
-      <th>98</th>
-      <td>0.044721</td>
-      <td>0.000088</td>
-      <td>0.055225</td>
-      <td>0.000492</td>
+      <th>99</th>
+      <td>0.047723</td>
+      <td>0.000763</td>
+      <td>0.05929</td>
+      <td>0.001728</td>
     </tr>
   </tbody>
 </table>
@@ -982,7 +988,7 @@ ntreen
 
 
 
-    98
+    99
 
 
 
@@ -998,7 +1004,7 @@ fittern
     XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
                   colsample_bynode=1, colsample_bytree=1, gamma=0,
                   learning_rate=0.1, max_delta_step=0, max_depth=3,
-                  min_child_weight=1, missing=None, n_estimators=98, n_jobs=1,
+                  min_child_weight=1, missing=None, n_estimators=99, n_jobs=1,
                   nthread=None, objective='binary:logistic', random_state=0,
                   reg_alpha=0, reg_lambda=1, scale_pos_weight=1, seed=None,
                   silent=None, subsample=1, verbosity=1)
@@ -1030,7 +1036,7 @@ wvpy.util.plot_roc(pfn_train["pred_naive"], pfn_train["churn"], title="Overfit M
 
 
 
-    0.9580470801240263
+    0.9503117803550936
 
 
 
@@ -1048,7 +1054,7 @@ wvpy.util.plot_roc(pfn["pred_naive"], pfn["churn"], title="Overfit Model on Test
 
 
 
-    0.5966161219229353
+    0.6339828131295911
 
 
 

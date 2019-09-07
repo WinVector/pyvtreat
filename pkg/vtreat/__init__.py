@@ -7,30 +7,6 @@ import numpy
 # noinspection PyUnresolvedReferences
 import scipy
 
-import warnings
-
-# had been getting Future warnings on seemining correct (no missing values) use of
-# Pandas indexing from vtreat.vtreat_impl.cross_patch_refit_y_aware_cols
-#
-# /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages/pandas/core/series.py:942: FutureWarning:
-# Passing list-likes to .loc or [] with any missing label will raise
-# KeyError in the future, you can use .reindex() as an alternative.
-#
-# See the documentation here:
-# https://pandas.pydata.org/pandas-docs/stable/indexing.html#deprecate-loc-reindex-listlike
-#  return self.loc[key]
-# /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.7/site-packages/pandas/core/indexing.py:1494: FutureWarning:
-# Passing list-likes to .loc or [] with any missing label will raise
-# KeyError in the future, you can use .reindex() as an alternative.
-#
-# See the documentation here:
-# https://pandas.pydata.org/pandas-docs/stable/indexing.html#deprecate-loc-reindex-listlike
-#  return self._getitem_tuple(key)
-#
-# working around with:
-# https://stackoverflow.com/questions/15777951/how-to-suppress-pandas-future-warning
-warnings.simplefilter(action="ignore", category=FutureWarning)
-
 from vtreat.vtreat_api import *
 
 __docformat__ = "restructuredtext"

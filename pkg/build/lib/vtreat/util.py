@@ -17,7 +17,7 @@ import statistics
 def can_convert_v_to_numeric(x):
     """check if non-empty vector can convert to numeric"""
     try:
-        x + 0.0
+        numpy.asarray(x+0, dtype=float)
         return True
     except TypeError:
         return False
@@ -26,6 +26,7 @@ def can_convert_v_to_numeric(x):
 def is_bad(x):
     """ for numeric vector x, return logical vector of positions that are null, NaN, infinite"""
     if can_convert_v_to_numeric(x):
+        x = numpy.asarray(x+0, dtype=float)
         return numpy.logical_or(
             pandas.isnull(x),
             numpy.logical_or(
@@ -144,6 +145,6 @@ def score_variables(cross_frame, variables, outcome):
     sf = [f(v) for v in variables]
     if len(sf) <= 0:
         return None
-    sf = pandas.concat(sf, axis=0)
+    sf = pandas.concat(sf, axis=0, sort=False)
     sf.reset_index(inplace=True, drop=True)
     return sf
