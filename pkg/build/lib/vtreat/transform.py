@@ -9,11 +9,11 @@ class UserTransform:
 
     # noinspection PyPep8Naming
     def fit(self, X, y):
-        raise Exception("base method called")
+        raise NotImplementedError("base method called")
 
     # noinspection PyPep8Naming
     def transform(self, X):
-        raise Exception("base method called")
+        raise NotImplementedError("base method called")
 
     # noinspection PyPep8Naming
     def fit_transform(self, X, y):

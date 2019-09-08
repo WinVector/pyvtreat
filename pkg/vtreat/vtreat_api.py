@@ -31,7 +31,7 @@ def vtreat_parameters(user_params=None):
         pkeys = set(params.keys())
         for k in user_params.keys():
             if k not in pkeys:
-                raise Exception("paramater key " + str(k) + " not recognized")
+                raise KeyError("paramater key " + str(k) + " not recognized")
             params[k] = user_params[k]
     return params
 
@@ -54,7 +54,7 @@ def unsupervised_parameters(user_params=None):
         pkeys = set(params.keys())
         for k in user_params.keys():
             if k not in pkeys:
-                raise Exception("paramater key " + str(k) + " not recognized")
+                raise KeyError("paramater key " + str(k) + " not recognized")
             params[k] = user_params[k]
     return params
 
@@ -102,18 +102,18 @@ class NumericOutcomeTreatment(VariableTreatment):
     # noinspection PyPep8Naming
     def fit(self, X, y):
         if not isinstance(X, pandas.DataFrame):
-            raise Exception("X should be a Pandas DataFrame")
+            raise TypeError("X should be a Pandas DataFrame")
         if y is None:
             y = X[self.outcome_name_]
         if not X.shape[0] == len(y):
-            raise Exception("X.shape[0] should equal len(y)")
+            raise TypeError("X.shape[0] should equal len(y)")
         self.fit_transform(X=X, y=y)
         return self
 
     # noinspection PyPep8Naming
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
-            raise Exception("X should be a Pandas DataFrame")
+            raise TypeError("X should be a Pandas DataFrame")
         res = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
@@ -124,16 +124,16 @@ class NumericOutcomeTreatment(VariableTreatment):
     # noinspection PyPep8Naming
     def fit_transform(self, X, y):
         if not isinstance(X, pandas.DataFrame):
-            raise Exception("X should be a Pandas DataFrame")
+            raise TypeError("X should be a Pandas DataFrame")
         if y is None:
             y = X[self.outcome_name_]
         if not X.shape[0] == len(y):
-            raise Exception("X.shape[0] should equal len(y)")
+            raise ValueError("X.shape[0] should equal len(y)")
         y = numpy.asarray(y, dtype=numpy.float64)
         if vtreat.util.is_bad(y).sum() > 0:
-            raise Exception("y should not have any missing/NA/NaN values")
+            raise ValueError("y should not have any missing/NA/NaN values")
         if numpy.max(y) <= numpy.min(y):
-            raise Exception("y does not vary")
+            raise ValueError("y does not vary")
         X = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
@@ -209,18 +209,18 @@ class BinomialOutcomeTreatment(VariableTreatment):
     # noinspection PyPep8Naming
     def fit(self, X, y):
         if not isinstance(X, pandas.DataFrame):
-            raise Exception("X should be a Pandas DataFrame")
+            raise TypeError("X should be a Pandas DataFrame")
         if y is None:
             y = X[self.outcome_name_]
         if not X.shape[0] == len(y):
-            raise Exception("X.shape[0] should equal len(y)")
+            raise ValueError("X.shape[0] should equal len(y)")
         self.fit_transform(X=X, y=y)
         return self
 
     # noinspection PyPep8Naming
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
-            raise Exception("X should be a Pandas DataFrame")
+            raise TypeError("X should be a Pandas DataFrame")
         X = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
@@ -231,14 +231,14 @@ class BinomialOutcomeTreatment(VariableTreatment):
     # noinspection PyPep8Naming
     def fit_transform(self, X, y):
         if not isinstance(X, pandas.DataFrame):
-            raise Exception("X should be a Pandas DataFrame")
+            raise TypeError("X should be a Pandas DataFrame")
         if y is None:
             y = X[self.outcome_name_]
         if not X.shape[0] == len(y):
-            raise Exception("X.shape[0] should equal len(y)")
+            raise ValueError("X.shape[0] should equal len(y)")
         y_mean = numpy.mean(y == self.outcome_target_)
         if y_mean <= 0 or y_mean >= 1:
-            raise Exception("y==outcome_target does not vary")
+            raise ValueError("y==outcome_target does not vary")
         X = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
@@ -312,18 +312,18 @@ class MultinomialOutcomeTreatment(VariableTreatment):
     # noinspection PyPep8Naming
     def fit(self, X, y):
         if not isinstance(X, pandas.DataFrame):
-            raise Exception("X should be a Pandas DataFrame")
+            raise TypeError("X should be a Pandas DataFrame")
         if y is None:
             y = X[self.outcome_name_]
         if not X.shape[0] == len(y):
-            raise Exception("X.shape[0] should equal len(y)")
+            raise ValueError("X.shape[0] should equal len(y)")
         self.fit_transform(X=X, y=y)
         return self
 
     # noinspection PyPep8Naming
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
-            raise Exception("X should be a Pandas DataFrame")
+            raise TypeError("X should be a Pandas DataFrame")
         X = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
@@ -334,13 +334,13 @@ class MultinomialOutcomeTreatment(VariableTreatment):
     # noinspection PyPep8Naming
     def fit_transform(self, X, y):
         if not isinstance(X, pandas.DataFrame):
-            raise Exception("X should be a Pandas DataFrame")
+            raise TypeError("X should be a Pandas DataFrame")
         if y is None:
             y = X[self.outcome_name_]
         if not X.shape[0] == len(y):
-            raise Exception("X.shape[0] should equal len(y)")
+            raise ValueError("X.shape[0] should equal len(y)")
         if len(numpy.unique(y)) <= 1:
-            raise Exception("y must take on at least 2 values")
+            raise ValueError("y must take on at least 2 values")
         X = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
@@ -417,16 +417,16 @@ class UnsupervisedTreatment(VariableTreatment):
     # noinspection PyPep8Naming
     def fit(self, X, y=None):
         if not isinstance(X, pandas.DataFrame):
-            raise Exception("X should be a Pandas DataFrame")
+            raise TypeError("X should be a Pandas DataFrame")
         if y is not None:
-            raise Exception("y should be None")
+            raise ValueError("y should be None")
         self.fit_transform(X)
         return self
 
     # noinspection PyPep8Naming
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
-            raise Exception("X should be a Pandas DataFrame")
+            raise TypeError("X should be a Pandas DataFrame")
         X = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
@@ -437,7 +437,7 @@ class UnsupervisedTreatment(VariableTreatment):
     # noinspection PyPep8Naming
     def fit_transform(self, X, y=None):
         if y is not None:
-            raise Exception("y should be None")
+            raise ValueError("y should be None")
         X = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )

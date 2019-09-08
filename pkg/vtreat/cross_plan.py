@@ -18,7 +18,7 @@ class CrossValidationPlan:
         self.verbose_ = False
 
     def split_plan(self, *, n_rows=None, k_folds=None, data=None, y=None):
-        raise Exception("base class called")
+        raise NotImplementedError("base class called")
 
 
 def k_way_cross_plan(n_rows, k_folds):
@@ -54,9 +54,9 @@ class KWayCrossPlan(CrossValidationPlan):
 
     def split_plan(self, *, n_rows=None, k_folds=None, data=None, y=None):
         if n_rows is None:
-            raise Exception("n_rows must not be None")
+            raise ValueError("n_rows must not be None")
         if k_folds is None:
-            raise Exception("k_folds must not be None")
+            raise ValueError("k_folds must not be None")
         return k_way_cross_plan(n_rows=n_rows, k_folds=k_folds)
 
 
@@ -109,11 +109,11 @@ class KWayCrossPlanYStratified(CrossValidationPlan):
 
     def split_plan(self, *, n_rows=None, k_folds=None, data=None, y=None):
         if n_rows is None:
-            raise Exception("n_rows must not be None")
+            raise ValueError("n_rows must not be None")
         if k_folds is None:
-            raise Exception("k_folds must not be None")
+            raise ValueError("k_folds must not be None")
         if y is None:
-            raise Exception("y must not be None")
+            raise ValueError("y must not be None")
         return k_way_cross_plan_y_stratified(n_rows=n_rows, k_folds=k_folds, y=y)
 
 
@@ -167,6 +167,6 @@ class OrderedCrossPlan(CrossValidationPlan):
 
     def split_plan(self, *, n_rows=None, k_folds=None, data=None, y=None):
         if k_folds is None:
-            raise Exception("k_folds must not be None")
+            raise ValueError("k_folds must not be None")
         order_vector = data[self.order_column_name_]
         return order_cross_plan(k_folds=k_folds, order_vector=order_vector)

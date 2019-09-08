@@ -10,7 +10,7 @@ import scipy
 from vtreat.vtreat_api import *
 
 __docformat__ = "restructuredtext"
-__version__ = "0.2.7"
+__version__ = "0.2.8"
 
 __doc__ = """
 This<https://github.com/WinVector/pyvtreat> is the Python version of the vtreat data preparation system
@@ -51,7 +51,8 @@ Worked examples can be found `here`<https://github.com/WinVector/pyvtreat/tree/m
 
 For more detail please see here: `arXiv:1611.09477
 stat.AP`<https://arxiv.org/abs/1611.09477> (the documentation describes the R version,
-however all of the examples can be found worked in Python `here`<https://github.com/WinVector/pyvtreat/tree/master/Examples/vtreat_paper1>).
+however all of the examples can be found worked in Python 
+`here`<https://github.com/WinVector/pyvtreat/tree/master/Examples/vtreat_paper1>).
 
 vtreat is available
 as a `Python/Pandas package`<https://github.com/WinVector/vtreat>,

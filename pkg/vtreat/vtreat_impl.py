@@ -23,7 +23,7 @@ class VarTransform:
         self.refitter_ = None
 
     def transform(self, data_frame):
-        raise Exception("base method called")
+        raise NotImplementedError("base method called")
 
 
 class MappedCodeTransform(VarTransform):
@@ -251,7 +251,7 @@ def fit_numeric_outcome_treatment(
     copy_set = set(cols_to_copy)
     var_list = [co for co in var_list if (not (co in copy_set))]
     if len(var_list) <= 0:
-        raise Exception("no variables")
+        raise ValueError("no variables")
     xforms = []
     n = X.shape[0]
     all_bad = []
@@ -335,7 +335,7 @@ def fit_binomial_outcome_treatment(
     copy_set = set(cols_to_copy)
     var_list = [co for co in var_list if (not (co in copy_set))]
     if len(var_list) <= 0:
-        raise Exception("no variables")
+        raise ValueError("no variables")
     xforms = []
     n = X.shape[0]
     all_badd = []
@@ -411,7 +411,7 @@ def fit_multinomial_outcome_treatment(
     copy_set = set(cols_to_copy)
     var_list = [co for co in var_list if (not (co in copy_set))]
     if len(var_list) <= 0:
-        raise Exception("no variables")
+        raise ValueError("no variables")
     xforms = []
     n = X.shape[0]
     all_bad = []
@@ -475,7 +475,7 @@ def fit_multinomial_outcome_treatment(
             ]
     xforms = [xf for xf in xforms if xf is not None]
     if len(xforms) <= 0:
-        raise Exception("no variables created")
+        raise ValueError("no variables created")
     for stp in params["user_transforms"]:
         stp.fit(X=X[var_list], y=y)
     return {
@@ -492,7 +492,7 @@ def fit_unsupervised_treatment(*, X, var_list, outcome_name, cols_to_copy, param
     copy_set = set(cols_to_copy)
     var_list = [co for co in var_list if (not (co in copy_set))]
     if len(var_list) <= 0:
-        raise Exception("no variables")
+        raise ValueError("no variables")
     xforms = []
     n = X.shape[0]
     all_bad = []
@@ -563,10 +563,10 @@ def pre_prep_frame(x, *, col_list, cols_to_copy):
     col_set = set(col_list)
     missing_cols = col_set - x_set
     if len(missing_cols) > 0:
-        raise Exception("referred to not-present columns " + str(missing_cols))
+        raise KeyError("referred to not-present columns " + str(missing_cols))
     cset = set(cols_to_copy)
     if len(col_list) <= 0:
-        raise Exception("no variables")
+        raise ValueError("no variables")
     x = x.loc[:, col_list]
     x = x.reset_index(inplace=False, drop=True)
     for c in x.columns:
@@ -596,7 +596,7 @@ def perform_transform(*, x, transform, params):
         cp = x.loc[:, to_copy].copy()
         new_frames = [cp] + new_frames
     if len(new_frames) <= 0:
-        raise Exception("no columns transformed")
+        raise ValueError("no columns transformed")
     res = pandas.concat(new_frames, axis=1, sort=False)
     res.reset_index(inplace=True, drop=True)
     return res
@@ -627,7 +627,7 @@ def limit_to_appropriate_columns(*, res, transform):
         )
     cols_to_keep = [ci for ci in res.columns if ci in to_copy or ci in to_take]
     if len(cols_to_keep) <= 0:
-        raise Exception("no columns retained")
+        raise ValueError("no columns retained")
     return res[cols_to_keep]
 
 
@@ -660,9 +660,9 @@ def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
         if derived_column_name not in derived_colset:
             continue
         if incoming_column_name not in incoming_colset:
-            raise Exception("missing required column " + incoming_column_name)
+            raise KeyError("missing required column " + incoming_column_name)
         if xf.refitter_ is None:
-            raise Exception(
+            raise ValueError(
                 "refitter is None: "
                 + incoming_column_name
                 + " -> "
@@ -725,9 +725,9 @@ def cross_patch_user_y_aware_cols(*, x, y, res, params, cross_plan):
         if len(instersect_out) <= 0:
             continue
         if len(instersect_out) != len(ut.derived_vars_):
-            raise Exception("not all derived columns are in res frame")
+            raise ValueError("not all derived columns are in res frame")
         if len(instersect_in) != len(ut.incoming_vars_):
-            raise Exception("missing required columns")
+            raise KeyError("missing required columns")
         patches = [
             ut.fit(X=x.loc[cp["train"], ut.incoming_vars_], y=y[cp["train"]]).transform(
                 X=x.loc[cp["app"], ut.incoming_vars_]
@@ -776,7 +776,7 @@ def score_plan_variables(cross_frame, outcome, plan, params):
             for ut in params["user_transforms"]
             if len(ut.incoming_vars_) > 0
         ],
-        sort = False
+        sort=False
     )
     var_table.reset_index(inplace=True, drop=True)
     sf = vtreat.util.score_variables(

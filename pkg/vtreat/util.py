@@ -70,9 +70,9 @@ def grouped_by_x_statistics(x, y):
     """compute some grouped by x vector summaries of numeric y vector (no missing values in y)"""
     n = len(x)
     if n <= 0:
-        raise Exception("no rows")
+        raise ValueError("no rows")
     if n != len(y):
-        raise Exception("len(y)!=len(x)")
+        raise ValueError("len(y)!=len(x)")
     eps = 1.0e-3
     sf = pandas.DataFrame({"x": x, "y": y})
     sf.reset_index(inplace=True, drop=True)
@@ -115,7 +115,7 @@ def score_variables(cross_frame, variables, outcome):
         return None
     n = cross_frame.shape[0]
     if n != len(outcome):
-        raise Exception("len(n) must equal cross_frame.shape[0]")
+        raise ValueError("len(n) must equal cross_frame.shape[0]")
 
     def f(v):
         col = cross_frame[v]
