@@ -574,7 +574,7 @@ def pre_prep_frame(x, *, col_list, cols_to_copy):
             continue
         bad_ind = vtreat.util.is_bad(x[c])
         if vtreat.util.can_convert_v_to_numeric(x[c]):
-            x[c] = numpy.asarray(x[c]+0, dtype=float)
+            x[c] = numpy.asarray(x[c] + 0, dtype=float)
         else:
             # https://stackoverflow.com/questions/22231592/pandas-change-data-type-of-series-to-string
             x[c] = numpy.asarray(x[c].apply(str), dtype=str)
@@ -776,7 +776,7 @@ def score_plan_variables(cross_frame, outcome, plan, params):
             for ut in params["user_transforms"]
             if len(ut.incoming_vars_) > 0
         ],
-        sort=False
+        sort=False,
     )
     var_table.reset_index(inplace=True, drop=True)
     sf = vtreat.util.score_variables(
@@ -834,7 +834,7 @@ def pseudo_score_plan_variables(*, cross_frame, plan, params):
             for ut in params["user_transforms"]
             if len(ut.incoming_vars_) > 0
         ],
-        sort=False
+        sort=False,
     )
     score_frame.reset_index(inplace=True, drop=True)
 

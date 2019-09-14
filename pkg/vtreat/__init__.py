@@ -10,7 +10,7 @@ import scipy
 from vtreat.vtreat_api import *
 
 __docformat__ = "restructuredtext"
-__version__ = "0.2.8"
+__version__ = "0.2.9"
 
 __doc__ = """
 This<https://github.com/WinVector/pyvtreat> is the Python version of the vtreat data preparation system

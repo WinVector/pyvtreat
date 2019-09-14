@@ -36,7 +36,7 @@ def test_multinomial():
     cross_frame = treatment.fit_transform(d, d["y"])
 
     for c in cross_frame.columns:
-        if not c == 'y':
+        if not c == "y":
             assert vtreat.util.can_convert_v_to_numeric(cross_frame[c])
             assert sum(vtreat.util.is_bad(cross_frame[c])) == 0
 
