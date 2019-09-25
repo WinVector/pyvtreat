@@ -1,10 +1,11 @@
 
-# Using [vtreat](https://github.com/WinVector/pyvtreat) with Classification Problems
+# Using vtreat with Regression Problems
 
 Nina Zumel and John Mount
 September 2019
 
-Note: this is a description of the [`Python` version of `vtreat`](https://github.com/WinVector/pyvtreat), the same example for the [`R` version of `vtreat`](https://github.com/WinVector/vtreat) can be found [here](https://github.com/WinVector/vtreat/blob/master/Examples/Classification/Classification.md).
+Note: this is a description of the [`Python` version of `vtreat`](https://github.com/WinVector/pyvtreat), the same example for the [`R` version of `vtreat`](https://github.com/WinVector/vtreat) can be found [here](https://github.com/WinVector/vtreat/blob/master/Examples/Regression/Regression.md).
+
 
 
 ## Preliminaries
@@ -26,21 +27,19 @@ import wvpy.util
 
 Generate example data. 
 
-* `y` is a noisy sinusoidal function of the variable `x`
-* `yc` is the output to be predicted: : whether `y` is > 0.5. 
-* Input `xc` is a categorical variable that represents a discretization of `y`, along some `NaN`s
+* `y` is a noisy sinusoidal plus linear function of the variable `x`, and is the output to be predicted
+* Input `xc` is a categorical variable that represents a discretization of `y`, along with some `NaN`s
 * Input `x2` is a pure noise variable with no relationship to the output
 
 
 ```python
 def make_data(nrows):
     d = pandas.DataFrame({'x': 5*numpy.random.normal(size=nrows)})
-    d['y'] = numpy.sin(d['x']) + 0.1*numpy.random.normal(size=nrows)
+    d['y'] = numpy.sin(d['x']) + 0.01*d['x'] + 0.1*numpy.random.normal(size=nrows)
     d.loc[numpy.arange(3, 10), 'x'] = numpy.nan                           # introduce a nan level
     d['xc'] = ['level_' + str(5*numpy.round(yi/5, 1)) for yi in d['y']]
     d['x2'] = numpy.random.normal(size=nrows)
     d.loc[d['xc']=='level_-1.0', 'xc'] = numpy.nan  # introduce a nan level
-    d['yc'] = d['y']>0.5
     return d
 
 d = make_data(500)
@@ -73,49 +72,43 @@ d.head()
       <th>y</th>
       <th>xc</th>
       <th>x2</th>
-      <th>yc</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>4.998150</td>
-      <td>-1.027156</td>
-      <td>NaN</td>
-      <td>0.102567</td>
-      <td>False</td>
+      <td>1.131463</td>
+      <td>0.908968</td>
+      <td>level_1.0</td>
+      <td>0.627907</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>1.005258</td>
-      <td>0.967756</td>
-      <td>level_1.0</td>
-      <td>-0.718418</td>
-      <td>True</td>
+      <td>5.607797</td>
+      <td>-0.510264</td>
+      <td>level_-0.5</td>
+      <td>-0.238125</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>-6.047966</td>
-      <td>0.323111</td>
-      <td>level_0.5</td>
-      <td>-1.046220</td>
-      <td>False</td>
+      <td>1.821388</td>
+      <td>1.096685</td>
+      <td>level_1.0</td>
+      <td>-0.983032</td>
     </tr>
     <tr>
       <th>3</th>
       <td>NaN</td>
-      <td>0.948966</td>
-      <td>level_1.0</td>
-      <td>0.264366</td>
-      <td>True</td>
+      <td>-1.192763</td>
+      <td>NaN</td>
+      <td>-0.619704</td>
     </tr>
     <tr>
       <th>4</th>
       <td>NaN</td>
-      <td>-0.480668</td>
-      <td>level_-0.5</td>
-      <td>-0.492535</td>
-      <td>False</td>
+      <td>-0.759459</td>
+      <td>NaN</td>
+      <td>-0.153687</td>
     </tr>
   </tbody>
 </table>
@@ -135,8 +128,8 @@ d['xc'].unique()
 
 
 
-    array([nan, 'level_1.0', 'level_0.5', 'level_-0.5', 'level_-0.0',
-           'level_0.0'], dtype=object)
+    array(['level_1.0', 'level_-0.5', nan, 'level_0.0', 'level_0.5',
+           'level_-0.0'], dtype=object)
 
 
 
@@ -148,41 +141,41 @@ d['xc'].value_counts(dropna=False)
 
 
 
-    level_1.0     118
-    NaN           106
-    level_0.5     104
-    level_-0.5     98
-    level_-0.0     41
-    level_0.0      33
+    NaN           119
+    level_-0.5    101
+    level_1.0     101
+    level_0.5      98
+    level_-0.0     42
+    level_0.0      39
     Name: xc, dtype: int64
 
 
 
-Find the mean value of `yc`
+Find the mean value of `y`
 
 
 ```python
-numpy.mean(d['yc'])
+numpy.mean(d['y'])
 ```
 
 
 
 
-    0.338
+    -0.04245045464390768
 
 
 
-Plot of `yc` versus `x`.
+Plot of `y` versus `x`.
 
 
 ```python
-seaborn.lineplot(x='x', y='yc', data=d)
+seaborn.lineplot(x='x', y='y', data=d)
 ```
 
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x1a175d3710>
+    <matplotlib.axes._subplots.AxesSubplot at 0x1a2289c2b0>
 
 
 
@@ -190,28 +183,27 @@ seaborn.lineplot(x='x', y='yc', data=d)
 ![png](output_13_1.png)
 
 
-## Build a transform appropriate for classification problems.
+## Build a transform appropriate for regression problems.
 
 Now that we have the data, we want to treat it prior to modeling: we want training data where all the input variables are numeric and have no missing values or `NaN`s.
 
-First create the data treatment transform object, in this case a treatment for a binomial classification problem.
+First create the data treatment transform object, in this case a treatment for a regression problem.
 
 
 ```python
-transform = vtreat.BinomialOutcomeTreatment(
-    outcome_name='yc',    # outcome variable
-    outcome_target=True,  # outcome of interest
-    cols_to_copy=['y'],   # columns to "carry along" but not treat as input variables
+transform = vtreat.NumericOutcomeTreatment(
+    outcome_name='y',    # outcome variable
 )  
 ```
 
+Notice that for the training data `d`: `transform_design$crossFrame` is **not** the same as `transform.prepare(d)`; the second call can lead to nested model bias in some situations, and is **not** recommended.
+For other, later data, not seen during transform design `transform.preprare(o)` is an appropriate step.
+
 Use the training data `d` to fit the transform and the return a treated training set: completely numeric, with no missing values.
-Note that for the training data `d`: `transform.fit_transform()` is **not** the same as `transform.fit().transform()`; the second call can lead to nested model bias in some situations, and is **not** recommended. 
-For other, later data, not seen during transform design `transform.transform(o)` is an appropriate step.
 
 
 ```python
-d_prepared = transform.fit_transform(d, d['yc'])
+d_prepared = transform.fit_transform(d, d['y'])
 ```
 
 Now examine the score frame, which gives information about each new variable, including its type, which original variable it is  derived from, its (cross-validated) correlation with the outcome, and its (cross-validated) significance as a one-variable linear model for the outcome. 
@@ -262,10 +254,10 @@ transform.score_frame_
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.022815</td>
-      <td>6.107811e-01</td>
+      <td>-0.017029</td>
+      <td>7.040463e-01</td>
       <td>2.0</td>
-      <td>0.10</td>
+      <td>0.083333</td>
       <td>False</td>
     </tr>
     <tr>
@@ -275,10 +267,10 @@ transform.score_frame_
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.370625</td>
-      <td>1.000294e-17</td>
+      <td>-0.699401</td>
+      <td>1.174776e-74</td>
       <td>2.0</td>
-      <td>0.10</td>
+      <td>0.083333</td>
       <td>True</td>
     </tr>
     <tr>
@@ -288,10 +280,10 @@ transform.score_frame_
       <td>clean_copy</td>
       <td>False</td>
       <td>True</td>
-      <td>0.027577</td>
-      <td>5.384103e-01</td>
+      <td>0.018941</td>
+      <td>6.726562e-01</td>
       <td>2.0</td>
-      <td>0.10</td>
+      <td>0.083333</td>
       <td>False</td>
     </tr>
     <tr>
@@ -301,49 +293,49 @@ transform.score_frame_
       <td>clean_copy</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.008976</td>
-      <td>8.413070e-01</td>
+      <td>-0.018316</td>
+      <td>6.828600e-01</td>
       <td>2.0</td>
-      <td>0.10</td>
+      <td>0.083333</td>
       <td>False</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>xc_logit_code</td>
+      <td>xc_impact_code</td>
       <td>xc</td>
-      <td>logit_code</td>
+      <td>impact_code</td>
       <td>True</td>
       <td>True</td>
-      <td>0.824019</td>
-      <td>5.675405e-125</td>
+      <td>0.986448</td>
+      <td>0.000000e+00</td>
       <td>1.0</td>
-      <td>0.20</td>
+      <td>0.166667</td>
       <td>True</td>
     </tr>
     <tr>
       <th>5</th>
+      <td>xc_deviation_code</td>
+      <td>xc</td>
+      <td>deviation_code</td>
+      <td>True</td>
+      <td>True</td>
+      <td>-0.068546</td>
+      <td>1.258423e-01</td>
+      <td>1.0</td>
+      <td>0.166667</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>6</th>
       <td>xc_prevalence_code</td>
       <td>xc</td>
       <td>prevalence_code</td>
       <td>False</td>
       <td>True</td>
-      <td>0.475269</td>
-      <td>1.535868e-29</td>
+      <td>-0.255156</td>
+      <td>7.154877e-09</td>
       <td>1.0</td>
-      <td>0.20</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>xc_lev_level_1.0</td>
-      <td>xc</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>0.777822</td>
-      <td>1.631550e-102</td>
-      <td>4.0</td>
-      <td>0.05</td>
+      <td>0.166667</td>
       <td>True</td>
     </tr>
     <tr>
@@ -353,36 +345,49 @@ transform.score_frame_
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.370625</td>
-      <td>1.000294e-17</td>
+      <td>-0.699401</td>
+      <td>1.174776e-74</td>
       <td>4.0</td>
-      <td>0.05</td>
+      <td>0.041667</td>
       <td>True</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>xc_lev_level_0.5</td>
-      <td>xc</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>0.165091</td>
-      <td>2.090885e-04</td>
-      <td>4.0</td>
-      <td>0.05</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>9</th>
       <td>xc_lev_level_-0.5</td>
       <td>xc</td>
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.352801</td>
-      <td>4.220524e-16</td>
+      <td>-0.355552</td>
+      <td>2.405192e-16</td>
       <td>4.0</td>
-      <td>0.05</td>
+      <td>0.041667</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>xc_lev_level_1.0</td>
+      <td>xc</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.676799</td>
+      <td>2.992053e-68</td>
+      <td>4.0</td>
+      <td>0.041667</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>xc_lev_level_0.5</td>
+      <td>xc</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.402619</td>
+      <td>6.583063e-21</td>
+      <td>4.0</td>
+      <td>0.041667</td>
       <td>True</td>
     </tr>
   </tbody>
@@ -393,132 +398,56 @@ transform.score_frame_
 
 Note that the variable `xc` has been converted to multiple variables: 
 
-* an indicator variable for each possible level (`xc_lev_level_*`)
-* the value of a (cross-validated) one-variable model for `yc` as a function of `xc` (`xc_logit_code`)
+* an indicator variable for each common possible level (`xc_lev_level_*`)
+* the value of a (cross-validated) one-variable model for `y` as a function of `xc` (`xc_impact_code`)
+* a variable indicating when `xc` was `NaN` in the original data (`xc_is_bad`)
 * a variable that returns how prevalent this particular value of `xc` is in the training data (`xc_prevalence_code`)
-* a variable indicating when `xc` was `NaN` in the original data (`xc_is_bad`, `x_is_bad`)
+* a variable that returns standard deviation of `y` conditioned on `xc` (`xc_deviation_code`)
 
 Any or all of these new variables are available for downstream modeling.
 
-The `recommended` column indicates which variables are non constant (`has_range` == True) and have a significance value smaller than `default_threshold`. See the section *Deriving the Default Threholds* below for the reasoning behind the default thresholds. Recommended columns are intended as advice about which variables appear to be most likely to be useful in a downstream model. This advice attempts to be conservative, to reduce the possibility of mistakenly eliminating variables that may in fact be useful (although, obviously, it can still mistakenly eliminate variables that have a real but non-linear relationship to the output, as is the case with `x`, in  our example).
+The `recommended` column indicates which variables are non constant (`has_range` == True) and have a significance value smaller than `default_threshold`. See the section *Deriving the Default Threholds* below for the reasoning behind the default thresholds. Recommended columns are intended as advice about which variables appear to be most likely to be useful in a downstream model. This advice attempts to be conservative, to reduce the possibility of mistakenly eliminating variables that may in fact be useful (although, obviously, it can still mistakenly eliminate variables that have a real but non-linear relationship to the output).
 
-Let's look at the variables that are and are not recommended:
+Let's look at the recommended and not recommended variables:
 
 
 ```python
 # recommended variables
-transform.score_frame_.loc[transform.score_frame_['recommended'], ['variable']]
+transform.score_frame_['variable'][transform.score_frame_['recommended']]
 ```
 
 
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>variable</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>1</th>
-      <td>xc_is_bad</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>xc_logit_code</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>xc_prevalence_code</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>xc_lev_level_1.0</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>xc_lev__NA_</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>xc_lev_level_0.5</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>xc_lev_level_-0.5</td>
-    </tr>
-  </tbody>
-</table>
-</div>
+    1              xc_is_bad
+    4         xc_impact_code
+    6     xc_prevalence_code
+    7            xc_lev__NA_
+    8      xc_lev_level_-0.5
+    9       xc_lev_level_1.0
+    10      xc_lev_level_0.5
+    Name: variable, dtype: object
 
 
 
 
 ```python
 # not recommended variables
-transform.score_frame_.loc[~transform.score_frame_['recommended'], ['variable']]
+transform.score_frame_['variable'][transform.score_frame_['recommended']==False]
 ```
 
 
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>variable</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>x_is_bad</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>x</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>x2</td>
-    </tr>
-  </tbody>
-</table>
-</div>
+    0             x_is_bad
+    2                    x
+    3                   x2
+    5    xc_deviation_code
+    Name: variable, dtype: object
 
 
 
-Notice that `d_prepared` only includes recommended variables (along with `y` and `yc`):
+Let's look at the top of `d_prepared`. Notice that the new treated data frame included only recommended variables (along with `y`).
 
 
 ```python
@@ -547,48 +476,44 @@ d_prepared.head()
     <tr style="text-align: right;">
       <th></th>
       <th>y</th>
-      <th>yc</th>
       <th>xc_is_bad</th>
-      <th>xc_logit_code</th>
+      <th>xc_impact_code</th>
       <th>xc_prevalence_code</th>
-      <th>xc_lev_level_1.0</th>
       <th>xc_lev__NA_</th>
-      <th>xc_lev_level_0.5</th>
       <th>xc_lev_level_-0.5</th>
+      <th>xc_lev_level_1.0</th>
+      <th>xc_lev_level_0.5</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>-1.027156</td>
-      <td>False</td>
-      <td>1.0</td>
-      <td>-5.851007</td>
-      <td>0.212</td>
+      <td>0.908968</td>
+      <td>0.0</td>
+      <td>0.939178</td>
+      <td>0.202</td>
+      <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
-      <td>0.0</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>0.967756</td>
-      <td>True</td>
+      <td>-0.510264</td>
       <td>0.0</td>
-      <td>1.152966</td>
-      <td>0.236</td>
+      <td>-0.521413</td>
+      <td>0.202</td>
+      <td>0.0</td>
       <td>1.0</td>
-      <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.323111</td>
-      <td>False</td>
+      <td>1.096685</td>
       <td>0.0</td>
-      <td>0.379735</td>
-      <td>0.208</td>
+      <td>0.965424</td>
+      <td>0.202</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
@@ -596,11 +521,10 @@ d_prepared.head()
     </tr>
     <tr>
       <th>3</th>
-      <td>0.948966</td>
-      <td>True</td>
-      <td>0.0</td>
-      <td>1.152966</td>
-      <td>0.236</td>
+      <td>-1.192763</td>
+      <td>1.0</td>
+      <td>-0.902318</td>
+      <td>0.238</td>
       <td>1.0</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -608,15 +532,14 @@ d_prepared.head()
     </tr>
     <tr>
       <th>4</th>
-      <td>-0.480668</td>
-      <td>False</td>
-      <td>0.0</td>
-      <td>-5.835851</td>
-      <td>0.196</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
+      <td>-0.759459</td>
       <td>1.0</td>
+      <td>-0.883834</td>
+      <td>0.238</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
     </tr>
   </tbody>
 </table>
@@ -624,100 +547,100 @@ d_prepared.head()
 
 
 
-This is `vtreat`s default behavior; to include all variables in the prepared data, set the parameter `filter_to_recommended` to False, as we show later, in the *Parameters for `BinomialOutcomeTreatment`* section below.
+This is `vtreat`'s default behavior; to include all variables in the prepared data, set the parameter `filter_to_recommended` to False, as we show later, in the *Parameters for `NumericOutcomeTreatment`* section below.
 
-## A Closer Look at `logit_code` variables
+## A Closer Look at the `impact_code` variables
 
-Variables of type `logit_code` are the outputs of a one-variable hierarchical logistic regression of a categorical variable (in our example, `xc`) against the centered output on the (cross-validated) treated training data. 
+Variables of type `impact_code` are the outputs of a one-variable hierarchical linear regression of a categorical variable (in our example, `xc`) against the centered output on the (cross-validated) treated training data. 
 
-Let's see whether `xc_logit_code` makes a good one-variable model for `yc`. It has a large AUC:
-
-
-```python
-wvpy.util.plot_roc(prediction=d_prepared['xc_logit_code'], 
-                   istrue=d_prepared['yc'],
-                   title = 'performance of xc_logit_code variable')
-```
-
-
-![png](output_28_0.png)
-
-
-
-
-
-    0.9779402563506676
-
-
-
-This indicates that `xc_logit_code` is strongly predictive of the outcome. Negative values of `xc_logit_code` correspond strongly to negative outcomes, and positive values correspond strongly to postive outcomes.
+Let's look at the relationship between `xc_impact_code` and `y` (actually `y_centered`, a centered version of `y`). 
 
 
 ```python
-wvpy.util.dual_density_plot(probs=d_prepared['xc_logit_code'], 
-                            istrue=d_prepared['yc'])
+import matplotlib.pyplot
+
+d_prepared['y_centered'] = d_prepared.y - d_prepared.y.mean()
+
+ax = seaborn.scatterplot(x = 'xc_impact_code', y = 'y_centered', data = d_prepared)
+# add the line "x = y"
+matplotlib.pyplot.plot(d_prepared.xc_impact_code, d_prepared.xc_impact_code, color="darkgray")
+ax.set_title('Relationship between xc_impact_code and y')
+plt.show()
 ```
 
 
-![png](output_30_0.png)
+![png](output_27_0.png)
 
 
-The values of `xc_logit_code` are in "link space". We can often visualize the relationship a little better by converting the logistic score to a probability.
+This indicates that `xc_impact_code` is strongly predictive of the outcome. Note that the score frame also reported the Pearson correlation between `xc_impact_code` and `y`, which is fairly large.
 
 
 ```python
-from scipy.special import expit  # sigmoid
-from scipy.special import logit
-
-offset = logit(numpy.mean(d_prepared.yc))
-wvpy.util.dual_density_plot(probs=expit(d_prepared['xc_logit_code'] + offset),
-                            istrue=d_prepared['yc'])                                   
+transform.score_frame_.PearsonR[transform.score_frame_.variable=='xc_impact_code']
 ```
 
 
-![png](output_32_0.png)
 
 
-Variables of type `logit_code` are useful when dealing with categorical variables with a very large number of possible levels. For example, a categorical variable with 10,000 possible values potentially converts to 10,000 indicator variables, which may be unwieldy for some modeling methods. Using a single numerical variable of type `logit_code` may be a preferable alternative.
+    4    0.986448
+    Name: PearsonR, dtype: float64
+
+
+
+Note also that the impact code values are jittered; this is because `d_prepared` is a "cross-frame": that is, the result of a cross-validated estimation process. Hence, the impact coding of `xc` is a function of both the value of `xc` and the cross-validation fold of the datum's row. When `transform` is applied to new data, there will be only one value of impact code for each (common) level of `xc`. We can see this by applying the transform to the data frame `d` as if it were new data.
+
+
+
+```python
+dtmp = transform.transform(d)
+dtmp['y_centered'] = dtmp.y - dtmp.y.mean()
+ax = seaborn.scatterplot(x = 'xc_impact_code', y = 'y_centered', data = dtmp)
+# add the line "x = y"
+matplotlib.pyplot.plot(d_prepared.xc_impact_code, dtmp.xc_impact_code, color="darkgray")
+ax.set_title('Relationship between xc_impact_code and y, on improperly prepared training data')
+plt.show()
+```
+
+
+![png](output_31_0.png)
+
+
+Variables of type `impact_code` are useful when dealing with categorical variables with a very large number of possible levels. For example, a categorical variable with 10,000 possible values potentially converts to 10,000 indicator variables, which may be unwieldy for some modeling methods. Using a single numerical variable of type `impact_code` may be a preferable alternative.
 
 ## Using the Prepared Data in a Model
 
 Of course, what we really want to do with the prepared training data is to fit a model jointly with all the (recommended) variables. 
-Let's try fitting a logistic regression model to `d_prepared`.
+Let's try fitting a linear regression model to `d_prepared`.
 
 
 ```python
 import sklearn.linear_model
 import seaborn
+import sklearn.metrics
 
-not_variables = ['y', 'yc', 'prediction']
+not_variables = ['y', 'y_centered', 'prediction']
 model_vars = [v for v in d_prepared.columns if v not in set(not_variables)]
 
-fitter = sklearn.linear_model.LogisticRegression()
-fitter.fit(d_prepared[model_vars], d_prepared['yc'])
+fitter = sklearn.linear_model.LinearRegression()
+fitter.fit(d_prepared[model_vars], d_prepared['y'])
 
 # now predict
-d_prepared['prediction'] = fitter.predict_proba(d_prepared[model_vars])[:, 1]
+d_prepared['prediction'] = fitter.predict(d_prepared[model_vars])
 
-# look at the ROC curve (on the training data)
-wvpy.util.plot_roc(prediction=d_prepared['prediction'], 
-                   istrue=d_prepared['yc'],
-                   title = 'Performance of logistic regression model on training data')
+# get R-squared
+r2 = sklearn.metrics.r2_score(y_true=d_prepared.y, y_pred=d_prepared.prediction)
+
+title = 'Prediction vs. outcome (training data); R-sqr = {:04.2f}'.format(r2)
+
+# compare the predictions to the outcome (on the training data)
+ax = seaborn.scatterplot(x='prediction', y='y', data=d_prepared)
+matplotlib.pyplot.plot(d_prepared.prediction, d_prepared.prediction, color="darkgray")
+ax.set_title(title)
+plt.show()
 ```
 
-    /Users/johnmount/anaconda3/envs/aiAcademy/lib/python3.6/site-packages/sklearn/linear_model/logistic.py:432: FutureWarning: Default solver will be changed to 'lbfgs' in 0.22. Specify a solver to silence this warning.
-      FutureWarning)
 
-
-
-![png](output_35_1.png)
-
-
-
-
-
-    0.9779402563506677
-
+![png](output_34_0.png)
 
 
 Now apply the model to new data.
@@ -731,25 +654,25 @@ dtest = make_data(450)
 dtest_prepared = transform.transform(dtest)
 
 # apply the model to the prepared data
-dtest_prepared['prediction'] = fitter.predict_proba(dtest_prepared[model_vars])[:, 1]
+dtest_prepared['prediction'] = fitter.predict(dtest_prepared[model_vars])
 
-wvpy.util.plot_roc(prediction=dtest_prepared['prediction'], 
-                   istrue=dtest_prepared['yc'],
-                   title = 'Performance of logistic regression model on test data')
+# get R-squared
+r2 = sklearn.metrics.r2_score(y_true=dtest_prepared.y, y_pred=dtest_prepared.prediction)
+
+title = 'Prediction vs. outcome (test data); R-sqr = {:04.2f}'.format(r2)
+
+# compare the predictions to the outcome (on the test data)
+ax = seaborn.scatterplot(x='prediction', y='y', data=dtest_prepared)
+matplotlib.pyplot.plot(dtest_prepared.prediction, dtest_prepared.prediction, color="darkgray")
+ax.set_title(title)
+plt.show()
 ```
 
 
-![png](output_37_0.png)
+![png](output_36_0.png)
 
 
-
-
-
-    0.9790693038605507
-
-
-
-## Parameters for `BinomialOutcomeTreatment`
+## Parameters for `NumericOutcomeTreatment`
 
 We've tried to set the defaults for all parameters so that `vtreat` is usable out of the box for most applications.
 
@@ -772,14 +695,14 @@ vtreat.vtreat_parameters()
       'prevalence_code'},
      'filter_to_recommended': True,
      'indicator_min_fraction': 0.1,
-     'cross_validation_plan': <vtreat.cross_plan.KWayCrossPlan at 0x1a17c1ab70>,
+     'cross_validation_plan': <vtreat.cross_plan.KWayCrossPlan at 0x1a22e10748>,
      'cross_validation_k': 5,
      'user_transforms': [],
      'sparse_indicators': True}
 
 
 
-**use_hierarchical_estimate:**: When True, uses hierarchical smoothing when estimating `logit_code` variables; when False, uses unsmoothed logistic regression.
+**use_hierarchical_estimate:**: When True, uses hierarchical smoothing when estimating `impact_code` variables; when False, uses unsmoothed linear regression.
 
 **coders**: The types of synthetic variables that `vtreat` will (potentially) produce. See *Types of prepared variables* below.
 
@@ -787,7 +710,7 @@ vtreat.vtreat_parameters()
 
 **indicator_min_fraction**: For categorical variables, indicator variables (type `indicator_code`) are only produced for levels that are present at least `indicator_min_fraction` of the time. A consequence of this is that 1/`indicator_min_fraction` is the maximum number of indicators that will be produced for a given categorical variable. To make sure that *all* possible indicator variables are produced, set `indicator_min_fraction = 0`
 
-**cross_validation_plan**: The cross validation method used by `vtreat`. Most people won't have to change this.
+**cross_validation_plan**: The cross validation method used by `vtreat`. Most people won't have to change this. *TODO: make some examples of OrderedCrossPlan and StratifiedCrossPlan to link to here*
 
 **cross_validation_k**: The number of folds to use for cross-validation
 
@@ -799,24 +722,22 @@ vtreat.vtreat_parameters()
 
 
 ```python
-transform_all = vtreat.BinomialOutcomeTreatment(
-    outcome_name='yc',    # outcome variable
-    outcome_target=True,  # outcome of interest
-    cols_to_copy=['y'],   # columns to "carry along" but not treat as input variables
+transform_all = vtreat.NumericOutcomeTreatment(
+    outcome_name='y',    # outcome variable
     params = vtreat.vtreat_parameters({
         'filter_to_recommended': False
     })
 )  
 
-transform_all.fit_transform(d, d['yc']).columns
+transform_all.fit_transform(d, d['y']).columns
 ```
 
 
 
 
-    Index(['y', 'yc', 'x_is_bad', 'xc_is_bad', 'x', 'x2', 'xc_logit_code',
-           'xc_prevalence_code', 'xc_lev_level_1.0', 'xc_lev__NA_',
-           'xc_lev_level_0.5', 'xc_lev_level_-0.5'],
+    Index(['y', 'x_is_bad', 'xc_is_bad', 'x', 'x2', 'xc_impact_code',
+           'xc_deviation_code', 'xc_prevalence_code', 'xc_lev__NA_',
+           'xc_lev_level_-0.5', 'xc_lev_level_1.0', 'xc_lev_level_0.5'],
           dtype='object')
 
 
@@ -867,10 +788,10 @@ transform_all.score_frame_
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.022815</td>
-      <td>6.107811e-01</td>
+      <td>-0.017029</td>
+      <td>7.040463e-01</td>
       <td>2.0</td>
-      <td>0.10</td>
+      <td>0.083333</td>
       <td>False</td>
     </tr>
     <tr>
@@ -880,10 +801,10 @@ transform_all.score_frame_
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.370625</td>
-      <td>1.000294e-17</td>
+      <td>-0.699401</td>
+      <td>1.174776e-74</td>
       <td>2.0</td>
-      <td>0.10</td>
+      <td>0.083333</td>
       <td>True</td>
     </tr>
     <tr>
@@ -893,10 +814,10 @@ transform_all.score_frame_
       <td>clean_copy</td>
       <td>False</td>
       <td>True</td>
-      <td>0.027577</td>
-      <td>5.384103e-01</td>
+      <td>0.018941</td>
+      <td>6.726562e-01</td>
       <td>2.0</td>
-      <td>0.10</td>
+      <td>0.083333</td>
       <td>False</td>
     </tr>
     <tr>
@@ -906,49 +827,49 @@ transform_all.score_frame_
       <td>clean_copy</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.008976</td>
-      <td>8.413070e-01</td>
+      <td>-0.018316</td>
+      <td>6.828600e-01</td>
       <td>2.0</td>
-      <td>0.10</td>
+      <td>0.083333</td>
       <td>False</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>xc_logit_code</td>
+      <td>xc_impact_code</td>
       <td>xc</td>
-      <td>logit_code</td>
+      <td>impact_code</td>
       <td>True</td>
       <td>True</td>
-      <td>0.823659</td>
-      <td>8.990887e-125</td>
+      <td>0.986315</td>
+      <td>0.000000e+00</td>
       <td>1.0</td>
-      <td>0.20</td>
+      <td>0.166667</td>
       <td>True</td>
     </tr>
     <tr>
       <th>5</th>
+      <td>xc_deviation_code</td>
+      <td>xc</td>
+      <td>deviation_code</td>
+      <td>True</td>
+      <td>True</td>
+      <td>-0.063933</td>
+      <td>1.534434e-01</td>
+      <td>1.0</td>
+      <td>0.166667</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>6</th>
       <td>xc_prevalence_code</td>
       <td>xc</td>
       <td>prevalence_code</td>
       <td>False</td>
       <td>True</td>
-      <td>0.475269</td>
-      <td>1.535868e-29</td>
+      <td>-0.255156</td>
+      <td>7.154877e-09</td>
       <td>1.0</td>
-      <td>0.20</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>xc_lev_level_1.0</td>
-      <td>xc</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>0.777822</td>
-      <td>1.631550e-102</td>
-      <td>4.0</td>
-      <td>0.05</td>
+      <td>0.166667</td>
       <td>True</td>
     </tr>
     <tr>
@@ -958,36 +879,49 @@ transform_all.score_frame_
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.370625</td>
-      <td>1.000294e-17</td>
+      <td>-0.699401</td>
+      <td>1.174776e-74</td>
       <td>4.0</td>
-      <td>0.05</td>
+      <td>0.041667</td>
       <td>True</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>xc_lev_level_0.5</td>
-      <td>xc</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>0.165091</td>
-      <td>2.090885e-04</td>
-      <td>4.0</td>
-      <td>0.05</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>9</th>
       <td>xc_lev_level_-0.5</td>
       <td>xc</td>
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.352801</td>
-      <td>4.220524e-16</td>
+      <td>-0.355552</td>
+      <td>2.405192e-16</td>
       <td>4.0</td>
-      <td>0.05</td>
+      <td>0.041667</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>xc_lev_level_1.0</td>
+      <td>xc</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.676799</td>
+      <td>2.992053e-68</td>
+      <td>4.0</td>
+      <td>0.041667</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>xc_lev_level_0.5</td>
+      <td>xc</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.402619</td>
+      <td>6.583063e-21</td>
+      <td>4.0</td>
+      <td>0.041667</td>
       <td>True</td>
     </tr>
   </tbody>
@@ -1006,25 +940,23 @@ Note that the prepared data produced by `fit_transform()` includes all the varia
 
 **prevalence_code**: Produced from categorical variables: indicates how often each level of the variable was "on"
 
-**logit_code**: Produced from categorical variables: score from a one-dimensional model of the centered output as a function of the variable
+**deviation_code**: Produced from categorical variables: standard deviation of outcome conditioned on levels of the variable
+
+**impact_code**: Produced from categorical variables: score from a one-dimensional model of the output as a function of the variable
 
 **missing_indicator**: Produced for both numerical and categorical variables: an indicator variable that marks when the original variable was missing or  `NaN`
 
-**deviation_code**: not used by `BinomialOutcomeTreatment`
-
-**impact_code**: not used by `BinomialOutcomeTreatment`
+**logit_code**: not used by `NumericOutcomeTreatment`
 
 ### Example: Produce only a subset of variable types
 
 In this example, suppose you only want to use indicators and continuous variables in your model; 
-in other words, you only want to use variables of types (`clean_copy`, `missing_indicator`, and `indicator_code`), and no `logit_code` or `prevalence_code` variables.
+in other words, you only want to use variables of types (`clean_copy`, `missing_indicator`, and `indicator_code`), and no `impact_code`, `deviance_code`, or `prevalence_code` variables.
 
 
 ```python
-transform_thin = vtreat.BinomialOutcomeTreatment(
-    outcome_name='yc',    # outcome variable
-    outcome_target=True,  # outcome of interest
-    cols_to_copy=['y'],   # columns to "carry along" but not treat as input variables
+transform_thin = vtreat.NumericOutcomeTreatment(
+    outcome_name='y',    # outcome variable
     params = vtreat.vtreat_parameters({
         'filter_to_recommended': False,
         'coders': {'clean_copy',
@@ -1034,7 +966,7 @@ transform_thin = vtreat.BinomialOutcomeTreatment(
     })
 )
 
-transform_thin.fit_transform(d, d['yc']).head()
+transform_thin.fit_transform(d, d['y']).head()
 ```
 
 
@@ -1059,52 +991,48 @@ transform_thin.fit_transform(d, d['yc']).head()
     <tr style="text-align: right;">
       <th></th>
       <th>y</th>
-      <th>yc</th>
       <th>x_is_bad</th>
       <th>xc_is_bad</th>
       <th>x</th>
       <th>x2</th>
-      <th>xc_lev_level_1.0</th>
       <th>xc_lev__NA_</th>
-      <th>xc_lev_level_0.5</th>
       <th>xc_lev_level_-0.5</th>
+      <th>xc_lev_level_1.0</th>
+      <th>xc_lev_level_0.5</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>-1.027156</td>
-      <td>False</td>
+      <td>0.908968</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.131463</td>
+      <td>0.627907</td>
+      <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
-      <td>4.998150</td>
-      <td>0.102567</td>
-      <td>0.0</td>
-      <td>1.0</td>
-      <td>0.0</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>0.967756</td>
-      <td>True</td>
+      <td>-0.510264</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>1.005258</td>
-      <td>-0.718418</td>
+      <td>5.607797</td>
+      <td>-0.238125</td>
+      <td>0.0</td>
       <td>1.0</td>
-      <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.323111</td>
-      <td>False</td>
+      <td>1.096685</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>-6.047966</td>
-      <td>-1.046220</td>
+      <td>1.821388</td>
+      <td>-0.983032</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
@@ -1112,12 +1040,11 @@ transform_thin.fit_transform(d, d['yc']).head()
     </tr>
     <tr>
       <th>3</th>
-      <td>0.948966</td>
-      <td>True</td>
+      <td>-1.192763</td>
       <td>1.0</td>
-      <td>0.0</td>
-      <td>-0.029983</td>
-      <td>0.264366</td>
+      <td>1.0</td>
+      <td>-0.180003</td>
+      <td>-0.619704</td>
       <td>1.0</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -1125,16 +1052,15 @@ transform_thin.fit_transform(d, d['yc']).head()
     </tr>
     <tr>
       <th>4</th>
-      <td>-0.480668</td>
-      <td>False</td>
+      <td>-0.759459</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>-0.180003</td>
+      <td>-0.153687</td>
       <td>1.0</td>
       <td>0.0</td>
-      <td>-0.029983</td>
-      <td>-0.492535</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.0</td>
-      <td>1.0</td>
     </tr>
   </tbody>
 </table>
@@ -1188,8 +1114,8 @@ transform_thin.score_frame_
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.022815</td>
-      <td>6.107811e-01</td>
+      <td>-0.017029</td>
+      <td>7.040463e-01</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>False</td>
@@ -1201,8 +1127,8 @@ transform_thin.score_frame_
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.370625</td>
-      <td>1.000294e-17</td>
+      <td>-0.699401</td>
+      <td>1.174776e-74</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>True</td>
@@ -1214,8 +1140,8 @@ transform_thin.score_frame_
       <td>clean_copy</td>
       <td>False</td>
       <td>True</td>
-      <td>0.027577</td>
-      <td>5.384103e-01</td>
+      <td>0.018941</td>
+      <td>6.726562e-01</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>False</td>
@@ -1227,60 +1153,60 @@ transform_thin.score_frame_
       <td>clean_copy</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.008976</td>
-      <td>8.413070e-01</td>
+      <td>-0.018316</td>
+      <td>6.828600e-01</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>False</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>xc_lev_level_1.0</td>
+      <td>xc_lev__NA_</td>
       <td>xc</td>
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>0.777822</td>
-      <td>1.631550e-102</td>
+      <td>-0.699401</td>
+      <td>1.174776e-74</td>
       <td>4.0</td>
       <td>0.083333</td>
       <td>True</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>xc_lev__NA_</td>
+      <td>xc_lev_level_-0.5</td>
       <td>xc</td>
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.370625</td>
-      <td>1.000294e-17</td>
+      <td>-0.355552</td>
+      <td>2.405192e-16</td>
       <td>4.0</td>
       <td>0.083333</td>
       <td>True</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>xc_lev_level_0.5</td>
+      <td>xc_lev_level_1.0</td>
       <td>xc</td>
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>0.165091</td>
-      <td>2.090885e-04</td>
+      <td>0.676799</td>
+      <td>2.992053e-68</td>
       <td>4.0</td>
       <td>0.083333</td>
       <td>True</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>xc_lev_level_-0.5</td>
+      <td>xc_lev_level_0.5</td>
       <td>xc</td>
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.352801</td>
-      <td>4.220524e-16</td>
+      <td>0.402619</td>
+      <td>6.583063e-21</td>
       <td>4.0</td>
       <td>0.083333</td>
       <td>True</td>
@@ -1305,5 +1231,4 @@ Suppose you have a (treated) data set with *ntreat* different types of `vtreat` 
 There are *nT* variables of type *T*. Then the default threshold for all the variables of type *T* is *1/(ntreat nT)*. This reweighting  helps to reduce the bias against any particular type of variable. The heuristic is still that the set of recommended variables will allow at most one noise variable into the set of candidate variables.
 
 As noted above, because `vtreat` estimates variable significances using linear methods by default, some variables with a non-linear relationship  to the output may fail to pass the threshold. Setting the `filter_to_recommended` parameter to False will keep all derived variables in the treated frame, for the data scientist to filter (or not) as they will.
-
 
