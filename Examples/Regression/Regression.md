@@ -77,38 +77,38 @@ d.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>1.131463</td>
-      <td>0.908968</td>
-      <td>level_1.0</td>
-      <td>0.627907</td>
+      <td>3.488840</td>
+      <td>-0.177070</td>
+      <td>level_-0.0</td>
+      <td>-1.453079</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>5.607797</td>
-      <td>-0.510264</td>
-      <td>level_-0.5</td>
-      <td>-0.238125</td>
+      <td>3.290143</td>
+      <td>0.003809</td>
+      <td>level_0.0</td>
+      <td>-0.004850</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>1.821388</td>
-      <td>1.096685</td>
-      <td>level_1.0</td>
-      <td>-0.983032</td>
+      <td>-1.566535</td>
+      <td>-0.997643</td>
+      <td>NaN</td>
+      <td>-0.369931</td>
     </tr>
     <tr>
       <th>3</th>
       <td>NaN</td>
-      <td>-1.192763</td>
-      <td>NaN</td>
-      <td>-0.619704</td>
+      <td>-0.514487</td>
+      <td>level_-0.5</td>
+      <td>0.072830</td>
     </tr>
     <tr>
       <th>4</th>
       <td>NaN</td>
-      <td>-0.759459</td>
-      <td>NaN</td>
-      <td>-0.153687</td>
+      <td>0.547428</td>
+      <td>level_0.5</td>
+      <td>-1.261570</td>
     </tr>
   </tbody>
 </table>
@@ -128,8 +128,8 @@ d['xc'].unique()
 
 
 
-    array(['level_1.0', 'level_-0.5', nan, 'level_0.0', 'level_0.5',
-           'level_-0.0'], dtype=object)
+    array(['level_-0.0', 'level_0.0', nan, 'level_-0.5', 'level_0.5',
+           'level_1.0'], dtype=object)
 
 
 
@@ -141,12 +141,12 @@ d['xc'].value_counts(dropna=False)
 
 
 
-    NaN           119
-    level_-0.5    101
-    level_1.0     101
-    level_0.5      98
-    level_-0.0     42
-    level_0.0      39
+    level_-0.5    110
+    NaN           108
+    level_1.0     104
+    level_0.5      78
+    level_0.0      52
+    level_-0.0     48
     Name: xc, dtype: int64
 
 
@@ -161,7 +161,7 @@ numpy.mean(d['y'])
 
 
 
-    -0.04245045464390768
+    -0.041518470752918556
 
 
 
@@ -175,7 +175,7 @@ seaborn.lineplot(x='x', y='y', data=d)
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x1a2289c2b0>
+    <matplotlib.axes._subplots.AxesSubplot at 0x1a210dc2e8>
 
 
 
@@ -254,8 +254,8 @@ transform.score_frame_
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.017029</td>
-      <td>7.040463e-01</td>
+      <td>0.008310</td>
+      <td>8.529429e-01</td>
       <td>2.0</td>
       <td>0.083333</td>
       <td>False</td>
@@ -267,8 +267,8 @@ transform.score_frame_
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.699401</td>
-      <td>1.174776e-74</td>
+      <td>-0.673228</td>
+      <td>2.730001e-67</td>
       <td>2.0</td>
       <td>0.083333</td>
       <td>True</td>
@@ -280,8 +280,8 @@ transform.score_frame_
       <td>clean_copy</td>
       <td>False</td>
       <td>True</td>
-      <td>0.018941</td>
-      <td>6.726562e-01</td>
+      <td>0.045521</td>
+      <td>3.097003e-01</td>
       <td>2.0</td>
       <td>0.083333</td>
       <td>False</td>
@@ -293,8 +293,8 @@ transform.score_frame_
       <td>clean_copy</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.018316</td>
-      <td>6.828600e-01</td>
+      <td>0.022413</td>
+      <td>6.170981e-01</td>
       <td>2.0</td>
       <td>0.083333</td>
       <td>False</td>
@@ -306,7 +306,7 @@ transform.score_frame_
       <td>impact_code</td>
       <td>True</td>
       <td>True</td>
-      <td>0.986448</td>
+      <td>0.985373</td>
       <td>0.000000e+00</td>
       <td>1.0</td>
       <td>0.166667</td>
@@ -319,8 +319,8 @@ transform.score_frame_
       <td>deviation_code</td>
       <td>True</td>
       <td>True</td>
-      <td>-0.068546</td>
-      <td>1.258423e-01</td>
+      <td>-0.033515</td>
+      <td>4.546156e-01</td>
       <td>1.0</td>
       <td>0.166667</td>
       <td>False</td>
@@ -332,36 +332,36 @@ transform.score_frame_
       <td>prevalence_code</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.255156</td>
-      <td>7.154877e-09</td>
+      <td>-0.244991</td>
+      <td>2.868989e-08</td>
       <td>1.0</td>
       <td>0.166667</td>
       <td>True</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>xc_lev__NA_</td>
-      <td>xc</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.699401</td>
-      <td>1.174776e-74</td>
-      <td>4.0</td>
-      <td>0.041667</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>8</th>
       <td>xc_lev_level_-0.5</td>
       <td>xc</td>
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.355552</td>
-      <td>2.405192e-16</td>
-      <td>4.0</td>
-      <td>0.041667</td>
+      <td>-0.358720</td>
+      <td>1.250004e-16</td>
+      <td>5.0</td>
+      <td>0.033333</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>xc_lev__NA_</td>
+      <td>xc</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>-0.673228</td>
+      <td>2.730001e-67</td>
+      <td>5.0</td>
+      <td>0.033333</td>
       <td>True</td>
     </tr>
     <tr>
@@ -371,10 +371,10 @@ transform.score_frame_
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>0.676799</td>
-      <td>2.992053e-68</td>
-      <td>4.0</td>
-      <td>0.041667</td>
+      <td>0.714321</td>
+      <td>3.170144e-79</td>
+      <td>5.0</td>
+      <td>0.033333</td>
       <td>True</td>
     </tr>
     <tr>
@@ -384,11 +384,24 @@ transform.score_frame_
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>0.402619</td>
-      <td>6.583063e-21</td>
-      <td>4.0</td>
-      <td>0.041667</td>
+      <td>0.350686</td>
+      <td>6.478225e-16</td>
+      <td>5.0</td>
+      <td>0.033333</td>
       <td>True</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>xc_lev_level_0.0</td>
+      <td>xc</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.077725</td>
+      <td>8.251776e-02</td>
+      <td>5.0</td>
+      <td>0.033333</td>
+      <td>False</td>
     </tr>
   </tbody>
 </table>
@@ -422,8 +435,8 @@ transform.score_frame_['variable'][transform.score_frame_['recommended']]
     1              xc_is_bad
     4         xc_impact_code
     6     xc_prevalence_code
-    7            xc_lev__NA_
-    8      xc_lev_level_-0.5
+    7      xc_lev_level_-0.5
+    8            xc_lev__NA_
     9       xc_lev_level_1.0
     10      xc_lev_level_0.5
     Name: variable, dtype: object
@@ -439,10 +452,11 @@ transform.score_frame_['variable'][transform.score_frame_['recommended']==False]
 
 
 
-    0             x_is_bad
-    2                    x
-    3                   x2
-    5    xc_deviation_code
+    0              x_is_bad
+    2                     x
+    3                    x2
+    5     xc_deviation_code
+    11     xc_lev_level_0.0
     Name: variable, dtype: object
 
 
@@ -479,8 +493,8 @@ d_prepared.head()
       <th>xc_is_bad</th>
       <th>xc_impact_code</th>
       <th>xc_prevalence_code</th>
-      <th>xc_lev__NA_</th>
       <th>xc_lev_level_-0.5</th>
+      <th>xc_lev__NA_</th>
       <th>xc_lev_level_1.0</th>
       <th>xc_lev_level_0.5</th>
     </tr>
@@ -488,43 +502,43 @@ d_prepared.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>0.908968</td>
+      <td>-0.177070</td>
       <td>0.0</td>
-      <td>0.939178</td>
-      <td>0.202</td>
+      <td>-0.142030</td>
+      <td>0.096</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>1.0</td>
+      <td>0.0</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>-0.510264</td>
+      <td>0.003809</td>
       <td>0.0</td>
-      <td>-0.521413</td>
-      <td>0.202</td>
+      <td>0.173839</td>
+      <td>0.104</td>
       <td>0.0</td>
-      <td>1.0</td>
+      <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>1.096685</td>
-      <td>0.0</td>
-      <td>0.965424</td>
-      <td>0.202</td>
-      <td>0.0</td>
+      <td>-0.997643</td>
+      <td>1.0</td>
+      <td>-0.883523</td>
+      <td>0.216</td>
       <td>0.0</td>
       <td>1.0</td>
+      <td>0.0</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>-1.192763</td>
-      <td>1.0</td>
-      <td>-0.902318</td>
-      <td>0.238</td>
+      <td>-0.514487</td>
+      <td>0.0</td>
+      <td>-0.475341</td>
+      <td>0.220</td>
       <td>1.0</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -532,14 +546,14 @@ d_prepared.head()
     </tr>
     <tr>
       <th>4</th>
-      <td>-0.759459</td>
+      <td>0.547428</td>
+      <td>0.0</td>
+      <td>0.556805</td>
+      <td>0.156</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
       <td>1.0</td>
-      <td>-0.883834</td>
-      <td>0.238</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
     </tr>
   </tbody>
 </table>
@@ -582,7 +596,7 @@ transform.score_frame_.PearsonR[transform.score_frame_.variable=='xc_impact_code
 
 
 
-    4    0.986448
+    4    0.985373
     Name: PearsonR, dtype: float64
 
 
@@ -695,7 +709,7 @@ vtreat.vtreat_parameters()
       'prevalence_code'},
      'filter_to_recommended': True,
      'indicator_min_fraction': 0.1,
-     'cross_validation_plan': <vtreat.cross_plan.KWayCrossPlan at 0x1a22e10748>,
+     'cross_validation_plan': <vtreat.cross_plan.KWayCrossPlan at 0x1a21cc7c18>,
      'cross_validation_k': 5,
      'user_transforms': [],
      'sparse_indicators': True}
@@ -736,8 +750,9 @@ transform_all.fit_transform(d, d['y']).columns
 
 
     Index(['y', 'x_is_bad', 'xc_is_bad', 'x', 'x2', 'xc_impact_code',
-           'xc_deviation_code', 'xc_prevalence_code', 'xc_lev__NA_',
-           'xc_lev_level_-0.5', 'xc_lev_level_1.0', 'xc_lev_level_0.5'],
+           'xc_deviation_code', 'xc_prevalence_code', 'xc_lev_level_-0.5',
+           'xc_lev__NA_', 'xc_lev_level_1.0', 'xc_lev_level_0.5',
+           'xc_lev_level_0.0'],
           dtype='object')
 
 
@@ -788,8 +803,8 @@ transform_all.score_frame_
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.017029</td>
-      <td>7.040463e-01</td>
+      <td>0.008310</td>
+      <td>8.529429e-01</td>
       <td>2.0</td>
       <td>0.083333</td>
       <td>False</td>
@@ -801,8 +816,8 @@ transform_all.score_frame_
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.699401</td>
-      <td>1.174776e-74</td>
+      <td>-0.673228</td>
+      <td>2.730001e-67</td>
       <td>2.0</td>
       <td>0.083333</td>
       <td>True</td>
@@ -814,8 +829,8 @@ transform_all.score_frame_
       <td>clean_copy</td>
       <td>False</td>
       <td>True</td>
-      <td>0.018941</td>
-      <td>6.726562e-01</td>
+      <td>0.045521</td>
+      <td>3.097003e-01</td>
       <td>2.0</td>
       <td>0.083333</td>
       <td>False</td>
@@ -827,8 +842,8 @@ transform_all.score_frame_
       <td>clean_copy</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.018316</td>
-      <td>6.828600e-01</td>
+      <td>0.022413</td>
+      <td>6.170981e-01</td>
       <td>2.0</td>
       <td>0.083333</td>
       <td>False</td>
@@ -840,7 +855,7 @@ transform_all.score_frame_
       <td>impact_code</td>
       <td>True</td>
       <td>True</td>
-      <td>0.986315</td>
+      <td>0.985324</td>
       <td>0.000000e+00</td>
       <td>1.0</td>
       <td>0.166667</td>
@@ -853,8 +868,8 @@ transform_all.score_frame_
       <td>deviation_code</td>
       <td>True</td>
       <td>True</td>
-      <td>-0.063933</td>
-      <td>1.534434e-01</td>
+      <td>-0.037211</td>
+      <td>4.063865e-01</td>
       <td>1.0</td>
       <td>0.166667</td>
       <td>False</td>
@@ -866,36 +881,36 @@ transform_all.score_frame_
       <td>prevalence_code</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.255156</td>
-      <td>7.154877e-09</td>
+      <td>-0.244991</td>
+      <td>2.868989e-08</td>
       <td>1.0</td>
       <td>0.166667</td>
       <td>True</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>xc_lev__NA_</td>
-      <td>xc</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.699401</td>
-      <td>1.174776e-74</td>
-      <td>4.0</td>
-      <td>0.041667</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>8</th>
       <td>xc_lev_level_-0.5</td>
       <td>xc</td>
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.355552</td>
-      <td>2.405192e-16</td>
-      <td>4.0</td>
-      <td>0.041667</td>
+      <td>-0.358720</td>
+      <td>1.250004e-16</td>
+      <td>5.0</td>
+      <td>0.033333</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>xc_lev__NA_</td>
+      <td>xc</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>-0.673228</td>
+      <td>2.730001e-67</td>
+      <td>5.0</td>
+      <td>0.033333</td>
       <td>True</td>
     </tr>
     <tr>
@@ -905,10 +920,10 @@ transform_all.score_frame_
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>0.676799</td>
-      <td>2.992053e-68</td>
-      <td>4.0</td>
-      <td>0.041667</td>
+      <td>0.714321</td>
+      <td>3.170144e-79</td>
+      <td>5.0</td>
+      <td>0.033333</td>
       <td>True</td>
     </tr>
     <tr>
@@ -918,11 +933,24 @@ transform_all.score_frame_
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>0.402619</td>
-      <td>6.583063e-21</td>
-      <td>4.0</td>
-      <td>0.041667</td>
+      <td>0.350686</td>
+      <td>6.478225e-16</td>
+      <td>5.0</td>
+      <td>0.033333</td>
       <td>True</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>xc_lev_level_0.0</td>
+      <td>xc</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.077725</td>
+      <td>8.251776e-02</td>
+      <td>5.0</td>
+      <td>0.033333</td>
+      <td>False</td>
     </tr>
   </tbody>
 </table>
@@ -995,71 +1023,77 @@ transform_thin.fit_transform(d, d['y']).head()
       <th>xc_is_bad</th>
       <th>x</th>
       <th>x2</th>
-      <th>xc_lev__NA_</th>
       <th>xc_lev_level_-0.5</th>
+      <th>xc_lev__NA_</th>
       <th>xc_lev_level_1.0</th>
       <th>xc_lev_level_0.5</th>
+      <th>xc_lev_level_0.0</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>0.908968</td>
+      <td>-0.177070</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>1.131463</td>
-      <td>0.627907</td>
+      <td>3.488840</td>
+      <td>-1.453079</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>-0.510264</td>
+      <td>0.003809</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>5.607797</td>
-      <td>-0.238125</td>
+      <td>3.290143</td>
+      <td>-0.004850</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>1.096685</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>1.821388</td>
-      <td>-0.983032</td>
-      <td>0.0</td>
+      <td>-0.997643</td>
       <td>0.0</td>
       <td>1.0</td>
+      <td>-1.566535</td>
+      <td>-0.369931</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>-1.192763</td>
+      <td>-0.514487</td>
       <td>1.0</td>
+      <td>0.0</td>
+      <td>0.020398</td>
+      <td>0.072830</td>
       <td>1.0</td>
-      <td>-0.180003</td>
-      <td>-0.619704</td>
-      <td>1.0</td>
+      <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>-0.759459</td>
-      <td>1.0</td>
-      <td>1.0</td>
-      <td>-0.180003</td>
-      <td>-0.153687</td>
+      <td>0.547428</td>
       <td>1.0</td>
       <td>0.0</td>
+      <td>0.020398</td>
+      <td>-1.261570</td>
       <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
       <td>0.0</td>
     </tr>
   </tbody>
@@ -1114,8 +1148,8 @@ transform_thin.score_frame_
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.017029</td>
-      <td>7.040463e-01</td>
+      <td>0.008310</td>
+      <td>8.529429e-01</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>False</td>
@@ -1127,8 +1161,8 @@ transform_thin.score_frame_
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.699401</td>
-      <td>1.174776e-74</td>
+      <td>-0.673228</td>
+      <td>2.730001e-67</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>True</td>
@@ -1140,8 +1174,8 @@ transform_thin.score_frame_
       <td>clean_copy</td>
       <td>False</td>
       <td>True</td>
-      <td>0.018941</td>
-      <td>6.726562e-01</td>
+      <td>0.045521</td>
+      <td>3.097003e-01</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>False</td>
@@ -1153,36 +1187,36 @@ transform_thin.score_frame_
       <td>clean_copy</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.018316</td>
-      <td>6.828600e-01</td>
+      <td>0.022413</td>
+      <td>6.170981e-01</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>False</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>xc_lev__NA_</td>
-      <td>xc</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.699401</td>
-      <td>1.174776e-74</td>
-      <td>4.0</td>
-      <td>0.083333</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>5</th>
       <td>xc_lev_level_-0.5</td>
       <td>xc</td>
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.355552</td>
-      <td>2.405192e-16</td>
-      <td>4.0</td>
-      <td>0.083333</td>
+      <td>-0.358720</td>
+      <td>1.250004e-16</td>
+      <td>5.0</td>
+      <td>0.066667</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>xc_lev__NA_</td>
+      <td>xc</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>-0.673228</td>
+      <td>2.730001e-67</td>
+      <td>5.0</td>
+      <td>0.066667</td>
       <td>True</td>
     </tr>
     <tr>
@@ -1192,10 +1226,10 @@ transform_thin.score_frame_
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>0.676799</td>
-      <td>2.992053e-68</td>
-      <td>4.0</td>
-      <td>0.083333</td>
+      <td>0.714321</td>
+      <td>3.170144e-79</td>
+      <td>5.0</td>
+      <td>0.066667</td>
       <td>True</td>
     </tr>
     <tr>
@@ -1205,11 +1239,24 @@ transform_thin.score_frame_
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>0.402619</td>
-      <td>6.583063e-21</td>
-      <td>4.0</td>
-      <td>0.083333</td>
+      <td>0.350686</td>
+      <td>6.478225e-16</td>
+      <td>5.0</td>
+      <td>0.066667</td>
       <td>True</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>xc_lev_level_0.0</td>
+      <td>xc</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0.077725</td>
+      <td>8.251776e-02</td>
+      <td>5.0</td>
+      <td>0.066667</td>
+      <td>False</td>
     </tr>
   </tbody>
 </table>
@@ -1231,4 +1278,19 @@ Suppose you have a (treated) data set with *ntreat* different types of `vtreat` 
 There are *nT* variables of type *T*. Then the default threshold for all the variables of type *T* is *1/(ntreat nT)*. This reweighting  helps to reduce the bias against any particular type of variable. The heuristic is still that the set of recommended variables will allow at most one noise variable into the set of candidate variables.
 
 As noted above, because `vtreat` estimates variable significances using linear methods by default, some variables with a non-linear relationship  to the output may fail to pass the threshold. Setting the `filter_to_recommended` parameter to False will keep all derived variables in the treated frame, for the data scientist to filter (or not) as they will.
+
+
+## Conclusion
+
+In all cases (classification, regression, unsupervised, and multinomial classification) the intent is that `vtreat` transforms are essentially one liners.
+
+The preparation commands are organized as follows:
+
+ * **Regression**: [`R` regression example](https://github.com/WinVector/vtreat/blob/master/Examples/Regression/Regression.md), [`Python` regression example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Regression/Regression.md).
+ * **Classification**: [`R` classification example](https://github.com/WinVector/vtreat/blob/master/Examples/Classification/Classification.md), [`Python` classification  example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Classification/Classification.md).
+ * **Unsupervised tasks**: [`R` unsupervised example](https://github.com/WinVector/vtreat/blob/master/Examples/Unsupervised/Unsupervised.md), [`Python` unsupervised example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Unsupervised/Unsupervised.md).
+ * **Multinomial classification**: [`R` multinomial classification example](https://winvector.github.io/vtreat/articles/MultiClassVtreat.html), [`Python` multinomial classification example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Multinomial/MultinomialExample.ipynb).
+
+These current revisions of the examples are designed to be small, yet complete.  So as a set they have some overlap, but the user can rely mostly on a single example for a single task type.
+
 
