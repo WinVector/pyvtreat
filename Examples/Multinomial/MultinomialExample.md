@@ -137,6 +137,52 @@ d.head()
 treatment = vtreat.MultinomialOutcomeTreatment(
     outcome_name='y')
 cross_frame = treatment.fit_transform(d, d['y'])
+score_frame = treatment.score_frame_
+```
+
+To select variables we either make our selection in terms of new variables as follows.
+
+
+```python
+good_new_variables = numpy.asarray(score_frame.variable[score_frame.recommended])
+good_new_variables
+```
+
+
+
+
+    array(['var_n_0', 'var_n_1', 'var_c_0_logit_code_a',
+           'var_c_0_prevalence_code', 'var_c_0_lev_b', 'var_c_0_lev_a',
+           'var_c_0_lev_c', 'var_c_1_logit_code_a', 'var_c_1_prevalence_code',
+           'var_c_1_lev_a', 'var_n_0', 'var_n_1', 'var_c_0_logit_code_b',
+           'var_c_0_prevalence_code', 'var_c_0_lev_b', 'var_c_0_lev_a',
+           'var_c_0_lev_c', 'var_c_1_logit_code_b', 'var_c_1_prevalence_code',
+           'var_c_1_lev_b', 'var_c_1_lev_c', 'var_n_0', 'var_n_1',
+           'var_c_0_logit_code_c', 'var_c_0_prevalence_code', 'var_c_0_lev_b',
+           'var_c_0_lev_c', 'var_c_1_logit_code_c', 'var_c_1_prevalence_code',
+           'var_c_1_lev_a', 'var_c_1_lev_b', 'var_c_1_lev_c'], dtype=object)
+
+
+
+Or in terms of original variables as follows.
+
+
+```python
+good_original_variables = score_frame.orig_variable[score_frame.recommended].unique()
+good_original_variables
+```
+
+
+
+
+    array(['var_n_0', 'var_n_1', 'var_c_0', 'var_c_1'], dtype=object)
+
+
+
+The cross frame and score frame look like the following.
+
+
+```python
 cross_frame.head()
 ```
 
@@ -165,15 +211,15 @@ cross_frame.head()
       <th>var_n_0</th>
       <th>var_n_1</th>
       <th>var_c_0_logit_code_c</th>
-      <th>var_c_0_logit_code_b</th>
       <th>var_c_0_logit_code_a</th>
+      <th>var_c_0_logit_code_b</th>
       <th>var_c_0_prevalence_code</th>
       <th>var_c_0_lev_b</th>
       <th>var_c_0_lev_a</th>
       <th>var_c_0_lev_c</th>
       <th>var_c_1_logit_code_c</th>
-      <th>var_c_1_logit_code_b</th>
       <th>var_c_1_logit_code_a</th>
+      <th>var_c_1_logit_code_b</th>
       <th>var_c_1_prevalence_code</th>
       <th>var_c_1_lev_a</th>
       <th>var_c_1_lev_b</th>
@@ -187,15 +233,15 @@ cross_frame.head()
       <td>0.544891</td>
       <td>1.595448</td>
       <td>-0.170159</td>
-      <td>0.334343</td>
       <td>-0.269680</td>
+      <td>0.334343</td>
       <td>0.352</td>
       <td>1.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>-0.157131</td>
-      <td>-0.029161</td>
       <td>0.157304</td>
+      <td>-0.029161</td>
       <td>0.346</td>
       <td>1.0</td>
       <td>0.0</td>
@@ -207,15 +253,15 @@ cross_frame.head()
       <td>-0.433273</td>
       <td>0.778452</td>
       <td>-0.159685</td>
-      <td>-0.193574</td>
       <td>0.291708</td>
+      <td>-0.193574</td>
       <td>0.328</td>
       <td>0.0</td>
       <td>1.0</td>
       <td>0.0</td>
       <td>-0.278599</td>
-      <td>0.316892</td>
       <td>-0.101950</td>
+      <td>0.316892</td>
       <td>0.334</td>
       <td>0.0</td>
       <td>1.0</td>
@@ -227,15 +273,15 @@ cross_frame.head()
       <td>-1.230834</td>
       <td>0.859162</td>
       <td>-0.213218</td>
-      <td>0.304510</td>
       <td>-0.164782</td>
+      <td>0.304510</td>
       <td>0.352</td>
       <td>1.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>-0.211409</td>
-      <td>0.031278</td>
       <td>0.143157</td>
+      <td>0.031278</td>
       <td>0.346</td>
       <td>1.0</td>
       <td>0.0</td>
@@ -247,15 +293,15 @@ cross_frame.head()
       <td>1.158161</td>
       <td>-0.344363</td>
       <td>0.305725</td>
-      <td>-0.245761</td>
       <td>-0.203392</td>
+      <td>-0.245761</td>
       <td>0.320</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
       <td>-0.278599</td>
-      <td>0.316892</td>
       <td>-0.101950</td>
+      <td>0.316892</td>
       <td>0.334</td>
       <td>0.0</td>
       <td>1.0</td>
@@ -267,15 +313,15 @@ cross_frame.head()
       <td>-1.029690</td>
       <td>0.789506</td>
       <td>0.248363</td>
-      <td>-0.190688</td>
       <td>-0.169911</td>
+      <td>-0.190688</td>
       <td>0.320</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
       <td>0.343053</td>
-      <td>-0.438143</td>
       <td>-0.093987</td>
+      <td>-0.438143</td>
       <td>0.320</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -399,20 +445,6 @@ treatment.score_frame_
     </tr>
     <tr>
       <th>5</th>
-      <td>var_c_0_logit_code_b</td>
-      <td>var_c_0</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>-0.107505</td>
-      <td>6.610536e-04</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>6</th>
       <td>var_c_0_logit_code_a</td>
       <td>var_c_0</td>
       <td>logit_code</td>
@@ -423,6 +455,20 @@ treatment.score_frame_
       <td>12.0</td>
       <td>0.020833</td>
       <td>True</td>
+      <td>a</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>var_c_0_logit_code_b</td>
+      <td>var_c_0</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>True</td>
+      <td>-0.107505</td>
+      <td>6.610536e-04</td>
+      <td>12.0</td>
+      <td>0.020833</td>
+      <td>False</td>
       <td>a</td>
     </tr>
     <tr>
@@ -497,20 +543,6 @@ treatment.score_frame_
     </tr>
     <tr>
       <th>12</th>
-      <td>var_c_1_logit_code_b</td>
-      <td>var_c_1</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>0.006520</td>
-      <td>8.368533e-01</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>13</th>
       <td>var_c_1_logit_code_a</td>
       <td>var_c_1</td>
       <td>logit_code</td>
@@ -521,6 +553,20 @@ treatment.score_frame_
       <td>12.0</td>
       <td>0.020833</td>
       <td>True</td>
+      <td>a</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>var_c_1_logit_code_b</td>
+      <td>var_c_1</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>True</td>
+      <td>0.006520</td>
+      <td>8.368533e-01</td>
+      <td>12.0</td>
+      <td>0.020833</td>
+      <td>False</td>
       <td>a</td>
     </tr>
     <tr>
@@ -595,20 +641,6 @@ treatment.score_frame_
     </tr>
     <tr>
       <th>19</th>
-      <td>noise_c_0_logit_code_b</td>
-      <td>noise_c_0</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>0.006383</td>
-      <td>8.402249e-01</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>20</th>
       <td>noise_c_0_logit_code_a</td>
       <td>noise_c_0</td>
       <td>logit_code</td>
@@ -616,6 +648,20 @@ treatment.score_frame_
       <td>True</td>
       <td>-0.074075</td>
       <td>1.914267e-02</td>
+      <td>12.0</td>
+      <td>0.020833</td>
+      <td>False</td>
+      <td>a</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>noise_c_0_logit_code_b</td>
+      <td>noise_c_0</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>True</td>
+      <td>0.006383</td>
+      <td>8.402249e-01</td>
       <td>12.0</td>
       <td>0.020833</td>
       <td>False</td>
@@ -693,20 +739,6 @@ treatment.score_frame_
     </tr>
     <tr>
       <th>26</th>
-      <td>noise_c_1_logit_code_b</td>
-      <td>noise_c_1</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>0.004169</td>
-      <td>8.952364e-01</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>27</th>
       <td>noise_c_1_logit_code_a</td>
       <td>noise_c_1</td>
       <td>logit_code</td>
@@ -714,6 +746,20 @@ treatment.score_frame_
       <td>True</td>
       <td>0.013643</td>
       <td>6.665379e-01</td>
+      <td>12.0</td>
+      <td>0.020833</td>
+      <td>False</td>
+      <td>a</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>noise_c_1_logit_code_b</td>
+      <td>noise_c_1</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>True</td>
+      <td>0.004169</td>
+      <td>8.952364e-01</td>
       <td>12.0</td>
       <td>0.020833</td>
       <td>False</td>
@@ -805,20 +851,6 @@ treatment.score_frame_
     </tr>
     <tr>
       <th>69</th>
-      <td>var_c_0_logit_code_b</td>
-      <td>var_c_0</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>-0.089015</td>
-      <td>4.847630e-03</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>70</th>
       <td>var_c_0_logit_code_a</td>
       <td>var_c_0</td>
       <td>logit_code</td>
@@ -826,6 +858,20 @@ treatment.score_frame_
       <td>True</td>
       <td>-0.046828</td>
       <td>1.389282e-01</td>
+      <td>12.0</td>
+      <td>0.020833</td>
+      <td>False</td>
+      <td>c</td>
+    </tr>
+    <tr>
+      <th>70</th>
+      <td>var_c_0_logit_code_b</td>
+      <td>var_c_0</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>True</td>
+      <td>-0.089015</td>
+      <td>4.847630e-03</td>
       <td>12.0</td>
       <td>0.020833</td>
       <td>False</td>
@@ -903,20 +949,6 @@ treatment.score_frame_
     </tr>
     <tr>
       <th>76</th>
-      <td>var_c_1_logit_code_b</td>
-      <td>var_c_1</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>-0.218394</td>
-      <td>2.909484e-12</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>77</th>
       <td>var_c_1_logit_code_a</td>
       <td>var_c_1</td>
       <td>logit_code</td>
@@ -924,6 +956,20 @@ treatment.score_frame_
       <td>True</td>
       <td>-0.075404</td>
       <td>1.708388e-02</td>
+      <td>12.0</td>
+      <td>0.020833</td>
+      <td>False</td>
+      <td>c</td>
+    </tr>
+    <tr>
+      <th>77</th>
+      <td>var_c_1_logit_code_b</td>
+      <td>var_c_1</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>True</td>
+      <td>-0.218394</td>
+      <td>2.909484e-12</td>
       <td>12.0</td>
       <td>0.020833</td>
       <td>False</td>
@@ -1001,20 +1047,6 @@ treatment.score_frame_
     </tr>
     <tr>
       <th>83</th>
-      <td>noise_c_0_logit_code_b</td>
-      <td>noise_c_0</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>0.003788</td>
-      <td>9.047818e-01</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>84</th>
       <td>noise_c_0_logit_code_a</td>
       <td>noise_c_0</td>
       <td>logit_code</td>
@@ -1022,6 +1054,20 @@ treatment.score_frame_
       <td>True</td>
       <td>0.058404</td>
       <td>6.486682e-02</td>
+      <td>12.0</td>
+      <td>0.020833</td>
+      <td>False</td>
+      <td>c</td>
+    </tr>
+    <tr>
+      <th>84</th>
+      <td>noise_c_0_logit_code_b</td>
+      <td>noise_c_0</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>True</td>
+      <td>0.003788</td>
+      <td>9.047818e-01</td>
       <td>12.0</td>
       <td>0.020833</td>
       <td>False</td>
@@ -1099,20 +1145,6 @@ treatment.score_frame_
     </tr>
     <tr>
       <th>90</th>
-      <td>noise_c_1_logit_code_b</td>
-      <td>noise_c_1</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>0.055366</td>
-      <td>8.012076e-02</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>91</th>
       <td>noise_c_1_logit_code_a</td>
       <td>noise_c_1</td>
       <td>logit_code</td>
@@ -1120,6 +1152,20 @@ treatment.score_frame_
       <td>True</td>
       <td>-0.015457</td>
       <td>6.254064e-01</td>
+      <td>12.0</td>
+      <td>0.020833</td>
+      <td>False</td>
+      <td>c</td>
+    </tr>
+    <tr>
+      <th>91</th>
+      <td>noise_c_1_logit_code_b</td>
+      <td>noise_c_1</td>
+      <td>logit_code</td>
+      <td>True</td>
+      <td>True</td>
+      <td>0.055366</td>
+      <td>8.012076e-02</td>
       <td>12.0</td>
       <td>0.020833</td>
       <td>False</td>
