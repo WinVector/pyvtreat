@@ -78,41 +78,41 @@ d.head()
     <tr>
       <th>0</th>
       <td>0.0</td>
-      <td>0.122050</td>
-      <td>level_0.0</td>
-      <td>-0.295831</td>
+      <td>-0.104856</td>
+      <td>level_-0.0</td>
+      <td>0.367093</td>
       <td>1</td>
     </tr>
     <tr>
       <th>1</th>
       <td>0.1</td>
-      <td>0.148888</td>
+      <td>0.148332</td>
       <td>level_0.0</td>
-      <td>0.083309</td>
+      <td>-0.690937</td>
       <td>1</td>
     </tr>
     <tr>
       <th>2</th>
       <td>0.2</td>
-      <td>0.169338</td>
-      <td>level_0.0</td>
-      <td>-1.201966</td>
+      <td>0.280450</td>
+      <td>level_0.5</td>
+      <td>-0.256927</td>
       <td>1</td>
     </tr>
     <tr>
       <th>3</th>
       <td>0.3</td>
-      <td>0.344644</td>
+      <td>0.504849</td>
       <td>level_0.5</td>
-      <td>-1.177414</td>
+      <td>0.188184</td>
       <td>1</td>
     </tr>
     <tr>
       <th>4</th>
       <td>0.4</td>
-      <td>0.428550</td>
+      <td>0.358950</td>
       <td>level_0.5</td>
-      <td>2.452838</td>
+      <td>0.619167</td>
       <td>1</td>
     </tr>
   </tbody>
@@ -133,7 +133,7 @@ d['xc'].unique()
 
 
 
-    array(['level_0.0', 'level_0.5', 'level_1.0', 'level_-0.0', 'level_-0.5',
+    array(['level_-0.0', 'level_0.0', 'level_0.5', 'level_1.0', 'level_-0.5',
            nan, 'level_1.5'], dtype=object)
 
 
@@ -146,13 +146,13 @@ d['xc'].value_counts(dropna=False)
 
 
 
-    level_-0.5    134
-    level_1.0     129
-    level_0.5      85
-    level_-0.0     46
-    level_1.5      38
-    level_0.0      37
-    NaN            31
+    level_-0.5    128
+    level_1.0     122
+    level_0.5      98
+    level_0.0      41
+    level_-0.0     40
+    NaN            36
+    level_1.5      35
     Name: xc, dtype: int64
 
 
@@ -307,30 +307,6 @@ transform.score_frame_
     </tr>
     <tr>
       <th>7</th>
-      <td>xc_lev_level_-0.0</td>
-      <td>xc</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>True</td>
-      <td>7.0</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>xc_lev_level_1.5</td>
-      <td>xc</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>True</td>
-      <td>7.0</td>
-    </tr>
-    <tr>
-      <th>9</th>
       <td>xc_lev_level_0.0</td>
       <td>xc</td>
       <td>indicator_code</td>
@@ -342,8 +318,32 @@ transform.score_frame_
       <td>7.0</td>
     </tr>
     <tr>
-      <th>10</th>
+      <th>8</th>
+      <td>xc_lev_level_-0.0</td>
+      <td>xc</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>7.0</td>
+    </tr>
+    <tr>
+      <th>9</th>
       <td>xc_lev__NA_</td>
+      <td>xc</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>7.0</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>xc_lev_level_1.5</td>
       <td>xc</td>
       <td>indicator_code</td>
       <td>False</td>
@@ -405,65 +405,65 @@ d_prepared.head()
       <th>xc_lev_level_-0.5</th>
       <th>xc_lev_level_1.0</th>
       <th>xc_lev_level_0.5</th>
-      <th>xc_lev_level_-0.0</th>
-      <th>xc_lev_level_1.5</th>
       <th>xc_lev_level_0.0</th>
+      <th>xc_lev_level_-0.0</th>
       <th>xc_lev__NA_</th>
+      <th>xc_lev_level_1.5</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>0.122050</td>
+      <td>-0.104856</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>-0.295831</td>
-      <td>0.074</td>
-      <td>0.0</td>
+      <td>0.367093</td>
+      <td>0.080</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
+      <td>0.0</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>0.148888</td>
+      <td>0.148332</td>
       <td>0.0</td>
       <td>0.1</td>
-      <td>0.083309</td>
-      <td>0.074</td>
-      <td>0.0</td>
-      <td>0.0</td>
+      <td>-0.690937</td>
+      <td>0.082</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.169338</td>
+      <td>0.280450</td>
       <td>0.0</td>
       <td>0.2</td>
-      <td>-1.201966</td>
-      <td>0.074</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
+      <td>-0.256927</td>
+      <td>0.196</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
       <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>0.344644</td>
+      <td>0.504849</td>
       <td>0.0</td>
       <td>0.3</td>
-      <td>-1.177414</td>
-      <td>0.170</td>
+      <td>0.188184</td>
+      <td>0.196</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
@@ -474,11 +474,11 @@ d_prepared.head()
     </tr>
     <tr>
       <th>4</th>
-      <td>0.428550</td>
+      <td>0.358950</td>
       <td>0.0</td>
       <td>0.4</td>
-      <td>2.452838</td>
-      <td>0.170</td>
+      <td>0.619167</td>
+      <td>0.196</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
@@ -545,23 +545,23 @@ print(fitter.intercept_)
 {model_vars[i]: fitter.coef_[i] for i in range(len(model_vars))}
 ```
 
-    0.2682644469961332
+    0.26687361134312826
 
 
 
 
 
-    {'xc_is_bad': -0.5813877493746411,
-     'x': 0.0010557448150332117,
-     'x2': -0.0028249332035590463,
-     'xc_prevalence_code': -0.00579720089584193,
-     'xc_lev_level_-0.5': -0.8102103198578267,
-     'xc_lev_level_1.0': 0.7054442153661262,
-     'xc_lev_level_0.5': 0.20721227463667088,
-     'xc_lev_level_-0.0': -0.4119274860533475,
-     'xc_lev_level_1.5': 1.0637644602766594,
-     'xc_lev_level_0.0': -0.17289539499364148,
-     'xc_lev__NA_': -0.5813877493746413}
+    {'xc_is_bad': -0.562356677841655,
+     'x': 0.0012639910538561326,
+     'x2': 0.001609517233713642,
+     'xc_prevalence_code': -0.0044801038835988755,
+     'xc_lev_level_-0.5': -0.8087257353814689,
+     'xc_lev_level_1.0': 0.7247440547156317,
+     'xc_lev_level_0.5': 0.2180424429835109,
+     'xc_lev_level_0.0': -0.17839488726269243,
+     'xc_lev_level_-0.0': -0.43704784362522275,
+     'xc_lev__NA_': -0.5623566778416543,
+     'xc_lev_level_1.5': 1.0437386464118965}
 
 
 
@@ -657,13 +657,13 @@ d['xc'].value_counts(dropna=False)/d.shape[0]
 
 
 
-    level_-0.5    0.268
-    level_1.0     0.258
-    level_0.5     0.170
-    level_-0.0    0.092
-    level_1.5     0.076
-    level_0.0     0.074
-    NaN           0.062
+    level_-0.5    0.256
+    level_1.0     0.244
+    level_0.5     0.196
+    level_0.0     0.082
+    level_-0.0    0.080
+    NaN           0.072
+    level_1.5     0.070
     Name: xc, dtype: float64
 
 
@@ -935,30 +935,6 @@ transform_thin.score_frame_
     </tr>
     <tr>
       <th>6</th>
-      <td>xc_lev_level_-0.0</td>
-      <td>xc</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>True</td>
-      <td>7.0</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>xc_lev_level_1.5</td>
-      <td>xc</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>True</td>
-      <td>7.0</td>
-    </tr>
-    <tr>
-      <th>8</th>
       <td>xc_lev_level_0.0</td>
       <td>xc</td>
       <td>indicator_code</td>
@@ -970,8 +946,32 @@ transform_thin.score_frame_
       <td>7.0</td>
     </tr>
     <tr>
-      <th>9</th>
+      <th>7</th>
+      <td>xc_lev_level_-0.0</td>
+      <td>xc</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>7.0</td>
+    </tr>
+    <tr>
+      <th>8</th>
       <td>xc_lev__NA_</td>
+      <td>xc</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>7.0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>xc_lev_level_1.5</td>
       <td>xc</td>
       <td>indicator_code</td>
       <td>False</td>
@@ -996,7 +996,7 @@ The preparation commands are organized as follows:
  * **Regression**: [`R` regression example](https://github.com/WinVector/vtreat/blob/master/Examples/Regression/Regression.md), [`Python` regression example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Regression/Regression.md).
  * **Classification**: [`R` classification example](https://github.com/WinVector/vtreat/blob/master/Examples/Classification/Classification.md), [`Python` classification  example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Multinomial/Multinomial.md).
  * **Unsupervised tasks**: [`R` unsupervised example](https://github.com/WinVector/vtreat/blob/master/Examples/Unsupervised/Unsupervised.md), [`Python` unsupervised example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Unsupervised/Unsupervised.md).
- * **Multinomial classification**: [`R` multinomial classification example](https://winvector.github.io/vtreat/articles/MultiClassVtreat.html), [`Python` multinomial classification example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Multinomial/MultinomialExample.md).
+ * **Multinomial classification**: [`R` multinomial classification example](https://github.com/WinVector/vtreat/blob/master/Examples/Multinomial/MultinomialExample.md), [`Python` multinomial classification example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Multinomial/MultinomialExample.md).
 
 These current revisions of the examples are designed to be small, yet complete.  So as a set they have some overlap, but the user can rely mostly on a single example for a single task type.
 
