@@ -79,42 +79,42 @@ d.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>1.105984</td>
-      <td>0.824566</td>
-      <td>level_1.0</td>
-      <td>-0.251820</td>
+      <td>-5.467538</td>
+      <td>0.625135</td>
+      <td>level_0.5</td>
+      <td>-0.854423</td>
       <td>True</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>-0.383044</td>
-      <td>-0.499880</td>
-      <td>level_-0.5</td>
-      <td>1.289857</td>
+      <td>2.470356</td>
+      <td>0.458113</td>
+      <td>level_0.5</td>
+      <td>0.308320</td>
       <td>False</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.171734</td>
-      <td>0.126956</td>
-      <td>level_0.0</td>
-      <td>-2.435946</td>
+      <td>3.438814</td>
+      <td>-0.232337</td>
+      <td>level_-0.0</td>
+      <td>0.049062</td>
       <td>False</td>
     </tr>
     <tr>
       <th>3</th>
       <td>NaN</td>
-      <td>0.554857</td>
-      <td>level_0.5</td>
-      <td>0.125646</td>
-      <td>True</td>
+      <td>0.041272</td>
+      <td>level_0.0</td>
+      <td>-1.947206</td>
+      <td>False</td>
     </tr>
     <tr>
       <th>4</th>
       <td>NaN</td>
-      <td>-0.067232</td>
-      <td>level_-0.0</td>
-      <td>0.172732</td>
+      <td>-1.038772</td>
+      <td>NaN</td>
+      <td>0.908372</td>
       <td>False</td>
     </tr>
   </tbody>
@@ -135,8 +135,8 @@ d['xc'].unique()
 
 
 
-    array(['level_1.0', 'level_-0.5', 'level_0.0', 'level_0.5', 'level_-0.0',
-           nan], dtype=object)
+    array(['level_0.5', 'level_-0.0', 'level_0.0', nan, 'level_1.0',
+           'level_-0.5', 'level_1.5'], dtype=object)
 
 
 
@@ -148,12 +148,13 @@ d['xc'].value_counts(dropna=False)
 
 
 
-    level_1.0     118
-    NaN           105
-    level_0.5     104
-    level_-0.5     97
-    level_-0.0     45
-    level_0.0      31
+    level_1.0     113
+    NaN           111
+    level_0.5     107
+    level_-0.5     88
+    level_-0.0     46
+    level_0.0      34
+    level_1.5       1
     Name: xc, dtype: int64
 
 
@@ -168,7 +169,7 @@ numpy.mean(d['yc'])
 
 
 
-    0.348
+    0.352
 
 
 
@@ -182,7 +183,7 @@ seaborn.lineplot(x='x', y='yc', data=d)
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x1a16cc6978>
+    <matplotlib.axes._subplots.AxesSubplot at 0x1a1a7709b0>
 
 
 
@@ -262,8 +263,8 @@ transform.score_frame_
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.020155</td>
-      <td>6.529932e-01</td>
+      <td>-0.016538</td>
+      <td>7.121995e-01</td>
       <td>2.0</td>
       <td>0.10</td>
       <td>False</td>
@@ -275,8 +276,8 @@ transform.score_frame_
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.376671</td>
-      <td>2.663113e-18</td>
+      <td>-0.393705</td>
+      <td>5.498167e-20</td>
       <td>2.0</td>
       <td>0.10</td>
       <td>True</td>
@@ -288,8 +289,8 @@ transform.score_frame_
       <td>clean_copy</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.032567</td>
-      <td>4.674769e-01</td>
+      <td>0.026011</td>
+      <td>5.617385e-01</td>
       <td>2.0</td>
       <td>0.10</td>
       <td>False</td>
@@ -301,8 +302,8 @@ transform.score_frame_
       <td>clean_copy</td>
       <td>False</td>
       <td>True</td>
-      <td>0.033303</td>
-      <td>4.574710e-01</td>
+      <td>0.005993</td>
+      <td>8.936675e-01</td>
       <td>2.0</td>
       <td>0.10</td>
       <td>False</td>
@@ -314,8 +315,8 @@ transform.score_frame_
       <td>logit_code</td>
       <td>True</td>
       <td>True</td>
-      <td>0.835895</td>
-      <td>7.839733e-132</td>
+      <td>0.842834</td>
+      <td>4.229388e-136</td>
       <td>1.0</td>
       <td>0.20</td>
       <td>True</td>
@@ -327,8 +328,8 @@ transform.score_frame_
       <td>prevalence_code</td>
       <td>False</td>
       <td>True</td>
-      <td>0.495706</td>
-      <td>2.292343e-32</td>
+      <td>0.433937</td>
+      <td>2.245502e-24</td>
       <td>1.0</td>
       <td>0.20</td>
       <td>True</td>
@@ -340,8 +341,8 @@ transform.score_frame_
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>0.760753</td>
-      <td>1.524206e-95</td>
+      <td>0.733162</td>
+      <td>1.967010e-85</td>
       <td>4.0</td>
       <td>0.05</td>
       <td>True</td>
@@ -353,8 +354,8 @@ transform.score_frame_
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.376671</td>
-      <td>2.663113e-18</td>
+      <td>-0.393705</td>
+      <td>5.498167e-20</td>
       <td>4.0</td>
       <td>0.05</td>
       <td>True</td>
@@ -366,8 +367,8 @@ transform.score_frame_
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>0.204910</td>
-      <td>3.845470e-06</td>
+      <td>0.248486</td>
+      <td>1.792007e-08</td>
       <td>4.0</td>
       <td>0.05</td>
       <td>True</td>
@@ -379,8 +380,8 @@ transform.score_frame_
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.358426</td>
-      <td>1.328709e-16</td>
+      <td>-0.340625</td>
+      <td>4.763791e-15</td>
       <td>4.0</td>
       <td>0.05</td>
       <td>True</td>
@@ -560,35 +561,35 @@ d_prepared.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>0.824566</td>
+      <td>0.625135</td>
       <td>True</td>
       <td>0.0</td>
-      <td>1.055077</td>
-      <td>0.236</td>
+      <td>0.537427</td>
+      <td>0.214</td>
+      <td>0.0</td>
+      <td>0.0</td>
       <td>1.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>-0.499880</td>
+      <td>0.458113</td>
       <td>False</td>
       <td>0.0</td>
-      <td>-5.807527</td>
-      <td>0.194</td>
-      <td>0.0</td>
+      <td>0.488582</td>
+      <td>0.214</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.126956</td>
+      <td>-0.232337</td>
       <td>False</td>
       <td>0.0</td>
-      <td>-5.741219</td>
-      <td>0.062</td>
+      <td>-5.847914</td>
+      <td>0.092</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -596,25 +597,25 @@ d_prepared.head()
     </tr>
     <tr>
       <th>3</th>
-      <td>0.554857</td>
-      <td>True</td>
+      <td>0.041272</td>
+      <td>False</td>
       <td>0.0</td>
-      <td>0.447684</td>
-      <td>0.208</td>
+      <td>-5.775588</td>
+      <td>0.068</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>1.0</td>
+      <td>0.0</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>-0.067232</td>
+      <td>-1.038772</td>
       <td>False</td>
+      <td>1.0</td>
+      <td>-5.895060</td>
+      <td>0.222</td>
       <td>0.0</td>
-      <td>-5.769288</td>
-      <td>0.090</td>
-      <td>0.0</td>
-      <td>0.0</td>
+      <td>1.0</td>
       <td>0.0</td>
       <td>0.0</td>
     </tr>
@@ -646,7 +647,7 @@ wvpy.util.plot_roc(prediction=d_prepared['xc_logit_code'],
 
 
 
-    0.9710792609830055
+    0.9738355780022447
 
 
 
@@ -716,7 +717,7 @@ wvpy.util.plot_roc(prediction=d_prepared['prediction'],
 
 
 
-    0.9710792609830055
+    0.9746247194163861
 
 
 
@@ -745,7 +746,7 @@ wvpy.util.plot_roc(prediction=dtest_prepared['prediction'],
 
 
 
-    0.9766359447004608
+    0.9836078240904274
 
 
 
@@ -772,7 +773,7 @@ vtreat.vtreat_parameters()
       'prevalence_code'},
      'filter_to_recommended': True,
      'indicator_min_fraction': 0.1,
-     'cross_validation_plan': <vtreat.cross_plan.KWayCrossPlan at 0x1a1728bac8>,
+     'cross_validation_plan': <vtreat.cross_plan.KWayCrossPlan at 0x1a1ad9a0f0>,
      'cross_validation_k': 5,
      'user_transforms': [],
      'sparse_indicators': True}
@@ -867,8 +868,8 @@ transform_all.score_frame_
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.020155</td>
-      <td>6.529932e-01</td>
+      <td>-0.016538</td>
+      <td>7.121995e-01</td>
       <td>2.0</td>
       <td>0.10</td>
       <td>False</td>
@@ -880,8 +881,8 @@ transform_all.score_frame_
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.376671</td>
-      <td>2.663113e-18</td>
+      <td>-0.393705</td>
+      <td>5.498167e-20</td>
       <td>2.0</td>
       <td>0.10</td>
       <td>True</td>
@@ -893,8 +894,8 @@ transform_all.score_frame_
       <td>clean_copy</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.032567</td>
-      <td>4.674769e-01</td>
+      <td>0.026011</td>
+      <td>5.617385e-01</td>
       <td>2.0</td>
       <td>0.10</td>
       <td>False</td>
@@ -906,8 +907,8 @@ transform_all.score_frame_
       <td>clean_copy</td>
       <td>False</td>
       <td>True</td>
-      <td>0.033303</td>
-      <td>4.574710e-01</td>
+      <td>0.005993</td>
+      <td>8.936675e-01</td>
       <td>2.0</td>
       <td>0.10</td>
       <td>False</td>
@@ -919,8 +920,8 @@ transform_all.score_frame_
       <td>logit_code</td>
       <td>True</td>
       <td>True</td>
-      <td>0.836150</td>
-      <td>5.502465e-132</td>
+      <td>0.842648</td>
+      <td>5.535871e-136</td>
       <td>1.0</td>
       <td>0.20</td>
       <td>True</td>
@@ -932,8 +933,8 @@ transform_all.score_frame_
       <td>prevalence_code</td>
       <td>False</td>
       <td>True</td>
-      <td>0.495706</td>
-      <td>2.292343e-32</td>
+      <td>0.433937</td>
+      <td>2.245502e-24</td>
       <td>1.0</td>
       <td>0.20</td>
       <td>True</td>
@@ -945,8 +946,8 @@ transform_all.score_frame_
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>0.760753</td>
-      <td>1.524206e-95</td>
+      <td>0.733162</td>
+      <td>1.967010e-85</td>
       <td>4.0</td>
       <td>0.05</td>
       <td>True</td>
@@ -958,8 +959,8 @@ transform_all.score_frame_
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.376671</td>
-      <td>2.663113e-18</td>
+      <td>-0.393705</td>
+      <td>5.498167e-20</td>
       <td>4.0</td>
       <td>0.05</td>
       <td>True</td>
@@ -971,8 +972,8 @@ transform_all.score_frame_
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>0.204910</td>
-      <td>3.845470e-06</td>
+      <td>0.248486</td>
+      <td>1.792007e-08</td>
       <td>4.0</td>
       <td>0.05</td>
       <td>True</td>
@@ -984,8 +985,8 @@ transform_all.score_frame_
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.358426</td>
-      <td>1.328709e-16</td>
+      <td>-0.340625</td>
+      <td>4.763791e-15</td>
       <td>4.0</td>
       <td>0.05</td>
       <td>True</td>
@@ -1073,38 +1074,38 @@ transform_thin.fit_transform(d, d['yc']).head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>0.824566</td>
+      <td>0.625135</td>
       <td>True</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>1.105984</td>
-      <td>-0.251820</td>
+      <td>-5.467538</td>
+      <td>-0.854423</td>
+      <td>0.0</td>
+      <td>0.0</td>
       <td>1.0</td>
-      <td>0.0</td>
-      <td>0.0</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>-0.499880</td>
+      <td>0.458113</td>
       <td>False</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>-0.383044</td>
-      <td>1.289857</td>
-      <td>0.0</td>
+      <td>2.470356</td>
+      <td>0.308320</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
+      <td>0.0</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.126956</td>
+      <td>-0.232337</td>
       <td>False</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.171734</td>
-      <td>-2.435946</td>
+      <td>3.438814</td>
+      <td>0.049062</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -1112,27 +1113,27 @@ transform_thin.fit_transform(d, d['yc']).head()
     </tr>
     <tr>
       <th>3</th>
-      <td>0.554857</td>
-      <td>True</td>
+      <td>0.041272</td>
+      <td>False</td>
       <td>1.0</td>
       <td>0.0</td>
-      <td>0.254035</td>
-      <td>0.125646</td>
+      <td>0.218326</td>
+      <td>-1.947206</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>1.0</td>
+      <td>0.0</td>
       <td>0.0</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>-0.067232</td>
+      <td>-1.038772</td>
       <td>False</td>
       <td>1.0</td>
+      <td>1.0</td>
+      <td>0.218326</td>
+      <td>0.908372</td>
       <td>0.0</td>
-      <td>0.254035</td>
-      <td>0.172732</td>
-      <td>0.0</td>
-      <td>0.0</td>
+      <td>1.0</td>
       <td>0.0</td>
       <td>0.0</td>
     </tr>
@@ -1188,8 +1189,8 @@ transform_thin.score_frame_
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.020155</td>
-      <td>6.529932e-01</td>
+      <td>-0.016538</td>
+      <td>7.121995e-01</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>False</td>
@@ -1201,8 +1202,8 @@ transform_thin.score_frame_
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.376671</td>
-      <td>2.663113e-18</td>
+      <td>-0.393705</td>
+      <td>5.498167e-20</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>True</td>
@@ -1214,8 +1215,8 @@ transform_thin.score_frame_
       <td>clean_copy</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.032567</td>
-      <td>4.674769e-01</td>
+      <td>0.026011</td>
+      <td>5.617385e-01</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>False</td>
@@ -1227,8 +1228,8 @@ transform_thin.score_frame_
       <td>clean_copy</td>
       <td>False</td>
       <td>True</td>
-      <td>0.033303</td>
-      <td>4.574710e-01</td>
+      <td>0.005993</td>
+      <td>8.936675e-01</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>False</td>
@@ -1240,8 +1241,8 @@ transform_thin.score_frame_
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>0.760753</td>
-      <td>1.524206e-95</td>
+      <td>0.733162</td>
+      <td>1.967010e-85</td>
       <td>4.0</td>
       <td>0.083333</td>
       <td>True</td>
@@ -1253,8 +1254,8 @@ transform_thin.score_frame_
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.376671</td>
-      <td>2.663113e-18</td>
+      <td>-0.393705</td>
+      <td>5.498167e-20</td>
       <td>4.0</td>
       <td>0.083333</td>
       <td>True</td>
@@ -1266,8 +1267,8 @@ transform_thin.score_frame_
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>0.204910</td>
-      <td>3.845470e-06</td>
+      <td>0.248486</td>
+      <td>1.792007e-08</td>
       <td>4.0</td>
       <td>0.083333</td>
       <td>True</td>
@@ -1279,8 +1280,8 @@ transform_thin.score_frame_
       <td>indicator_code</td>
       <td>False</td>
       <td>True</td>
-      <td>-0.358426</td>
-      <td>1.328709e-16</td>
+      <td>-0.340625</td>
+      <td>4.763791e-15</td>
       <td>4.0</td>
       <td>0.083333</td>
       <td>True</td>
@@ -1315,9 +1316,10 @@ In all cases (classification, regression, unsupervised, and multinomial classifi
 The preparation commands are organized as follows:
 
  * **Regression**: [`R` regression example](https://github.com/WinVector/vtreat/blob/master/Examples/Regression/Regression.md), [`Python` regression example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Regression/Regression.md).
- * **Classification**: [`R` classification example](https://github.com/WinVector/vtreat/blob/master/Examples/Classification/Classification.md), [`Python` classification  example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Classification/Classification.md).
+ * **Classification**: [`R` classification example](https://github.com/WinVector/vtreat/blob/master/Examples/Classification/Classification.md), [`Python` classification  example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Multinomial/Multinomial.md).
  * **Unsupervised tasks**: [`R` unsupervised example](https://github.com/WinVector/vtreat/blob/master/Examples/Unsupervised/Unsupervised.md), [`Python` unsupervised example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Unsupervised/Unsupervised.md).
- * **Multinomial classification**: [`R` multinomial classification example](https://winvector.github.io/vtreat/articles/MultiClassVtreat.html), [`Python` multinomial classification example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Multinomial/MultinomialExample.ipynb).
+ * **Multinomial classification**: [`R` multinomial classification example](https://winvector.github.io/vtreat/articles/MultiClassVtreat.html), [`Python` multinomial classification example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Multinomial/MultinomialExample.md).
 
 These current revisions of the examples are designed to be small, yet complete.  So as a set they have some overlap, but the user can rely mostly on a single example for a single task type.
+
 
