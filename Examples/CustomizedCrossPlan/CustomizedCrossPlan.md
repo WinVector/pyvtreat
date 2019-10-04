@@ -1,7 +1,12 @@
 
+Nina Zumel, John Mount
+October 2019
+
+[These](https://github.com/WinVector/pyvtreat/blob/master/Examples/CustomizedCrossPlan/CustomizedCrossPlan.md) are notes on controlling the cross-validation plan in the [`Python` version of `vtreat`](https://github.com/WinVector/pyvtreat), for notes on the [`R` version of `vtreat`](https://github.com/WinVector/vtreat), please see [here](https://github.com/WinVector/vtreat/blob/master/Examples/CustomizedCrossPlan/CustomizedCrossPlan.md).
+
 # Using Custom Cross-Validation Plans with `vtreat`
 
-By default, `vtreat` uses simple randomized k-way cross validation when creating and evaluating complex synthetic variables. This will work well for the majority of applications. However, there may be times when you need a more specialized cross validation scheme for your modeling projects. In this document, we'll show how to replace the cross validation scheme in `vtreat`.
+By default, `Python` `vtreat` uses simple randomized k-way cross validation when creating and evaluating complex synthetic variables. This will work well for the majority of applications. However, there may be times when you need a more specialized cross validation scheme for your modeling projects. In this document, we'll show how to replace the cross validation scheme in `vtreat`.
 
 
 ```python
@@ -10,6 +15,7 @@ import numpy
 import numpy.random
 
 import vtreat
+import vtreat.cross_plan
 ```
 
 ## Example: Highly Unbalanced Class Outcomes
@@ -102,7 +108,7 @@ d.describe()
 
 
 
-First, try preparing this data using `vtreat`. 
+First, try preparing this data using `vtreat`. `Python` `vtreat` defaults to a simple `k`-fold cross validation plan.
 
 
 ```python
@@ -236,7 +242,6 @@ In this situation, `vtreat` has an alternative cross-validation sampler called `
 
 
 ```python
-import vtreat.cross_plan
 
 # create the treatment plan
 treatment_stratified = vtreat.BinomialOutcomeTreatment(
@@ -367,7 +372,4 @@ Another benefit of explicit cross-validation plans is that one can use the same 
 
 In addition to the y-stratified cross validation, `vtreat` also defines a time-oriented cross validation scheme ([`OrderedCrossPlan`](https://github.com/WinVector/pyvtreat/blob/master/pkg/vtreat/cross_plan.py#L161)). The ordered cross plan treats time as the grouping variable. For each fold, all the datums in the application set (the datums that the model will be applied to) come from the same time period. All the datums in the training set come from one side of the application set; that is all the training data will be either earlier or later than the data in the application set. Ordered cross plans are useful when modeling time-oriented data.
 
-
-```python
-
-```
+Note: it is important to *not* use leave-one-out cross-validation when using nested or stacked modeling concepts (such as seen in `vtreat`), we have some notes on this [here](https://github.com/WinVector/vtreat/blob/master/extras/ConstantLeak.md).
