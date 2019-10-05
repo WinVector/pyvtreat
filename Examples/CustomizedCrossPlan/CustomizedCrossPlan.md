@@ -108,7 +108,11 @@ d.describe()
 
 
 
-First, try preparing this data using `vtreat`. `Python` `vtreat` defaults to a simple `k`-fold cross validation plan.
+First, try preparing this data using `vtreat`.
+
+By default, `Python` `vtreat` uses a `y`-stratified randomized k-way cross validation when creating and evaluating complex synthetic variables. 
+
+Here we start with a simple `k`-way cross validation plan. This will work well for the majority of applications. However, there may be times when you need a more specialized cross validation scheme for your modeling projects. In this document, we'll show how to replace the cross validation scheme in `vtreat`.
 
 
 ```python
@@ -122,6 +126,7 @@ treatment_unstratified = vtreat.BinomialOutcomeTreatment(
     outcome_name='y',
     outcome_target=1,
     params=vtreat.vtreat_parameters({
+        'cross_validation_plan': vtreat.cross_plan.KWayCrossPlan(),
         'cross_validation_k': k
     })
 )

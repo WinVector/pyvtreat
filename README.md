@@ -12,7 +12,7 @@ in a statistically sound manner.
 Install `vtreat` with either of:
 
   * `pip install vtreat`
-  * `pip install https://github.com/WinVector/pyvtreat/raw/master/pkg/dist/vtreat-0.2.9.tar.gz`
+  * `pip install https://github.com/WinVector/pyvtreat/raw/master/pkg/dist/vtreat-0.3.0.tar.gz`
 
 # Details
 
@@ -1225,7 +1225,9 @@ To install, please run:
 pip install vtreat
 ```
 
+Some notes on controlling `vtreat` cross-validation can be found [here](https://github.com/WinVector/pyvtreat/blob/master/Examples/CustomizedCrossPlan/CustomizedCrossPlan.md).
+
 ## Note on data types.
 
-`.fit_transform()` expects the first argument to be a `pandas.DataFrame` with trivial row-indexing, (i.e. `.reset_index(inplace=True, drop=True)`) and the second to be a vector-like object with a `len()` equal to the number of rows of the first argument. We are working on supporting column types other than string and numeric at this time.
+`.fit_transform()` expects the first argument to be a `pandas.DataFrame` with trivial row-indexing and scalar column names, (i.e. `.reset_index(inplace=True, drop=True)`) and the second to be a vector-like object with a `len()` equal to the number of rows of the first argument. We are working on supporting column types other than string and numeric at this time.
 
