@@ -3,7 +3,6 @@ This is an supervised classification example taken from the KDD 2009 cup.  A cop
 # to install
 !pip install vtreat
 !pip install wvpy
-
 Load our packages/modules.
 
 
@@ -11,6 +10,7 @@ Load our packages/modules.
 import pandas
 import xgboost
 import vtreat
+import vtreat.cross_plan
 import numpy.random
 import wvpy.util
 import scipy.sparse
@@ -68,12 +68,16 @@ Arrange test/train split.
 
 
 ```python
-
-
+numpy.random.seed(855885)
 n = d.shape[0]
-is_train = numpy.random.uniform(size=n)<=0.9
+# https://github.com/WinVector/pyvtreat/blob/master/Examples/CustomizedCrossPlan/CustomizedCrossPlan.md
+split1 = vtreat.cross_plan.KWayCrossPlanYStratified().split_plan(n_rows=n, k_folds=10, y=churn.iloc[:, 0])
+train_idx = set(split1[0]['train'])
+is_train = [i in train_idx for i in range(n)]
 is_test = numpy.logical_not(is_train)
 ```
+
+(The reported performance runs of this example were sensitive to the prevalance of the churn variable in the test set, we are cutting down on this source of evaluation variarance by using the stratified split.)
 
 
 ```python
@@ -135,6 +139,30 @@ d_train.head()
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <th>0</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1526.0</td>
+      <td>7.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>oslk</td>
+      <td>fXVEsaq</td>
+      <td>jySVZNlOJy</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>xb3V</td>
+      <td>RAYp</td>
+      <td>F2FyR07IdsN7I</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
     <tr>
       <th>1</th>
       <td>NaN</td>
@@ -231,30 +259,6 @@ d_train.head()
       <td>mj86</td>
       <td>NaN</td>
     </tr>
-    <tr>
-      <th>5</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>658.0</td>
-      <td>7.0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>...</td>
-      <td>zCkv</td>
-      <td>QqVuch3</td>
-      <td>LM8l689qOp</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>Qcbd</td>
-      <td>02N6s8f</td>
-      <td>Zy3gnGM</td>
-      <td>am7c</td>
-      <td>NaN</td>
-    </tr>
   </tbody>
 </table>
 <p>5 rows × 230 columns</p>
@@ -270,7 +274,7 @@ d_train.shape
 
 
 
-    (44999, 230)
+    (45000, 230)
 
 
 
@@ -305,7 +309,7 @@ Use `.fit_transform()` to get a special copy of the treated training data that h
 cross_frame = plan.fit_transform(d_train, churn_train)
 ```
 
-Take a look at the new data.  This frame is guaranteed to be all numeric with no missing values.
+Take a look at the new data.  This frame is guaranteed to be all numeric with no missing values, with the rows in the same order as the training data.
 
 
 ```python
@@ -372,11 +376,11 @@ cross_frame.head()
       <td>...</td>
       <td>1.0</td>
       <td>0.0</td>
-      <td>0.140709</td>
-      <td>0.653948</td>
+      <td>0.151682</td>
+      <td>0.653733</td>
       <td>1.0</td>
-      <td>0.161622</td>
-      <td>0.568168</td>
+      <td>0.172744</td>
+      <td>0.567422</td>
       <td>1.0</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -394,15 +398,15 @@ cross_frame.head()
       <td>0.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>-0.505610</td>
-      <td>0.053512</td>
-      <td>0.0</td>
-      <td>-0.246583</td>
-      <td>0.233627</td>
-      <td>0.0</td>
       <td>1.0</td>
+      <td>0.0</td>
+      <td>0.146119</td>
+      <td>0.653733</td>
+      <td>1.0</td>
+      <td>0.175707</td>
+      <td>0.567422</td>
+      <td>1.0</td>
+      <td>0.0</td>
       <td>0.0</td>
     </tr>
     <tr>
@@ -411,22 +415,22 @@ cross_frame.head()
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>1.0</td>
+      <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
       <td>1.0</td>
       <td>0.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>1.0</td>
       <td>0.0</td>
-      <td>0.140709</td>
-      <td>0.653948</td>
-      <td>1.0</td>
-      <td>0.161622</td>
-      <td>0.568168</td>
-      <td>1.0</td>
       <td>0.0</td>
+      <td>-0.629820</td>
+      <td>0.053956</td>
+      <td>0.0</td>
+      <td>-0.263504</td>
+      <td>0.234400</td>
+      <td>0.0</td>
+      <td>1.0</td>
       <td>0.0</td>
     </tr>
     <tr>
@@ -435,7 +439,7 @@ cross_frame.head()
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>0.0</td>
+      <td>1.0</td>
       <td>0.0</td>
       <td>1.0</td>
       <td>1.0</td>
@@ -444,14 +448,14 @@ cross_frame.head()
       <td>...</td>
       <td>1.0</td>
       <td>0.0</td>
-      <td>0.140709</td>
-      <td>0.653948</td>
+      <td>0.145871</td>
+      <td>0.653733</td>
       <td>1.0</td>
-      <td>-0.279741</td>
-      <td>0.196804</td>
+      <td>0.159486</td>
+      <td>0.567422</td>
+      <td>1.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>1.0</td>
     </tr>
     <tr>
       <th>4</th>
@@ -466,20 +470,20 @@ cross_frame.head()
       <td>0.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>0.0</td>
-      <td>0.0</td>
-      <td>-0.171294</td>
-      <td>0.019134</td>
-      <td>0.0</td>
-      <td>-0.253889</td>
-      <td>0.233627</td>
-      <td>0.0</td>
       <td>1.0</td>
       <td>0.0</td>
+      <td>0.147432</td>
+      <td>0.653733</td>
+      <td>1.0</td>
+      <td>-0.286852</td>
+      <td>0.196600</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 222 columns</p>
+<p>5 rows × 216 columns</p>
 </div>
 
 
@@ -492,7 +496,7 @@ cross_frame.shape
 
 
 
-    (44999, 222)
+    (45000, 216)
 
 
 
@@ -544,10 +548,10 @@ plan.score_frame_.head()
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.002700</td>
-      <td>0.566802</td>
-      <td>192.0</td>
-      <td>0.001042</td>
+      <td>0.003283</td>
+      <td>0.486212</td>
+      <td>193.0</td>
+      <td>0.001036</td>
       <td>False</td>
     </tr>
     <tr>
@@ -557,10 +561,10 @@ plan.score_frame_.head()
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.020073</td>
-      <td>0.000021</td>
-      <td>192.0</td>
-      <td>0.001042</td>
+      <td>0.019270</td>
+      <td>0.000044</td>
+      <td>193.0</td>
+      <td>0.001036</td>
       <td>True</td>
     </tr>
     <tr>
@@ -570,10 +574,10 @@ plan.score_frame_.head()
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.020042</td>
-      <td>0.000021</td>
-      <td>192.0</td>
-      <td>0.001042</td>
+      <td>0.019238</td>
+      <td>0.000045</td>
+      <td>193.0</td>
+      <td>0.001036</td>
       <td>True</td>
     </tr>
     <tr>
@@ -583,10 +587,10 @@ plan.score_frame_.head()
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.017835</td>
-      <td>0.000155</td>
-      <td>192.0</td>
-      <td>0.001042</td>
+      <td>0.018744</td>
+      <td>0.000070</td>
+      <td>193.0</td>
+      <td>0.001036</td>
       <td>True</td>
     </tr>
     <tr>
@@ -596,10 +600,10 @@ plan.score_frame_.head()
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.020403</td>
-      <td>0.000015</td>
-      <td>192.0</td>
-      <td>0.001042</td>
+      <td>0.017575</td>
+      <td>0.000193</td>
+      <td>193.0</td>
+      <td>0.001036</td>
       <td>True</td>
     </tr>
   </tbody>
@@ -617,7 +621,7 @@ len(model_vars)
 
 
 
-    222
+    216
 
 
 
@@ -642,7 +646,7 @@ cross_frame.dtypes
     Var229_lev__NA_           Sparse[float64, 0.0]
     Var229_lev_am7c           Sparse[float64, 0.0]
     Var229_lev_mj86           Sparse[float64, 0.0]
-    Length: 222, dtype: object
+    Length: 216, dtype: object
 
 
 
@@ -657,7 +661,7 @@ except Exception as ex:
 ```
 
     DataFrame.dtypes for data must be int, float or bool.
-                    Did not expect the data types in fields Var193_lev_RO12, Var193_lev_2Knk1KF, Var194_lev__NA_, Var194_lev_SEuy, Var195_lev_taul, Var200_lev__NA_, Var201_lev__NA_, Var201_lev_smXZ, Var205_lev_VpdQ, Var206_lev_IYzP, Var206_lev_zm5i, Var206_lev__NA_, Var207_lev_me75fM6ugJ, Var207_lev_7M47J5GA0pTYIFxg5uy, Var210_lev_uKAI, Var211_lev_L84s, Var211_lev_Mtgm, Var212_lev_NhsEn4L, Var212_lev_XfqtO3UdzaXh_, Var213_lev__NA_, Var214_lev__NA_, Var218_lev_cJvF, Var218_lev_UYBR, Var221_lev_oslk, Var221_lev_zCkv, Var225_lev__NA_, Var225_lev_ELof, Var226_lev_FSa2, Var227_lev_RAYp, Var227_lev_ZI9m, Var228_lev_F2FyR07IdsN7I, Var229_lev__NA_, Var229_lev_am7c, Var229_lev_mj86
+                    Did not expect the data types in fields Var193_lev_RO12, Var193_lev_2Knk1KF, Var194_lev__NA_, Var194_lev_SEuy, Var195_lev_taul, Var200_lev__NA_, Var201_lev__NA_, Var201_lev_smXZ, Var205_lev_VpdQ, Var206_lev_IYzP, Var206_lev_zm5i, Var206_lev__NA_, Var207_lev_me75fM6ugJ, Var207_lev_7M47J5GA0pTYIFxg5uy, Var210_lev_uKAI, Var211_lev_L84s, Var211_lev_Mtgm, Var212_lev_NhsEn4L, Var212_lev_XfqtO3UdzaXh_, Var213_lev__NA_, Var214_lev__NA_, Var218_lev_cJvF, Var218_lev_UYBR, Var221_lev_oslk, Var221_lev_zCkv, Var225_lev__NA_, Var225_lev_ELof, Var225_lev_kG3k, Var226_lev_FSa2, Var227_lev_RAYp, Var227_lev_ZI9m, Var228_lev_F2FyR07IdsN7I, Var229_lev__NA_, Var229_lev_am7c, Var229_lev_mj86
 
 
 
@@ -727,38 +731,38 @@ cv.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>0.072546</td>
-      <td>0.000165</td>
-      <td>0.073246</td>
-      <td>0.000406</td>
+      <td>0.073378</td>
+      <td>0.000322</td>
+      <td>0.073733</td>
+      <td>0.000669</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>0.072757</td>
-      <td>0.000312</td>
-      <td>0.073002</td>
-      <td>0.000626</td>
+      <td>0.073411</td>
+      <td>0.000257</td>
+      <td>0.073511</td>
+      <td>0.000529</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.072713</td>
-      <td>0.000317</td>
-      <td>0.073024</td>
-      <td>0.000600</td>
+      <td>0.073433</td>
+      <td>0.000268</td>
+      <td>0.073578</td>
+      <td>0.000514</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>0.072790</td>
-      <td>0.000317</td>
-      <td>0.072957</td>
-      <td>0.000634</td>
+      <td>0.073444</td>
+      <td>0.000283</td>
+      <td>0.073533</td>
+      <td>0.000525</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>0.072813</td>
-      <td>0.000287</td>
-      <td>0.072935</td>
-      <td>0.000640</td>
+      <td>0.073444</td>
+      <td>0.000283</td>
+      <td>0.073533</td>
+      <td>0.000525</td>
     </tr>
   </tbody>
 </table>
@@ -803,11 +807,11 @@ best
   </thead>
   <tbody>
     <tr>
-      <th>53</th>
-      <td>0.070468</td>
-      <td>0.000354</td>
-      <td>0.072357</td>
-      <td>0.000115</td>
+      <th>21</th>
+      <td>0.072756</td>
+      <td>0.000177</td>
+      <td>0.073267</td>
+      <td>0.000327</td>
     </tr>
   </tbody>
 </table>
@@ -824,7 +828,7 @@ ntree
 
 
 
-    53
+    21
 
 
 
@@ -840,7 +844,7 @@ fitter
     XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
                   colsample_bynode=1, colsample_bytree=1, gamma=0,
                   learning_rate=0.1, max_delta_step=0, max_depth=3,
-                  min_child_weight=1, missing=None, n_estimators=53, n_jobs=1,
+                  min_child_weight=1, missing=None, n_estimators=21, n_jobs=1,
                   nthread=None, objective='binary:logistic', random_state=0,
                   reg_alpha=0, reg_lambda=1, scale_pos_weight=1, seed=None,
                   silent=None, subsample=1, verbosity=1)
@@ -869,13 +873,13 @@ wvpy.util.plot_roc(pf_train["pred"], pf_train["churn"], title="Model on Train")
 ```
 
 
-![png](output_43_0.png)
+![png](output_44_0.png)
 
 
 
 
 
-    0.7641722874118888
+    0.7424056263753072
 
 
 
@@ -890,24 +894,19 @@ wvpy.util.plot_roc(pf["pred"], pf["churn"], title="Model on Test")
 ```
 
 
-![png](output_45_0.png)
+![png](output_46_0.png)
 
 
 
 
 
-    0.7481851169628191
+    0.7328696191869485
 
 
 
 Notice we dealt with many problem columns at once, and in a statistically sound manner. More on the `vtreat` package for Python can be found here: [https://github.com/WinVector/pyvtreat](https://github.com/WinVector/pyvtreat).  Details on the `R` version can be found here: [https://github.com/WinVector/vtreat](https://github.com/WinVector/vtreat).
 
-We can compare this to the [R solution](https://github.com/WinVector/PDSwR2/blob/master/KDD2009/KDD2009vtreat.md).
-
-
-```python
-
-```
+We can compare this to the [R solution (link)](https://github.com/WinVector/PDSwR2/blob/master/KDD2009/KDD2009vtreat.md).
 
 We can compare the above cross-frame solution to a naive "design transform and model on the same data set" solution as we show below.  Note we turn off `filter_to_recommended` as this is computed using cross-frame techniques (and hence is a non-naive estimate).
 
@@ -967,11 +966,11 @@ bestn
   </thead>
   <tbody>
     <tr>
-      <th>99</th>
-      <td>0.047723</td>
-      <td>0.000763</td>
-      <td>0.05929</td>
-      <td>0.001728</td>
+      <th>94</th>
+      <td>0.0485</td>
+      <td>0.000438</td>
+      <td>0.058622</td>
+      <td>0.000545</td>
     </tr>
   </tbody>
 </table>
@@ -988,7 +987,7 @@ ntreen
 
 
 
-    99
+    94
 
 
 
@@ -1004,7 +1003,7 @@ fittern
     XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
                   colsample_bynode=1, colsample_bytree=1, gamma=0,
                   learning_rate=0.1, max_delta_step=0, max_depth=3,
-                  min_child_weight=1, missing=None, n_estimators=99, n_jobs=1,
+                  min_child_weight=1, missing=None, n_estimators=94, n_jobs=1,
                   nthread=None, objective='binary:logistic', random_state=0,
                   reg_alpha=0, reg_lambda=1, scale_pos_weight=1, seed=None,
                   silent=None, subsample=1, verbosity=1)
@@ -1036,7 +1035,7 @@ wvpy.util.plot_roc(pfn_train["pred_naive"], pfn_train["churn"], title="Overfit M
 
 
 
-    0.9503117803550936
+    0.9492686875296688
 
 
 
@@ -1054,13 +1053,8 @@ wvpy.util.plot_roc(pfn["pred_naive"], pfn["churn"], title="Overfit Model on Test
 
 
 
-    0.6339828131295911
+    0.5960012412998182
 
 
 
 Note the naive test performance is worse, despite its far better training performance.  This is over-fit due to the nested model bias of using the same data to build the treatment plan and model without any cross-frame mitigations.
-
-
-```python
-
-```
