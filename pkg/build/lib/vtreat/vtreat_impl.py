@@ -839,7 +839,7 @@ def pseudo_score_plan_variables(*, cross_frame, plan, params):
     score_frame.reset_index(inplace=True, drop=True)
 
     def has_range(x):
-        x = numpy.asarray(x)
+        x = numpy.asarray(pandas.Series(x))
         return numpy.max(x) > numpy.min(x)
 
     score_frame["has_range"] = [
