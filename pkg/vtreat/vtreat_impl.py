@@ -838,12 +838,8 @@ def pseudo_score_plan_variables(*, cross_frame, plan, params):
     )
     score_frame.reset_index(inplace=True, drop=True)
 
-    def has_range(x):
-        x = numpy.asarray(x)
-        return numpy.max(x) > numpy.min(x)
-
     score_frame["has_range"] = [
-        has_range(cross_frame[c]) for c in score_frame["variable"]
+        vtreat.util.has_range(cross_frame[c]) for c in score_frame["variable"]
     ]
     score_frame["PearsonR"] = numpy.nan
     score_frame["significance"] = numpy.nan

@@ -33,9 +33,14 @@ def is_bad(x):
     return pandas.isnull(x)
 
 
+def has_range(x):
+    x = numpy.asarray(pandas.Series(x)).astype(float)
+    return numpy.max(x) > numpy.min(x)
+
+
 def characterize_numeric(x):
     """compute na count, min,max,mean of a numeric vector"""
-    x = numpy.asarray(x).astype(float)
+    x = numpy.asarray(pandas.Series(x)).astype(float)
     not_bad = numpy.logical_not(is_bad(x))
     n_not_bad = sum(not_bad)
     n = len(x)
