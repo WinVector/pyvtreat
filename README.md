@@ -12,7 +12,7 @@ in a statistically sound manner.
 Install `vtreat` with either of:
 
   * `pip install vtreat`
-  * `pip install https://github.com/WinVector/pyvtreat/raw/master/pkg/dist/vtreat-0.3.1.tar.gz`
+  * `pip install https://github.com/WinVector/pyvtreat/raw/master/pkg/dist/vtreat-0.3.2.tar.gz`
 
 # Details
 
