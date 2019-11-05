@@ -1,7 +1,7 @@
 ============================= test session starts ==============================
-platform darwin -- Python 3.6.9, pytest-5.0.1, py-1.8.0, pluggy-0.12.0
+platform darwin -- Python 3.6.9, pytest-5.2.2, py-1.8.0, pluggy-0.13.0
 rootdir: /Users/johnmount/Documents/work/pyvtreat/pkg
-plugins: cov-2.7.1
+plugins: cov-2.8.1
 collected 8 items
 
 pkg/tests/test_classification.py .                                       [ 12%]
@@ -26,4 +26,4 @@ pkg/vtreat/vtreat_impl.py     464     80    83%
 TOTAL                         870    209    76%
 
 
-========================== 8 passed in 11.66 seconds ===========================
+============================== 8 passed in 6.31s ===============================
