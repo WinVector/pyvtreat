@@ -81,7 +81,7 @@ class CleanNumericTransform(VarTransform):
         self.replacement_value_ = replacement_value
 
     def transform(self, data_frame):
-        col = numpy.asarray(data_frame[self.incoming_column_name_].copy()).astype(float)
+        col = vtreat.util.safe_to_numeric_array(data_frame[self.incoming_column_name_])
         bad_posns = vtreat.util.is_bad(col)
         col[bad_posns] = self.replacement_value_
         res = pandas.DataFrame({self.derived_column_names_[0]: col})
@@ -165,7 +165,7 @@ def fit_regression_deviation_code(*, incoming_column_name, x, y, extra_args, par
 def fit_binomial_impact_code(*, incoming_column_name, x, y, extra_args, params):
     outcome_target = (extra_args["outcome_target"],)
     var_suffix = extra_args["var_suffix"]
-    y = numpy.asarray(numpy.asarray(y) == outcome_target, dtype=numpy.float64)
+    y = numpy.asarray(numpy.asarray(y) == outcome_target, dtype=float)
     sf = vtreat.util.grouped_by_x_statistics(x, y)
     if sf.shape[0] <= 1:
         return None
@@ -583,7 +583,7 @@ def pre_prep_frame(x, *, col_list, cols_to_copy):
             continue
         bad_ind = vtreat.util.is_bad(x[c])
         if vtreat.util.can_convert_v_to_numeric(x[c]):
-            x[c] = numpy.asarray(x[c] + 0, dtype=float)
+            x[c] = vtreat.util.safe_to_numeric_array(x[c])
         else:
             # https://stackoverflow.com/questions/22231592/pandas-change-data-type-of-series-to-string
             x[c] = numpy.asarray(x[c].apply(str), dtype=str)
@@ -712,7 +712,7 @@ def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
             cp = cross_plan[i]
             res.loc[cp["app"], derived_column_name] = numpy.asarray(
                 pi[derived_column_name]
-            ).reshape((len(pi)))
+            ).reshape((len(pi), ))
         res.loc[vtreat.util.is_bad(res[derived_column_name]), derived_column_name] = avg
     for xf in plan["xforms"]:
         xf.refitter_ = None
@@ -757,7 +757,7 @@ def cross_patch_user_y_aware_cols(*, x, y, res, params, cross_plan):
                     continue
                 pi.reset_index(inplace=True, drop=True)
                 cp = cross_plan[i]
-                res.loc[cp["app"], col] = numpy.asarray(pi[col]).reshape((len(pi)))
+                res.loc[cp["app"], col] = numpy.asarray(pi[col]).reshape((len(pi), ))
             res.loc[vtreat.util.is_bad(res[col]), col] = avg
     return res
 
