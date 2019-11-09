@@ -271,11 +271,11 @@ def fit_numeric_outcome_treatment(
     cat_list = [co for co in var_list if co not in set(num_list)]
     if "clean_copy" in params["coders"]:
         for vi in num_list:
-            summaryi = vtreat.util.characterize_numeric(X[vi])
-            if summaryi["varies"] and summaryi["has_range"]:
+            if vtreat.util.has_range(X[vi]):
+                replacement_value = vtreat.util.summarize_column(X[vi])
                 xforms = xforms + [
                     CleanNumericTransform(
-                        incoming_column_name=vi, replacement_value=summaryi["mean"]
+                        incoming_column_name=vi, replacement_value=replacement_value
                     )
                 ]
     for vi in cat_list:
@@ -356,12 +356,12 @@ def fit_binomial_outcome_treatment(
     cat_list = [co for co in var_list if co not in set(num_list)]
     if "clean_copy" in params["coders"]:
         for vi in num_list:
-            summaryi = vtreat.util.characterize_numeric(X[vi])
-            if summaryi["varies"] and summaryi["has_range"]:
+            if vtreat.util.has_range(X[vi]):
+                replacement_value = vtreat.util.summarize_column(X[vi])
                 # noinspection PyTypeChecker
                 xforms = xforms + [
                     CleanNumericTransform(
-                        incoming_column_name=vi, replacement_value=summaryi["mean"]
+                        incoming_column_name=vi, replacement_value=replacement_value
                     )
                 ]
     extra_args = {"outcome_target": outcome_target, "var_suffix": ""}
@@ -433,12 +433,12 @@ def fit_multinomial_outcome_treatment(
     cat_list = [co for co in var_list if co not in set(num_list)]
     if "clean_copy" in params["coders"]:
         for vi in num_list:
-            summaryi = vtreat.util.characterize_numeric(X[vi])
-            if summaryi["varies"] and summaryi["has_range"]:
+            if vtreat.util.has_range(X[vi]):
+                replacement_value = vtreat.util.summarize_column(X[vi])
                 # noinspection PyTypeChecker
                 xforms = xforms + [
                     CleanNumericTransform(
-                        incoming_column_name=vi, replacement_value=summaryi["mean"]
+                        incoming_column_name=vi, replacement_value=replacement_value
                     )
                 ]
     for vi in cat_list:
@@ -513,12 +513,12 @@ def fit_unsupervised_treatment(*, X, var_list, outcome_name, cols_to_copy, param
     cat_list = [co for co in var_list if co not in set(num_list)]
     if "clean_copy" in params["coders"]:
         for vi in num_list:
-            summaryi = vtreat.util.characterize_numeric(X[vi])
-            if summaryi["varies"] and summaryi["has_range"]:
+            if vtreat.util.has_range(X[vi]):
+                replacement_value = vtreat.util.summarize_column(X[vi])
                 # noinspection PyTypeChecker
                 xforms = xforms + [
                     CleanNumericTransform(
-                        incoming_column_name=vi, replacement_value=summaryi["mean"]
+                        incoming_column_name=vi, replacement_value=replacement_value
                     )
                 ]
     for vi in cat_list:

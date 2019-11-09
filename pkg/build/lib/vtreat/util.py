@@ -5,9 +5,10 @@ Created on Sat Jul 20 11:40:41 2019
 @author: johnmount
 """
 
+import math
+import warnings
 
 import numpy
-import warnings
 
 import pandas
 import scipy.stats
@@ -17,7 +18,7 @@ import statistics
 def can_convert_v_to_numeric(x):
     """check if non-empty vector can convert to numeric"""
     try:
-        numpy.asarray(x + 0, dtype=float)
+        numpy.asarray(x + 0.0, dtype=float)
         return True
     except TypeError:
         return False
@@ -34,13 +35,40 @@ def is_bad(x):
 
 
 def has_range(x):
-    x = numpy.asarray(pandas.Series(x)).astype(float)
+    x = numpy.asarray(pandas.Series(x)).astype(float)  # work around https://github.com/WinVector/pyvtreat/issues/7
+    not_bad = numpy.logical_not(is_bad(x))
+    n_not_bad = sum(not_bad)
+    if n_not_bad < 2:
+        return False
+    x = x[not_bad]
     return numpy.max(x) > numpy.min(x)
+
+
+def summarize_column(x, *, fn=numpy.mean):
+    """
+    Summarize column to a non-missing scalar.
+
+    :param x: a vector/Series or column of numbers
+    :param fn: summarize function (such as numpy.mean), only passed non-bad positions
+    :return: scalar float summary of the non-None positions of x (otherwise 0)
+    """
+
+    x = numpy.asarray(pandas.Series(x)).astype(float)  # work around https://github.com/WinVector/pyvtreat/issues/7
+    not_bad = numpy.logical_not(is_bad(x))
+    n_not_bad = sum(not_bad)
+    if n_not_bad < 1:
+        return 0.0
+    x = x[not_bad]
+    v = 0.0 + fn(x)
+    if pandas.isnull(v) or math.isnan(v) or math.isinf(v):
+        return 0.0
+    return v
 
 
 def characterize_numeric(x):
     """compute na count, min,max,mean of a numeric vector"""
-    x = numpy.asarray(pandas.Series(x)).astype(float)
+
+    x = numpy.asarray(pandas.Series(x)).astype(float)  # work around https://github.com/WinVector/pyvtreat/issues/7
     not_bad = numpy.logical_not(is_bad(x))
     n_not_bad = sum(not_bad)
     n = len(x)
