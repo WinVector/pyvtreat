@@ -5,6 +5,8 @@ Created on Sat Jul 20 12:07:57 2019
 @author: johnmount
 """
 
+import math
+
 import numpy
 import pandas
 
@@ -96,6 +98,27 @@ class IndicateMissingTransform(VarTransform):
         col = vtreat.util.is_bad(data_frame[self.incoming_column_name_])
         res = pandas.DataFrame({self.derived_column_names_[0]: col})
         return res.astype(float)
+
+
+def fit_clean_code(*, incoming_column_name, x, params, imputation_map):
+    if not vtreat.util.has_range(x):
+        return None
+    replacement = params['missingness_imputation']
+    try:
+        replacement = imputation_map[incoming_column_name]
+    except KeyError:
+        pass
+    if vtreat.util.can_convert_v_to_numeric(replacement):
+        replacement_value = 0.0 + replacement
+    elif callable(replacement):
+        replacement_value = vtreat.util.summarize_column(x, fn=replacement)
+    else:
+        raise TypeError("unexpected imputation type " + str(type(replacement)) + " (" + incoming_column_name + ")")
+    if pandas.isnull(replacement_value) or math.isnan(replacement_value) or math.isinf(replacement_value):
+        raise ValueError("replacement was bad " + incoming_column_name + ": " + str(replacement_value))
+    return CleanNumericTransform(
+            incoming_column_name=incoming_column_name, replacement_value=replacement_value
+        )
 
 
 def fit_regression_impact_code(*, incoming_column_name, x, y, extra_args, params):
@@ -244,7 +267,7 @@ def fit_prevalence_code(incoming_column_name, x):
 
 # noinspection PyPep8Naming
 def fit_numeric_outcome_treatment(
-    *, X, y, var_list, outcome_name, cols_to_copy, params
+    *, X, y, var_list, outcome_name, cols_to_copy, params, imputation_map
 ):
     if (var_list is None) or (len(var_list) <= 0):
         var_list = [co for co in X.columns]
@@ -271,13 +294,10 @@ def fit_numeric_outcome_treatment(
     cat_list = [co for co in var_list if co not in set(num_list)]
     if "clean_copy" in params["coders"]:
         for vi in num_list:
-            if vtreat.util.has_range(X[vi]):
-                replacement_value = vtreat.util.summarize_column(X[vi])
-                xforms = xforms + [
-                    CleanNumericTransform(
-                        incoming_column_name=vi, replacement_value=replacement_value
-                    )
-                ]
+            xform = fit_clean_code(incoming_column_name=vi, x=X[vi], params=params, imputation_map=imputation_map)
+            if xform is not None:
+                # noinspection PyTypeChecker
+                xforms = xforms + [xform]
     for vi in cat_list:
         if "impact_code" in params["coders"]:
             # noinspection PyTypeChecker
@@ -328,7 +348,7 @@ def fit_numeric_outcome_treatment(
 
 # noinspection PyPep8Naming
 def fit_binomial_outcome_treatment(
-    *, X, y, outcome_target, var_list, outcome_name, cols_to_copy, params
+    *, X, y, outcome_target, var_list, outcome_name, cols_to_copy, params, imputation_map
 ):
     if (var_list is None) or (len(var_list) <= 0):
         var_list = [co for co in X.columns]
@@ -356,14 +376,10 @@ def fit_binomial_outcome_treatment(
     cat_list = [co for co in var_list if co not in set(num_list)]
     if "clean_copy" in params["coders"]:
         for vi in num_list:
-            if vtreat.util.has_range(X[vi]):
-                replacement_value = vtreat.util.summarize_column(X[vi])
+            xform = fit_clean_code(incoming_column_name=vi, x=X[vi], params=params, imputation_map=imputation_map)
+            if xform is not None:
                 # noinspection PyTypeChecker
-                xforms = xforms + [
-                    CleanNumericTransform(
-                        incoming_column_name=vi, replacement_value=replacement_value
-                    )
-                ]
+                xforms = xforms + [xform]
     extra_args = {"outcome_target": outcome_target, "var_suffix": ""}
     for vi in cat_list:
         if "logit_code" in params["coders"]:
@@ -404,7 +420,7 @@ def fit_binomial_outcome_treatment(
 
 # noinspection PyPep8Naming
 def fit_multinomial_outcome_treatment(
-    *, X, y, var_list, outcome_name, cols_to_copy, params
+    *, X, y, var_list, outcome_name, cols_to_copy, params, imputation_map
 ):
     if (var_list is None) or (len(var_list) <= 0):
         var_list = [co for co in X.columns]
@@ -433,14 +449,10 @@ def fit_multinomial_outcome_treatment(
     cat_list = [co for co in var_list if co not in set(num_list)]
     if "clean_copy" in params["coders"]:
         for vi in num_list:
-            if vtreat.util.has_range(X[vi]):
-                replacement_value = vtreat.util.summarize_column(X[vi])
+            xform = fit_clean_code(incoming_column_name=vi, x=X[vi], params=params, imputation_map=imputation_map)
+            if xform is not None:
                 # noinspection PyTypeChecker
-                xforms = xforms + [
-                    CleanNumericTransform(
-                        incoming_column_name=vi, replacement_value=replacement_value
-                    )
-                ]
+                xforms = xforms + [xform]
     for vi in cat_list:
         for outcome in outcomes:
             if "impact_code" in params["coders"]:
@@ -486,7 +498,7 @@ def fit_multinomial_outcome_treatment(
 
 
 # noinspection PyPep8Naming
-def fit_unsupervised_treatment(*, X, var_list, outcome_name, cols_to_copy, params):
+def fit_unsupervised_treatment(*, X, var_list, outcome_name, cols_to_copy, params, imputation_map):
     if (var_list is None) or (len(var_list) <= 0):
         var_list = [co for co in X.columns]
     copy_set = set(cols_to_copy)
@@ -513,14 +525,10 @@ def fit_unsupervised_treatment(*, X, var_list, outcome_name, cols_to_copy, param
     cat_list = [co for co in var_list if co not in set(num_list)]
     if "clean_copy" in params["coders"]:
         for vi in num_list:
-            if vtreat.util.has_range(X[vi]):
-                replacement_value = vtreat.util.summarize_column(X[vi])
+            xform = fit_clean_code(incoming_column_name=vi, x=X[vi], params=params, imputation_map=imputation_map)
+            if xform is not None:
                 # noinspection PyTypeChecker
-                xforms = xforms + [
-                    CleanNumericTransform(
-                        incoming_column_name=vi, replacement_value=replacement_value
-                    )
-                ]
+                xforms = xforms + [xform]
     for vi in cat_list:
         if "prevalence_code" in params["coders"]:
             # noinspection PyTypeChecker
@@ -528,6 +536,7 @@ def fit_unsupervised_treatment(*, X, var_list, outcome_name, cols_to_copy, param
                 fit_prevalence_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
             ]
         if "indicator_code" in params["coders"]:
+            # noinspection PyTypeChecker
             xforms = xforms + [
                 fit_indicator_code(
                     incoming_column_name=vi,

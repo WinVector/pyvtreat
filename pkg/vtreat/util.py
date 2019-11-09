@@ -15,6 +15,12 @@ import scipy.stats
 import statistics
 
 
+def safe_to_numeric_array(x):
+    # work around https://github.com/WinVector/pyvtreat/issues/7
+    # noinspection PyTypeChecker
+    return numpy.asarray(pandas.Series(x) + 0.0, dtype=float)
+
+
 def can_convert_v_to_numeric(x):
     """check if non-empty vector can convert to numeric"""
     try:
@@ -27,7 +33,7 @@ def can_convert_v_to_numeric(x):
 def is_bad(x):
     """ for numeric vector x, return logical vector of positions that are null, NaN, infinite"""
     if can_convert_v_to_numeric(x):
-        x = numpy.asarray(x + 0, dtype=float)
+        x = safe_to_numeric_array(x)
         return numpy.logical_or(
             pandas.isnull(x), numpy.logical_or(numpy.isnan(x), numpy.isinf(x))
         )
@@ -35,7 +41,7 @@ def is_bad(x):
 
 
 def has_range(x):
-    x = numpy.asarray(pandas.Series(x)).astype(float)  # work around https://github.com/WinVector/pyvtreat/issues/7
+    x = safe_to_numeric_array(x)
     not_bad = numpy.logical_not(is_bad(x))
     n_not_bad = sum(not_bad)
     if n_not_bad < 2:
@@ -53,7 +59,7 @@ def summarize_column(x, *, fn=numpy.mean):
     :return: scalar float summary of the non-None positions of x (otherwise 0)
     """
 
-    x = numpy.asarray(pandas.Series(x)).astype(float)  # work around https://github.com/WinVector/pyvtreat/issues/7
+    x = safe_to_numeric_array(x)
     not_bad = numpy.logical_not(is_bad(x))
     n_not_bad = sum(not_bad)
     if n_not_bad < 1:
@@ -68,7 +74,7 @@ def summarize_column(x, *, fn=numpy.mean):
 def characterize_numeric(x):
     """compute na count, min,max,mean of a numeric vector"""
 
-    x = numpy.asarray(pandas.Series(x)).astype(float)  # work around https://github.com/WinVector/pyvtreat/issues/7
+    x = safe_to_numeric_array(x)
     not_bad = numpy.logical_not(is_bad(x))
     n_not_bad = sum(not_bad)
     n = len(x)
@@ -103,6 +109,7 @@ def grouped_by_x_statistics(x, y):
         raise ValueError("no rows")
     if n != len(y):
         raise ValueError("len(y)!=len(x)")
+    y = safe_to_numeric_array(y)
     eps = 1.0e-3
     sf = pandas.DataFrame({"x": x, "y": y})
     sf.reset_index(inplace=True, drop=True)
@@ -146,10 +153,11 @@ def score_variables(cross_frame, variables, outcome):
     n = cross_frame.shape[0]
     if n != len(outcome):
         raise ValueError("len(n) must equal cross_frame.shape[0]")
+    outcome = safe_to_numeric_array(outcome)
 
     def f(v):
         col = cross_frame[v]
-        col = numpy.asarray(col)
+        col = safe_to_numeric_array(col)
         if n > 0 and numpy.max(col) > numpy.min(col):
             with warnings.catch_warnings():
                 est = scipy.stats.pearsonr(cross_frame[v], outcome)

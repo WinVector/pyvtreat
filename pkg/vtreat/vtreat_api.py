@@ -26,12 +26,13 @@ def vtreat_parameters(user_params=None):
         "cross_validation_k": 5,
         "user_transforms": [],
         "sparse_indicators": True,
+        "missingness_imputation": numpy.mean,
     }
     if user_params is not None:
         pkeys = set(params.keys())
         for k in user_params.keys():
             if k not in pkeys:
-                raise KeyError("paramater key " + str(k) + " not recognized")
+                raise KeyError("parameter key " + str(k) + " not recognized")
             params[k] = user_params[k]
     return params
 
@@ -49,19 +50,25 @@ def unsupervised_parameters(user_params=None):
         "indicator_min_fraction": 0.0,
         "user_transforms": [],
         "sparse_indicators": True,
+        "missingness_imputation": numpy.mean,
     }
     if user_params is not None:
         pkeys = set(params.keys())
         for k in user_params.keys():
             if k not in pkeys:
-                raise KeyError("paramater key " + str(k) + " not recognized")
+                raise KeyError("parameter key " + str(k) + " not recognized")
             params[k] = user_params[k]
     return params
 
 
 class VariableTreatment:
     def __init__(
-        self, *, var_list=None, outcome_name=None, cols_to_copy=None, params=None
+            self, *,
+            var_list=None,
+            outcome_name=None,
+            cols_to_copy=None,
+            params=None,
+            imputation_map=None,
     ):
         if var_list is None:
             var_list = []
@@ -69,10 +76,13 @@ class VariableTreatment:
             cols_to_copy = []
         if outcome_name is not None and outcome_name not in set(cols_to_copy):
             cols_to_copy = cols_to_copy + [outcome_name]
+        if imputation_map is None:
+            imputation_map = {}  # dict
         self.outcome_name_ = outcome_name
         self.var_list_ = [vi for vi in var_list if vi not in set(cols_to_copy)]
         self.cols_to_copy_ = cols_to_copy.copy()
         self.params_ = params.copy()
+        self.imputation_map_ = imputation_map.copy()
         self.plan_ = None
         self.score_frame_ = None
         self.cross_plan_ = None
@@ -83,7 +93,12 @@ class NumericOutcomeTreatment(VariableTreatment):
     """manage a treatment plan for a numeric outcome (regression)"""
 
     def __init__(
-        self, *, var_list=None, outcome_name=None, cols_to_copy=None, params=None
+            self, *,
+            var_list=None,
+            outcome_name=None,
+            cols_to_copy=None,
+            params=None,
+            imputation_map=None,
     ):
         """
 
@@ -91,6 +106,7 @@ class NumericOutcomeTreatment(VariableTreatment):
          :param outcome_name: name of column containing dependent variable
          :param cols_to_copy: list or touple of column names
          :param params: vtreat.vtreat_parameters()
+         :param imputation_map: map of column names to custom missing imputation values or functions
         """
         params = vtreat_parameters(params)
         VariableTreatment.__init__(
@@ -99,6 +115,7 @@ class NumericOutcomeTreatment(VariableTreatment):
             outcome_name=outcome_name,
             cols_to_copy=cols_to_copy,
             params=params,
+            imputation_map=imputation_map,
         )
 
     # noinspection PyPep8Naming
@@ -131,7 +148,7 @@ class NumericOutcomeTreatment(VariableTreatment):
             y = X[self.outcome_name_]
         if not X.shape[0] == len(y):
             raise ValueError("X.shape[0] should equal len(y)")
-        y = numpy.asarray(y, dtype=numpy.float64)
+        y = vtreat.util.safe_to_numeric_array(y)
         if vtreat.util.is_bad(y).sum() > 0:
             raise ValueError("y should not have any missing/NA/NaN values")
         if numpy.max(y) <= numpy.min(y):
@@ -152,6 +169,7 @@ class NumericOutcomeTreatment(VariableTreatment):
             outcome_name=self.outcome_name_,
             cols_to_copy=self.cols_to_copy_,
             params=self.params_,
+            imputation_map=self.imputation_map_,
         )
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         # patch in cross-frame versions of complex columns such as impact
@@ -182,13 +200,14 @@ class BinomialOutcomeTreatment(VariableTreatment):
     """manage a treatment plan for a target outcome (binomial classification)"""
 
     def __init__(
-        self,
-        *,
-        var_list=None,
-        outcome_name=None,
-        outcome_target,
-        cols_to_copy=None,
-        params=None
+            self,
+            *,
+            var_list=None,
+            outcome_name=None,
+            outcome_target,
+            cols_to_copy=None,
+            params=None,
+            imputation_map=None,
     ):
         """
 
@@ -197,6 +216,7 @@ class BinomialOutcomeTreatment(VariableTreatment):
          :param outcome_target: value of outcome to consider "positive"
          :param cols_to_copy: list or touple of column names
          :param params: vtreat.vtreat_parameters()
+         :param imputation_map: map of column names to custom missing imputation values or functions
         """
         params = vtreat_parameters(params)
         VariableTreatment.__init__(
@@ -205,6 +225,7 @@ class BinomialOutcomeTreatment(VariableTreatment):
             outcome_name=outcome_name,
             cols_to_copy=cols_to_copy,
             params=params,
+            imputation_map=imputation_map,
         )
         self.outcome_target_ = outcome_target
 
@@ -258,6 +279,7 @@ class BinomialOutcomeTreatment(VariableTreatment):
             outcome_name=self.outcome_name_,
             cols_to_copy=self.cols_to_copy_,
             params=self.params_,
+            imputation_map=self.imputation_map_,
         )
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         # patch in cross-frame versions of complex columns such as impact
@@ -278,7 +300,7 @@ class BinomialOutcomeTreatment(VariableTreatment):
         self.score_frame_ = vtreat_impl.score_plan_variables(
             cross_frame=cross_frame,
             outcome=numpy.asarray(
-                numpy.asarray(y) == self.outcome_target_, dtype=numpy.float64
+                numpy.asarray(y) == self.outcome_target_, dtype=float
             ),
             plan=self.plan_,
             params=self.params_,
@@ -293,7 +315,13 @@ class MultinomialOutcomeTreatment(VariableTreatment):
     """manage a treatment plan for a set of outcomes (multinomial classification)"""
 
     def __init__(
-        self, *, var_list=None, outcome_name=None, cols_to_copy=None, params=None
+            self,
+            *,
+            var_list=None,
+            outcome_name=None,
+            cols_to_copy=None,
+            params=None,
+            imputation_map=None,
     ):
         """
 
@@ -301,6 +329,7 @@ class MultinomialOutcomeTreatment(VariableTreatment):
          :param outcome_name: name of column containing dependent variable
          :param cols_to_copy: list or touple of column names
          :param params: vtreat.vtreat_parameters()
+         :param imputation_map: map of column names to custom missing imputation values or functions
         """
 
         params = vtreat_parameters(params)
@@ -310,6 +339,7 @@ class MultinomialOutcomeTreatment(VariableTreatment):
             outcome_name=outcome_name,
             cols_to_copy=cols_to_copy,
             params=params,
+            imputation_map=imputation_map,
         )
         self.outcomes_ = None
 
@@ -362,6 +392,7 @@ class MultinomialOutcomeTreatment(VariableTreatment):
             outcome_name=self.outcome_name_,
             cols_to_copy=self.cols_to_copy_,
             params=self.params_,
+            imputation_map=self.imputation_map_,
         )
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         # patch in cross-frame versions of complex columns such as impact
@@ -378,12 +409,13 @@ class MultinomialOutcomeTreatment(VariableTreatment):
             params=self.params_,
             cross_plan=self.cross_plan_,
         )
+
         # use cross_frame to compute variable effects
 
         def si(oi):
             sf = vtreat_impl.score_plan_variables(
                 cross_frame=cross_frame,
-                outcome=numpy.asarray(numpy.asarray(y) == oi, dtype=numpy.float64),
+                outcome=numpy.asarray(numpy.asarray(y) == oi, dtype=float),
                 plan=self.plan_,
                 params=self.params_,
             )
@@ -402,12 +434,18 @@ class MultinomialOutcomeTreatment(VariableTreatment):
 class UnsupervisedTreatment(VariableTreatment):
     """manage an unsupervised treatment plan"""
 
-    def __init__(self, *, var_list=None, cols_to_copy=None, params=None):
+    def __init__(self,
+                 *,
+                 var_list=None,
+                 cols_to_copy=None,
+                 params=None,
+                 imputation_map=None):
         """
 
         :param var_list: list or touple of column names
         :param cols_to_copy: list or touple of column names
         :param params: vtreat.unsupervised_parameters()
+        :param imputation_map: map of column names to custom missing imputation values or functions
         """
         params = unsupervised_parameters(params)
         VariableTreatment.__init__(
@@ -416,6 +454,7 @@ class UnsupervisedTreatment(VariableTreatment):
             outcome_name=None,
             cols_to_copy=cols_to_copy,
             params=params,
+            imputation_map=imputation_map,
         )
 
     # noinspection PyPep8Naming
@@ -452,6 +491,7 @@ class UnsupervisedTreatment(VariableTreatment):
             outcome_name=self.outcome_name_,
             cols_to_copy=self.cols_to_copy_,
             params=self.params_,
+            imputation_map=self.imputation_map_,
         )
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         self.score_frame_ = vtreat_impl.pseudo_score_plan_variables(
