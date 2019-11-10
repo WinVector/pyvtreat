@@ -2,29 +2,30 @@
 platform darwin -- Python 3.6.9, pytest-5.2.2, py-1.8.0, pluggy-0.13.0
 rootdir: /Users/johnmount/Documents/work/pyvtreat/pkg
 plugins: cov-2.8.1
-collected 9 items
+collected 10 items
 
-pkg/tests/test_classification.py .                                       [ 11%]
-pkg/tests/test_imputation_controls.py .                                  [ 22%]
-pkg/tests/test_multinomial.py .                                          [ 33%]
-pkg/tests/test_nan_inf.py .                                              [ 44%]
-pkg/tests/test_r1_issue.py .                                             [ 55%]
-pkg/tests/test_range.py .                                                [ 66%]
-pkg/tests/test_regression.py .                                           [ 77%]
-pkg/tests/test_unsupervised.py .                                         [ 88%]
+pkg/tests/test_classification.py .                                       [ 10%]
+pkg/tests/test_imputation_controls.py .                                  [ 20%]
+pkg/tests/test_multinomial.py .                                          [ 30%]
+pkg/tests/test_nan_inf.py .                                              [ 40%]
+pkg/tests/test_perm_cor.py .                                             [ 50%]
+pkg/tests/test_r1_issue.py .                                             [ 60%]
+pkg/tests/test_range.py .                                                [ 70%]
+pkg/tests/test_regression.py .                                           [ 80%]
+pkg/tests/test_unsupervised.py .                                         [ 90%]
 pkg/tests/test_util.py .                                                 [100%]
 
 ---------- coverage: platform darwin, python 3.6.9-final-0 -----------
 Name                        Stmts   Miss  Cover
 -----------------------------------------------
-pkg/vtreat/__init__.py          7      0   100%
+pkg/vtreat/__init__.py          6      0   100%
 pkg/vtreat/cross_plan.py       94     52    45%
 pkg/vtreat/transform.py        13      8    38%
-pkg/vtreat/util.py            104     20    81%
+pkg/vtreat/util.py            133     26    80%
 pkg/vtreat/vtreat_api.py      212     61    71%
 pkg/vtreat/vtreat_impl.py     481     79    84%
 -----------------------------------------------
-TOTAL                         911    220    76%
+TOTAL                         939    226    76%
 
 
-============================== 9 passed in 6.32s ===============================
+============================== 10 passed in 7.37s ==============================

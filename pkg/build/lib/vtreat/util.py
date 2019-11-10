@@ -7,12 +7,19 @@ Created on Sat Jul 20 11:40:41 2019
 
 import math
 import warnings
+import statistics
 
 import numpy
-
 import pandas
-import scipy.stats
-import statistics
+
+have_scipy_stats = False
+try:
+    # noinspection PyUnresolvedReferences
+    import scipy.stats
+
+    have_scipy_stats = True
+except ImportError:
+    have_scipy_stats = False
 
 
 def safe_to_numeric_array(x):
@@ -145,7 +152,46 @@ def grouped_by_x_statistics(x, y):
     return sf
 
 
-def score_variables(cross_frame, variables, outcome):
+def perm_est_correlation(x, y,
+                         *,
+                         eps=1e-13,
+                         nrounds=10000):
+    """
+    Compute Pearson correlation and permutation test 2-sided significance.
+    Note: smoothed to +1 to avoid reporting zero-significance without sufficient evidence.
+    Uses the numpy pseudo-random number generator.
+
+    :param x: vector of length n.
+    :param y: vector of length n.
+    :param eps: tolerance to check for variation
+    :param nrounds: number of permutation rounds
+    :return:
+    """
+    n = len(x)
+    if len(y) != n:
+        raise ValueError("x and y must be the same length")
+    if (n < 2) or (numpy.max(x) <= eps + numpy.min(x)) or (numpy.max(y) <= eps + numpy.min(y)):
+        return (numpy.Nan, 1.0)
+    # standardize
+    x = x - numpy.mean(x)
+    x = x / math.sqrt(numpy.dot(x, x))
+    y = y - numpy.mean(y)
+    y = y / math.sqrt(numpy.dot(y, y))
+    cor = numpy.dot(x, y)
+    # permutation test for 2-sided significance
+    abs_cor = abs(cor)
+    n_hit = 0.0
+    for rep in range(nrounds):
+        yp = numpy.random.choice(y, n, replace=False)
+        ci = numpy.dot(x, yp)
+        if abs(ci) >= abs_cor:
+            n_hit = n_hit + 1.0
+    sig = (n_hit + 1.0)/(nrounds + 1.0)
+    return (cor, sig)
+
+
+def score_variables(cross_frame, variables, outcome,
+                    permutation_rounds=0):
     """score the linear relation of varaibles to outcomename"""
 
     if len(variables) <= 0:
@@ -154,13 +200,18 @@ def score_variables(cross_frame, variables, outcome):
     if n != len(outcome):
         raise ValueError("len(n) must equal cross_frame.shape[0]")
     outcome = safe_to_numeric_array(outcome)
+    if (not have_scipy_stats) and (permutation_rounds<=0):
+        permutation_rounds = 10000
 
     def f(v):
         col = cross_frame[v]
         col = safe_to_numeric_array(col)
-        if n > 0 and numpy.max(col) > numpy.min(col):
+        if (n > 1) and (numpy.max(col) > numpy.min(col)) and (numpy.max(outcome) > numpy.min(outcome)):
             with warnings.catch_warnings():
-                est = scipy.stats.pearsonr(cross_frame[v], outcome)
+                if permutation_rounds>0:
+                    est = perm_est_correlation(col, outcome, nrounds=permutation_rounds)
+                else:
+                    est = scipy.stats.pearsonr(col, outcome)
                 sfi = pandas.DataFrame(
                     {
                         "variable": [v],
@@ -175,7 +226,7 @@ def score_variables(cross_frame, variables, outcome):
                     "variable": [v],
                     "has_range": [False],
                     "PearsonR": [numpy.NaN],
-                    "significance": [1],
+                    "significance": [1.0],
                 }
             )
         return sfi

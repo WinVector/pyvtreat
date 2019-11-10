@@ -4,9 +4,6 @@ import pandas
 # noinspection PyUnresolvedReferences
 import numpy
 
-# noinspection PyUnresolvedReferences
-import scipy
-
 from vtreat.vtreat_api import *
 
 __docformat__ = "restructuredtext"
