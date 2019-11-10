@@ -164,18 +164,18 @@ def score_variables(cross_frame, variables, outcome):
                 sfi = pandas.DataFrame(
                     {
                         "variable": [v],
-                        "has_range": True,
-                        "PearsonR": est[0],
-                        "significance": est[1],
+                        "has_range": [True],
+                        "PearsonR": [est[0]],
+                        "significance": [est[1]],
                     }
                 )
         else:
             sfi = pandas.DataFrame(
                 {
                     "variable": [v],
-                    "has_range": False,
-                    "PearsonR": numpy.NaN,
-                    "significance": 1,
+                    "has_range": [False],
+                    "PearsonR": [numpy.NaN],
+                    "significance": [1],
                 }
             )
         return sfi
