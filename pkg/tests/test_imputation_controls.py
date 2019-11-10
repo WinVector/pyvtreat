@@ -6,13 +6,6 @@ import vtreat.util
 
 
 def test_imputation_controls():
-    def check(*, res, expect, tol=1.0e-4):
-        assert isinstance(res, pandas.DataFrame)
-        assert len(res.columns) == len(expect.columns)
-        for c in expect.columns:
-            ec = expect[c]
-            rc = res[c]
-            assert numpy.max(numpy.abs(ec - rc)) <= tol
 
     d = pandas.DataFrame({
         "x": [0, 1, 1000, None],
@@ -28,7 +21,7 @@ def test_imputation_controls():
         'x_is_bad': [0.0, 0.0, 0.0, 1.0],
         'x': [0.0, 1.0, 1000.0, 333.6666666667],
     })
-    check(res=d_treated, expect=expect)
+    vtreat.util.check_matching_numeric_frames(res=d_treated, expect=expect)
 
     transform = vtreat.UnsupervisedTreatment(
         cols_to_copy=["y"],
@@ -41,7 +34,7 @@ def test_imputation_controls():
         'x_is_bad': [0.0, 0.0, 0.0, 1.0],
         'x': [0.0, 1.0, 1000.0, 1.0],
     })
-    check(res=d_treated, expect=expect)
+    vtreat.util.check_matching_numeric_frames(res=d_treated, expect=expect)
 
     transform = vtreat.UnsupervisedTreatment(
         cols_to_copy=["y"],
@@ -54,7 +47,7 @@ def test_imputation_controls():
         'x_is_bad': [0.0, 0.0, 0.0, 1.0],
         'x': [0.0, 1.0, 1000.0, 0.0],
     })
-    check(res=d_treated, expect=expect)
+    vtreat.util.check_matching_numeric_frames(res=d_treated, expect=expect)
 
     transform = vtreat.UnsupervisedTreatment(
         cols_to_copy=["y"],
@@ -68,7 +61,7 @@ def test_imputation_controls():
         'x_is_bad': [0.0, 0.0, 0.0, 1.0],
         'x': [0.0, 1.0, 1000.0, 7.0],
     })
-    check(res=d_treated, expect=expect)
+    vtreat.util.check_matching_numeric_frames(res=d_treated, expect=expect)
 
     transform = vtreat.UnsupervisedTreatment(
         cols_to_copy=["y"],
@@ -83,7 +76,7 @@ def test_imputation_controls():
         'x_is_bad': [0.0, 0.0, 0.0, 1.0],
         'x': [0.0, 1.0, 1000.0, 1.0],
     })
-    check(res=d_treated, expect=expect)
+    vtreat.util.check_matching_numeric_frames(res=d_treated, expect=expect)
 
     transform = vtreat.UnsupervisedTreatment(
         cols_to_copy=["y"],
@@ -98,4 +91,4 @@ def test_imputation_controls():
         'x_is_bad': [0.0, 0.0, 0.0, 1.0],
         'x': [0.0, 1.0, 1000.0, 12.0],
     })
-    check(res=d_treated, expect=expect)
+    vtreat.util.check_matching_numeric_frames(res=d_treated, expect=expect)

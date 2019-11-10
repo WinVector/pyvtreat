@@ -237,3 +237,21 @@ def score_variables(cross_frame, variables, outcome,
     sf = pandas.concat(sf, axis=0, sort=False)
     sf.reset_index(inplace=True, drop=True)
     return sf
+
+
+
+def check_matching_numeric_frames(*, res, expect, tol=1.0e-4):
+    """
+    Check if two numeric pandas.DataFrame s are identical.  assert if not
+    :param res:
+    :param expect:
+    :param tol: numeric tolerance.
+    :return: None
+    """
+    assert isinstance(expect, pandas.DataFrame)
+    assert isinstance(res, pandas.DataFrame)
+    assert res.shape == expect.shape
+    for c in expect.columns:
+        ec = expect[c]
+        rc = res[c]
+        assert numpy.max(numpy.abs(ec - rc)) <= tol
