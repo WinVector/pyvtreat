@@ -70,23 +70,31 @@ class VariableTreatment:
             params=None,
             imputation_map=None,
     ):
-        if var_list is None:
-            var_list = []
-        if cols_to_copy is None:
-            cols_to_copy = []
+        var_list = vtreat.util.unique_itmes_in_order(var_list)
+        cols_to_copy = vtreat.util.unique_itmes_in_order(cols_to_copy)
         if outcome_name is not None and outcome_name not in set(cols_to_copy):
             cols_to_copy = cols_to_copy + [outcome_name]
         if imputation_map is None:
             imputation_map = {}  # dict
         self.outcome_name_ = outcome_name
         self.var_list_ = [vi for vi in var_list if vi not in set(cols_to_copy)]
-        self.cols_to_copy_ = cols_to_copy.copy()
+        self.cols_to_copy_ = cols_to_copy
         self.params_ = params.copy()
         self.imputation_map_ = imputation_map.copy()
         self.plan_ = None
         self.score_frame_ = None
         self.cross_plan_ = None
         self.n_training_rows_ = None
+
+    def check_column_names(self, col_names):
+        to_check = set(self.var_list_)
+        if self.outcome_name_ is not None:
+            to_check.add(self.outcome_name_)
+        if self.cols_to_copy_ is not None:
+            to_check.update(self.cols_to_copy_)
+        seen = [c for c in col_names if c in to_check]
+        if len(seen) != len(set(seen)):
+            raise ValueError("duplicate column names in frame")
 
 
 class NumericOutcomeTreatment(VariableTreatment):
@@ -122,6 +130,7 @@ class NumericOutcomeTreatment(VariableTreatment):
     def fit(self, X, y):
         if not isinstance(X, pandas.DataFrame):
             raise TypeError("X should be a Pandas DataFrame")
+        self.check_column_names(X.columns)
         if y is None:
             y = X[self.outcome_name_]
         if not X.shape[0] == len(y):
@@ -133,6 +142,7 @@ class NumericOutcomeTreatment(VariableTreatment):
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
             raise TypeError("X should be a Pandas DataFrame")
+        self.check_column_names(X.columns)
         res = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
@@ -144,6 +154,7 @@ class NumericOutcomeTreatment(VariableTreatment):
     def fit_transform(self, X, y):
         if not isinstance(X, pandas.DataFrame):
             raise TypeError("X should be a Pandas DataFrame")
+        self.check_column_names(X.columns)
         if y is None:
             y = X[self.outcome_name_]
         if not X.shape[0] == len(y):
@@ -233,6 +244,7 @@ class BinomialOutcomeTreatment(VariableTreatment):
     def fit(self, X, y):
         if not isinstance(X, pandas.DataFrame):
             raise TypeError("X should be a Pandas DataFrame")
+        self.check_column_names(X.columns)
         if y is None:
             y = X[self.outcome_name_]
         if not X.shape[0] == len(y):
@@ -244,6 +256,7 @@ class BinomialOutcomeTreatment(VariableTreatment):
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
             raise TypeError("X should be a Pandas DataFrame")
+        self.check_column_names(X.columns)
         X = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
@@ -255,6 +268,7 @@ class BinomialOutcomeTreatment(VariableTreatment):
     def fit_transform(self, X, y):
         if not isinstance(X, pandas.DataFrame):
             raise TypeError("X should be a Pandas DataFrame")
+        self.check_column_names(X.columns)
         if y is None:
             y = X[self.outcome_name_]
         if not X.shape[0] == len(y):
@@ -347,6 +361,7 @@ class MultinomialOutcomeTreatment(VariableTreatment):
     def fit(self, X, y):
         if not isinstance(X, pandas.DataFrame):
             raise TypeError("X should be a Pandas DataFrame")
+        self.check_column_names(X.columns)
         if y is None:
             y = X[self.outcome_name_]
         if not X.shape[0] == len(y):
@@ -358,6 +373,7 @@ class MultinomialOutcomeTreatment(VariableTreatment):
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
             raise TypeError("X should be a Pandas DataFrame")
+        self.check_column_names(X.columns)
         X = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
@@ -369,6 +385,7 @@ class MultinomialOutcomeTreatment(VariableTreatment):
     def fit_transform(self, X, y):
         if not isinstance(X, pandas.DataFrame):
             raise TypeError("X should be a Pandas DataFrame")
+        self.check_column_names(X.columns)
         if y is None:
             y = X[self.outcome_name_]
         if not X.shape[0] == len(y):
@@ -461,6 +478,7 @@ class UnsupervisedTreatment(VariableTreatment):
     def fit(self, X, y=None):
         if not isinstance(X, pandas.DataFrame):
             raise TypeError("X should be a Pandas DataFrame")
+        self.check_column_names(X.columns)
         if y is not None:
             raise ValueError("y should be None")
         self.fit_transform(X)
@@ -470,6 +488,7 @@ class UnsupervisedTreatment(VariableTreatment):
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
             raise TypeError("X should be a Pandas DataFrame")
+        self.check_column_names(X.columns)
         X = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
@@ -479,6 +498,9 @@ class UnsupervisedTreatment(VariableTreatment):
 
     # noinspection PyPep8Naming
     def fit_transform(self, X, y=None):
+        if not isinstance(X, pandas.DataFrame):
+            raise TypeError("X should be a Pandas DataFrame")
+        self.check_column_names(X.columns)
         if y is not None:
             raise ValueError("y should be None")
         X = vtreat_impl.pre_prep_frame(

@@ -254,3 +254,14 @@ def check_matching_numeric_frames(*, res, expect, tol=1.0e-4):
         ec = expect[c]
         rc = res[c]
         assert numpy.max(numpy.abs(ec - rc)) <= tol
+
+
+def unique_itmes_in_order(lst):
+    ret = []
+    if lst is not None:
+        seen = set()
+        for item in lst:
+            if item not in seen:
+                ret.append(item)
+                seen.add(item)
+    return ret
