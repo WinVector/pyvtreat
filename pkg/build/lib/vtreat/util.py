@@ -171,7 +171,7 @@ def perm_est_correlation(x, y,
     if len(y) != n:
         raise ValueError("x and y must be the same length")
     if (n < 2) or (numpy.max(x) <= eps + numpy.min(x)) or (numpy.max(y) <= eps + numpy.min(y)):
-        return (numpy.Nan, 1.0)
+        return (numpy.NaN, 1.0)
     # standardize
     x = x - numpy.mean(x)
     x = x / math.sqrt(numpy.dot(x, x))
@@ -200,7 +200,7 @@ def score_variables(cross_frame, variables, outcome,
     if n != len(outcome):
         raise ValueError("len(n) must equal cross_frame.shape[0]")
     outcome = safe_to_numeric_array(outcome)
-    if (not have_scipy_stats) and (permutation_rounds<=0):
+    if (not have_scipy_stats) and (permutation_rounds <= 0):
         permutation_rounds = 10000
 
     def f(v):
@@ -208,7 +208,7 @@ def score_variables(cross_frame, variables, outcome,
         col = safe_to_numeric_array(col)
         if (n > 1) and (numpy.max(col) > numpy.min(col)) and (numpy.max(outcome) > numpy.min(outcome)):
             with warnings.catch_warnings():
-                if permutation_rounds>0:
+                if permutation_rounds > 0:
                     est = perm_est_correlation(col, outcome, nrounds=permutation_rounds)
                 else:
                     est = scipy.stats.pearsonr(col, outcome)
@@ -237,7 +237,6 @@ def score_variables(cross_frame, variables, outcome,
     sf = pandas.concat(sf, axis=0, sort=False)
     sf.reset_index(inplace=True, drop=True)
     return sf
-
 
 
 def check_matching_numeric_frames(*, res, expect, tol=1.0e-4):
