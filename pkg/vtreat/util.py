@@ -265,3 +265,8 @@ def unique_itmes_in_order(lst):
                 ret.append(item)
                 seen.add(item)
     return ret
+
+
+def build_level_codes(incoming_column_name, levels):
+    levels = [str(lev) for lev in levels]
+    return [incoming_column_name + "_lev_" + lev for lev in levels]
