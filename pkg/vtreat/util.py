@@ -258,8 +258,8 @@ def check_matching_numeric_frames(*, res, expect, tol=1.0e-4):
 
 def unique_itmes_in_order(lst):
     ret = []
-    seen = set()
     if lst is not None:
+        seen = set()
         for item in lst:
             if item not in seen:
                 ret.append(item)
