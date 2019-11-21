@@ -234,12 +234,12 @@ def fit_indicator_code(
     counts = sf[incoming_column_name].value_counts()
     n = sf.shape[0]
     counts = counts[counts >= min_fraction * n]  # no more than 1/min_fraction symbols
-    levels = [v for v in counts.index]
+    levels = [str(v) for v in counts.index]
     if len(levels) < 1:
         return None
     return IndicatorCodeTransform(
         incoming_column_name,
-        [incoming_column_name + "_lev_" + lev for lev in levels],
+        vtreat.util.build_level_codes(incoming_column_name, levels),
         levels=levels,
         sparse_indicators=sparse_indicators,
     )

@@ -267,6 +267,23 @@ def unique_itmes_in_order(lst):
     return ret
 
 
+def clean_string(str):
+    mp = {'<': '_lt_',
+          '>': '_gt_',
+          '[': '_osq_',
+          ']': '_csq_',
+          '(': '_op_',
+          ')': '_cp_',
+          '.': '_',
+          }
+    for (k, v) in mp.items():
+        str = str.replace(k, v)
+    return str
+
+
 def build_level_codes(incoming_column_name, levels):
     levels = [str(lev) for lev in levels]
-    return [incoming_column_name + "_lev_" + lev for lev in levels]
+    levels = [incoming_column_name + "_lev_" + clean_string(lev) for lev in levels]
+    if len(set(levels)) != len(levels):
+        levels = [levels[i] + "_" + str(i) for i in range(len(levels))]
+    return levels
