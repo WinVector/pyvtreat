@@ -70,17 +70,15 @@ class VariableTreatment:
             params=None,
             imputation_map=None,
     ):
-        if var_list is None:
-            var_list = []
-        if cols_to_copy is None:
-            cols_to_copy = []
+        var_list = vtreat.util.unique_itmes_in_order(var_list)
+        cols_to_copy = vtreat.util.unique_itmes_in_order(cols_to_copy)
         if outcome_name is not None and outcome_name not in set(cols_to_copy):
             cols_to_copy = cols_to_copy + [outcome_name]
         if imputation_map is None:
             imputation_map = {}  # dict
         self.outcome_name_ = outcome_name
         self.var_list_ = [vi for vi in var_list if vi not in set(cols_to_copy)]
-        self.cols_to_copy_ = cols_to_copy.copy()
+        self.cols_to_copy_ = cols_to_copy
         self.params_ = params.copy()
         self.imputation_map_ = imputation_map.copy()
         self.plan_ = None
