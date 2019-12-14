@@ -40,19 +40,7 @@ d.describe()
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -160,19 +148,7 @@ unstratified_summary
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -274,19 +250,7 @@ stratified_summary
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -378,3 +342,4 @@ Another benefit of explicit cross-validation plans is that one can use the same 
 In addition to the y-stratified cross validation, `vtreat` also defines a time-oriented cross validation scheme ([`OrderedCrossPlan`](https://github.com/WinVector/pyvtreat/blob/master/pkg/vtreat/cross_plan.py#L161)). The ordered cross plan treats time as the grouping variable. For each fold, all the datums in the application set (the datums that the model will be applied to) come from the same time period. All the datums in the training set come from one side of the application set; that is all the training data will be either earlier or later than the data in the application set. Ordered cross plans are useful when modeling time-oriented data.
 
 Note: it is important to *not* use leave-one-out cross-validation when using nested or stacked modeling concepts (such as seen in `vtreat`), we have some notes on this [here](https://github.com/WinVector/vtreat/blob/master/extras/ConstantLeak.md).
+
