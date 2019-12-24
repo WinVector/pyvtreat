@@ -1,9 +1,11 @@
-
-
 ```python
 import vtreat
+import numpy
+import numpy.random
 import pandas as pd
 from sklearn.datasets import load_iris
+
+numpy.random.seed(2019)
 
 iris = load_iris()
 

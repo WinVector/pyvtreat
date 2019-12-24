@@ -1,5 +1,3 @@
-
-
 ```python
 import numpy
 import numpy.random
@@ -184,16 +182,16 @@ cross_frame.head()
       <th>y</th>
       <th>var_n_0</th>
       <th>var_n_1</th>
+      <th>var_c_0_logit_code_a</th>
       <th>var_c_0_logit_code_c</th>
       <th>var_c_0_logit_code_b</th>
-      <th>var_c_0_logit_code_a</th>
       <th>var_c_0_prevalence_code</th>
       <th>var_c_0_lev_b</th>
       <th>var_c_0_lev_a</th>
       <th>var_c_0_lev_c</th>
+      <th>var_c_1_logit_code_a</th>
       <th>var_c_1_logit_code_c</th>
       <th>var_c_1_logit_code_b</th>
-      <th>var_c_1_logit_code_a</th>
       <th>var_c_1_prevalence_code</th>
       <th>var_c_1_lev_a</th>
       <th>var_c_1_lev_b</th>
@@ -206,16 +204,16 @@ cross_frame.head()
       <td>a</td>
       <td>0.544891</td>
       <td>1.595448</td>
-      <td>-0.170159</td>
-      <td>0.334343</td>
-      <td>-0.269680</td>
+      <td>-0.183425</td>
+      <td>-0.246066</td>
+      <td>0.333199</td>
       <td>0.352</td>
       <td>1.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>-0.157131</td>
-      <td>-0.029161</td>
-      <td>0.157304</td>
+      <td>0.164827</td>
+      <td>-0.258790</td>
+      <td>0.046310</td>
       <td>0.346</td>
       <td>1.0</td>
       <td>0.0</td>
@@ -226,16 +224,16 @@ cross_frame.head()
       <td>c</td>
       <td>-0.433273</td>
       <td>0.778452</td>
-      <td>-0.159685</td>
-      <td>-0.193574</td>
-      <td>0.291708</td>
+      <td>0.320872</td>
+      <td>-0.144157</td>
+      <td>-0.254121</td>
       <td>0.328</td>
       <td>0.0</td>
       <td>1.0</td>
       <td>0.0</td>
-      <td>-0.278599</td>
-      <td>0.316892</td>
-      <td>-0.101950</td>
+      <td>-0.149856</td>
+      <td>-0.257395</td>
+      <td>0.322305</td>
       <td>0.334</td>
       <td>0.0</td>
       <td>1.0</td>
@@ -246,16 +244,16 @@ cross_frame.head()
       <td>b</td>
       <td>-1.230834</td>
       <td>0.859162</td>
-      <td>-0.213218</td>
-      <td>0.304510</td>
-      <td>-0.164782</td>
+      <td>-0.233913</td>
+      <td>-0.186684</td>
+      <td>0.326693</td>
       <td>0.352</td>
       <td>1.0</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>-0.211409</td>
-      <td>0.031278</td>
-      <td>0.143157</td>
+      <td>0.209085</td>
+      <td>-0.287449</td>
+      <td>0.023177</td>
       <td>0.346</td>
       <td>1.0</td>
       <td>0.0</td>
@@ -266,16 +264,16 @@ cross_frame.head()
       <td>a</td>
       <td>1.158161</td>
       <td>-0.344363</td>
-      <td>0.305725</td>
-      <td>-0.245761</td>
-      <td>-0.203392</td>
+      <td>-0.220148</td>
+      <td>0.290051</td>
+      <td>-0.199207</td>
       <td>0.320</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
-      <td>-0.278599</td>
-      <td>0.316892</td>
-      <td>-0.101950</td>
+      <td>-0.149856</td>
+      <td>-0.257395</td>
+      <td>0.322305</td>
       <td>0.334</td>
       <td>0.0</td>
       <td>1.0</td>
@@ -286,16 +284,16 @@ cross_frame.head()
       <td>c</td>
       <td>-1.029690</td>
       <td>0.789506</td>
-      <td>0.248363</td>
-      <td>-0.190688</td>
-      <td>-0.169911</td>
+      <td>-0.193397</td>
+      <td>0.283625</td>
+      <td>-0.212830</td>
       <td>0.320</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
-      <td>0.343053</td>
-      <td>-0.438143</td>
-      <td>-0.093987</td>
+      <td>-0.117681</td>
+      <td>0.397098</td>
+      <td>-0.522505</td>
       <td>0.320</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -393,366 +391,16 @@ treatment.score_frame_
     </tr>
     <tr>
       <th>4</th>
-      <td>var_c_0_logit_code_c</td>
-      <td>var_c_0</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>-0.044396</td>
-      <td>1.606541e-01</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>var_c_0_logit_code_b</td>
-      <td>var_c_0</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>-0.107505</td>
-      <td>6.610536e-04</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>6</th>
       <td>var_c_0_logit_code_a</td>
       <td>var_c_0</td>
       <td>logit_code</td>
       <td>True</td>
       <td>True</td>
-      <td>0.171044</td>
-      <td>5.260217e-08</td>
+      <td>0.180222</td>
+      <td>9.520214e-09</td>
       <td>12.0</td>
       <td>0.020833</td>
       <td>True</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>var_c_0_prevalence_code</td>
-      <td>var_c_0</td>
-      <td>prevalence_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.060871</td>
-      <td>5.431808e-02</td>
-      <td>4.0</td>
-      <td>0.062500</td>
-      <td>True</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>var_c_0_lev_b</td>
-      <td>var_c_0</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.100126</td>
-      <td>1.522917e-03</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>True</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>var_c_0_lev_a</td>
-      <td>var_c_0</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>0.184872</td>
-      <td>3.868879e-09</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>True</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>10</th>
-      <td>var_c_0_lev_c</td>
-      <td>var_c_0</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.083552</td>
-      <td>8.206181e-03</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>True</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>11</th>
-      <td>var_c_1_logit_code_c</td>
-      <td>var_c_1</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>-0.035772</td>
-      <td>2.584166e-01</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>12</th>
-      <td>var_c_1_logit_code_b</td>
-      <td>var_c_1</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>0.006520</td>
-      <td>8.368533e-01</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>13</th>
-      <td>var_c_1_logit_code_a</td>
-      <td>var_c_1</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>0.100804</td>
-      <td>1.413720e-03</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>True</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>14</th>
-      <td>var_c_1_prevalence_code</td>
-      <td>var_c_1</td>
-      <td>prevalence_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>0.096485</td>
-      <td>2.254798e-03</td>
-      <td>4.0</td>
-      <td>0.062500</td>
-      <td>True</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>15</th>
-      <td>var_c_1_lev_a</td>
-      <td>var_c_1</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>0.120567</td>
-      <td>1.324653e-04</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>True</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>16</th>
-      <td>var_c_1_lev_b</td>
-      <td>var_c_1</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.070889</td>
-      <td>2.497855e-02</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>17</th>
-      <td>var_c_1_lev_c</td>
-      <td>var_c_1</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.051275</td>
-      <td>1.051273e-01</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>18</th>
-      <td>noise_c_0_logit_code_c</td>
-      <td>noise_c_0</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>0.021457</td>
-      <td>4.979168e-01</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>19</th>
-      <td>noise_c_0_logit_code_b</td>
-      <td>noise_c_0</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>0.006383</td>
-      <td>8.402249e-01</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>20</th>
-      <td>noise_c_0_logit_code_a</td>
-      <td>noise_c_0</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>-0.074075</td>
-      <td>1.914267e-02</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>21</th>
-      <td>noise_c_0_prevalence_code</td>
-      <td>noise_c_0</td>
-      <td>prevalence_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.003217</td>
-      <td>9.190732e-01</td>
-      <td>4.0</td>
-      <td>0.062500</td>
-      <td>False</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>22</th>
-      <td>noise_c_0_lev_b</td>
-      <td>noise_c_0</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.000326</td>
-      <td>9.917733e-01</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>23</th>
-      <td>noise_c_0_lev_a</td>
-      <td>noise_c_0</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.003919</td>
-      <td>9.014892e-01</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>24</th>
-      <td>noise_c_0_lev_c</td>
-      <td>noise_c_0</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>0.004287</td>
-      <td>8.922984e-01</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>25</th>
-      <td>noise_c_1_logit_code_c</td>
-      <td>noise_c_1</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>-0.014232</td>
-      <td>6.530656e-01</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>26</th>
-      <td>noise_c_1_logit_code_b</td>
-      <td>noise_c_1</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>0.004169</td>
-      <td>8.952364e-01</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>27</th>
-      <td>noise_c_1_logit_code_a</td>
-      <td>noise_c_1</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>0.013643</td>
-      <td>6.665379e-01</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>28</th>
-      <td>noise_c_1_prevalence_code</td>
-      <td>noise_c_1</td>
-      <td>prevalence_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>0.002054</td>
-      <td>9.482694e-01</td>
-      <td>4.0</td>
-      <td>0.062500</td>
-      <td>False</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>29</th>
-      <td>noise_c_1_lev_c</td>
-      <td>noise_c_1</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.013034</td>
-      <td>6.805904e-01</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
       <td>a</td>
     </tr>
     <tr>
@@ -770,364 +418,14 @@ treatment.score_frame_
       <td>...</td>
     </tr>
     <tr>
-      <th>66</th>
-      <td>noise_n_0</td>
-      <td>noise_n_0</td>
-      <td>clean_copy</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.005021</td>
-      <td>8.739920e-01</td>
-      <td>4.0</td>
-      <td>0.062500</td>
-      <td>False</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>67</th>
-      <td>noise_n_1</td>
-      <td>noise_n_1</td>
-      <td>clean_copy</td>
-      <td>False</td>
-      <td>True</td>
-      <td>0.022103</td>
-      <td>4.850783e-01</td>
-      <td>4.0</td>
-      <td>0.062500</td>
-      <td>False</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>68</th>
-      <td>var_c_0_logit_code_c</td>
-      <td>var_c_0</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>0.155713</td>
-      <td>7.492672e-07</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>True</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>69</th>
-      <td>var_c_0_logit_code_b</td>
-      <td>var_c_0</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>-0.089015</td>
-      <td>4.847630e-03</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>70</th>
-      <td>var_c_0_logit_code_a</td>
-      <td>var_c_0</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>-0.046828</td>
-      <td>1.389282e-01</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>71</th>
-      <td>var_c_0_prevalence_code</td>
-      <td>var_c_0</td>
-      <td>prevalence_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.139135</td>
-      <td>1.006197e-05</td>
-      <td>4.0</td>
-      <td>0.062500</td>
-      <td>True</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>72</th>
-      <td>var_c_0_lev_b</td>
-      <td>var_c_0</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.109217</td>
-      <td>5.405943e-04</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>True</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>73</th>
-      <td>var_c_0_lev_a</td>
-      <td>var_c_0</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.064276</td>
-      <td>4.213767e-02</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>74</th>
-      <td>var_c_0_lev_c</td>
-      <td>var_c_0</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>0.176511</td>
-      <td>1.920949e-08</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>True</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>75</th>
-      <td>var_c_1_logit_code_c</td>
-      <td>var_c_1</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>0.227716</td>
-      <td>3.146820e-13</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>True</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>76</th>
-      <td>var_c_1_logit_code_b</td>
-      <td>var_c_1</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>-0.218394</td>
-      <td>2.909484e-12</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>77</th>
-      <td>var_c_1_logit_code_a</td>
-      <td>var_c_1</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>-0.075404</td>
-      <td>1.708388e-02</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>78</th>
-      <td>var_c_1_prevalence_code</td>
-      <td>var_c_1</td>
-      <td>prevalence_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.211188</td>
-      <td>1.517424e-11</td>
-      <td>4.0</td>
-      <td>0.062500</td>
-      <td>True</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>79</th>
-      <td>var_c_1_lev_a</td>
-      <td>var_c_1</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.113476</td>
-      <td>3.237033e-04</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>True</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>80</th>
-      <td>var_c_1_lev_b</td>
-      <td>var_c_1</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.126592</td>
-      <td>5.961234e-05</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>True</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>81</th>
-      <td>var_c_1_lev_c</td>
-      <td>var_c_1</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>0.243711</td>
-      <td>5.482387e-15</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>True</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>82</th>
-      <td>noise_c_0_logit_code_c</td>
-      <td>noise_c_0</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>-0.023104</td>
-      <td>4.655240e-01</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>83</th>
-      <td>noise_c_0_logit_code_b</td>
-      <td>noise_c_0</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>0.003788</td>
-      <td>9.047818e-01</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>84</th>
-      <td>noise_c_0_logit_code_a</td>
-      <td>noise_c_0</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>0.058404</td>
-      <td>6.486682e-02</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>85</th>
-      <td>noise_c_0_prevalence_code</td>
-      <td>noise_c_0</td>
-      <td>prevalence_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>0.039606</td>
-      <td>2.107948e-01</td>
-      <td>4.0</td>
-      <td>0.062500</td>
-      <td>False</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>86</th>
-      <td>noise_c_0_lev_b</td>
-      <td>noise_c_0</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>0.020221</td>
-      <td>5.230213e-01</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>87</th>
-      <td>noise_c_0_lev_a</td>
-      <td>noise_c_0</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>0.022470</td>
-      <td>4.778443e-01</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>88</th>
-      <td>noise_c_0_lev_c</td>
-      <td>noise_c_0</td>
-      <td>indicator_code</td>
-      <td>False</td>
-      <td>True</td>
-      <td>-0.043193</td>
-      <td>1.723135e-01</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>89</th>
-      <td>noise_c_1_logit_code_c</td>
-      <td>noise_c_1</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>-0.023665</td>
-      <td>4.547524e-01</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>90</th>
+      <th>91</th>
       <td>noise_c_1_logit_code_b</td>
       <td>noise_c_1</td>
       <td>logit_code</td>
       <td>True</td>
       <td>True</td>
-      <td>0.055366</td>
-      <td>8.012076e-02</td>
-      <td>12.0</td>
-      <td>0.020833</td>
-      <td>False</td>
-      <td>c</td>
-    </tr>
-    <tr>
-      <th>91</th>
-      <td>noise_c_1_logit_code_a</td>
-      <td>noise_c_1</td>
-      <td>logit_code</td>
-      <td>True</td>
-      <td>True</td>
-      <td>-0.015457</td>
-      <td>6.254064e-01</td>
+      <td>0.015519</td>
+      <td>6.240063e-01</td>
       <td>12.0</td>
       <td>0.020833</td>
       <td>False</td>

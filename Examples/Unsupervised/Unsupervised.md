@@ -1,10 +1,9 @@
-
 # Using vtreat with Unsupervised Problems and Non-Y-aware data treatment
 
 ## Preliminaries
 
 Nina Zumel and John Mount
-September 2019
+November 2019
 
 Note: this is a description of the [`Python` version of `vtreat`](https://github.com/WinVector/pyvtreat), the same example for the [`R` version of `vtreat`](https://github.com/WinVector/vtreat) can be found [here](https://github.com/WinVector/vtreat/blob/master/Examples/Unsupervised/Unsupervised.md).
 
@@ -21,6 +20,8 @@ import matplotlib.pyplot as plt
 import vtreat
 import vtreat.util
 import wvpy.util
+
+numpy.random.seed(2019)
 ```
 
 Generate example data. 
@@ -66,41 +67,41 @@ d.head()
     <tr>
       <th>0</th>
       <td>0.0</td>
-      <td>-0.104856</td>
+      <td>-0.021768</td>
       <td>level_-0.0</td>
-      <td>0.367093</td>
+      <td>-0.704278</td>
       <td>1</td>
     </tr>
     <tr>
       <th>1</th>
       <td>0.1</td>
-      <td>0.148332</td>
+      <td>0.182979</td>
       <td>level_0.0</td>
-      <td>-0.690937</td>
+      <td>1.508747</td>
       <td>1</td>
     </tr>
     <tr>
       <th>2</th>
       <td>0.2</td>
-      <td>0.280450</td>
+      <td>0.348797</td>
       <td>level_0.5</td>
-      <td>-0.256927</td>
+      <td>0.048117</td>
       <td>1</td>
     </tr>
     <tr>
       <th>3</th>
       <td>0.3</td>
-      <td>0.504849</td>
+      <td>0.431707</td>
       <td>level_0.5</td>
-      <td>0.188184</td>
+      <td>-1.445366</td>
       <td>1</td>
     </tr>
     <tr>
       <th>4</th>
       <td>0.4</td>
-      <td>0.358950</td>
+      <td>0.357232</td>
       <td>level_0.5</td>
-      <td>0.619167</td>
+      <td>-0.037443</td>
       <td>1</td>
     </tr>
   </tbody>
@@ -121,8 +122,8 @@ d['xc'].unique()
 
 
 
-    array(['level_-0.0', 'level_0.0', 'level_0.5', 'level_1.0', 'level_-0.5',
-           nan, 'level_1.5'], dtype=object)
+    array(['level_-0.0', 'level_0.0', 'level_0.5', 'level_1.0', 'level_1.5',
+           'level_-0.5', nan], dtype=object)
 
 
 
@@ -134,12 +135,12 @@ d['xc'].value_counts(dropna=False)
 
 
 
-    level_-0.5    128
-    level_1.0     122
-    level_0.5      98
-    level_0.0      41
-    level_-0.0     40
-    NaN            36
+    level_1.0     127
+    level_-0.5    125
+    level_0.5      86
+    level_0.0      50
+    level_-0.0     39
+    NaN            38
     level_1.5      35
     Name: xc, dtype: int64
 
@@ -247,7 +248,7 @@ transform.score_frame_
     </tr>
     <tr>
       <th>4</th>
-      <td>xc_lev_level_-0.5</td>
+      <td>xc_lev_level_1_0</td>
       <td>xc</td>
       <td>indicator_code</td>
       <td>False</td>
@@ -259,7 +260,7 @@ transform.score_frame_
     </tr>
     <tr>
       <th>5</th>
-      <td>xc_lev_level_1.0</td>
+      <td>xc_lev_level_-0_5</td>
       <td>xc</td>
       <td>indicator_code</td>
       <td>False</td>
@@ -271,7 +272,7 @@ transform.score_frame_
     </tr>
     <tr>
       <th>6</th>
-      <td>xc_lev_level_0.5</td>
+      <td>xc_lev_level_0_5</td>
       <td>xc</td>
       <td>indicator_code</td>
       <td>False</td>
@@ -283,7 +284,7 @@ transform.score_frame_
     </tr>
     <tr>
       <th>7</th>
-      <td>xc_lev_level_0.0</td>
+      <td>xc_lev_level_0_0</td>
       <td>xc</td>
       <td>indicator_code</td>
       <td>False</td>
@@ -295,7 +296,7 @@ transform.score_frame_
     </tr>
     <tr>
       <th>8</th>
-      <td>xc_lev_level_-0.0</td>
+      <td>xc_lev_level_-0_0</td>
       <td>xc</td>
       <td>indicator_code</td>
       <td>False</td>
@@ -319,7 +320,7 @@ transform.score_frame_
     </tr>
     <tr>
       <th>10</th>
-      <td>xc_lev_level_1.5</td>
+      <td>xc_lev_level_1_5</td>
       <td>xc</td>
       <td>indicator_code</td>
       <td>False</td>
@@ -366,23 +367,23 @@ d_prepared.head()
       <th>x</th>
       <th>x2</th>
       <th>xc_prevalence_code</th>
-      <th>xc_lev_level_-0.5</th>
-      <th>xc_lev_level_1.0</th>
-      <th>xc_lev_level_0.5</th>
-      <th>xc_lev_level_0.0</th>
-      <th>xc_lev_level_-0.0</th>
+      <th>xc_lev_level_1_0</th>
+      <th>xc_lev_level_-0_5</th>
+      <th>xc_lev_level_0_5</th>
+      <th>xc_lev_level_0_0</th>
+      <th>xc_lev_level_-0_0</th>
       <th>xc_lev__NA_</th>
-      <th>xc_lev_level_1.5</th>
+      <th>xc_lev_level_1_5</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>-0.104856</td>
+      <td>-0.021768</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>0.367093</td>
-      <td>0.080</td>
+      <td>-0.704278</td>
+      <td>0.078</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -393,11 +394,11 @@ d_prepared.head()
     </tr>
     <tr>
       <th>1</th>
-      <td>0.148332</td>
+      <td>0.182979</td>
       <td>0.0</td>
       <td>0.1</td>
-      <td>-0.690937</td>
-      <td>0.082</td>
+      <td>1.508747</td>
+      <td>0.100</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -408,11 +409,11 @@ d_prepared.head()
     </tr>
     <tr>
       <th>2</th>
-      <td>0.280450</td>
+      <td>0.348797</td>
       <td>0.0</td>
       <td>0.2</td>
-      <td>-0.256927</td>
-      <td>0.196</td>
+      <td>0.048117</td>
+      <td>0.172</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
@@ -423,11 +424,11 @@ d_prepared.head()
     </tr>
     <tr>
       <th>3</th>
-      <td>0.504849</td>
+      <td>0.431707</td>
       <td>0.0</td>
       <td>0.3</td>
-      <td>0.188184</td>
-      <td>0.196</td>
+      <td>-1.445366</td>
+      <td>0.172</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
@@ -438,11 +439,11 @@ d_prepared.head()
     </tr>
     <tr>
       <th>4</th>
-      <td>0.358950</td>
+      <td>0.357232</td>
       <td>0.0</td>
       <td>0.4</td>
-      <td>0.619167</td>
-      <td>0.196</td>
+      <td>-0.037443</td>
+      <td>0.172</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
@@ -509,23 +510,23 @@ print(fitter.intercept_)
 {model_vars[i]: fitter.coef_[i] for i in range(len(model_vars))}
 ```
 
-    0.26687361134312826
+    0.2663584367410501
 
 
 
 
 
-    {'xc_is_bad': -0.562356677841655,
-     'x': 0.0012639910538561326,
-     'x2': 0.001609517233713642,
-     'xc_prevalence_code': -0.0044801038835988755,
-     'xc_lev_level_-0.5': -0.8087257353814689,
-     'xc_lev_level_1.0': 0.7247440547156317,
-     'xc_lev_level_0.5': 0.2180424429835109,
-     'xc_lev_level_0.0': -0.17839488726269243,
-     'xc_lev_level_-0.0': -0.43704784362522275,
-     'xc_lev__NA_': -0.5623566778416543,
-     'xc_lev_level_1.5': 1.0437386464118965}
+    {'xc_is_bad': -0.5725948709331864,
+     'x': 0.001297968015670281,
+     'x2': 0.00039443912145288937,
+     'xc_prevalence_code': -0.0044343345462432415,
+     'xc_lev_level_1_0': 0.7171318997544216,
+     'xc_lev_level_-0_5': -0.813326636340793,
+     'xc_lev_level_0_5': 0.21813583211202364,
+     'xc_lev_level_0_0': -0.1831739973957964,
+     'xc_lev_level_-0_0': -0.4133594109584153,
+     'xc_lev__NA_': -0.572594870933186,
+     'xc_lev_level_1_5': 1.0471871837617464}
 
 
 
@@ -598,7 +599,8 @@ vtreat.unsupervised_parameters()
       'prevalence_code'},
      'indicator_min_fraction': 0.0,
      'user_transforms': [],
-     'sparse_indicators': True}
+     'sparse_indicators': True,
+     'missingness_imputation': <function numpy.mean(a, axis=None, dtype=None, out=None, keepdims=<no value>)>}
 
 
 
@@ -609,6 +611,8 @@ vtreat.unsupervised_parameters()
 **user_transforms**: For passing in user-defined transforms for custom data preparation. Won't be needed in most situations, but see [here](https://github.com/WinVector/pyvtreat/blob/master/Examples/UserCoders/UserCoders.ipynb) for an example of applying a GAM transform to input variables.
 
 **sparse_indicators**: When True, use a (Pandas) sparse representation for indicator variables. This representation is compatible with `sklearn`; however, it may not be compatible with other modeling packages. When False, use a dense representation.
+
+**missingness_imputation** The function or value that `vtreat` uses to impute or "fill in" missing numerical values. The default is `numpy.mean()`. To change the imputation function or use different functions/values for different columns, see the [Imputation example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Imputation/Imputation.ipynb).
 
 ### Example: Restrict the number of indicator variables
 
@@ -621,12 +625,12 @@ d['xc'].value_counts(dropna=False)/d.shape[0]
 
 
 
-    level_-0.5    0.256
-    level_1.0     0.244
-    level_0.5     0.196
-    level_0.0     0.082
-    level_-0.0    0.080
-    NaN           0.072
+    level_1.0     0.254
+    level_-0.5    0.250
+    level_0.5     0.172
+    level_0.0     0.100
+    level_-0.0    0.078
+    NaN           0.076
     level_1.5     0.070
     Name: xc, dtype: float64
 
@@ -716,7 +720,7 @@ transform_common.score_frame_     # examine the score frame
     </tr>
     <tr>
       <th>4</th>
-      <td>xc_lev_level_-0.5</td>
+      <td>xc_lev_level_1_0</td>
       <td>xc</td>
       <td>indicator_code</td>
       <td>False</td>
@@ -728,7 +732,7 @@ transform_common.score_frame_     # examine the score frame
     </tr>
     <tr>
       <th>5</th>
-      <td>xc_lev_level_1.0</td>
+      <td>xc_lev_level_-0_5</td>
       <td>xc</td>
       <td>indicator_code</td>
       <td>False</td>
@@ -839,7 +843,7 @@ transform_thin.score_frame_
     </tr>
     <tr>
       <th>3</th>
-      <td>xc_lev_level_-0.5</td>
+      <td>xc_lev_level_1_0</td>
       <td>xc</td>
       <td>indicator_code</td>
       <td>False</td>
@@ -851,7 +855,7 @@ transform_thin.score_frame_
     </tr>
     <tr>
       <th>4</th>
-      <td>xc_lev_level_1.0</td>
+      <td>xc_lev_level_-0_5</td>
       <td>xc</td>
       <td>indicator_code</td>
       <td>False</td>
@@ -863,7 +867,7 @@ transform_thin.score_frame_
     </tr>
     <tr>
       <th>5</th>
-      <td>xc_lev_level_0.5</td>
+      <td>xc_lev_level_0_5</td>
       <td>xc</td>
       <td>indicator_code</td>
       <td>False</td>
@@ -875,7 +879,7 @@ transform_thin.score_frame_
     </tr>
     <tr>
       <th>6</th>
-      <td>xc_lev_level_0.0</td>
+      <td>xc_lev_level_0_0</td>
       <td>xc</td>
       <td>indicator_code</td>
       <td>False</td>
@@ -887,7 +891,7 @@ transform_thin.score_frame_
     </tr>
     <tr>
       <th>7</th>
-      <td>xc_lev_level_-0.0</td>
+      <td>xc_lev_level_-0_0</td>
       <td>xc</td>
       <td>indicator_code</td>
       <td>False</td>
@@ -911,7 +915,7 @@ transform_thin.score_frame_
     </tr>
     <tr>
       <th>9</th>
-      <td>xc_lev_level_1.5</td>
+      <td>xc_lev_level_1_5</td>
       <td>xc</td>
       <td>indicator_code</td>
       <td>False</td>
