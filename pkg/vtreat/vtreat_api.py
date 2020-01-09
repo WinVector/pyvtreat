@@ -88,7 +88,6 @@ class VariableTreatment:
         self.plan_ = None
         self.score_frame_ = None
         self.cross_plan_ = None
-        self.n_training_rows_ = None
 
     def check_column_names(self, col_names):
         to_check = set(self.var_list_)
@@ -104,7 +103,6 @@ class VariableTreatment:
         self.plan_ = None
         self.score_frame_ = None
         self.cross_plan_ = None
-        self.n_training_rows_ = None
 
     def merge_params(self, p):
         return vtreat_parameters(p)
@@ -166,8 +164,8 @@ class VariableTreatment:
         return params
 
     def set_params(self, **params):
-        p = {k: v for k, v in params.items()}
         self.clear()
+        p = {k: v for k, v in params.items()}
         if 'outcome_name' in p.keys():
             self.outcome_name_ = p['outcome_name']
             del p['outcome_name']
@@ -261,6 +259,7 @@ class NumericOutcomeTreatment(VariableTreatment):
             raise ValueError("y should not have any missing/NA/NaN values")
         if numpy.max(y) <= numpy.min(y):
             raise ValueError("y does not vary")
+        self.clear()
         X = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
@@ -269,7 +268,6 @@ class NumericOutcomeTreatment(VariableTreatment):
         # model for independent transforms
         self.plan_ = None
         self.score_frame_ = None
-        self.n_training_rows_ = X.shape[0]
         self.plan_ = vtreat_impl.fit_numeric_outcome_treatment(
             X=X,
             y=y,
@@ -373,6 +371,7 @@ class BinomialOutcomeTreatment(VariableTreatment):
         y_mean = numpy.mean(y == self.outcome_target_)
         if y_mean <= 0 or y_mean >= 1:
             raise ValueError("y==outcome_target does not vary")
+        self.clear()
         X = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
@@ -381,7 +380,6 @@ class BinomialOutcomeTreatment(VariableTreatment):
         # model for independent transforms
         self.plan_ = None
         self.score_frame_ = None
-        self.n_training_rows_ = X.shape[0]
         self.plan_ = vtreat_impl.fit_binomial_outcome_treatment(
             X=X,
             y=y,
@@ -489,6 +487,7 @@ class MultinomialOutcomeTreatment(VariableTreatment):
             raise ValueError("X.shape[0] should equal len(y)")
         if len(numpy.unique(y)) <= 1:
             raise ValueError("y must take on at least 2 values")
+        self.clear()
         X = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
@@ -497,7 +496,6 @@ class MultinomialOutcomeTreatment(VariableTreatment):
         # model for independent transforms
         self.plan_ = None
         self.score_frame_ = None
-        self.n_training_rows_ = X.shape[0]
         self.outcomes_ = numpy.unique(y)
         self.plan_ = vtreat_impl.fit_multinomial_outcome_treatment(
             X=X,
@@ -603,10 +601,10 @@ class UnsupervisedTreatment(VariableTreatment):
         self.check_column_names(X.columns)
         if y is not None:
             raise ValueError("y should be None")
+        self.clear()
         X = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
-        self.n_training_rows_ = X.shape[0]
         self.plan_ = vtreat_impl.fit_unsupervised_treatment(
             X=X,
             var_list=self.var_list_,
