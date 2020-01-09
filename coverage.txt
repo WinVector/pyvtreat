@@ -1,5 +1,5 @@
 ============================= test session starts ==============================
-platform darwin -- Python 3.7.5, pytest-5.3.1, py-1.8.0, pluggy-0.13.1
+platform darwin -- Python 3.7.5, pytest-5.2.4, py-1.8.0, pluggy-0.13.0
 rootdir: /Users/johnmount/Documents/work/pyvtreat/pkg
 plugins: cov-2.8.1
 collected 13 items
@@ -23,10 +23,10 @@ pkg/vtreat/__init__.py          6      0   100%
 pkg/vtreat/cross_plan.py       94     52    45%
 pkg/vtreat/transform.py        13      8    38%
 pkg/vtreat/util.py            161     26    84%
-pkg/vtreat/vtreat_api.py      233     68    71%
+pkg/vtreat/vtreat_api.py      307    127    59%
 pkg/vtreat/vtreat_impl.py     481     79    84%
 -----------------------------------------------
-TOTAL                         988    233    76%
+TOTAL                        1062    292    73%
 
 
-============================= 13 passed in 14.44s ==============================
+============================== 13 passed in 8.06s ==============================
