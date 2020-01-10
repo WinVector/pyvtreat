@@ -1,3 +1,4 @@
+import warnings
 import pprint
 
 import pandas
@@ -29,6 +30,7 @@ def vtreat_parameters(user_params=None):
         "user_transforms": [],
         "sparse_indicators": True,
         "missingness_imputation": numpy.mean,
+        "check_for_duplicate_frames": True,
     }
     if user_params is not None:
         pkeys = set(params.keys())
@@ -88,6 +90,8 @@ class VariableTreatment:
         self.plan_ = None
         self.score_frame_ = None
         self.cross_plan_ = None
+        self.last_fit_x_id_ = None
+        self.clear()
 
     def check_column_names(self, col_names):
         to_check = set(self.var_list_)
@@ -103,6 +107,7 @@ class VariableTreatment:
         self.plan_ = None
         self.score_frame_ = None
         self.cross_plan_ = None
+        self.last_fit_x_id_ = None
 
     def merge_params(self, p):
         return vtreat_parameters(p)
@@ -238,6 +243,11 @@ class NumericOutcomeTreatment(VariableTreatment):
         if not isinstance(X, pandas.DataFrame):
             raise TypeError("X should be a Pandas DataFrame")
         self.check_column_names(X.columns)
+        if self.last_fit_x_id_ is None:
+            raise ValueError("called transform on not yet fit treatment")
+        if self.params_['check_for_duplicate_frames'] and (self.last_fit_x_id_ == id(X)):
+            warnings.warn(
+                "possibly called transform on same data used to fit (this causes over-fit, please use fit_transform() instead)")
         res = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
@@ -260,6 +270,7 @@ class NumericOutcomeTreatment(VariableTreatment):
         if numpy.max(y) <= numpy.min(y):
             raise ValueError("y does not vary")
         self.clear()
+        self.last_fit_x_id_ = id(X)
         X = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
@@ -352,6 +363,11 @@ class BinomialOutcomeTreatment(VariableTreatment):
         if not isinstance(X, pandas.DataFrame):
             raise TypeError("X should be a Pandas DataFrame")
         self.check_column_names(X.columns)
+        if self.last_fit_x_id_ is None:
+            raise ValueError("called transform on not yet fit treatment")
+        if self.params_['check_for_duplicate_frames'] and (self.last_fit_x_id_ == id(X)):
+            warnings.warn(
+                "possibly called transform on same data used to fit (this causes over-fit, please use fit_transform() instead)")
         X = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
@@ -372,6 +388,7 @@ class BinomialOutcomeTreatment(VariableTreatment):
         if y_mean <= 0 or y_mean >= 1:
             raise ValueError("y==outcome_target does not vary")
         self.clear()
+        self.last_fit_x_id_ = id(X)
         X = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
@@ -469,6 +486,11 @@ class MultinomialOutcomeTreatment(VariableTreatment):
         if not isinstance(X, pandas.DataFrame):
             raise TypeError("X should be a Pandas DataFrame")
         self.check_column_names(X.columns)
+        if self.last_fit_x_id_ is None:
+            raise ValueError("called transform on not yet fit treatment")
+        if self.params_['check_for_duplicate_frames'] and (self.last_fit_x_id_ == id(X)):
+            warnings.warn(
+                "possibly called transform on same data used to fit (this causes over-fit, please use fit_transform() instead)")
         X = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
@@ -488,6 +510,7 @@ class MultinomialOutcomeTreatment(VariableTreatment):
         if len(numpy.unique(y)) <= 1:
             raise ValueError("y must take on at least 2 values")
         self.clear()
+        self.last_fit_x_id_ = id(X)
         X = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
@@ -587,6 +610,8 @@ class UnsupervisedTreatment(VariableTreatment):
         if not isinstance(X, pandas.DataFrame):
             raise TypeError("X should be a Pandas DataFrame")
         self.check_column_names(X.columns)
+        if self.last_fit_x_id_ is None:
+            raise ValueError("called transform on not yet fit treatment")
         X = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
@@ -602,6 +627,7 @@ class UnsupervisedTreatment(VariableTreatment):
         if y is not None:
             raise ValueError("y should be None")
         self.clear()
+        self.last_fit_x_id_ = id(X)
         X = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
