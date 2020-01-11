@@ -141,10 +141,10 @@ treatment = vtreat.BinomialOutcomeTreatment(
 
 
 ```python
-test_prepared = treatment.fit_transform(training_data, training_data['yc'])
+train_prepared = treatment.fit_transform(training_data, training_data['yc'])
 ```
 
-`d_prepared` is the correct way to use the same training data for inferring the impact-coded variables.
+`train_prepared` is prepared in the correct way to use the same training data for inferring the impact-coded variables, using `.fit_transform()` instead of `.fit().transform()`.
 
 We prepare new test or application data as follows.
 
