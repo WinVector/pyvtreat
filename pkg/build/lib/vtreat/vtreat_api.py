@@ -117,17 +117,17 @@ class VariableTreatment:
     def __repr__(self):
         fmted = str(self.__class__.__module__) + "." + str(self.__class__.__name__) + '('
         if self.outcome_name_ is not None:
-            fmted = fmted + "outcome_name=" + pprint.pformat(self.outcome_name_) + ",\n"
+            fmted = fmted + "outcome_name=" + pprint.pformat(self.outcome_name_) + ", "
         if self.outcome_target_ is not None:
-            fmted = fmted + "outcome_target=" + pprint.pformat(self.outcome_target_) + ",\n"
+            fmted = fmted + "outcome_target=" + pprint.pformat(self.outcome_target_) + ", "
         if (self.var_list_ is not None) and (len(self.var_list_) > 0):
-            fmted = fmted + "var_list=" + pprint.pformat(self.var_list_) + ",\n"
+            fmted = fmted + "var_list=" + pprint.pformat(self.var_list_) + ", "
         if (self.cols_to_copy_ is not None) and (len(self.cols_to_copy_) > 0):
-            fmted = fmted + "cols_to_copy=" + pprint.pformat(self.cols_to_copy_) + ",\n"
-        if (self.params_ is not None) and (len(self.params_) > 0):
-            fmted = fmted + "params=" + pprint.pformat(self.params_) + ",\n"
-        if (self.imputation_map_ is not None) and (len(self.imputation_map_) > 0):
-            fmted = fmted + "imputation_map=" + pprint.pformat(self.imputation_map_) + ",\n"
+            fmted = fmted + "cols_to_copy=" + pprint.pformat(self.cols_to_copy_) + ", "
+        # if (self.params_ is not None) and (len(self.params_) > 0):
+        #     fmted = fmted + "params=" + pprint.pformat(self.params_) + ",\n"
+        # if (self.imputation_map_ is not None) and (len(self.imputation_map_) > 0):
+        #     fmted = fmted + "imputation_map=" + pprint.pformat(self.imputation_map_) + ",\n"
         fmted = fmted + ')'
         return fmted
 
@@ -153,40 +153,18 @@ class VariableTreatment:
         new_vars = new_vars + self.cols_to_copy_
         return new_vars
 
-    # noinspection PyUnusedLocal
+    # noinspection PyUnusedLocal,PyMethodMayBeStatic
     def get_params(self, deep=False):
-        params = {k: v for k, v in self.params_.items()}
-        if self.outcome_name_ is not None:
-            params['outcome_name'] = self.outcome_name_
-        if self.outcome_target_ is not None:
-            params['outcome_target'] = self.outcome_target_
-        if (self.var_list_ is not None) and (len(self.var_list_) > 0):
-            params['var_list'] = self.var_list_
-        if (self.cols_to_copy_ is not None) and (len(self.cols_to_copy_) > 0):
-            params['cols_to_copy'] = self.cols_to_copy_
-        if (self.imputation_map_ is not None) and (len(self.imputation_map_) > 0):
-            params['imputation_map'] = self.imputation_map_
-        return params
+        """
+        vtreat doesn't expose parameters so outside code doesn't attempt to optimize over them
+        """
+        return {}
 
     def set_params(self, **params):
-        self.clear()
-        p = {k: v for k, v in params.items()}
-        if 'outcome_name' in p.keys():
-            self.outcome_name_ = p['outcome_name']
-            del p['outcome_name']
-        if 'outcome_target' in p.keys():
-            self.outcome_target_ = p['outcome_target']
-            del p['outcome_target']
-        if 'var_list' in p.keys():
-            self.var_list_ = p['var_list']
-            del p['var_list']
-        if 'cols_to_copy' in p.keys():
-            self.cols_to_copy_ = p['cols_to_copy']
-            del p['cols_to_copy']
-        if 'imputation_map' in p.keys():
-            self.imputation_map_ = p['imputation_map']
-            del p['imputation_map']
-        self.params_ = self.merge_params(p)
+        """
+        vtreat doesn't expose parameters so outside code doesn't attempt to optimize over them
+        """
+        pass
 
     # noinspection PyPep8Naming
     def inverse_transform(self, X):

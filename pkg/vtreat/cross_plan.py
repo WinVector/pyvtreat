@@ -15,10 +15,16 @@ class CrossValidationPlan:
     """Data splitting plan"""
 
     def __init__(self):
-        self.verbose_ = False
+        pass
 
     def split_plan(self, *, n_rows=None, k_folds=None, data=None, y=None):
         raise NotImplementedError("base class called")
+
+    def __repr__(self):
+        return "vtreat.cross_plan.CrossValidationPlan()"
+
+    def __str__(self):
+        return self.__repr__()
 
 
 def k_way_cross_plan(n_rows, k_folds):
@@ -58,6 +64,9 @@ class KWayCrossPlan(CrossValidationPlan):
         if k_folds is None:
             raise ValueError("k_folds must not be None")
         return k_way_cross_plan(n_rows=n_rows, k_folds=k_folds)
+
+    def __repr__(self):
+        return "vtreat.cross_plan.KWayCrossPlan()"
 
 
 def k_way_cross_plan_y_stratified(n_rows, k_folds, y):
@@ -116,6 +125,9 @@ class KWayCrossPlanYStratified(CrossValidationPlan):
             raise ValueError("y must not be None")
         return k_way_cross_plan_y_stratified(n_rows=n_rows, k_folds=k_folds, y=y)
 
+    def __repr__(self):
+        return "vtreat.cross_plan.KWayCrossPlanYStratified()"
+
 
 def order_cross_plan(k_folds, order_vector):
     """Build a k_folds cross validation plan based on the ordered series"""
@@ -170,3 +182,6 @@ class OrderedCrossPlan(CrossValidationPlan):
             raise ValueError("k_folds must not be None")
         order_vector = data[self.order_column_name_]
         return order_cross_plan(k_folds=k_folds, order_vector=order_vector)
+
+    def __repr__(self):
+        return "vtreat.cross_plan.OrderedCrossPlan()"

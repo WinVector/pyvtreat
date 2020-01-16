@@ -20,13 +20,13 @@ pkg/tests/test_util.py .                                                 [100%]
 Name                        Stmts   Miss  Cover
 -----------------------------------------------
 pkg/vtreat/__init__.py          6      0   100%
-pkg/vtreat/cross_plan.py       94     52    45%
-pkg/vtreat/transform.py        13      8    38%
+pkg/vtreat/cross_plan.py      104     57    45%
+pkg/vtreat/transform.py        17     10    41%
 pkg/vtreat/util.py            161     26    84%
-pkg/vtreat/vtreat_api.py      327    133    59%
+pkg/vtreat/vtreat_api.py      295    101    66%
 pkg/vtreat/vtreat_impl.py     481     79    84%
 -----------------------------------------------
-TOTAL                        1082    298    72%
+TOTAL                        1064    273    74%
 
 
-============================== 13 passed in 7.16s ==============================
+============================== 13 passed in 6.62s ==============================
