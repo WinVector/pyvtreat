@@ -44,6 +44,7 @@ class MappedCodeTransform(VarTransform):
         res = pandas.merge(
             sf, self.code_book_, on=[self.incoming_column_name_], how="left", sort=False
         )  # ordered by left table rows
+        # could also try pandas .map()
         res = res[[derived_column_name]].copy()
         res.loc[vtreat.util.is_bad(res[derived_column_name]), derived_column_name] = 0
         return res
