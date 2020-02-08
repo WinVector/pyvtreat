@@ -75,10 +75,19 @@ class VariableTreatment:
             params=None,
             imputation_map=None,
     ):
-        var_list = vtreat.util.unique_itmes_in_order(var_list)
-        cols_to_copy = vtreat.util.unique_itmes_in_order(cols_to_copy)
+        if var_list is None:
+            var_list = []
+        else:
+            var_list = vtreat.util.unique_itmes_in_order(var_list)
+        if cols_to_copy is None:
+            cols_to_copy = []
+        else:
+            cols_to_copy = vtreat.util.unique_itmes_in_order(cols_to_copy)
         if outcome_name is not None and outcome_name not in set(cols_to_copy):
             cols_to_copy = cols_to_copy + [outcome_name]
+        confused = set(cols_to_copy).intersection(set(var_list))
+        if len(confused) > 0:
+            raise ValueError("variables in treatment plan and non-treatment: " + ', '.join(confused))
         if imputation_map is None:
             imputation_map = {}  # dict
         self.outcome_name_ = outcome_name
@@ -210,7 +219,13 @@ class NumericOutcomeTreatment(VariableTreatment):
             raise TypeError("X should be a Pandas DataFrame")
         self.check_column_names(X.columns)
         if y is None:
+            if self.outcome_name_ is None:
+                raise ValueError(".fit(X) must have outcome_name set")
             y = X[self.outcome_name_]
+        else:
+            if self.outcome_name_ is not None:
+                if not numpy.all(X[self.outcome_name_] == y):
+                    raise ValueError(".fit(X, y) called with y != X[outcome_name]")
         if not X.shape[0] == len(y):
             raise TypeError("X.shape[0] should equal len(y)")
         self.fit_transform(X=X, y=y)
@@ -239,7 +254,13 @@ class NumericOutcomeTreatment(VariableTreatment):
             raise TypeError("X should be a Pandas DataFrame")
         self.check_column_names(X.columns)
         if y is None:
+            if self.outcome_name_ is None:
+                raise ValueError(".fit_transform(X) must have outcome_name set")
             y = X[self.outcome_name_]
+        else:
+            if self.outcome_name_ is not None:
+                if not numpy.all(X[self.outcome_name_] == y):
+                    raise ValueError(".fit_transform(X, y) called with y != X[outcome_name]")
         if not X.shape[0] == len(y):
             raise ValueError("X.shape[0] should equal len(y)")
         y = vtreat.util.safe_to_numeric_array(y)
@@ -330,7 +351,13 @@ class BinomialOutcomeTreatment(VariableTreatment):
             raise TypeError("X should be a Pandas DataFrame")
         self.check_column_names(X.columns)
         if y is None:
+            if self.outcome_name_ is None:
+                raise ValueError(".fit(X) must have outcome_name set")
             y = X[self.outcome_name_]
+        else:
+            if self.outcome_name_ is not None:
+                if not numpy.all(X[self.outcome_name_] == y):
+                    raise ValueError(".fit(X, y) called with y != X[outcome_name]")
         if not X.shape[0] == len(y):
             raise ValueError("X.shape[0] should equal len(y)")
         self.fit_transform(X=X, y=y)
@@ -359,7 +386,13 @@ class BinomialOutcomeTreatment(VariableTreatment):
             raise TypeError("X should be a Pandas DataFrame")
         self.check_column_names(X.columns)
         if y is None:
+            if self.outcome_name_ is None:
+                raise ValueError(".fit_transform(X) must have outcome_name set")
             y = X[self.outcome_name_]
+        else:
+            if self.outcome_name_ is not None:
+                if not numpy.all(X[self.outcome_name_] == y):
+                    raise ValueError(".fit_transform(X, y) called with y != X[outcome_name]")
         if not X.shape[0] == len(y):
             raise ValueError("X.shape[0] should equal len(y)")
         y_mean = numpy.mean(y == self.outcome_target_)
@@ -453,7 +486,13 @@ class MultinomialOutcomeTreatment(VariableTreatment):
             raise TypeError("X should be a Pandas DataFrame")
         self.check_column_names(X.columns)
         if y is None:
+            if self.outcome_name_ is None:
+                raise ValueError(".fit(X) must have outcome_name set")
             y = X[self.outcome_name_]
+        else:
+            if self.outcome_name_ is not None:
+                if not numpy.all(X[self.outcome_name_] == y):
+                    raise ValueError(".fit(X, y) called with y != X[outcome_name]")
         if not X.shape[0] == len(y):
             raise ValueError("X.shape[0] should equal len(y)")
         self.fit_transform(X=X, y=y)
@@ -482,7 +521,13 @@ class MultinomialOutcomeTreatment(VariableTreatment):
             raise TypeError("X should be a Pandas DataFrame")
         self.check_column_names(X.columns)
         if y is None:
+            if self.outcome_name_ is None:
+                raise ValueError(".fit_transform(X) must have outcome_name set")
             y = X[self.outcome_name_]
+        else:
+            if self.outcome_name_ is not None:
+                if not numpy.all(X[self.outcome_name_] == y):
+                    raise ValueError(".fit_transform(X, y) called with y != X[outcome_name]")
         if not X.shape[0] == len(y):
             raise ValueError("X.shape[0] should equal len(y)")
         if len(numpy.unique(y)) <= 1:
