@@ -8,6 +8,6 @@ def test_range():
     # https://github.com/WinVector/pyvtreat/issues/7
     numpy.random.seed(2019)
     arr = numpy.random.randint(2, size=10)
-    sparr = pandas.SparseArray(arr, fill_value=0)
+    sparr = pandas.arrays.SparseArray(arr, fill_value=0)
     assert vtreat.util.has_range(arr)
     assert vtreat.util.has_range(sparr)

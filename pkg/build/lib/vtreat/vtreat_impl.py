@@ -214,7 +214,7 @@ class IndicatorCodeTransform(VarTransform):
         def f(i):
             v = numpy.asarray(col == self.levels_[i]) + 0.0
             if self.sparse_indicators_:
-                v = pandas.SparseArray(v, fill_value=0.0)
+                v = pandas.arrays.SparseArray(v, fill_value=0.0)
             return v
 
         res = [
