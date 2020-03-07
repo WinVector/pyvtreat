@@ -5,13 +5,34 @@ Created on Sat Jul 20 12:07:57 2019
 @author: johnmount
 """
 
+from abc import ABC
 import math
+import pprint
 
 import numpy
 import pandas
 
 import vtreat.util
 import vtreat.transform
+
+
+def ready_data_frame(d):
+    orig_type = type(d)
+    if orig_type == numpy.ndarray:
+        d = pandas.DataFrame(d)
+        d.columns = [str(c) for c in d.columns]
+    if not isinstance(d, pandas.DataFrame):
+        raise TypeError("not prepared to process type " + str(orig_type))
+    return d, orig_type
+
+
+def back_to_orig_type_data_frame(d, orig_type):
+    if not isinstance(d, pandas.DataFrame):
+        raise TypeError("Expected result to be a pandas.DataFram, found: " + str(type(d)))
+    columns = [c for c in d.columns]
+    if orig_type == numpy.ndarray:
+        d = numpy.asarray(d)
+    return d, columns
 
 
 class VarTransform:
@@ -858,3 +879,128 @@ def pseudo_score_plan_variables(*, cross_frame, plan, params):
     score_frame["vcount"] = score_frame.groupby("treatment")["_one"].transform("sum")
     score_frame.drop(["_one"], axis=1, inplace=True)
     return score_frame
+
+
+class VariableTreatment(ABC):
+    def __init__(
+            self, *,
+            var_list=None,
+            outcome_name=None,
+            outcome_target=None,
+            cols_to_copy=None,
+            params=None,
+            imputation_map=None,
+    ):
+        if var_list is None:
+            var_list = []
+        else:
+            var_list = vtreat.util.unique_itmes_in_order(var_list)
+        if cols_to_copy is None:
+            cols_to_copy = []
+        else:
+            cols_to_copy = vtreat.util.unique_itmes_in_order(cols_to_copy)
+        if outcome_name is not None and outcome_name not in set(cols_to_copy):
+            cols_to_copy = cols_to_copy + [outcome_name]
+        confused = set(cols_to_copy).intersection(set(var_list))
+        if len(confused) > 0:
+            raise ValueError("variables in treatment plan and non-treatment: " + ', '.join(confused))
+        if imputation_map is None:
+            imputation_map = {}  # dict
+        self.outcome_name_ = outcome_name
+        self.outcome_target_ = outcome_target
+        self.var_list_ = [vi for vi in var_list if vi not in set(cols_to_copy)]
+        self.cols_to_copy_ = cols_to_copy
+        self.params_ = params.copy()
+        self.imputation_map_ = imputation_map.copy()
+        self.plan_ = None
+        self.score_frame_ = None
+        self.cross_plan_ = None
+        self.last_fit_x_id_ = None
+        self.last_result_columns = None
+        self.clear()
+
+    def check_column_names(self, col_names):
+        to_check = set(self.var_list_)
+        if self.outcome_name_ is not None:
+            to_check.add(self.outcome_name_)
+        if self.cols_to_copy_ is not None:
+            to_check.update(self.cols_to_copy_)
+        seen = [c for c in col_names if c in to_check]
+        if len(seen) != len(set(seen)):
+            raise ValueError("duplicate column names in frame")
+
+    def clear(self):
+        self.plan_ = None
+        self.score_frame_ = None
+        self.cross_plan_ = None
+        self.last_fit_x_id_ = None
+        self.last_result_columns = None
+
+    def merge_params(self, p):
+        raise NotImplementedError("base class called")
+
+    # display methods
+
+    def __repr__(self):
+        fmted = str(self.__class__.__module__) + "." + str(self.__class__.__name__) + '('
+        if self.outcome_name_ is not None:
+            fmted = fmted + "outcome_name=" + pprint.pformat(self.outcome_name_) + ", "
+        if self.outcome_target_ is not None:
+            fmted = fmted + "outcome_target=" + pprint.pformat(self.outcome_target_) + ", "
+        if (self.var_list_ is not None) and (len(self.var_list_) > 0):
+            fmted = fmted + "var_list=" + pprint.pformat(self.var_list_) + ", "
+        if (self.cols_to_copy_ is not None) and (len(self.cols_to_copy_) > 0):
+            fmted = fmted + "cols_to_copy=" + pprint.pformat(self.cols_to_copy_) + ", "
+        # if (self.params_ is not None) and (len(self.params_) > 0):
+        #     fmted = fmted + "params=" + pprint.pformat(self.params_) + ",\n"
+        # if (self.imputation_map_ is not None) and (len(self.imputation_map_) > 0):
+        #     fmted = fmted + "imputation_map=" + pprint.pformat(self.imputation_map_) + ",\n"
+        fmted = fmted + ')'
+        return fmted
+
+    def __str__(self):
+        return self.__repr__()
+
+    # noinspection PyPep8Naming
+    def _fit_transform_impl(self, X, y=None, *, do_transform):
+        raise NotImplementedError("base class method called")
+
+    # sklearn pipeline step methods
+
+    # noinspection PyPep8Naming
+    def fit(self, X, y=None):
+        raise NotImplementedError("base class method called")
+
+    # noinspection PyPep8Naming
+    def fit_transform(self, X, y=None):
+        return self._fit_transform_impl(X=X, y=y, do_transform=True)
+
+    def get_feature_names(self, input_features=None):
+        if self.score_frame_ is None:
+            raise ValueError("get_feature_names called on uninitialized vtreat transform")
+        new_vars = [self.score_frame_['variable'][i] for i in range(self.score_frame_.shape[0])
+                    if self.score_frame_['has_range'][i]
+                    and (input_features is None or self.score_frame_['variable'][i] in input_features)]
+        new_vars = new_vars + self.cols_to_copy_
+        return new_vars
+
+    # noinspection PyUnusedLocal,PyMethodMayBeStatic
+    def get_params(self, deep=False):
+        """
+        vtreat doesn't expose parameters so outside code doesn't attempt to optimize over them
+        """
+        return {}
+
+    def set_params(self, **params):
+        """
+        vtreat doesn't expose parameters so outside code doesn't attempt to optimize over them
+        """
+        pass
+
+    # noinspection PyPep8Naming
+    def inverse_transform(self, X):
+        raise TypeError("vtreat does not support inverse_transform")
+
+    # noinspection PyPep8Naming
+    def transform(self, X):
+        raise NotImplementedError("base class method called")

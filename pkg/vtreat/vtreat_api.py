@@ -110,7 +110,7 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
                     raise ValueError(".fit(X, y) called with y != X[outcome_name]")
         if not X.shape[0] == len(y):
             raise TypeError("X.shape[0] should equal len(y)")
-        self.fit_transform(X=X, y=y)
+        self._fit_transform_impl(X=X, y=y, do_transform=False)
         return self
 
     # noinspection PyPep8Naming
@@ -122,7 +122,7 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
         if self.params_['check_for_duplicate_frames'] and (self.last_fit_x_id_ == id(X)):
             warnings.warn(
                 "possibly called transform on same data used to fit\n" +
-                "(this causes over-fit, please use fit_transform() instead)")
+                "(this causes over-fit, please use _fit_transform_impl() instead)")
         res = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
@@ -133,17 +133,17 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
         return res
 
     # noinspection PyPep8Naming
-    def fit_transform(self, X, y=None):
+    def _fit_transform_impl(self, X, y=None, *, do_transform):
         X, orig_type = vtreat_impl.ready_data_frame(X)
         self.check_column_names(X.columns)
         if y is None:
             if self.outcome_name_ is None:
-                raise ValueError(".fit_transform(X) must have outcome_name set")
+                raise ValueError("._fit_transform_impl(X) must have outcome_name set")
             y = X[self.outcome_name_]
         else:
             if self.outcome_name_ is not None:
                 if not numpy.all(X[self.outcome_name_] == y):
-                    raise ValueError(".fit_transform(X, y) called with y != X[outcome_name]")
+                    raise ValueError("._fit_transform_impl(X, y) called with y != X[outcome_name]")
         if not X.shape[0] == len(y):
             raise ValueError("X.shape[0] should equal len(y)")
         y = vtreat.util.safe_to_numeric_array(y)
@@ -170,6 +170,8 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
             params=self.params_,
             imputation_map=self.imputation_map_,
         )
+        if not do_transform:
+            return None
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         # patch in cross-frame versions of complex columns such as impact
         self.cross_plan_ = self.params_["cross_validation_plan"].split_plan(
@@ -247,7 +249,7 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
                     raise ValueError(".fit(X, y) called with y != X[outcome_name]")
         if not X.shape[0] == len(y):
             raise ValueError("X.shape[0] should equal len(y)")
-        self.fit_transform(X=X, y=y)
+        self._fit_transform_impl(X=X, y=y, do_transform=False)
         return self
 
     # noinspection PyPep8Naming
@@ -259,7 +261,7 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         if self.params_['check_for_duplicate_frames'] and (self.last_fit_x_id_ == id(X)):
             warnings.warn(
                 "possibly called transform on same data used to fit\n" +
-                "(this causes over-fit, please use fit_transform() instead)")
+                "(this causes over-fit, please use _fit_transform_impl() instead)")
         X = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
@@ -270,17 +272,17 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         return res
 
     # noinspection PyPep8Naming
-    def fit_transform(self, X, y=None):
+    def _fit_transform_impl(self, X, y=None, *, do_transform):
         X, orig_type = vtreat_impl.ready_data_frame(X)
         self.check_column_names(X.columns)
         if y is None:
             if self.outcome_name_ is None:
-                raise ValueError(".fit_transform(X) must have outcome_name set")
+                raise ValueError("._fit_transform_impl(X) must have outcome_name set")
             y = X[self.outcome_name_]
         else:
             if self.outcome_name_ is not None:
                 if not numpy.all(X[self.outcome_name_] == y):
-                    raise ValueError(".fit_transform(X, y) called with y != X[outcome_name]")
+                    raise ValueError("._fit_transform_impl(X, y) called with y != X[outcome_name]")
         if not X.shape[0] == len(y):
             raise ValueError("X.shape[0] should equal len(y)")
         y_mean = numpy.mean(y == self.outcome_target_)
@@ -306,6 +308,8 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
             params=self.params_,
             imputation_map=self.imputation_map_,
         )
+        if not do_transform:
+            return None
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         # patch in cross-frame versions of complex columns such as impact
         self.cross_plan_ = self.params_["cross_validation_plan"].split_plan(
@@ -387,7 +391,7 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
                     raise ValueError(".fit(X, y) called with y != X[outcome_name]")
         if not X.shape[0] == len(y):
             raise ValueError("X.shape[0] should equal len(y)")
-        self.fit_transform(X=X, y=y)
+        self._fit_transform_impl(X=X, y=y, do_transform=False)
         return self
 
     # noinspection PyPep8Naming
@@ -399,7 +403,7 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         if self.params_['check_for_duplicate_frames'] and (self.last_fit_x_id_ == id(X)):
             warnings.warn(
                 "possibly called transform on same data used to fit\n" +
-                "(this causes over-fit, please use fit_transform() instead)")
+                "(this causes over-fit, please use _fit_transform_impl() instead)")
         X = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
@@ -410,17 +414,17 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         return res
 
     # noinspection PyPep8Naming
-    def fit_transform(self, X, y=None):
+    def _fit_transform_impl(self, X, y=None, *, do_transform):
         X, orig_type = vtreat_impl.ready_data_frame(X)
         self.check_column_names(X.columns)
         if y is None:
             if self.outcome_name_ is None:
-                raise ValueError(".fit_transform(X) must have outcome_name set")
+                raise ValueError("._fit_transform_impl(X) must have outcome_name set")
             y = X[self.outcome_name_]
         else:
             if self.outcome_name_ is not None:
                 if not numpy.all(X[self.outcome_name_] == y):
-                    raise ValueError(".fit_transform(X, y) called with y != X[outcome_name]")
+                    raise ValueError("._fit_transform_impl(X, y) called with y != X[outcome_name]")
         if not X.shape[0] == len(y):
             raise ValueError("X.shape[0] should equal len(y)")
         if len(numpy.unique(y)) <= 1:
@@ -445,6 +449,8 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
             params=self.params_,
             imputation_map=self.imputation_map_,
         )
+        if not do_transform:
+            return None
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         # patch in cross-frame versions of complex columns such as impact
         self.cross_plan_ = self.params_["cross_validation_plan"].split_plan(
@@ -519,7 +525,7 @@ class UnsupervisedTreatment(vtreat_impl.VariableTreatment):
         self.check_column_names(X.columns)
         if y is not None:
             raise ValueError("y should be None")
-        self.fit_transform(X)
+        self._fit_transform_impl(X, do_transform=False)
         return self
 
     # noinspection PyPep8Naming
@@ -538,7 +544,7 @@ class UnsupervisedTreatment(vtreat_impl.VariableTreatment):
         return res
 
     # noinspection PyPep8Naming
-    def fit_transform(self, X, y=None):
+    def _fit_transform_impl(self, X, y=None, *, do_transform):
         X, orig_type = vtreat_impl.ready_data_frame(X)
         self.check_column_names(X.columns)
         if y is not None:
@@ -556,6 +562,8 @@ class UnsupervisedTreatment(vtreat_impl.VariableTreatment):
             params=self.params_,
             imputation_map=self.imputation_map_,
         )
+        if not do_transform:
+            return None
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         self.score_frame_ = vtreat_impl.pseudo_score_plan_variables(
             cross_frame=res, plan=self.plan_, params=self.params_

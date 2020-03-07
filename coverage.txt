@@ -2,19 +2,19 @@
 platform darwin -- Python 3.7.5, pytest-5.2.4, py-1.8.0, pluggy-0.13.0
 rootdir: /Users/johnmount/Documents/work/pyvtreat/pkg
 plugins: cov-2.8.1
-collected 14 items
+collected 15 items
 
-pkg/tests/test_classification.py .                                       [  7%]
-pkg/tests/test_col_name_issues.py ...                                    [ 28%]
-pkg/tests/test_imputation_controls.py .                                  [ 35%]
-pkg/tests/test_multinomial.py .                                          [ 42%]
-pkg/tests/test_nan_inf.py .                                              [ 50%]
-pkg/tests/test_outcome_name_required.py .                                [ 57%]
-pkg/tests/test_perm_cor.py .                                             [ 64%]
-pkg/tests/test_r1_issue.py .                                             [ 71%]
-pkg/tests/test_range.py .                                                [ 78%]
-pkg/tests/test_regression.py .                                           [ 85%]
-pkg/tests/test_unsupervised.py .                                         [ 92%]
+pkg/tests/test_classification.py ..                                      [ 13%]
+pkg/tests/test_col_name_issues.py ...                                    [ 33%]
+pkg/tests/test_imputation_controls.py .                                  [ 40%]
+pkg/tests/test_multinomial.py .                                          [ 46%]
+pkg/tests/test_nan_inf.py .                                              [ 53%]
+pkg/tests/test_outcome_name_required.py .                                [ 60%]
+pkg/tests/test_perm_cor.py .                                             [ 66%]
+pkg/tests/test_r1_issue.py .                                             [ 73%]
+pkg/tests/test_range.py .                                                [ 80%]
+pkg/tests/test_regression.py .                                           [ 86%]
+pkg/tests/test_unsupervised.py .                                         [ 93%]
 pkg/tests/test_util.py .                                                 [100%]
 
 ---------- coverage: platform darwin, python 3.7.5-final-0 -----------
@@ -24,10 +24,10 @@ pkg/vtreat/__init__.py          6      0   100%
 pkg/vtreat/cross_plan.py      104     57    45%
 pkg/vtreat/transform.py        17     10    41%
 pkg/vtreat/util.py            161     25    84%
-pkg/vtreat/vtreat_api.py      344    129    62%
-pkg/vtreat/vtreat_impl.py     481     79    84%
+pkg/vtreat/vtreat_api.py      275     92    67%
+pkg/vtreat/vtreat_impl.py     576    106    82%
 -----------------------------------------------
-TOTAL                        1113    300    73%
+TOTAL                        1139    290    75%
 
 
-============================== 14 passed in 8.25s ==============================
+============================== 15 passed in 9.52s ==============================
