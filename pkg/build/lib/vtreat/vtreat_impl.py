@@ -961,19 +961,16 @@ class VariableTreatment(ABC):
     def __str__(self):
         return self.__repr__()
 
-    # noinspection PyPep8Naming
-    def _fit_transform_impl(self, X, y=None, *, do_transform):
-        raise NotImplementedError("base class method called")
-
     # sklearn pipeline step methods
 
     # noinspection PyPep8Naming
     def fit(self, X, y=None):
-        raise NotImplementedError("base class method called")
+        self.fit_transform(X=X, y=y)
+        return self
 
     # noinspection PyPep8Naming
     def fit_transform(self, X, y=None):
-        return self._fit_transform_impl(X=X, y=y, do_transform=True)
+        raise NotImplementedError("base class method called")
 
     def get_feature_names(self, input_features=None):
         if self.score_frame_ is None:
