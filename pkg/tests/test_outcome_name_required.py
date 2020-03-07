@@ -13,26 +13,17 @@ def test_outcome_name_required():
         {"x": ['1', '2', '3', '4', '5', '6'], "y": [1, 2, 3, 4, 5, 6]}
     )
 
-    with pytest.raises(Exception):
-        vtreat.NumericOutcomeTreatment()
-
-    transform = vtreat.NumericOutcomeTreatment(outcome_name=None)
+    transform = vtreat.NumericOutcomeTreatment()
     transform.fit_transform(d, d["y"])
     with pytest.raises(Exception):
         transform.fit_transform(d)
 
-    with pytest.raises(Exception):
-        vtreat.BinomialOutcomeTreatment(outcome_target=3)
-
-    transform = vtreat.BinomialOutcomeTreatment(outcome_name=None, outcome_target=3)
+    transform = vtreat.BinomialOutcomeTreatment(outcome_target=3)
     transform.fit_transform(d, d["y"])
     with pytest.raises(Exception):
         transform.fit_transform(d)
 
-    with pytest.raises(Exception):
-        vtreat.vtreat_api.MultinomialOutcomeTreatment()
-
-    transform = vtreat.vtreat_api.MultinomialOutcomeTreatment(outcome_name=None)
+    transform = vtreat.vtreat_api.MultinomialOutcomeTreatment()
     transform.fit_transform(d, d["y"])
     with pytest.raises(Exception):
         transform.fit_transform(d)

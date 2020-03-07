@@ -24,10 +24,10 @@ pkg/vtreat/__init__.py          6      0   100%
 pkg/vtreat/cross_plan.py      104     57    45%
 pkg/vtreat/transform.py        17     10    41%
 pkg/vtreat/util.py            161     25    84%
-pkg/vtreat/vtreat_api.py      332    120    64%
+pkg/vtreat/vtreat_api.py      344    129    62%
 pkg/vtreat/vtreat_impl.py     481     79    84%
 -----------------------------------------------
-TOTAL                        1101    291    74%
+TOTAL                        1113    300    73%
 
 
-============================== 14 passed in 8.33s ==============================
+============================== 14 passed in 8.25s ==============================

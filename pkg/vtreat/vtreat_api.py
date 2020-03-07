@@ -190,7 +190,7 @@ class NumericOutcomeTreatment(VariableTreatment):
     def __init__(
             self, *,
             var_list=None,
-            outcome_name,
+            outcome_name=None,
             cols_to_copy=None,
             params=None,
             imputation_map=None,
@@ -216,7 +216,8 @@ class NumericOutcomeTreatment(VariableTreatment):
     # noinspection PyPep8Naming
     def fit(self, X, y=None):
         if not isinstance(X, pandas.DataFrame):
-            raise TypeError("X should be a Pandas DataFrame")
+            X = pandas.DataFrame(X)
+            X.columns = [str(c) for c in X.columns]
         self.check_column_names(X.columns)
         if y is None:
             if self.outcome_name_ is None:
@@ -234,7 +235,8 @@ class NumericOutcomeTreatment(VariableTreatment):
     # noinspection PyPep8Naming
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
-            raise TypeError("X should be a Pandas DataFrame")
+            X = pandas.DataFrame(X)
+            X.columns = [str(c) for c in X.columns]
         self.check_column_names(X.columns)
         if self.last_fit_x_id_ is None:
             raise ValueError("called transform on not yet fit treatment")
@@ -251,7 +253,8 @@ class NumericOutcomeTreatment(VariableTreatment):
     # noinspection PyPep8Naming
     def fit_transform(self, X, y=None):
         if not isinstance(X, pandas.DataFrame):
-            raise TypeError("X should be a Pandas DataFrame")
+            X = pandas.DataFrame(X)
+            X.columns = [str(c) for c in X.columns]
         self.check_column_names(X.columns)
         if y is None:
             if self.outcome_name_ is None:
@@ -319,7 +322,7 @@ class BinomialOutcomeTreatment(VariableTreatment):
             self,
             *,
             var_list=None,
-            outcome_name,
+            outcome_name=None,
             outcome_target=True,
             cols_to_copy=None,
             params=None,
@@ -348,7 +351,8 @@ class BinomialOutcomeTreatment(VariableTreatment):
     # noinspection PyPep8Naming
     def fit(self, X, y=None):
         if not isinstance(X, pandas.DataFrame):
-            raise TypeError("X should be a Pandas DataFrame")
+            X = pandas.DataFrame(X)
+            X.columns = [str(c) for c in X.columns]
         self.check_column_names(X.columns)
         if y is None:
             if self.outcome_name_ is None:
@@ -366,7 +370,8 @@ class BinomialOutcomeTreatment(VariableTreatment):
     # noinspection PyPep8Naming
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
-            raise TypeError("X should be a Pandas DataFrame")
+            X = pandas.DataFrame(X)
+            X.columns = [str(c) for c in X.columns]
         self.check_column_names(X.columns)
         if self.last_fit_x_id_ is None:
             raise ValueError("called transform on not yet fit treatment")
@@ -383,7 +388,8 @@ class BinomialOutcomeTreatment(VariableTreatment):
     # noinspection PyPep8Naming
     def fit_transform(self, X, y=None):
         if not isinstance(X, pandas.DataFrame):
-            raise TypeError("X should be a Pandas DataFrame")
+            X = pandas.DataFrame(X)
+            X.columns = [str(c) for c in X.columns]
         self.check_column_names(X.columns)
         if y is None:
             if self.outcome_name_ is None:
@@ -455,7 +461,7 @@ class MultinomialOutcomeTreatment(VariableTreatment):
             self,
             *,
             var_list=None,
-            outcome_name,
+            outcome_name=None,
             cols_to_copy=None,
             params=None,
             imputation_map=None,
@@ -483,7 +489,8 @@ class MultinomialOutcomeTreatment(VariableTreatment):
     # noinspection PyPep8Naming
     def fit(self, X, y=None):
         if not isinstance(X, pandas.DataFrame):
-            raise TypeError("X should be a Pandas DataFrame")
+            X = pandas.DataFrame(X)
+            X.columns = [str(c) for c in X.columns]
         self.check_column_names(X.columns)
         if y is None:
             if self.outcome_name_ is None:
@@ -501,7 +508,8 @@ class MultinomialOutcomeTreatment(VariableTreatment):
     # noinspection PyPep8Naming
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
-            raise TypeError("X should be a Pandas DataFrame")
+            X = pandas.DataFrame(X)
+            X.columns = [str(c) for c in X.columns]
         self.check_column_names(X.columns)
         if self.last_fit_x_id_ is None:
             raise ValueError("called transform on not yet fit treatment")
@@ -518,7 +526,8 @@ class MultinomialOutcomeTreatment(VariableTreatment):
     # noinspection PyPep8Naming
     def fit_transform(self, X, y=None):
         if not isinstance(X, pandas.DataFrame):
-            raise TypeError("X should be a Pandas DataFrame")
+            X = pandas.DataFrame(X)
+            X.columns = [str(c) for c in X.columns]
         self.check_column_names(X.columns)
         if y is None:
             if self.outcome_name_ is None:
@@ -621,7 +630,8 @@ class UnsupervisedTreatment(VariableTreatment):
     # noinspection PyPep8Naming
     def fit(self, X, y=None):
         if not isinstance(X, pandas.DataFrame):
-            raise TypeError("X should be a Pandas DataFrame")
+            X = pandas.DataFrame(X)
+            X.columns = [str(c) for c in X.columns]
         self.check_column_names(X.columns)
         if y is not None:
             raise ValueError("y should be None")
@@ -631,7 +641,8 @@ class UnsupervisedTreatment(VariableTreatment):
     # noinspection PyPep8Naming
     def transform(self, X):
         if not isinstance(X, pandas.DataFrame):
-            raise TypeError("X should be a Pandas DataFrame")
+            X = pandas.DataFrame(X)
+            X.columns = [str(c) for c in X.columns]
         self.check_column_names(X.columns)
         if self.last_fit_x_id_ is None:
             raise ValueError("called transform on not yet fit treatment")
@@ -645,7 +656,8 @@ class UnsupervisedTreatment(VariableTreatment):
     # noinspection PyPep8Naming
     def fit_transform(self, X, y=None):
         if not isinstance(X, pandas.DataFrame):
-            raise TypeError("X should be a Pandas DataFrame")
+            X = pandas.DataFrame(X)
+            X.columns = [str(c) for c in X.columns]
         self.check_column_names(X.columns)
         if y is not None:
             raise ValueError("y should be None")
