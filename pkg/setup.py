@@ -52,7 +52,7 @@ and also as an [`R` package](https://github.com/WinVector/vtreat).
 
 setuptools.setup(
     name='vtreat',
-    version='0.3.8',
+    version='0.4.0',
     author='John Mount, Nina Zumel',
     author_email='jmount@win-vector.com',
     url='https://github.com/WinVector/pyvtreat',
@@ -60,10 +60,8 @@ setuptools.setup(
     install_requires=[
         'numpy',
         'pandas',
+        'statsmodels'
     ],
-    extras_require={
-        'non_permutation_correlation': ['scipy'],
-    },
     platforms=['any'],
     license='License :: OSI Approved :: BSD 3-clause License',
     python_requires=">=3.5.3",

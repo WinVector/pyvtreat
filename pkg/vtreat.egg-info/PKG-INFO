@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: vtreat
-Version: 0.3.8
+Version: 0.4.0
 Summary: vtreat is a pandas.DataFrame processor/conditioner that prepares real-world data for predictive modeling in a statistically sound manner. 
 Home-page: https://github.com/WinVector/pyvtreat
 Author: John Mount, Nina Zumel
@@ -62,4 +62,3 @@ Classifier: Programming Language :: Python :: 3.8
 Classifier: License :: OSI Approved :: BSD License
 Requires-Python: >=3.5.3
 Description-Content-Type: text/markdown
-Provides-Extra: non_permutation_correlation

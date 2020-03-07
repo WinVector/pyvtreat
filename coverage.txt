@@ -2,19 +2,18 @@
 platform darwin -- Python 3.7.5, pytest-5.2.4, py-1.8.0, pluggy-0.13.0
 rootdir: /Users/johnmount/Documents/work/pyvtreat/pkg
 plugins: cov-2.8.1
-collected 16 items
+collected 15 items
 
-pkg/tests/test_classification.py ..                                      [ 12%]
-pkg/tests/test_col_name_issues.py ...                                    [ 31%]
-pkg/tests/test_imputation_controls.py .                                  [ 37%]
-pkg/tests/test_multinomial.py .                                          [ 43%]
-pkg/tests/test_nan_inf.py .                                              [ 50%]
-pkg/tests/test_outcome_name_required.py .                                [ 56%]
-pkg/tests/test_perm_cor.py .                                             [ 62%]
-pkg/tests/test_r1_issue.py .                                             [ 68%]
-pkg/tests/test_range.py .                                                [ 75%]
-pkg/tests/test_regression.py .                                           [ 81%]
-pkg/tests/test_unsupervised.py .                                         [ 87%]
+pkg/tests/test_classification.py ..                                      [ 13%]
+pkg/tests/test_col_name_issues.py ...                                    [ 33%]
+pkg/tests/test_imputation_controls.py .                                  [ 40%]
+pkg/tests/test_multinomial.py .                                          [ 46%]
+pkg/tests/test_nan_inf.py .                                              [ 53%]
+pkg/tests/test_outcome_name_required.py .                                [ 60%]
+pkg/tests/test_r1_issue.py .                                             [ 66%]
+pkg/tests/test_range.py .                                                [ 73%]
+pkg/tests/test_regression.py .                                           [ 80%]
+pkg/tests/test_unsupervised.py .                                         [ 86%]
 pkg/tests/test_user_coders.py .                                          [ 93%]
 pkg/tests/test_util.py .                                                 [100%]
 
@@ -24,11 +23,11 @@ Name                        Stmts   Miss  Cover
 pkg/vtreat/__init__.py          6      0   100%
 pkg/vtreat/cross_plan.py      104     57    45%
 pkg/vtreat/transform.py        17      4    76%
-pkg/vtreat/util.py            161     25    84%
-pkg/vtreat/vtreat_api.py      218     42    81%
+pkg/vtreat/util.py            154     19    88%
+pkg/vtreat/vtreat_api.py      221     44    80%
 pkg/vtreat/vtreat_impl.py     575     79    86%
 -----------------------------------------------
-TOTAL                        1081    207    81%
+TOTAL                        1077    203    81%
 
 
-============================= 16 passed in 10.34s ==============================
+============================= 15 passed in 10.19s ==============================

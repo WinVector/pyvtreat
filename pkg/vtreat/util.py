@@ -5,21 +5,17 @@ Created on Sat Jul 20 11:40:41 2019
 @author: johnmount
 """
 
-import math
 import warnings
+import math
 import statistics
 
 import numpy
 import pandas
 
-have_scipy_stats = False
-try:
-    # noinspection PyUnresolvedReferences
-    import scipy.stats
 
-    have_scipy_stats = True
-except ImportError:
-    have_scipy_stats = False
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", category=DeprecationWarning)
+    import statsmodels.api
 
 
 def safe_to_numeric_array(x):
@@ -152,47 +148,51 @@ def grouped_by_x_statistics(x, y):
     return sf
 
 
-def perm_est_correlation(x, y,
-                         *,
-                         eps=1e-13,
-                         nrounds=10000):
-    """
-    Compute Pearson correlation and permutation test 2-sided significance.
-    Note: smoothed to +1 to avoid reporting zero-significance without sufficient evidence.
-    Uses the numpy pseudo-random number generator.
+def our_corr_score(*, y_true, y_pred):
+    # compute Pearson correlation
+    y_true = numpy.asarray(y_true)
+    y_pred = numpy.asarray(y_pred)
+    y_pred = y_pred - numpy.mean(y_pred)
+    y_pred = y_pred / math.sqrt(numpy.dot(y_pred, y_pred))
+    y_true = y_true - numpy.mean(y_true)
+    y_true = y_true / math.sqrt(numpy.dot(y_true, y_true))
+    return numpy.dot(y_pred, y_true)
 
-    :param x: vector of length n.
-    :param y: vector of length n.
-    :param eps: tolerance to check for variation
-    :param nrounds: number of permutation rounds
-    :return:
-    """
-    n = len(x)
-    if len(y) != n:
-        raise ValueError("x and y must be the same length")
-    if (n < 2) or (numpy.max(x) <= eps + numpy.min(x)) or (numpy.max(y) <= eps + numpy.min(y)):
-        return (numpy.NaN, 1.0)
-    # standardize
-    x = x - numpy.mean(x)
-    x = x / math.sqrt(numpy.dot(x, x))
-    y = y - numpy.mean(y)
-    y = y / math.sqrt(numpy.dot(y, y))
-    cor = numpy.dot(x, y)
-    # permutation test for 2-sided significance
-    abs_cor = abs(cor)
-    n_hit = 0.0
-    for rep in range(nrounds):
-        yp = numpy.random.choice(y, n, replace=False)
-        ci = numpy.dot(x, yp)
-        if abs(ci) >= abs_cor:
-            n_hit = n_hit + 1.0
-    sig = (n_hit + 1.0)/(nrounds + 1.0)
-    return (cor, sig)
+
+# noinspection PyPep8Naming
+def linear_R2_with_sig(*,  y_true, y_pred):
+    # smoothed down
+    y_true = numpy.append(
+        numpy.asarray(y_true),
+        [0, 1, 0, 1])  # smoothing/regularization
+    y_pred = numpy.append(
+        numpy.asarray(y_pred),
+        [0, 0, 1, 1])  # smoothing/regularization
+    fit = statsmodels.api.OLS(
+        y_true,
+        pandas.DataFrame({'x': y_pred, 'c': 1})).fit()
+    return fit.rsquared, fit.f_pvalue  # use the f-test sig
+
+
+# noinspection PyPep8Naming
+def pseudo_R2_with_sig(*,  y_true, y_pred):
+    # smoothed down
+    y_true = numpy.append(
+        numpy.asarray(y_true),
+        [0, 1, 0, 1])  # smoothing/regularization
+    y_pred = numpy.append(
+        numpy.asarray(y_pred),
+        [0, 0, 1, 1])  # smoothing/regularization
+    fit = statsmodels.api.Logit(
+        y_true,
+        pandas.DataFrame({'x': y_pred, 'c': 1})).fit()
+    return fit.prsquared, fit.llr_pvalue  # use the log-likelihood sig
 
 
 def score_variables(cross_frame, variables, outcome,
-                    permutation_rounds=0):
-    """score the linear relation of varaibles to outcomename"""
+                    *,
+                    is_classification=False):
+    """score the linear relation of variables to outcome"""
 
     if len(variables) <= 0:
         return None
@@ -200,32 +200,36 @@ def score_variables(cross_frame, variables, outcome,
     if n != len(outcome):
         raise ValueError("len(n) must equal cross_frame.shape[0]")
     outcome = safe_to_numeric_array(outcome)
-    if (not have_scipy_stats) and (permutation_rounds <= 0):
-        permutation_rounds = 10000
 
     def f(v):
         col = cross_frame[v]
         col = safe_to_numeric_array(col)
-        if (n > 1) and (numpy.max(col) > numpy.min(col)) and (numpy.max(outcome) > numpy.min(outcome)):
-            with warnings.catch_warnings():
-                if permutation_rounds > 0:
-                    est = perm_est_correlation(col, outcome, nrounds=permutation_rounds)
-                else:
-                    est = scipy.stats.pearsonr(col, outcome)
-                sfi = pandas.DataFrame(
-                    {
-                        "variable": [v],
-                        "has_range": [True],
-                        "PearsonR": [est[0]],
-                        "significance": [est[1]],
-                    }
-                )
+        if (n > 2) and \
+                (numpy.max(col) > numpy.min(col)) and \
+                (numpy.max(outcome) > numpy.min(outcome)):
+            cor = our_corr_score(
+                y_true=outcome,
+                y_pred=col)
+            if is_classification:
+                est = pseudo_R2_with_sig(y_true=outcome, y_pred=col)
+            else:
+                est = linear_R2_with_sig(y_true=outcome, y_pred=col)
+            sfi = pandas.DataFrame(
+                {
+                    "variable": [v],
+                    "has_range": [True],
+                    "PearsonR": cor,
+                    "R2": [est[0]],
+                    "significance": [est[1]],
+                }
+            )
         else:
             sfi = pandas.DataFrame(
                 {
                     "variable": [v],
                     "has_range": [False],
                     "PearsonR": [numpy.NaN],
+                    "R2": [numpy.NaN],
                     "significance": [1.0],
                 }
             )
@@ -267,7 +271,7 @@ def unique_itmes_in_order(lst):
     return ret
 
 
-def clean_string(str):
+def clean_string(strng):
     mp = {'<': '_lt_',
           '>': '_gt_',
           '[': '_osq_',
@@ -277,8 +281,8 @@ def clean_string(str):
           '.': '_',
           }
     for (k, v) in mp.items():
-        str = str.replace(k, v)
-    return str
+        strng = strng.replace(k, v)
+    return strng
 
 
 def build_level_codes(incoming_column_name, levels):

@@ -784,7 +784,9 @@ def cross_patch_user_y_aware_cols(*, x, y, res, params, cross_plan):
     return res
 
 
-def score_plan_variables(cross_frame, outcome, plan, params):
+def score_plan_variables(cross_frame, outcome, plan, params,
+                         *,
+                         is_classification=False):
     def describe_xf(xf):
         description = pandas.DataFrame({"variable": xf.derived_column_names_})
         description["orig_variable"] = xf.incoming_column_name_
@@ -811,7 +813,10 @@ def score_plan_variables(cross_frame, outcome, plan, params):
     )
     var_table.reset_index(inplace=True, drop=True)
     sf = vtreat.util.score_variables(
-        cross_frame, variables=var_table["variable"], outcome=outcome
+        cross_frame,
+        variables=var_table["variable"],
+        outcome=outcome,
+        is_classification=is_classification
     )
     score_frame = pandas.merge(var_table, sf, how="left", on=["variable"], sort=False)
     num_treatment_types = len(score_frame["treatment"].unique())

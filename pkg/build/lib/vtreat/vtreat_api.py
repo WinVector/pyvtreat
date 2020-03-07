@@ -122,8 +122,9 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
         if y is None:
             if self.outcome_name_ is None:
                 raise ValueError(".fit_transform(X) must have outcome_name set")
-            y = X[self.outcome_name_]
+            y = numpy.asarray(X[self.outcome_name_])
         else:
+            y = numpy.asarray(y)
             if self.outcome_name_ is not None:
                 if not numpy.all(X[self.outcome_name_] == y):
                     raise ValueError(".fit_transform(X, y) called with y != X[outcome_name]")
@@ -170,7 +171,11 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
         )
         # use cross_frame to compute variable effects
         self.score_frame_ = vtreat_impl.score_plan_variables(
-            cross_frame=cross_frame, outcome=y, plan=self.plan_, params=self.params_
+            cross_frame=cross_frame,
+            outcome=y,
+            plan=self.plan_,
+            params=self.params_,
+            is_classification=False
         )
         cross_frame = vtreat_impl.limit_to_appropriate_columns(
             res=cross_frame, transform=self
@@ -242,8 +247,9 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         if y is None:
             if self.outcome_name_ is None:
                 raise ValueError(".fit_transform(X) must have outcome_name set")
-            y = X[self.outcome_name_]
+            y = numpy.asarray(X[self.outcome_name_])
         else:
+            y = numpy.asarray(y)
             if self.outcome_name_ is not None:
                 if not numpy.all(X[self.outcome_name_] == y):
                     raise ValueError(".fit_transform(X, y) called with y != X[outcome_name]")
@@ -295,6 +301,7 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
             ),
             plan=self.plan_,
             params=self.params_,
+            is_classification=True
         )
         cross_frame = vtreat_impl.limit_to_appropriate_columns(
             res=cross_frame, transform=self
@@ -365,8 +372,9 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         if y is None:
             if self.outcome_name_ is None:
                 raise ValueError(".fit_transform(X) must have outcome_name set")
-            y = X[self.outcome_name_]
+            y = numpy.asarray(X[self.outcome_name_])
         else:
+            y = numpy.asarray(y)
             if self.outcome_name_ is not None:
                 if not numpy.all(X[self.outcome_name_] == y):
                     raise ValueError(".fit_transform(X, y) called with y != X[outcome_name]")
@@ -418,6 +426,7 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
                 outcome=numpy.asarray(numpy.asarray(y) == oi, dtype=float),
                 plan=self.plan_,
                 params=self.params_,
+                is_classification=True
             )
             sf["outcome_target"] = oi
             return sf
