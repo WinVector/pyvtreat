@@ -6,6 +6,7 @@ import pandas
 
 import vtreat  # https://github.com/WinVector/pyvtreat
 
+
 def test_outcome_name_required():
 
     numpy.random.seed(235)

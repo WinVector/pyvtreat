@@ -5,11 +5,11 @@ import vtreat
 import vtreat.util
 
 
-def test_classification_numpy():
+def test_classification():
     numpy.random.seed(46546)
 
     def make_data(nrows):
-        d = pandas.DataFrame({"x": [0.1 * i for i in range(500)]})
+        d = pandas.DataFrame({"x": [0.1 * i for i in range(nrows)]})
         d["y"] = d["x"] + numpy.sin(d["x"]) + 0.1 * numpy.random.normal(size=d.shape[0])
         d["xc"] = ["level_" + str(5 * numpy.round(yi / 5, 1)) for yi in d["y"]]
         d["x2"] = numpy.random.normal(size=d.shape[0])
@@ -17,7 +17,7 @@ def test_classification_numpy():
         d["yc"] = d["y"] > 0.5
         return d
 
-    d = make_data(5000)
+    d = make_data(500)
 
     transform = vtreat.BinomialOutcomeTreatment(
         outcome_name="yc",  # outcome variable
@@ -53,7 +53,7 @@ def test_classification_numpy():
     numpy.random.seed(46546)
 
     def make_data(nrows):
-        d = pandas.DataFrame({"x": [0.1 * i for i in range(500)]})
+        d = pandas.DataFrame({"x": [0.1 * i for i in range(nrows)]})
         d["y"] = d["x"] + numpy.sin(d["x"]) + 0.1 * numpy.random.normal(size=d.shape[0])
         d["xc"] = ["level_" + str(5 * numpy.round(yi / 5, 1)) for yi in d["y"]]
         d["x2"] = numpy.random.normal(size=d.shape[0])
@@ -61,7 +61,7 @@ def test_classification_numpy():
         d["yc"] = d["y"] > 0.5
         return d
 
-    d = make_data(5000)
+    d = make_data(500)
     vars = [v for v in d.columns if v not in ['y', 'c']]
     d_n = numpy.asarray(d[vars])
 
@@ -70,17 +70,14 @@ def test_classification_numpy():
     )
 
     d_prepared = transform.fit_transform(d_n, numpy.asarray(d["yc"]))
+    d_prepared_columns = transform.last_result_columns
+    sf = transform.score_frame_
 
-    for c in d_prepared.columns:
-        assert vtreat.util.can_convert_v_to_numeric(d_prepared[c])
-        assert sum(vtreat.util.is_bad(d_prepared[c])) == 0
+    assert len(set(d_prepared_columns) - set(sf.variable)) == 0
 
     dtest = make_data(450)
 
     dtest_prepared = transform.transform(numpy.asarray(dtest[vars]))
+    dtest_prepared_columns = transform.last_result_columns
 
-    for c in dtest_prepared.columns:
-        assert vtreat.util.can_convert_v_to_numeric(dtest_prepared[c])
-        assert sum(vtreat.util.is_bad(dtest_prepared[c])) == 0
-
-    sf = transform.score_frame_
+    assert len(set(dtest_prepared_columns) - set(sf.variable)) == 0
