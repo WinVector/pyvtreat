@@ -36,8 +36,6 @@ def back_to_orig_type_data_frame(d, orig_type):
 
 
 class VarTransform:
-    """build a treatment plan for a numeric outcome (regression)"""
-
     def __init__(self, incoming_column_name, derived_column_names, treatment):
         self.incoming_column_name_ = incoming_column_name
         self.derived_column_names_ = derived_column_names.copy()
@@ -968,23 +966,22 @@ class VariableTreatment(ABC):
 
     # sklearn pipeline step methods
 
-    # noinspection PyPep8Naming
-    def fit(self, X, y=None):
+    # https://scikit-learn.org/stable/modules/generated/sklearn.base.TransformerMixin.html
+
+    # noinspection PyPep8Naming, PyUnusedLocal
+    def fit(self, X, y=None, **fit_params):
         self.fit_transform(X=X, y=y)
         return self
 
-    # noinspection PyPep8Naming
-    def fit_transform(self, X, y=None):
+    # noinspection PyPep8Naming, PyUnusedLocal
+    def fit_transform(self, X, y=None, **fit_params):
         raise NotImplementedError("base class method called")
 
-    def get_feature_names(self, input_features=None):
-        if self.score_frame_ is None:
-            raise ValueError("get_feature_names called on uninitialized vtreat transform")
-        new_vars = [self.score_frame_['variable'][i] for i in range(self.score_frame_.shape[0])
-                    if self.score_frame_['has_range'][i]
-                    and (input_features is None or self.score_frame_['variable'][i] in input_features)]
-        new_vars = new_vars + self.cols_to_copy_
-        return new_vars
+    # noinspection PyPep8Naming
+    def transform(self, X):
+        raise NotImplementedError("base class method called")
+
+    # https://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html
 
     # noinspection PyUnusedLocal,PyMethodMayBeStatic
     def get_params(self, deep=False):
@@ -993,16 +990,41 @@ class VariableTreatment(ABC):
         """
         return {}
 
+    # noinspection PyUnusedLocal,PyMethodMayBeStatic
     def set_params(self, **params):
         """
         vtreat doesn't expose parameters so outside code doesn't attempt to optimize over them
         """
-        pass
+        return self
+
+    # extra methods to look more like sklearn objects
+
+    # https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html
+
+    # noinspection PyPep8Naming, PyUnusedLocal
+    def fit_predict(self, X, y=None, **fit_params):
+        return self.fit_transform(X=X, y=y)
 
     # noinspection PyPep8Naming
-    def inverse_transform(self, X):
-        raise TypeError("vtreat does not support inverse_transform")
+    def predict(self, X):
+        return self.transform(X)
 
     # noinspection PyPep8Naming
-    def transform(self, X):
-        raise NotImplementedError("base class method called")
+    def predict_proba(self, X):
+        return self.transform(X)
+
+    # https://github.com/scikit-learn/scikit-learn/blob/master/sklearn/compose/_column_transformer.py
+
+    def get_feature_names(self, input_features=None):
+        if self.score_frame_ is None:
+            raise ValueError("get_feature_names called on uninitialized vtreat transform")
+        if self.params_['filter_to_recommended']:
+            new_vars = [self.score_frame_['variable'][i] for i in range(self.score_frame_.shape[0])
+                        if self.score_frame_['has_range'][i] and self.score_frame_['recommended'][i]
+                        and (input_features is None or self.score_frame_['orig_variable'][i] in input_features)]
+        else:
+            new_vars = [self.score_frame_['variable'][i] for i in range(self.score_frame_.shape[0])
+                        if self.score_frame_['has_range'][i]
+                        and (input_features is None or self.score_frame_['orig_variable'][i] in input_features)]
+        new_vars = new_vars + self.cols_to_copy_
+        return new_vars
