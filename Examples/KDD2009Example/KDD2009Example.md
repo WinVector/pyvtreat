@@ -1,4 +1,3 @@
-
 This is an supervised classification example taken from the KDD 2009 cup.  A copy of the data and details can be found here: [https://github.com/WinVector/PDSwR2/tree/master/KDD2009](https://github.com/WinVector/PDSwR2/tree/master/KDD2009).  The problem was to predict account cancellation ("churn") from very messy data (column names not given, numeric and categorical variables, many missing values, some categorical variables with a large number of possible levels).  In this example we show how to quickly use `vtreat` to prepare the data for modeling.  `vtreat` takes in `Pandas` `DataFrame`s and returns both a treatment plan and a clean `Pandas` `DataFrame` ready for modeling.
 # to install
 !pip install vtreat
@@ -15,6 +14,28 @@ import numpy.random
 import wvpy.util
 import scipy.sparse
 ```
+
+
+<style type='text/css'>
+.datatable table.frame { margin-bottom: 0; }
+.datatable table.frame thead { border-bottom: none; }
+.datatable table.frame tr.coltypes td {  color: #FFFFFF;  line-height: 6px;  padding: 0 0.5em;}
+.datatable .boolean { background: #DDDD99; }
+.datatable .object  { background: #565656; }
+.datatable .integer { background: #5D9E5D; }
+.datatable .float   { background: #4040CC; }
+.datatable .string  { background: #CC4040; }
+.datatable .row_index {  background: var(--jp-border-color3);  border-right: 1px solid var(--jp-border-color0);  color: var(--jp-ui-font-color3);  font-size: 9px;}
+.datatable .frame tr.coltypes .row_index {  background: var(--jp-border-color0);}
+.datatable th:nth-child(2) { padding-left: 12px; }
+.datatable .hellipsis {  color: var(--jp-cell-editor-border-color);}
+.datatable .vellipsis {  background: var(--jp-layout-color0);  color: var(--jp-cell-editor-border-color);}
+.datatable .na {  color: var(--jp-cell-editor-border-color);  font-size: 80%;}
+.datatable .footer { font-size: 9px; }
+.datatable .frame_dimensions {  background: var(--jp-border-color3);  border-top: 1px solid var(--jp-border-color0);  color: var(--jp-ui-font-color3);  display: inline-block;  opacity: 0.6;  padding: 1px 10px 1px 5px;}
+</style>
+
+
 
 Read in explanitory variables.
 
@@ -68,7 +89,7 @@ Arrange test/train split.
 
 
 ```python
-numpy.random.seed(855885)
+numpy.random.seed(2020)
 n = d.shape[0]
 # https://github.com/WinVector/pyvtreat/blob/master/Examples/CustomizedCrossPlan/CustomizedCrossPlan.md
 split1 = vtreat.cross_plan.KWayCrossPlanYStratified().split_plan(n_rows=n, k_folds=10, y=churn.iloc[:, 0])
@@ -200,30 +221,6 @@ d_train.head()
       <td>NaN</td>
     </tr>
     <tr>
-      <th>3</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>0.0</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>...</td>
-      <td>oslk</td>
-      <td>CE7uk3u</td>
-      <td>LM8l689qOp</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>FSa2</td>
-      <td>RAYp</td>
-      <td>F2FyR07IdsN7I</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
       <th>4</th>
       <td>NaN</td>
       <td>NaN</td>
@@ -245,6 +242,30 @@ d_train.head()
       <td>RAYp</td>
       <td>F2FyR07IdsN7I</td>
       <td>mj86</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>658.0</td>
+      <td>7.0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>zCkv</td>
+      <td>QqVuch3</td>
+      <td>LM8l689qOp</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Qcbd</td>
+      <td>02N6s8f</td>
+      <td>Zy3gnGM</td>
+      <td>am7c</td>
       <td>NaN</td>
     </tr>
   </tbody>
@@ -287,7 +308,9 @@ We start by building our treatment plan, this has the `sklearn.pipeline.Pipeline
 
 
 ```python
-plan = vtreat.BinomialOutcomeTreatment(outcome_target=True)
+plan = vtreat.BinomialOutcomeTreatment(
+    outcome_target=True,
+    params=vtreat.vtreat_parameters({'filter_to_recommended':True}))
 ```
 
 Use `.fit_transform()` to get a special copy of the treated training data that has cross-validated mitigations againsst nested model bias. We call this a "cross frame." `.fit_transform()` is deliberately a different `DataFrame` than what would be returned by `.fit().transform()` (the `.fit().transform()` would damage the modeling effort due nested model bias, the `.fit_transform()` "cross frame" uses cross-validation techniques similar to "stacking" to mitigate these issues).
@@ -352,11 +375,11 @@ cross_frame.head()
       <td>...</td>
       <td>1.0</td>
       <td>0.0</td>
-      <td>0.151682</td>
-      <td>0.653733</td>
+      <td>0.145563</td>
+      <td>0.654178</td>
       <td>1.0</td>
-      <td>0.172744</td>
-      <td>0.567422</td>
+      <td>0.180634</td>
+      <td>0.568733</td>
       <td>1.0</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -376,11 +399,11 @@ cross_frame.head()
       <td>...</td>
       <td>1.0</td>
       <td>0.0</td>
-      <td>0.146119</td>
-      <td>0.653733</td>
+      <td>0.150727</td>
+      <td>0.654178</td>
       <td>1.0</td>
-      <td>0.175707</td>
-      <td>0.567422</td>
+      <td>0.175825</td>
+      <td>0.568733</td>
       <td>1.0</td>
       <td>0.0</td>
       <td>0.0</td>
@@ -400,11 +423,11 @@ cross_frame.head()
       <td>...</td>
       <td>0.0</td>
       <td>0.0</td>
-      <td>-0.629820</td>
-      <td>0.053956</td>
+      <td>-0.591072</td>
+      <td>0.053667</td>
       <td>0.0</td>
-      <td>-0.263504</td>
-      <td>0.234400</td>
+      <td>-0.296854</td>
+      <td>0.233689</td>
       <td>0.0</td>
       <td>1.0</td>
       <td>0.0</td>
@@ -415,7 +438,7 @@ cross_frame.head()
       <td>1.0</td>
       <td>1.0</td>
       <td>1.0</td>
-      <td>1.0</td>
+      <td>0.0</td>
       <td>0.0</td>
       <td>1.0</td>
       <td>1.0</td>
@@ -424,14 +447,14 @@ cross_frame.head()
       <td>...</td>
       <td>1.0</td>
       <td>0.0</td>
-      <td>0.145871</td>
-      <td>0.653733</td>
+      <td>0.150727</td>
+      <td>0.654178</td>
       <td>1.0</td>
-      <td>0.159486</td>
-      <td>0.567422</td>
-      <td>1.0</td>
+      <td>-0.292587</td>
+      <td>0.196044</td>
       <td>0.0</td>
       <td>0.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
       <th>4</th>
@@ -446,20 +469,20 @@ cross_frame.head()
       <td>0.0</td>
       <td>1.0</td>
       <td>...</td>
-      <td>1.0</td>
-      <td>0.0</td>
-      <td>0.147432</td>
-      <td>0.653733</td>
-      <td>1.0</td>
-      <td>-0.286852</td>
-      <td>0.196600</td>
       <td>0.0</td>
       <td>0.0</td>
+      <td>-0.323715</td>
+      <td>0.018556</td>
+      <td>0.0</td>
+      <td>-0.268261</td>
+      <td>0.233689</td>
+      <td>0.0</td>
       <td>1.0</td>
+      <td>0.0</td>
     </tr>
   </tbody>
 </table>
-<p>5 rows × 216 columns</p>
+<p>5 rows × 235 columns</p>
 </div>
 
 
@@ -472,7 +495,7 @@ cross_frame.shape
 
 
 
-    (45000, 216)
+    (45000, 235)
 
 
 
@@ -498,6 +521,7 @@ plan.score_frame_.head()
       <th>y_aware</th>
       <th>has_range</th>
       <th>PearsonR</th>
+      <th>R2</th>
       <th>significance</th>
       <th>vcount</th>
       <th>default_threshold</th>
@@ -512,8 +536,9 @@ plan.score_frame_.head()
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.003283</td>
-      <td>0.486212</td>
+      <td>0.004328</td>
+      <td>0.000037</td>
+      <td>0.348710</td>
       <td>193.0</td>
       <td>0.001036</td>
       <td>False</td>
@@ -525,8 +550,9 @@ plan.score_frame_.head()
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.019270</td>
-      <td>0.000044</td>
+      <td>0.016358</td>
+      <td>0.000579</td>
+      <td>0.000218</td>
       <td>193.0</td>
       <td>0.001036</td>
       <td>True</td>
@@ -538,8 +564,9 @@ plan.score_frame_.head()
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.019238</td>
-      <td>0.000045</td>
+      <td>0.016325</td>
+      <td>0.000576</td>
+      <td>0.000225</td>
       <td>193.0</td>
       <td>0.001036</td>
       <td>True</td>
@@ -551,8 +578,9 @@ plan.score_frame_.head()
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.018744</td>
-      <td>0.000070</td>
+      <td>0.020327</td>
+      <td>0.000906</td>
+      <td>0.000004</td>
       <td>193.0</td>
       <td>0.001036</td>
       <td>True</td>
@@ -564,8 +592,9 @@ plan.score_frame_.head()
       <td>missing_indicator</td>
       <td>False</td>
       <td>True</td>
-      <td>0.017575</td>
-      <td>0.000193</td>
+      <td>0.017267</td>
+      <td>0.000641</td>
+      <td>0.000100</td>
       <td>193.0</td>
       <td>0.001036</td>
       <td>True</td>
@@ -585,7 +614,7 @@ len(model_vars)
 
 
 
-    216
+    235
 
 
 
@@ -610,7 +639,7 @@ cross_frame.dtypes
     Var229_lev__NA_           Sparse[float64, 0.0]
     Var229_lev_am7c           Sparse[float64, 0.0]
     Var229_lev_mj86           Sparse[float64, 0.0]
-    Length: 216, dtype: object
+    Length: 235, dtype: object
 
 
 
@@ -625,7 +654,7 @@ except Exception as ex:
 ```
 
     DataFrame.dtypes for data must be int, float or bool.
-                    Did not expect the data types in fields Var193_lev_RO12, Var193_lev_2Knk1KF, Var194_lev__NA_, Var194_lev_SEuy, Var195_lev_taul, Var200_lev__NA_, Var201_lev__NA_, Var201_lev_smXZ, Var205_lev_VpdQ, Var206_lev_IYzP, Var206_lev_zm5i, Var206_lev__NA_, Var207_lev_me75fM6ugJ, Var207_lev_7M47J5GA0pTYIFxg5uy, Var210_lev_uKAI, Var211_lev_L84s, Var211_lev_Mtgm, Var212_lev_NhsEn4L, Var212_lev_XfqtO3UdzaXh_, Var213_lev__NA_, Var214_lev__NA_, Var218_lev_cJvF, Var218_lev_UYBR, Var221_lev_oslk, Var221_lev_zCkv, Var225_lev__NA_, Var225_lev_ELof, Var225_lev_kG3k, Var226_lev_FSa2, Var227_lev_RAYp, Var227_lev_ZI9m, Var228_lev_F2FyR07IdsN7I, Var229_lev__NA_, Var229_lev_am7c, Var229_lev_mj86
+                    Did not expect the data types in fields Var191_lev__NA_, Var193_lev_RO12, Var193_lev_2Knk1KF, Var194_lev__NA_, Var194_lev_SEuy, Var195_lev_taul, Var200_lev__NA_, Var201_lev__NA_, Var201_lev_smXZ, Var205_lev_VpdQ, Var206_lev_IYzP, Var206_lev_zm5i, Var206_lev__NA_, Var207_lev_me75fM6ugJ, Var207_lev_7M47J5GA0pTYIFxg5uy, Var210_lev_uKAI, Var211_lev_L84s, Var211_lev_Mtgm, Var212_lev_NhsEn4L, Var212_lev_XfqtO3UdzaXh_, Var213_lev__NA_, Var214_lev__NA_, Var218_lev_cJvF, Var218_lev_UYBR, Var221_lev_oslk, Var221_lev_zCkv, Var225_lev__NA_, Var225_lev_ELof, Var226_lev_FSa2, Var227_lev_RAYp, Var227_lev_ZI9m, Var228_lev_F2FyR07IdsN7I, Var229_lev__NA_, Var229_lev_am7c, Var229_lev_mj86
 
 
 
@@ -683,38 +712,38 @@ cv.head()
   <tbody>
     <tr>
       <th>0</th>
-      <td>0.073378</td>
-      <td>0.000322</td>
-      <td>0.073733</td>
-      <td>0.000669</td>
+      <td>0.073300</td>
+      <td>0.000709</td>
+      <td>0.073311</td>
+      <td>0.001447</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>0.073411</td>
-      <td>0.000257</td>
-      <td>0.073511</td>
-      <td>0.000529</td>
+      <td>0.073322</td>
+      <td>0.000741</td>
+      <td>0.073333</td>
+      <td>0.001415</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.073433</td>
-      <td>0.000268</td>
-      <td>0.073578</td>
-      <td>0.000514</td>
+      <td>0.073344</td>
+      <td>0.000747</td>
+      <td>0.073467</td>
+      <td>0.001464</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>0.073444</td>
-      <td>0.000283</td>
-      <td>0.073533</td>
-      <td>0.000525</td>
+      <td>0.073378</td>
+      <td>0.000725</td>
+      <td>0.073467</td>
+      <td>0.001464</td>
     </tr>
     <tr>
       <th>4</th>
+      <td>0.073356</td>
+      <td>0.000739</td>
       <td>0.073444</td>
-      <td>0.000283</td>
-      <td>0.073533</td>
-      <td>0.000525</td>
+      <td>0.001450</td>
     </tr>
   </tbody>
 </table>
@@ -747,11 +776,11 @@ best
   </thead>
   <tbody>
     <tr>
-      <th>21</th>
-      <td>0.072756</td>
-      <td>0.000177</td>
-      <td>0.073267</td>
-      <td>0.000327</td>
+      <th>67</th>
+      <td>0.070311</td>
+      <td>0.0003</td>
+      <td>0.072533</td>
+      <td>0.001178</td>
     </tr>
   </tbody>
 </table>
@@ -768,7 +797,7 @@ ntree
 
 
 
-    21
+    67
 
 
 
@@ -784,7 +813,7 @@ fitter
     XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
                   colsample_bynode=1, colsample_bytree=1, gamma=0,
                   learning_rate=0.1, max_delta_step=0, max_depth=3,
-                  min_child_weight=1, missing=None, n_estimators=21, n_jobs=1,
+                  min_child_weight=1, missing=None, n_estimators=67, n_jobs=1,
                   nthread=None, objective='binary:logistic', random_state=0,
                   reg_alpha=0, reg_lambda=1, scale_pos_weight=1, seed=None,
                   silent=None, subsample=1, verbosity=1)
@@ -819,7 +848,7 @@ wvpy.util.plot_roc(pf_train["pred"], pf_train["churn"], title="Model on Train")
 
 
 
-    0.7424056263753072
+    0.7724322415352468
 
 
 
@@ -840,7 +869,7 @@ wvpy.util.plot_roc(pf["pred"], pf["churn"], title="Model on Test")
 
 
 
-    0.7328696191869485
+    0.7457744702689956
 
 
 
@@ -854,10 +883,28 @@ We can compare the above cross-frame solution to a naive "design transform and m
 ```python
 plan_naive = vtreat.BinomialOutcomeTreatment(
     outcome_target=True,              
-    params=vtreat.vtreat_parameters({'filter_to_recommended':False}))
+    params=vtreat.vtreat_parameters({'filter_to_recommended':True}))
 plan_naive.fit(d_train, churn_train)
 naive_frame = plan_naive.transform(d_train)
 ```
+
+    /Users/johnmount/opt/anaconda3/envs/ai_academy_3_7/lib/python3.7/site-packages/vtreat/vtreat_api.py:232: UserWarning: possibly called transform on same data used to fit
+    (this causes over-fit, please use fit_transform() instead)
+      "possibly called transform on same data used to fit\n" +
+
+
+
+```python
+model_vars = numpy.asarray(plan_naive.score_frame_["variable"][plan_naive.score_frame_["recommended"]])
+len(model_vars)
+```
+
+
+
+
+    231
+
+
 
 
 ```python
@@ -873,7 +920,7 @@ cvn = xgboost.cv(x_parameters, fd_naive, num_boost_round=100, verbose_eval=False
 
 
 ```python
-bestn = cvn.loc[cvn["test-error-mean"]<= min(cvn["test-error-mean"] + 1.0e-9), :]
+bestn = cvn.loc[cvn["test-error-mean"] <= min(cvn["test-error-mean"] + 1.0e-9), :]
 bestn
 ```
 
@@ -894,11 +941,11 @@ bestn
   </thead>
   <tbody>
     <tr>
-      <th>94</th>
-      <td>0.0485</td>
-      <td>0.000438</td>
-      <td>0.058622</td>
-      <td>0.000545</td>
+      <th>71</th>
+      <td>0.050944</td>
+      <td>0.000418</td>
+      <td>0.059289</td>
+      <td>0.002297</td>
     </tr>
   </tbody>
 </table>
@@ -915,7 +962,7 @@ ntreen
 
 
 
-    94
+    71
 
 
 
@@ -931,7 +978,7 @@ fittern
     XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
                   colsample_bynode=1, colsample_bytree=1, gamma=0,
                   learning_rate=0.1, max_delta_step=0, max_depth=3,
-                  min_child_weight=1, missing=None, n_estimators=94, n_jobs=1,
+                  min_child_weight=1, missing=None, n_estimators=71, n_jobs=1,
                   nthread=None, objective='binary:logistic', random_state=0,
                   reg_alpha=0, reg_lambda=1, scale_pos_weight=1, seed=None,
                   silent=None, subsample=1, verbosity=1)
@@ -957,13 +1004,13 @@ wvpy.util.plot_roc(pfn_train["pred_naive"], pfn_train["churn"], title="Overfit M
 ```
 
 
-![png](output_58_0.png)
+![png](output_59_0.png)
 
 
 
 
 
-    0.9492686875296688
+    0.9453924736252498
 
 
 
@@ -975,13 +1022,13 @@ wvpy.util.plot_roc(pfn["pred_naive"], pfn["churn"], title="Overfit Model on Test
 ```
 
 
-![png](output_59_0.png)
+![png](output_60_0.png)
 
 
 
 
 
-    0.5960012412998182
+    0.5941434506117897
 
 
 
