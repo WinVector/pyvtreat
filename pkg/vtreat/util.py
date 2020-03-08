@@ -16,6 +16,7 @@ import pandas
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore", category=DeprecationWarning)
     import statsmodels.api
+    import statsmodels.formula.api
 
 
 def safe_to_numeric_array(x):
@@ -161,32 +162,46 @@ def our_corr_score(*, y_true, y_pred):
 
 # noinspection PyPep8Naming
 def linear_R2_with_sig(*,  y_true, y_pred):
-    # smoothed down
-    y_true = numpy.append(
-        numpy.asarray(y_true),
-        [0, 1, 0, 1])  # smoothing/regularization
-    y_pred = numpy.append(
-        numpy.asarray(y_pred),
-        [0, 0, 1, 1])  # smoothing/regularization
+    y_true = numpy.asarray(y_true)
+    y_pred = numpy.asarray(y_pred)
     fit = statsmodels.api.OLS(
         y_true,
-        pandas.DataFrame({'x': y_pred, 'c': 1})).fit()
+        pandas.DataFrame({'x': y_pred, 'c': 1})).fit(disp=0)
     return fit.rsquared, fit.f_pvalue  # use the f-test sig
 
 
 # noinspection PyPep8Naming
 def pseudo_R2_with_sig(*,  y_true, y_pred):
-    # smoothed down
-    y_true = numpy.append(
-        numpy.asarray(y_true),
-        [0, 1, 0, 1])  # smoothing/regularization
-    y_pred = numpy.append(
-        numpy.asarray(y_pred),
-        [0, 0, 1, 1])  # smoothing/regularization
-    fit = statsmodels.api.Logit(
-        y_true,
-        pandas.DataFrame({'x': y_pred, 'c': 1})).fit()
-    return fit.prsquared, fit.llr_pvalue  # use the log-likelihood sig
+    y_true = numpy.asarray(y_true)
+    p = numpy.mean(y_true)
+    if (p <= 0) or (p >= 1):
+        return 1, 1
+    y_pred = numpy.asarray(y_pred)
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore")
+        # noinspection PyBroadException
+        try:
+            fit = statsmodels.api.Logit(
+                y_true,
+                pandas.DataFrame({'x': y_pred, 'c': 1})).fit(disp=0)
+            return fit.prsquared, fit.llr_pvalue  # use the log-likelihood sig
+        except Exception:
+            pass
+    # separated use linear model as a stand-in
+    return linear_R2_with_sig(y_true=y_true, y_pred=y_pred)
+    # # smoothing approach, very downward biased on small examples
+    # eps = min(p/2, (1-p)/2)
+    # y_true = numpy.append(
+    #     y_true,
+    #     [p - eps, p + eps, p - eps, p + eps])  # smoothing/regularization
+    #
+    # y_pred = numpy.append(
+    #     y_pred,
+    #     [0, 0, 1, 1])  # smoothing/regularization
+    # fit = statsmodels.api.Logit(
+    #      y_true,
+    #      pandas.DataFrame({'x': y_pred, 'c': 1})).fit(disp=0)
+    # return fit.prsquared, fit.llr_pvalue  # use the log-likelihood sig
 
 
 def score_variables(cross_frame, variables, outcome,

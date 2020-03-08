@@ -1,5 +1,5 @@
 ============================= test session starts ==============================
-platform darwin -- Python 3.7.6, pytest-5.3.5, py-1.8.1, pluggy-0.13.1
+platform darwin -- Python 3.7.5, pytest-5.2.4, py-1.8.0, pluggy-0.13.0
 rootdir: /Users/johnmount/Documents/work/pyvtreat/pkg
 plugins: cov-2.8.1
 collected 15 items
@@ -17,17 +17,17 @@ pkg/tests/test_unsupervised.py .                                         [ 86%]
 pkg/tests/test_user_coders.py .                                          [ 93%]
 pkg/tests/test_util.py .                                                 [100%]
 
----------- coverage: platform darwin, python 3.7.6-final-0 -----------
+---------- coverage: platform darwin, python 3.7.5-final-0 -----------
 Name                        Stmts   Miss  Cover
 -----------------------------------------------
 pkg/vtreat/__init__.py          6      0   100%
 pkg/vtreat/cross_plan.py      104     57    45%
 pkg/vtreat/transform.py        17      4    76%
-pkg/vtreat/util.py            154     19    88%
+pkg/vtreat/util.py            164     20    88%
 pkg/vtreat/vtreat_api.py      221     44    80%
 pkg/vtreat/vtreat_impl.py     575     79    86%
 -----------------------------------------------
-TOTAL                        1077    203    81%
+TOTAL                        1087    204    81%
 
 
-============================= 15 passed in 10.25s ==============================
+============================= 15 passed in 10.89s ==============================
