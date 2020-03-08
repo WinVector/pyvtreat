@@ -164,6 +164,12 @@ def our_corr_score(*, y_true, y_pred):
 def linear_R2_with_sig(*,  y_true, y_pred):
     y_true = numpy.asarray(y_true)
     y_pred = numpy.asarray(y_pred)
+    if len(y_true) < 2:
+        return 0, 1
+    if numpy.min(y_true) >= numpy.max(y_true):
+        return 0, 1
+    if numpy.min(y_pred) >= numpy.max(y_pred):
+        return 0, 1
     fit = statsmodels.api.OLS(
         y_true,
         pandas.DataFrame({'x': y_pred, 'c': 1})).fit(disp=0)
@@ -173,10 +179,13 @@ def linear_R2_with_sig(*,  y_true, y_pred):
 # noinspection PyPep8Naming
 def pseudo_R2_with_sig(*,  y_true, y_pred):
     y_true = numpy.asarray(y_true)
-    p = numpy.mean(y_true)
-    if (p <= 0) or (p >= 1):
-        return 1, 1
     y_pred = numpy.asarray(y_pred)
+    if len(y_true) < 2:
+        return 0, 1
+    if numpy.min(y_true) >= numpy.max(y_true):
+        return 0, 1
+    if numpy.min(y_pred) >= numpy.max(y_pred):
+        return 0, 1
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore")
         # noinspection PyBroadException
@@ -190,6 +199,9 @@ def pseudo_R2_with_sig(*,  y_true, y_pred):
     # separated use linear model as a stand-in
     return linear_R2_with_sig(y_true=y_true, y_pred=y_pred)
     # # smoothing approach, very downward biased on small examples
+    # p = numpy.mean(y_true)
+    # if (p <= 0) or (p >= 1):
+    #     return 1, 1
     # eps = min(p/2, (1-p)/2)
     # y_true = numpy.append(
     #     y_true,
