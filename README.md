@@ -48,14 +48,11 @@ To get started with `vtreat` please check out our documentation:
   * [Getting started using `vtreat` for classification](https://github.com/WinVector/pyvtreat/blob/master/Examples/Classification/Classification.md).
   * [Getting started using `vtreat` for regression](https://github.com/WinVector/pyvtreat/blob/master/Examples/Regression/Regression.md).
   * [Getting started using `vtreat` for multi-category classification](https://github.com/WinVector/pyvtreat/blob/master/Examples/Multinomial/MultinomialExample.md).
-
   * [Getting started using `vtreat` for unsupervised tasks](https://github.com/WinVector/pyvtreat/blob/master/Examples/Unsupervised/Unsupervised.md).
   * [The original `vtreat` paper](https://arxiv.org/abs/1611.09477) this note describes the methodology and theory. (The article describes the `R` version, however all of the examples can be found worked in `Python` [here](https://github.com/WinVector/pyvtreat/tree/master/Examples/vtreat_paper1)).
 
 
-`vtreat` is available
-as a [`Python`/`Pandas` package](https://github.com/WinVector/vtreat),
-and also as an [`R` package](https://github.com/WinVector/vtreat).
+`vtreat` is available as a [`Python`/`Pandas` package](https://github.com/WinVector/vtreat), and also as an [`R` package](https://github.com/WinVector/vtreat).
 
 
 ![](https://github.com/WinVector/vtreat/raw/master/tools/vtreat.png)
