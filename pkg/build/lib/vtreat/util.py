@@ -5,18 +5,12 @@ Created on Sat Jul 20 11:40:41 2019
 @author: johnmount
 """
 
-import warnings
 import math
 import statistics
 
 import numpy
 import pandas
-
-
-with warnings.catch_warnings():
-    warnings.filterwarnings("ignore", category=DeprecationWarning)
-    import statsmodels.api
-    import statsmodels.formula.api
+import scipy.stats
 
 
 def safe_to_numeric_array(x):
@@ -153,67 +147,17 @@ def our_corr_score(*, y_true, y_pred):
     # compute Pearson correlation
     y_true = numpy.asarray(y_true)
     y_pred = numpy.asarray(y_pred)
-    y_pred = y_pred - numpy.mean(y_pred)
-    y_pred = y_pred / math.sqrt(numpy.dot(y_pred, y_pred))
-    y_true = y_true - numpy.mean(y_true)
-    y_true = y_true / math.sqrt(numpy.dot(y_true, y_true))
-    return numpy.dot(y_pred, y_true)
-
-
-# noinspection PyPep8Naming
-def linear_R2_with_sig(*,  y_true, y_pred):
-    y_true = numpy.asarray(y_true)
-    y_pred = numpy.asarray(y_pred)
-    if len(y_true) < 2:
-        return 0, 1
+    n = len(y_true)
+    if n < 2:
+        return 1, 1
     if numpy.min(y_true) >= numpy.max(y_true):
-        return 0, 1
+        return 1, 1
     if numpy.min(y_pred) >= numpy.max(y_pred):
         return 0, 1
-    fit = statsmodels.api.OLS(
-        y_true,
-        pandas.DataFrame({'x': y_pred, 'c': 1})).fit(disp=0)
-    return fit.rsquared, fit.f_pvalue  # use the f-test sig
-
-
-# noinspection PyPep8Naming
-def pseudo_R2_with_sig(*,  y_true, y_pred):
-    y_true = numpy.asarray(y_true)
-    y_pred = numpy.asarray(y_pred)
-    if len(y_true) < 2:
-        return 0, 1
-    if numpy.min(y_true) >= numpy.max(y_true):
-        return 0, 1
-    if numpy.min(y_pred) >= numpy.max(y_pred):
-        return 0, 1
-    with warnings.catch_warnings():
-        warnings.filterwarnings("ignore")
-        # noinspection PyBroadException
-        try:
-            fit = statsmodels.api.Logit(
-                y_true,
-                pandas.DataFrame({'x': y_pred, 'c': 1})).fit(disp=0)
-            return fit.prsquared, fit.llr_pvalue  # use the log-likelihood sig
-        except Exception:
-            pass
-    # separated use linear model as a stand-in
-    return linear_R2_with_sig(y_true=y_true, y_pred=y_pred)
-    # # smoothing approach, very downward biased on small examples
-    # p = numpy.mean(y_true)
-    # if (p <= 0) or (p >= 1):
-    #     return 1, 1
-    # eps = min(p/2, (1-p)/2)
-    # y_true = numpy.append(
-    #     y_true,
-    #     [p - eps, p + eps, p - eps, p + eps])  # smoothing/regularization
-    #
-    # y_pred = numpy.append(
-    #     y_pred,
-    #     [0, 0, 1, 1])  # smoothing/regularization
-    # fit = statsmodels.api.Logit(
-    #      y_true,
-    #      pandas.DataFrame({'x': y_pred, 'c': 1})).fit(disp=0)
-    # return fit.prsquared, fit.llr_pvalue  # use the log-likelihood sig
+    r, sig = scipy.stats.pearsonr(y_true, y_pred)
+    if n < 3:
+        sig = 1
+    return r, sig
 
 
 def score_variables(cross_frame, variables, outcome,
@@ -234,20 +178,17 @@ def score_variables(cross_frame, variables, outcome,
         if (n > 2) and \
                 (numpy.max(col) > numpy.min(col)) and \
                 (numpy.max(outcome) > numpy.min(outcome)):
-            cor = our_corr_score(
-                y_true=outcome,
-                y_pred=col)
+            cor, sig = our_corr_score(y_true=outcome, y_pred=col)
+            r2 = cor**2
             if is_classification:
-                est = pseudo_R2_with_sig(y_true=outcome, y_pred=col)
-            else:
-                est = linear_R2_with_sig(y_true=outcome, y_pred=col)
+                pass  # TODO: fix this up
             sfi = pandas.DataFrame(
                 {
                     "variable": [v],
                     "has_range": [True],
                     "PearsonR": cor,
-                    "R2": [est[0]],
-                    "significance": [est[1]],
+                    "R2": r2,
+                    "significance": sig,
                 }
             )
         else:
