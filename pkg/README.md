@@ -52,6 +52,10 @@ To get started with `vtreat` please check out our documentation:
   * [The `vtreat` Score Frame](https://github.com/WinVector/pyvtreat/blob/master/Examples/ScoreFrame/ScoreFrame.md) (a table mapping new derived variables to original columns).
   * [The original `vtreat` paper](https://arxiv.org/abs/1611.09477) this note describes the methodology and theory. (The article describes the `R` version, however all of the examples can be found worked in `Python` [here](https://github.com/WinVector/pyvtreat/tree/master/Examples/vtreat_paper1)).
 
+Some `vtreat` common capabilities are documented here:
+
+  * **Score Frame** [score_frame_](https://github.com/WinVector/pyvtreat/blob/master/Examples/ScoreFrame/ScoreFrame.md), using the `score_frame_` information.
+  * **Cross Validation** [Customized Cross Plans](https://github.com/WinVector/pyvtreat/blob/master/Examples/CustomizedCrossPlan/CustomizedCrossPlan.md), controlling the cross validation plan.
 
 `vtreat` is available as a [`Python`/`Pandas` package](https://github.com/WinVector/vtreat), and also as an [`R` package](https://github.com/WinVector/vtreat).
 
