@@ -1001,9 +1001,9 @@ class VariableTreatment(ABC):
 
     # https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html
 
-    # noinspection PyPep8Naming, PyUnusedLocal
+    # noinspection PyPep8Naming
     def fit_predict(self, X, y=None, **fit_params):
-        return self.fit_transform(X=X, y=y)
+        return self.fit_transform(X=X, y=y, **fit_params)
 
     # noinspection PyPep8Naming
     def predict(self, X):
