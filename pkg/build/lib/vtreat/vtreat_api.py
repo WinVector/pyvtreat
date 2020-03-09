@@ -30,6 +30,7 @@ def vtreat_parameters(user_params=None):
         "sparse_indicators": True,
         "missingness_imputation": numpy.mean,
         "check_for_duplicate_frames": True,
+        "retain_cross_plan": False,
     }
     if user_params is not None:
         pkeys = set(params.keys())
@@ -116,7 +117,7 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
         return res
 
     # noinspection PyPep8Naming
-    def fit_transform(self, X, y=None):
+    def fit_transform(self, X, y=None, **fit_params):
         X, orig_type = vtreat_impl.ready_data_frame(X)
         self.check_column_names(X.columns)
         if y is None:
@@ -156,18 +157,18 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
         )
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         # patch in cross-frame versions of complex columns such as impact
-        self.cross_plan_ = self.params_["cross_validation_plan"].split_plan(
+        cross_plan = self.params_["cross_validation_plan"].split_plan(
             n_rows=X.shape[0], k_folds=self.params_["cross_validation_k"], data=X, y=y
         )
         cross_frame = vtreat_impl.cross_patch_refit_y_aware_cols(
-            x=X, y=y, res=res, plan=self.plan_, cross_plan=self.cross_plan_
+            x=X, y=y, res=res, plan=self.plan_, cross_plan=cross_plan
         )
         cross_frame = vtreat_impl.cross_patch_user_y_aware_cols(
             x=cross_frame,
             y=y,
             res=res,
             params=self.params_,
-            cross_plan=self.cross_plan_,
+            cross_plan=cross_plan,
         )
         # use cross_frame to compute variable effects
         self.score_frame_ = vtreat_impl.score_plan_variables(
@@ -182,6 +183,8 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
         )
         cross_frame, res_columns = vtreat_impl.back_to_orig_type_data_frame(cross_frame, orig_type)
         self.last_result_columns = res_columns
+        if self.params_['retain_cross_plan']:
+            self.cross_plan_ = cross_plan
         return cross_frame
 
 
@@ -241,7 +244,7 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         return res
 
     # noinspection PyPep8Naming
-    def fit_transform(self, X, y=None):
+    def fit_transform(self, X, y=None, **fit_params):
         X, orig_type = vtreat_impl.ready_data_frame(X)
         self.check_column_names(X.columns)
         if y is None:
@@ -280,18 +283,18 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         )
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         # patch in cross-frame versions of complex columns such as impact
-        self.cross_plan_ = self.params_["cross_validation_plan"].split_plan(
+        cross_plan = self.params_["cross_validation_plan"].split_plan(
             n_rows=X.shape[0], k_folds=self.params_["cross_validation_k"], data=X, y=y
         )
         cross_frame = vtreat_impl.cross_patch_refit_y_aware_cols(
-            x=X, y=y, res=res, plan=self.plan_, cross_plan=self.cross_plan_
+            x=X, y=y, res=res, plan=self.plan_, cross_plan=cross_plan
         )
         cross_frame = vtreat_impl.cross_patch_user_y_aware_cols(
             x=cross_frame,
             y=y,
             res=res,
             params=self.params_,
-            cross_plan=self.cross_plan_,
+            cross_plan=cross_plan,
         )
         # use cross_frame to compute variable effects
         self.score_frame_ = vtreat_impl.score_plan_variables(
@@ -308,6 +311,8 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         )
         cross_frame, res_columns = vtreat_impl.back_to_orig_type_data_frame(cross_frame, orig_type)
         self.last_result_columns = res_columns
+        if self.params_['retain_cross_plan']:
+            self.cross_plan_ = cross_plan
         return cross_frame
 
 
@@ -366,7 +371,7 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         return res
 
     # noinspection PyPep8Naming
-    def fit_transform(self, X, y=None):
+    def fit_transform(self, X, y=None, **fit_params):
         X, orig_type = vtreat_impl.ready_data_frame(X)
         self.check_column_names(X.columns)
         if y is None:
@@ -404,20 +409,19 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         )
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         # patch in cross-frame versions of complex columns such as impact
-        self.cross_plan_ = self.params_["cross_validation_plan"].split_plan(
+        cross_plan = self.params_["cross_validation_plan"].split_plan(
             n_rows=X.shape[0], k_folds=self.params_["cross_validation_k"], data=X, y=y
         )
         cross_frame = vtreat_impl.cross_patch_refit_y_aware_cols(
-            x=X, y=y, res=res, plan=self.plan_, cross_plan=self.cross_plan_
+            x=X, y=y, res=res, plan=self.plan_, cross_plan=cross_plan
         )
         cross_frame = vtreat_impl.cross_patch_user_y_aware_cols(
             x=cross_frame,
             y=y,
             res=res,
             params=self.params_,
-            cross_plan=self.cross_plan_,
+            cross_plan=cross_plan,
         )
-
         # use cross_frame to compute variable effects
 
         def si(oi):
@@ -439,6 +443,8 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         )
         cross_frame, res_columns = vtreat_impl.back_to_orig_type_data_frame(cross_frame, orig_type)
         self.last_result_columns = res_columns
+        if self.params_['retain_cross_plan']:
+            self.cross_plan_ = cross_plan
         return cross_frame
 
 
@@ -487,7 +493,7 @@ class UnsupervisedTreatment(vtreat_impl.VariableTreatment):
         return res
 
     # noinspection PyPep8Naming
-    def fit_transform(self, X, y=None):
+    def fit_transform(self, X, y=None, **fit_params):
         X, orig_type = vtreat_impl.ready_data_frame(X)
         self.check_column_names(X.columns)
         if y is not None:
