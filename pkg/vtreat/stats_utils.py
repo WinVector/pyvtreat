@@ -34,6 +34,19 @@ def our_corr_score(*, y_true, y_pred):
     return r, sig
 
 
+# x, y - numpy numeric vectors, y 0/1.  solve for y- return predictions
+def solve_logistic_regression(*, y, x):
+    fitter = sklearn.linear_model.LogisticRegression(
+        penalty='l2',
+        solver='lbfgs',
+        fit_intercept=True,
+        C=1000)
+    dependent_vars = x.reshape((len(x), 1))
+    fitter.fit(X=dependent_vars, y=y)
+    preds = fitter.predict_proba(X=dependent_vars)[:, 1]
+    return preds
+
+
 # noinspection PyPep8Naming
 def our_pseudo_R2(*, y_true, y_pred):
     if not have_sklearn:
@@ -50,13 +63,7 @@ def our_pseudo_R2(*, y_true, y_pred):
     if numpy.min(y_pred) >= numpy.max(y_pred):
         return 0, 1
 
-    fitter = sklearn.linear_model.LogisticRegression(
-        penalty='l2',
-        solver='lbfgs',
-        fit_intercept=True,
-        C=1000)
-    fitter.fit(X=y_pred.reshape((n, 1)), y=y_true)
-    preds = fitter.predict_proba(X=y_pred.reshape((n, 1)))[:, 1]
+    preds = solve_logistic_regression(y=y_true, x=y_pred)
     eps = 1e-5
     preds = numpy.minimum(preds, 1-eps)
     preds = numpy.maximum(preds, eps)

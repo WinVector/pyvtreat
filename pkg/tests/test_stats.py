@@ -10,12 +10,16 @@ def test_linear_cor():
     # R:
     # y_true = c(1, 1, 0, 1, 0, 1, 1, 0, 1, 0)
     # y_pred = c(0.8, 1, 0.2, 0.5, 0.5, 0.8, 1, 0.2, 0.5, 0.5)
+    # cor.test(y_true, y_pred)
+    # # t = 3.1159, df = 8, p-value = 0.01432
+    # #       cor
+    # # 0.7404361
     # summary(lm(y_true ~ y_pred))
     # Multiple R-squared:  0.5482,	Adjusted R-squared:  0.4918
     # F-statistic: 9.709 on 1 and 8 DF,  p-value: 0.01432
+    assert numpy.abs(cor - 0.7404361) < 1.0e-2
     assert numpy.abs(cor*cor - 0.5482) < 1.0e-2
     assert numpy.abs(sig - 0.01432)  < 1.0e-2
-
 
 
 def test_logistic_r2():
