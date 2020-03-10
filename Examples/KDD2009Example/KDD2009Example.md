@@ -16,25 +16,6 @@ import scipy.sparse
 ```
 
 
-<style type='text/css'>
-.datatable table.frame { margin-bottom: 0; }
-.datatable table.frame thead { border-bottom: none; }
-.datatable table.frame tr.coltypes td {  color: #FFFFFF;  line-height: 6px;  padding: 0 0.5em;}
-.datatable .boolean { background: #DDDD99; }
-.datatable .object  { background: #565656; }
-.datatable .integer { background: #5D9E5D; }
-.datatable .float   { background: #4040CC; }
-.datatable .string  { background: #CC4040; }
-.datatable .row_index {  background: var(--jp-border-color3);  border-right: 1px solid var(--jp-border-color0);  color: var(--jp-ui-font-color3);  font-size: 9px;}
-.datatable .frame tr.coltypes .row_index {  background: var(--jp-border-color0);}
-.datatable th:nth-child(2) { padding-left: 12px; }
-.datatable .hellipsis {  color: var(--jp-cell-editor-border-color);}
-.datatable .vellipsis {  background: var(--jp-layout-color0);  color: var(--jp-cell-editor-border-color);}
-.datatable .na {  color: var(--jp-cell-editor-border-color);  font-size: 80%;}
-.datatable .footer { font-size: 9px; }
-.datatable .frame_dimensions {  background: var(--jp-border-color3);  border-top: 1px solid var(--jp-border-color0);  color: var(--jp-ui-font-color3);  display: inline-block;  opacity: 0.6;  padding: 1px 10px 1px 5px;}
-</style>
-
 
 
 Read in explanitory variables.
@@ -482,7 +463,7 @@ cross_frame.head()
     </tr>
   </tbody>
 </table>
-<p>5 rows × 235 columns</p>
+<p>5 rows × 234 columns</p>
 </div>
 
 
@@ -495,7 +476,7 @@ cross_frame.shape
 
 
 
-    (45000, 235)
+    (45000, 234)
 
 
 
@@ -537,8 +518,8 @@ plan.score_frame_.head()
       <td>False</td>
       <td>True</td>
       <td>0.004328</td>
-      <td>0.000037</td>
-      <td>0.348710</td>
+      <td>0.000019</td>
+      <td>0.358610</td>
       <td>193.0</td>
       <td>0.001036</td>
       <td>False</td>
@@ -551,8 +532,8 @@ plan.score_frame_.head()
       <td>False</td>
       <td>True</td>
       <td>0.016358</td>
-      <td>0.000579</td>
-      <td>0.000218</td>
+      <td>0.000268</td>
+      <td>0.000520</td>
       <td>193.0</td>
       <td>0.001036</td>
       <td>True</td>
@@ -565,8 +546,8 @@ plan.score_frame_.head()
       <td>False</td>
       <td>True</td>
       <td>0.016325</td>
-      <td>0.000576</td>
-      <td>0.000225</td>
+      <td>0.000266</td>
+      <td>0.000534</td>
       <td>193.0</td>
       <td>0.001036</td>
       <td>True</td>
@@ -579,8 +560,8 @@ plan.score_frame_.head()
       <td>False</td>
       <td>True</td>
       <td>0.020327</td>
-      <td>0.000906</td>
-      <td>0.000004</td>
+      <td>0.000413</td>
+      <td>0.000016</td>
       <td>193.0</td>
       <td>0.001036</td>
       <td>True</td>
@@ -593,8 +574,8 @@ plan.score_frame_.head()
       <td>False</td>
       <td>True</td>
       <td>0.017267</td>
-      <td>0.000641</td>
-      <td>0.000100</td>
+      <td>0.000298</td>
+      <td>0.000249</td>
       <td>193.0</td>
       <td>0.001036</td>
       <td>True</td>
@@ -614,7 +595,7 @@ len(model_vars)
 
 
 
-    235
+    234
 
 
 
@@ -639,7 +620,7 @@ cross_frame.dtypes
     Var229_lev__NA_           Sparse[float64, 0.0]
     Var229_lev_am7c           Sparse[float64, 0.0]
     Var229_lev_mj86           Sparse[float64, 0.0]
-    Length: 235, dtype: object
+    Length: 234, dtype: object
 
 
 
@@ -776,11 +757,11 @@ best
   </thead>
   <tbody>
     <tr>
-      <th>67</th>
-      <td>0.070311</td>
-      <td>0.0003</td>
-      <td>0.072533</td>
-      <td>0.001178</td>
+      <th>83</th>
+      <td>0.069933</td>
+      <td>0.000401</td>
+      <td>0.072333</td>
+      <td>0.001093</td>
     </tr>
   </tbody>
 </table>
@@ -797,7 +778,7 @@ ntree
 
 
 
-    67
+    83
 
 
 
@@ -813,7 +794,7 @@ fitter
     XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
                   colsample_bynode=1, colsample_bytree=1, gamma=0,
                   learning_rate=0.1, max_delta_step=0, max_depth=3,
-                  min_child_weight=1, missing=None, n_estimators=67, n_jobs=1,
+                  min_child_weight=1, missing=None, n_estimators=83, n_jobs=1,
                   nthread=None, objective='binary:logistic', random_state=0,
                   reg_alpha=0, reg_lambda=1, scale_pos_weight=1, seed=None,
                   silent=None, subsample=1, verbosity=1)
@@ -848,7 +829,7 @@ wvpy.util.plot_roc(pf_train["pred"], pf_train["churn"], title="Model on Train")
 
 
 
-    0.7724322415352468
+    0.778895961015585
 
 
 
@@ -869,7 +850,7 @@ wvpy.util.plot_roc(pf["pred"], pf["churn"], title="Model on Test")
 
 
 
-    0.7457744702689956
+    0.7472558854286449
 
 
 
@@ -877,7 +858,7 @@ Notice we dealt with many problem columns at once, and in a statistically sound 
 
 We can compare this to the [R solution (link)](https://github.com/WinVector/PDSwR2/blob/master/KDD2009/KDD2009vtreat.md).
 
-We can compare the above cross-frame solution to a naive "design transform and model on the same data set" solution as we show below.  Note we turn off `filter_to_recommended` as this is computed using cross-frame techniques (and hence is a non-naive estimate).
+We can compare the above cross-frame solution to a naive "design transform and model on the same data set" solution as we show below.  Note we are leaveing filter to recommended on, to show the non-cross validated methodology still fails in an "easy case."
 
 
 ```python
@@ -888,7 +869,7 @@ plan_naive.fit(d_train, churn_train)
 naive_frame = plan_naive.transform(d_train)
 ```
 
-    /Users/johnmount/opt/anaconda3/envs/ai_academy_3_7/lib/python3.7/site-packages/vtreat/vtreat_api.py:232: UserWarning: possibly called transform on same data used to fit
+    /Users/johnmount/opt/anaconda3/envs/ai_academy_3_7/lib/python3.7/site-packages/vtreat/vtreat_api.py:235: UserWarning: possibly called transform on same data used to fit
     (this causes over-fit, please use fit_transform() instead)
       "possibly called transform on same data used to fit\n" +
 
@@ -902,7 +883,7 @@ len(model_vars)
 
 
 
-    231
+    230
 
 
 
@@ -941,11 +922,11 @@ bestn
   </thead>
   <tbody>
     <tr>
-      <th>71</th>
-      <td>0.050944</td>
-      <td>0.000418</td>
-      <td>0.059289</td>
-      <td>0.002297</td>
+      <th>96</th>
+      <td>0.047833</td>
+      <td>0.000314</td>
+      <td>0.058444</td>
+      <td>0.001457</td>
     </tr>
   </tbody>
 </table>
@@ -962,7 +943,7 @@ ntreen
 
 
 
-    71
+    96
 
 
 
@@ -978,7 +959,7 @@ fittern
     XGBClassifier(base_score=0.5, booster='gbtree', colsample_bylevel=1,
                   colsample_bynode=1, colsample_bytree=1, gamma=0,
                   learning_rate=0.1, max_delta_step=0, max_depth=3,
-                  min_child_weight=1, missing=None, n_estimators=71, n_jobs=1,
+                  min_child_weight=1, missing=None, n_estimators=96, n_jobs=1,
                   nthread=None, objective='binary:logistic', random_state=0,
                   reg_alpha=0, reg_lambda=1, scale_pos_weight=1, seed=None,
                   silent=None, subsample=1, verbosity=1)
@@ -1010,7 +991,7 @@ wvpy.util.plot_roc(pfn_train["pred_naive"], pfn_train["churn"], title="Overfit M
 
 
 
-    0.9453924736252498
+    0.9496847639151214
 
 
 
@@ -1028,7 +1009,7 @@ wvpy.util.plot_roc(pfn["pred_naive"], pfn["churn"], title="Overfit Model on Test
 
 
 
-    0.5941434506117897
+    0.598560484633134
 
 
 
