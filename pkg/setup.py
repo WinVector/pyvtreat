@@ -62,6 +62,10 @@ setuptools.setup(
         'pandas',
         'scipy'
     ],
+    extras_require={
+        'pseudoR2': ['sklearn'],
+        'all': ['sklearn'],
+    },
     platforms=['any'],
     license='License :: OSI Approved :: BSD 3-clause License',
     python_requires=">=3.5.3",

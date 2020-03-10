@@ -10,7 +10,9 @@ import statistics
 
 import numpy
 import pandas
-import scipy.stats
+
+
+import vtreat.stats_utils
 
 
 def safe_to_numeric_array(x):
@@ -143,23 +145,6 @@ def grouped_by_x_statistics(x, y):
     return sf
 
 
-def our_corr_score(*, y_true, y_pred):
-    # compute Pearson correlation
-    y_true = numpy.asarray(y_true)
-    y_pred = numpy.asarray(y_pred)
-    n = len(y_true)
-    if n < 2:
-        return 1, 1
-    if numpy.min(y_true) >= numpy.max(y_true):
-        return 1, 1
-    if numpy.min(y_pred) >= numpy.max(y_pred):
-        return 0, 1
-    r, sig = scipy.stats.pearsonr(y_true, y_pred)
-    if n < 3:
-        sig = 1
-    return r, sig
-
-
 def score_variables(cross_frame, variables, outcome,
                     *,
                     is_classification=False):
@@ -178,10 +163,10 @@ def score_variables(cross_frame, variables, outcome,
         if (n > 2) and \
                 (numpy.max(col) > numpy.min(col)) and \
                 (numpy.max(outcome) > numpy.min(outcome)):
-            cor, sig = our_corr_score(y_true=outcome, y_pred=col)
+            cor, sig = vtreat.stats_utils.our_corr_score(y_true=outcome, y_pred=col)
             r2 = cor**2
             if is_classification:
-                pass  # TODO: fix this up
+                r2, sig = vtreat.stats_utils.our_pseudo_R2(y_true=outcome, y_pred=col)
             sfi = pandas.DataFrame(
                 {
                     "variable": [v],

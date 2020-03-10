@@ -1,3 +1,9 @@
 numpy
 pandas
 scipy
+
+[all]
+sklearn
+
+[pseudoR2]
+sklearn

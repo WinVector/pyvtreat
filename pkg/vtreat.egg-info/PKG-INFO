@@ -62,3 +62,5 @@ Classifier: Programming Language :: Python :: 3.8
 Classifier: License :: OSI Approved :: BSD License
 Requires-Python: >=3.5.3
 Description-Content-Type: text/markdown
+Provides-Extra: pseudoR2
+Provides-Extra: all
