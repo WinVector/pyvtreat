@@ -81,14 +81,28 @@ def test_solve_logistic():
     assert numpy.max(numpy.abs(numpy.asarray(expect) - soln)) < 1.0e-3
 
     soln = vtreat.stats_utils.solve_logistic_regression(y=[1, 0, 1, 0, 0], x=[1, 0, 1, 0, 1])
-    expect = [0.66452451, 0.00321781, 0.66452451, 0.00321781, 0.66452451]
-    assert numpy.max(numpy.abs(numpy.asarray(expect) - soln)) < 1.0e-3
+    expect = [6.66662683e-01, 1.64791483e-05, 6.66662683e-01, 1.64791483e-05,
+       6.66662683e-01]
+    assert numpy.max(numpy.abs(numpy.asarray(expect) - soln)) < 1.0e-2
 
 
 def test_est_dev():
     est = vtreat.stats_utils.est_deviance(y=[1, 0, 1, 1, 0, 0], est=[1, 0.2, 0, 0.5, 0.2, 0.3])
     expect = 26.018089384294647
-    assert numpy.abs(expect - est) < 1.0e-3
+    assert numpy.abs(expect - est) < 1.0e-2
+
+
+def test_brute_logistic():
+    y_true = [1, 1, 0, 0, 0, 1, 1, 0, 1, 1]
+    y_pred = [0.8, 1, 1, 0.5, 0.5, 0.8, 1, 0.2, 0.5, 0.5]
+    soln = vtreat.stats_utils.brute_force_solve_logistic(y=y_true, x=y_pred)
+    expect = [0.70953711, 0.8298342 , 0.8298342 , 0.46410274, 0.46410274,
+       0.70953711, 0.8298342 , 0.23490658, 0.46410274, 0.46410274]
+    assert numpy.max(numpy.abs(numpy.asarray(expect) - soln)) < 1.0e-2
+
+    if vtreat.stats_utils.have_sklearn:
+        soln2 = vtreat.stats_utils.sklearn_solve_logistic(y=y_true, x=y_pred)
+        assert numpy.max(numpy.abs(numpy.asarray(expect) - soln2)) < 1.0e-2
 
 
 def test_logistic_r2():
@@ -106,9 +120,6 @@ def test_logistic_r2():
     expect_cor, expect_sig = (1, 1)
     assert numpy.abs(cor - expect_cor) < 1.0e-3
     assert numpy.abs(sig - expect_sig) < 1.0e-3
-
-    if not vtreat.stats_utils.have_sklearn:  # TODO: elim this
-        return
 
     y_true = [1, 1, 0, 0, 0, 1, 1, 0, 1, 1]
     y_pred = [0.8, 1, 1, 0.5, 0.5, 0.8, 1, 0.2, 0.5, 0.5]
