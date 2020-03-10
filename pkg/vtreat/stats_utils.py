@@ -36,15 +36,29 @@ def our_corr_score(*, y_true, y_pred):
 
 # x, y - numpy numeric vectors, y 0/1.  solve for y- return predictions
 def solve_logistic_regression(*, y, x):
+    n = len(y)
+    if (n < 2) or (numpy.min(y) >= numpy.max(y)):
+        return y.copy()
+    if numpy.min(x) >= numpy.max(x):
+        return numpy.asarray([numpy.mean(y)] * n)
     fitter = sklearn.linear_model.LogisticRegression(
         penalty='l2',
         solver='lbfgs',
         fit_intercept=True,
         C=1000)
-    dependent_vars = x.reshape((len(x), 1))
+    dependent_vars = x.reshape((n, 1))
     fitter.fit(X=dependent_vars, y=y)
     preds = fitter.predict_proba(X=dependent_vars)[:, 1]
-    return preds
+    return numpy.asarray(preds)
+
+
+def est_deviance(*, y, est, epsilon=1.0e-5):
+    est = numpy.minimum(est, 1 - epsilon)
+    est = numpy.maximum(est, epsilon)
+    deviance = -2 * numpy.sum(
+        y * numpy.log(est) +
+        (1 - y) * numpy.log(1 - est))
+    return deviance
 
 
 # noinspection PyPep8Naming
@@ -62,16 +76,9 @@ def our_pseudo_R2(*, y_true, y_pred):
         return 1, 1
     if numpy.min(y_pred) >= numpy.max(y_pred):
         return 0, 1
-
     preds = solve_logistic_regression(y=y_true, x=y_pred)
-    eps = 1e-5
-    preds = numpy.minimum(preds, 1-eps)
-    preds = numpy.maximum(preds, eps)
-    deviance = -2 * numpy.sum(y_true * numpy.log(preds) +\
-                              (1 - y_true) * numpy.log(1 - preds))
-    null_pred = numpy.zeros(n) + numpy.mean(y_true)
-    null_deviance = -2 * numpy.sum(y_true * numpy.log(null_pred) +\
-                                   (1 - y_true) * numpy.log(1 - null_pred))
+    deviance = est_deviance(y=y_true, est=preds)
+    null_deviance = est_deviance(y=y_true, est=numpy.zeros(n) + numpy.mean(y_true))
     r2 = 1 - deviance/null_deviance
     sig = 1
 
