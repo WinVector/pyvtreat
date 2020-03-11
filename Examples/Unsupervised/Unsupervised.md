@@ -510,23 +510,23 @@ print(fitter.intercept_)
 {model_vars[i]: fitter.coef_[i] for i in range(len(model_vars))}
 ```
 
-    0.2663584367410501
+    0.2663584367410494
 
 
 
 
 
-    {'xc_is_bad': -0.5725948709331864,
-     'x': 0.001297968015670281,
-     'x2': 0.00039443912145288937,
-     'xc_prevalence_code': -0.0044343345462432415,
-     'xc_lev_level_1_0': 0.7171318997544216,
-     'xc_lev_level_-0_5': -0.813326636340793,
-     'xc_lev_level_0_5': 0.21813583211202364,
-     'xc_lev_level_0_0': -0.1831739973957964,
-     'xc_lev_level_-0_0': -0.4133594109584153,
-     'xc_lev__NA_': -0.572594870933186,
-     'xc_lev_level_1_5': 1.0471871837617464}
+    {'xc_is_bad': -0.5725948709331847,
+     'x': 0.0012979680156703069,
+     'x2': 0.0003944391214530679,
+     'xc_prevalence_code': -0.004434334546243255,
+     'xc_lev_level_1_0': 0.717131899754422,
+     'xc_lev_level_-0_5': -0.8133266363407938,
+     'xc_lev_level_0_5': 0.21813583211202345,
+     'xc_lev_level_0_0': -0.1831739973957961,
+     'xc_lev_level_-0_0': -0.4133594109584157,
+     'xc_lev__NA_': -0.5725948709331844,
+     'xc_lev_level_1_5': 1.0471871837617448}
 
 
 
@@ -937,11 +937,14 @@ In all cases (classification, regression, unsupervised, and multinomial classifi
 
 The preparation commands are organized as follows:
 
- * **Regression**: [`R` regression example](https://github.com/WinVector/vtreat/blob/master/Examples/Regression/Regression.md), [`Python` regression example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Regression/Regression.md).
- * **Classification**: [`R` classification example](https://github.com/WinVector/vtreat/blob/master/Examples/Classification/Classification.md), [`Python` classification  example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Classification/Classification.md).
- * **Unsupervised tasks**: [`R` unsupervised example](https://github.com/WinVector/vtreat/blob/master/Examples/Unsupervised/Unsupervised.md), [`Python` unsupervised example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Unsupervised/Unsupervised.md).
- * **Multinomial classification**: [`R` multinomial classification example](https://github.com/WinVector/vtreat/blob/master/Examples/Multinomial/MultinomialExample.md), [`Python` multinomial classification example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Multinomial/MultinomialExample.md).
- 
+
+ * **Regression**: [`Python` regression example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Regression/Regression.md), [`R` regression example, fit/prepare interface](https://github.com/WinVector/vtreat/blob/master/Examples/Regression/Regression_FP.md), [`R` regression example, design/prepare/experiment interface](https://github.com/WinVector/vtreat/blob/master/Examples/Regression/Regression.md).
+ * **Classification**: [`Python` classification  example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Classification/Classification.md), [`R` classification example, fit/prepare interface](https://github.com/WinVector/vtreat/blob/master/Examples/Classification/Classification_FP.md), [`R` classification example, design/prepare/experiment interface](https://github.com/WinVector/vtreat/blob/master/Examples/Classification/Classification.md).
+ * **Unsupervised tasks**: [`Python` unsupervised example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Unsupervised/Unsupervised.md), [`R` unsupervised example, fit/prepare interface](https://github.com/WinVector/vtreat/blob/master/Examples/Unsupervised/Unsupervised_FP.md), [`R` unsupervised example, design/prepare/experiment interface](https://github.com/WinVector/vtreat/blob/master/Examples/Unsupervised/Unsupervised.md).
+ * **Multinomial classification**: [`Python` multinomial classification example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Multinomial/MultinomialExample.md), [`R` multinomial classification example, fit/prepare interface](https://github.com/WinVector/vtreat/blob/master/Examples/Multinomial/MultinomialExample_FP.md), [`R` multinomial classification example, design/prepare/experiment interface](https://github.com/WinVector/vtreat/blob/master/Examples/Multinomial/MultinomialExample.md).
+
+
+
 Some `vtreat` common capabilities are documented here:
 
   * **Score Frame** [score_frame_](https://github.com/WinVector/pyvtreat/blob/master/Examples/ScoreFrame/ScoreFrame.md), using the `score_frame_` information.

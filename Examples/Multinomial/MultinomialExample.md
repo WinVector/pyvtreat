@@ -209,6 +209,7 @@ transform.score_frame_
       <th>y_aware</th>
       <th>has_range</th>
       <th>PearsonR</th>
+      <th>R2</th>
       <th>significance</th>
       <th>vcount</th>
       <th>default_threshold</th>
@@ -225,7 +226,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.051749</td>
-      <td>2.480789e-01</td>
+      <td>0.002388</td>
+      <td>2.137073e-01</td>
       <td>2.0</td>
       <td>0.100000</td>
       <td>False</td>
@@ -239,7 +241,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.387438</td>
-      <td>2.353230e-19</td>
+      <td>0.169451</td>
+      <td>0.000000e+00</td>
       <td>2.0</td>
       <td>0.100000</td>
       <td>True</td>
@@ -253,7 +256,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.052826</td>
-      <td>2.383607e-01</td>
+      <td>0.002158</td>
+      <td>2.371412e-01</td>
       <td>2.0</td>
       <td>0.100000</td>
       <td>False</td>
@@ -267,7 +271,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.069126</td>
-      <td>1.226672e-01</td>
+      <td>0.003709</td>
+      <td>1.212047e-01</td>
       <td>2.0</td>
       <td>0.100000</td>
       <td>False</td>
@@ -281,7 +286,8 @@ transform.score_frame_
       <td>True</td>
       <td>True</td>
       <td>-0.447451</td>
-      <td>5.490853e-26</td>
+      <td>0.163299</td>
+      <td>0.000000e+00</td>
       <td>3.0</td>
       <td>0.066667</td>
       <td>False</td>
@@ -295,7 +301,8 @@ transform.score_frame_
       <td>True</td>
       <td>True</td>
       <td>0.867882</td>
-      <td>1.996377e-153</td>
+      <td>0.833866</td>
+      <td>0.000000e+00</td>
       <td>3.0</td>
       <td>0.066667</td>
       <td>True</td>
@@ -309,7 +316,8 @@ transform.score_frame_
       <td>True</td>
       <td>True</td>
       <td>-0.631421</td>
-      <td>5.580035e-57</td>
+      <td>0.825622</td>
+      <td>0.000000e+00</td>
       <td>3.0</td>
       <td>0.066667</td>
       <td>False</td>
@@ -323,7 +331,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.567968</td>
-      <td>4.779330e-44</td>
+      <td>0.341474</td>
+      <td>0.000000e+00</td>
       <td>1.0</td>
       <td>0.200000</td>
       <td>True</td>
@@ -337,7 +346,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.849837</td>
-      <td>1.270913e-140</td>
+      <td>0.645319</td>
+      <td>0.000000e+00</td>
       <td>4.0</td>
       <td>0.050000</td>
       <td>True</td>
@@ -351,7 +361,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.387438</td>
-      <td>2.353230e-19</td>
+      <td>0.169451</td>
+      <td>0.000000e+00</td>
       <td>4.0</td>
       <td>0.050000</td>
       <td>True</td>
@@ -365,7 +376,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.373767</td>
-      <td>5.045930e-18</td>
+      <td>0.158566</td>
+      <td>0.000000e+00</td>
       <td>4.0</td>
       <td>0.050000</td>
       <td>True</td>
@@ -379,7 +391,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.102752</td>
-      <td>2.156466e-02</td>
+      <td>0.007894</td>
+      <td>2.377379e-02</td>
       <td>4.0</td>
       <td>0.050000</td>
       <td>True</td>
@@ -393,7 +406,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.028292</td>
-      <td>5.279294e-01</td>
+      <td>0.000609</td>
+      <td>5.371098e-01</td>
       <td>2.0</td>
       <td>0.100000</td>
       <td>False</td>
@@ -407,7 +421,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.360534</td>
-      <td>8.564773e-17</td>
+      <td>0.155143</td>
+      <td>0.000000e+00</td>
       <td>2.0</td>
       <td>0.100000</td>
       <td>True</td>
@@ -421,7 +436,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.060936</td>
-      <td>1.736986e-01</td>
+      <td>0.002973</td>
+      <td>1.726990e-01</td>
       <td>2.0</td>
       <td>0.100000</td>
       <td>False</td>
@@ -435,7 +451,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.001912</td>
-      <td>9.659861e-01</td>
+      <td>0.000003</td>
+      <td>9.658994e-01</td>
       <td>2.0</td>
       <td>0.100000</td>
       <td>False</td>
@@ -449,7 +466,8 @@ transform.score_frame_
       <td>True</td>
       <td>True</td>
       <td>0.705192</td>
-      <td>2.141044e-76</td>
+      <td>0.592554</td>
+      <td>0.000000e+00</td>
       <td>3.0</td>
       <td>0.066667</td>
       <td>True</td>
@@ -463,7 +481,8 @@ transform.score_frame_
       <td>True</td>
       <td>True</td>
       <td>-0.268632</td>
-      <td>1.032402e-09</td>
+      <td>0.060381</td>
+      <td>8.003610e-10</td>
       <td>3.0</td>
       <td>0.066667</td>
       <td>False</td>
@@ -477,7 +496,8 @@ transform.score_frame_
       <td>True</td>
       <td>True</td>
       <td>-0.201252</td>
-      <td>5.750716e-06</td>
+      <td>0.033368</td>
+      <td>4.923164e-06</td>
       <td>3.0</td>
       <td>0.066667</td>
       <td>False</td>
@@ -491,7 +511,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.711666</td>
-      <td>2.164070e-78</td>
+      <td>0.482260</td>
+      <td>0.000000e+00</td>
       <td>1.0</td>
       <td>0.200000</td>
       <td>True</td>
@@ -505,7 +526,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.425828</td>
-      <td>1.924077e-23</td>
+      <td>0.209794</td>
+      <td>0.000000e+00</td>
       <td>4.0</td>
       <td>0.050000</td>
       <td>True</td>
@@ -519,7 +541,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.360534</td>
-      <td>8.564773e-17</td>
+      <td>0.155143</td>
+      <td>0.000000e+00</td>
       <td>4.0</td>
       <td>0.050000</td>
       <td>True</td>
@@ -533,7 +556,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.140658</td>
-      <td>1.615849e-03</td>
+      <td>0.015196</td>
+      <td>2.051361e-03</td>
       <td>4.0</td>
       <td>0.050000</td>
       <td>True</td>
@@ -547,7 +571,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.194241</td>
-      <td>1.218632e-05</td>
+      <td>0.028310</td>
+      <td>2.580974e-05</td>
       <td>4.0</td>
       <td>0.050000</td>
       <td>True</td>
@@ -561,7 +586,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.024435</td>
-      <td>5.856828e-01</td>
+      <td>0.000451</td>
+      <td>5.921961e-01</td>
       <td>2.0</td>
       <td>0.100000</td>
       <td>False</td>
@@ -575,7 +601,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.748935</td>
-      <td>4.736195e-91</td>
+      <td>0.489005</td>
+      <td>0.000000e+00</td>
       <td>2.0</td>
       <td>0.100000</td>
       <td>True</td>
@@ -589,7 +616,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.006755</td>
-      <td>8.802327e-01</td>
+      <td>0.000036</td>
+      <td>8.799326e-01</td>
       <td>2.0</td>
       <td>0.100000</td>
       <td>False</td>
@@ -603,7 +631,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.071903</td>
-      <td>1.083077e-01</td>
+      <td>0.004068</td>
+      <td>1.078311e-01</td>
       <td>2.0</td>
       <td>0.100000</td>
       <td>False</td>
@@ -617,7 +646,8 @@ transform.score_frame_
       <td>True</td>
       <td>True</td>
       <td>-0.244170</td>
-      <td>3.201241e-08</td>
+      <td>0.047673</td>
+      <td>3.700307e-08</td>
       <td>3.0</td>
       <td>0.066667</td>
       <td>False</td>
@@ -631,7 +661,8 @@ transform.score_frame_
       <td>True</td>
       <td>True</td>
       <td>-0.613362</td>
-      <td>5.345060e-53</td>
+      <td>0.707546</td>
+      <td>0.000000e+00</td>
       <td>3.0</td>
       <td>0.066667</td>
       <td>False</td>
@@ -645,7 +676,8 @@ transform.score_frame_
       <td>True</td>
       <td>True</td>
       <td>0.838533</td>
-      <td>1.973352e-133</td>
+      <td>0.771629</td>
+      <td>0.000000e+00</td>
       <td>3.0</td>
       <td>0.066667</td>
       <td>True</td>
@@ -659,7 +691,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.128509</td>
-      <td>3.998112e-03</td>
+      <td>0.013351</td>
+      <td>3.580040e-03</td>
       <td>1.0</td>
       <td>0.200000</td>
       <td>True</td>
@@ -673,7 +706,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.439636</td>
-      <td>4.791039e-25</td>
+      <td>0.218219</td>
+      <td>0.000000e+00</td>
       <td>4.0</td>
       <td>0.050000</td>
       <td>True</td>
@@ -687,7 +721,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.748935</td>
-      <td>4.736195e-91</td>
+      <td>0.489005</td>
+      <td>0.000000e+00</td>
       <td>4.0</td>
       <td>0.050000</td>
       <td>True</td>
@@ -701,7 +736,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.239464</td>
-      <td>5.952274e-08</td>
+      <td>0.042966</td>
+      <td>1.734635e-07</td>
       <td>4.0</td>
       <td>0.050000</td>
       <td>True</td>
@@ -715,7 +751,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.296154</td>
-      <td>1.401007e-11</td>
+      <td>0.105297</td>
+      <td>3.330669e-16</td>
       <td>4.0</td>
       <td>0.050000</td>
       <td>True</td>
@@ -1191,11 +1228,13 @@ vtreat.vtreat_parameters()
       'prevalence_code'},
      'filter_to_recommended': True,
      'indicator_min_fraction': 0.1,
-     'cross_validation_plan': <vtreat.cross_plan.KWayCrossPlanYStratified at 0x1a219dd810>,
+     'cross_validation_plan': vtreat.cross_plan.KWayCrossPlanYStratified(),
      'cross_validation_k': 5,
      'user_transforms': [],
      'sparse_indicators': True,
-     'missingness_imputation': <function numpy.mean(a, axis=None, dtype=None, out=None, keepdims=<no value>)>}
+     'missingness_imputation': <function numpy.mean(a, axis=None, dtype=None, out=None, keepdims=<no value>)>,
+     'check_for_duplicate_frames': True,
+     'retain_cross_plan': False}
 
 
 
@@ -1431,6 +1470,7 @@ transform_thin.score_frame_
       <th>y_aware</th>
       <th>has_range</th>
       <th>PearsonR</th>
+      <th>R2</th>
       <th>significance</th>
       <th>vcount</th>
       <th>default_threshold</th>
@@ -1447,7 +1487,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.051749</td>
-      <td>2.480789e-01</td>
+      <td>0.002388</td>
+      <td>2.137073e-01</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>False</td>
@@ -1461,7 +1502,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.387438</td>
-      <td>2.353230e-19</td>
+      <td>0.169451</td>
+      <td>0.000000e+00</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>True</td>
@@ -1475,7 +1517,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.052826</td>
-      <td>2.383607e-01</td>
+      <td>0.002158</td>
+      <td>2.371412e-01</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>False</td>
@@ -1489,7 +1532,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.069126</td>
-      <td>1.226672e-01</td>
+      <td>0.003709</td>
+      <td>1.212047e-01</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>True</td>
@@ -1503,7 +1547,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.849837</td>
-      <td>1.270913e-140</td>
+      <td>0.645319</td>
+      <td>0.000000e+00</td>
       <td>4.0</td>
       <td>0.083333</td>
       <td>True</td>
@@ -1517,7 +1562,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.387438</td>
-      <td>2.353230e-19</td>
+      <td>0.169451</td>
+      <td>0.000000e+00</td>
       <td>4.0</td>
       <td>0.083333</td>
       <td>True</td>
@@ -1531,7 +1577,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.373767</td>
-      <td>5.045930e-18</td>
+      <td>0.158566</td>
+      <td>0.000000e+00</td>
       <td>4.0</td>
       <td>0.083333</td>
       <td>True</td>
@@ -1545,7 +1592,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.102752</td>
-      <td>2.156466e-02</td>
+      <td>0.007894</td>
+      <td>2.377379e-02</td>
       <td>4.0</td>
       <td>0.083333</td>
       <td>True</td>
@@ -1559,7 +1607,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.028292</td>
-      <td>5.279294e-01</td>
+      <td>0.000609</td>
+      <td>5.371098e-01</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>False</td>
@@ -1573,7 +1622,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.360534</td>
-      <td>8.564773e-17</td>
+      <td>0.155143</td>
+      <td>0.000000e+00</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>True</td>
@@ -1587,7 +1637,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.060936</td>
-      <td>1.736986e-01</td>
+      <td>0.002973</td>
+      <td>1.726990e-01</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>False</td>
@@ -1601,7 +1652,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.001912</td>
-      <td>9.659861e-01</td>
+      <td>0.000003</td>
+      <td>9.658994e-01</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>False</td>
@@ -1615,7 +1667,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.425828</td>
-      <td>1.924077e-23</td>
+      <td>0.209794</td>
+      <td>0.000000e+00</td>
       <td>4.0</td>
       <td>0.083333</td>
       <td>True</td>
@@ -1629,7 +1682,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.360534</td>
-      <td>8.564773e-17</td>
+      <td>0.155143</td>
+      <td>0.000000e+00</td>
       <td>4.0</td>
       <td>0.083333</td>
       <td>True</td>
@@ -1643,7 +1697,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.140658</td>
-      <td>1.615849e-03</td>
+      <td>0.015196</td>
+      <td>2.051361e-03</td>
       <td>4.0</td>
       <td>0.083333</td>
       <td>True</td>
@@ -1657,7 +1712,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.194241</td>
-      <td>1.218632e-05</td>
+      <td>0.028310</td>
+      <td>2.580974e-05</td>
       <td>4.0</td>
       <td>0.083333</td>
       <td>True</td>
@@ -1671,7 +1727,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.024435</td>
-      <td>5.856828e-01</td>
+      <td>0.000451</td>
+      <td>5.921961e-01</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>False</td>
@@ -1685,7 +1742,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.748935</td>
-      <td>4.736195e-91</td>
+      <td>0.489005</td>
+      <td>0.000000e+00</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>True</td>
@@ -1699,7 +1757,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.006755</td>
-      <td>8.802327e-01</td>
+      <td>0.000036</td>
+      <td>8.799326e-01</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>False</td>
@@ -1713,7 +1772,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.071903</td>
-      <td>1.083077e-01</td>
+      <td>0.004068</td>
+      <td>1.078311e-01</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>True</td>
@@ -1727,7 +1787,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.439636</td>
-      <td>4.791039e-25</td>
+      <td>0.218219</td>
+      <td>0.000000e+00</td>
       <td>4.0</td>
       <td>0.083333</td>
       <td>True</td>
@@ -1741,7 +1802,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.748935</td>
-      <td>4.736195e-91</td>
+      <td>0.489005</td>
+      <td>0.000000e+00</td>
       <td>4.0</td>
       <td>0.083333</td>
       <td>True</td>
@@ -1755,7 +1817,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.239464</td>
-      <td>5.952274e-08</td>
+      <td>0.042966</td>
+      <td>1.734635e-07</td>
       <td>4.0</td>
       <td>0.083333</td>
       <td>True</td>
@@ -1769,7 +1832,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.296154</td>
-      <td>1.401007e-11</td>
+      <td>0.105297</td>
+      <td>3.330669e-16</td>
       <td>4.0</td>
       <td>0.083333</td>
       <td>True</td>
@@ -1804,15 +1868,21 @@ In all cases (classification, regression, unsupervised, and multinomial classifi
 
 The preparation commands are organized as follows:
 
- * **Regression**: [`R` regression example](https://github.com/WinVector/vtreat/blob/master/Examples/Regression/Regression.md), [`Python` regression example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Regression/Regression.md).
- * **Classification**: [`R` classification example](https://github.com/WinVector/vtreat/blob/master/Examples/Classification/Classification.md), [`Python` classification  example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Classification/Classification.md).
- * **Unsupervised tasks**: [`R` unsupervised example](https://github.com/WinVector/vtreat/blob/master/Examples/Unsupervised/Unsupervised.md), [`Python` unsupervised example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Unsupervised/Unsupervised.md).
- * **Multinomial classification**: [`R` multinomial classification example](https://github.com/WinVector/vtreat/blob/master/Examples/Multinomial/MultinomialExample.md), [`Python` multinomial classification example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Multinomial/MultinomialExample.md).
- 
+ * **Regression**: [`Python` regression example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Regression/Regression.md), [`R` regression example, fit/prepare interface](https://github.com/WinVector/vtreat/blob/master/Examples/Regression/Regression_FP.md), [`R` regression example, design/prepare/experiment interface](https://github.com/WinVector/vtreat/blob/master/Examples/Regression/Regression.md).
+ * **Classification**: [`Python` classification  example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Classification/Classification.md), [`R` classification example, fit/prepare interface](https://github.com/WinVector/vtreat/blob/master/Examples/Classification/Classification_FP.md), [`R` classification example, design/prepare/experiment interface](https://github.com/WinVector/vtreat/blob/master/Examples/Classification/Classification.md).
+ * **Unsupervised tasks**: [`Python` unsupervised example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Unsupervised/Unsupervised.md), [`R` unsupervised example, fit/prepare interface](https://github.com/WinVector/vtreat/blob/master/Examples/Unsupervised/Unsupervised_FP.md), [`R` unsupervised example, design/prepare/experiment interface](https://github.com/WinVector/vtreat/blob/master/Examples/Unsupervised/Unsupervised.md).
+ * **Multinomial classification**: [`Python` multinomial classification example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Multinomial/MultinomialExample.md), [`R` multinomial classification example, fit/prepare interface](https://github.com/WinVector/vtreat/blob/master/Examples/Multinomial/MultinomialExample_FP.md), [`R` multinomial classification example, design/prepare/experiment interface](https://github.com/WinVector/vtreat/blob/master/Examples/Multinomial/MultinomialExample.md).
+
+
 Some `vtreat` common capabilities are documented here:
 
   * **Score Frame** [score_frame_](https://github.com/WinVector/pyvtreat/blob/master/Examples/ScoreFrame/ScoreFrame.md), using the `score_frame_` information.
   * **Cross Validation** [Customized Cross Plans](https://github.com/WinVector/pyvtreat/blob/master/Examples/CustomizedCrossPlan/CustomizedCrossPlan.md), controlling the cross validation plan.
 
 These current revisions of the examples are designed to be small, yet complete.  So as a set they have some overlap, but the user can rely mostly on a single example for a single task type.
+
+
+```python
+
+```
 

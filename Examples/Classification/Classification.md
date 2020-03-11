@@ -177,7 +177,7 @@ seaborn.lineplot(x='x', y='yc', data=d)
 
 
 
-    <matplotlib.axes._subplots.AxesSubplot at 0x1c1f554750>
+    <matplotlib.axes._subplots.AxesSubplot at 0x1a19866310>
 
 
 
@@ -248,7 +248,7 @@ transform.score_frame_
       <td>True</td>
       <td>-0.051749</td>
       <td>0.002388</td>
-      <td>2.137073e-01</td>
+      <td>0.213707</td>
       <td>2.0</td>
       <td>0.10</td>
       <td>False</td>
@@ -261,8 +261,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.387438</td>
-      <td>0.169454</td>
-      <td>1.132743e-25</td>
+      <td>0.169451</td>
+      <td>0.000000</td>
       <td>2.0</td>
       <td>0.10</td>
       <td>True</td>
@@ -276,7 +276,7 @@ transform.score_frame_
       <td>True</td>
       <td>0.052826</td>
       <td>0.002158</td>
-      <td>2.371412e-01</td>
+      <td>0.237141</td>
       <td>2.0</td>
       <td>0.10</td>
       <td>False</td>
@@ -290,7 +290,7 @@ transform.score_frame_
       <td>True</td>
       <td>0.069126</td>
       <td>0.003709</td>
-      <td>1.212047e-01</td>
+      <td>0.121205</td>
       <td>2.0</td>
       <td>0.10</td>
       <td>False</td>
@@ -303,8 +303,8 @@ transform.score_frame_
       <td>True</td>
       <td>True</td>
       <td>0.867915</td>
-      <td>0.834540</td>
-      <td>1.606230e-119</td>
+      <td>0.834531</td>
+      <td>0.000000</td>
       <td>1.0</td>
       <td>0.20</td>
       <td>True</td>
@@ -318,7 +318,7 @@ transform.score_frame_
       <td>True</td>
       <td>0.567968</td>
       <td>0.341474</td>
-      <td>5.241952e-50</td>
+      <td>0.000000</td>
       <td>1.0</td>
       <td>0.20</td>
       <td>True</td>
@@ -331,8 +331,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.849837</td>
-      <td>0.645323</td>
-      <td>7.304511e-93</td>
+      <td>0.645319</td>
+      <td>0.000000</td>
       <td>4.0</td>
       <td>0.05</td>
       <td>True</td>
@@ -345,8 +345,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.387438</td>
-      <td>0.169454</td>
-      <td>1.132743e-25</td>
+      <td>0.169451</td>
+      <td>0.000000</td>
       <td>4.0</td>
       <td>0.05</td>
       <td>True</td>
@@ -359,8 +359,8 @@ transform.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.373767</td>
-      <td>0.158569</td>
-      <td>3.968788e-24</td>
+      <td>0.158566</td>
+      <td>0.000000</td>
       <td>4.0</td>
       <td>0.05</td>
       <td>True</td>
@@ -374,7 +374,7 @@ transform.score_frame_
       <td>True</td>
       <td>0.102752</td>
       <td>0.007894</td>
-      <td>2.377379e-02</td>
+      <td>0.023774</td>
       <td>4.0</td>
       <td>0.05</td>
       <td>True</td>
@@ -735,7 +735,8 @@ vtreat.vtreat_parameters()
      'user_transforms': [],
      'sparse_indicators': True,
      'missingness_imputation': <function numpy.mean(a, axis=None, dtype=None, out=None, keepdims=<no value>)>,
-     'check_for_duplicate_frames': True}
+     'check_for_duplicate_frames': True,
+     'retain_cross_plan': False}
 
 
 
@@ -820,7 +821,7 @@ transform_all.score_frame_
       <td>True</td>
       <td>-0.051749</td>
       <td>0.002388</td>
-      <td>2.137073e-01</td>
+      <td>0.213707</td>
       <td>2.0</td>
       <td>0.10</td>
       <td>False</td>
@@ -833,8 +834,8 @@ transform_all.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.387438</td>
-      <td>0.169454</td>
-      <td>1.132743e-25</td>
+      <td>0.169451</td>
+      <td>0.000000</td>
       <td>2.0</td>
       <td>0.10</td>
       <td>True</td>
@@ -848,7 +849,7 @@ transform_all.score_frame_
       <td>True</td>
       <td>0.052826</td>
       <td>0.002158</td>
-      <td>2.371412e-01</td>
+      <td>0.237141</td>
       <td>2.0</td>
       <td>0.10</td>
       <td>False</td>
@@ -862,7 +863,7 @@ transform_all.score_frame_
       <td>True</td>
       <td>0.069126</td>
       <td>0.003709</td>
-      <td>1.212047e-01</td>
+      <td>0.121205</td>
       <td>2.0</td>
       <td>0.10</td>
       <td>False</td>
@@ -875,8 +876,8 @@ transform_all.score_frame_
       <td>True</td>
       <td>True</td>
       <td>0.867909</td>
-      <td>0.831237</td>
-      <td>4.687905e-119</td>
+      <td>0.831229</td>
+      <td>0.000000</td>
       <td>1.0</td>
       <td>0.20</td>
       <td>True</td>
@@ -890,7 +891,7 @@ transform_all.score_frame_
       <td>True</td>
       <td>0.567968</td>
       <td>0.341474</td>
-      <td>5.241952e-50</td>
+      <td>0.000000</td>
       <td>1.0</td>
       <td>0.20</td>
       <td>True</td>
@@ -903,8 +904,8 @@ transform_all.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.849837</td>
-      <td>0.645323</td>
-      <td>7.304511e-93</td>
+      <td>0.645319</td>
+      <td>0.000000</td>
       <td>4.0</td>
       <td>0.05</td>
       <td>True</td>
@@ -917,8 +918,8 @@ transform_all.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.387438</td>
-      <td>0.169454</td>
-      <td>1.132743e-25</td>
+      <td>0.169451</td>
+      <td>0.000000</td>
       <td>4.0</td>
       <td>0.05</td>
       <td>True</td>
@@ -931,8 +932,8 @@ transform_all.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.373767</td>
-      <td>0.158569</td>
-      <td>3.968788e-24</td>
+      <td>0.158566</td>
+      <td>0.000000</td>
       <td>4.0</td>
       <td>0.05</td>
       <td>True</td>
@@ -946,7 +947,7 @@ transform_all.score_frame_
       <td>True</td>
       <td>0.102752</td>
       <td>0.007894</td>
-      <td>2.377379e-02</td>
+      <td>0.023774</td>
       <td>4.0</td>
       <td>0.05</td>
       <td>True</td>
@@ -1128,7 +1129,7 @@ transform_thin.score_frame_
       <td>True</td>
       <td>-0.051749</td>
       <td>0.002388</td>
-      <td>2.137073e-01</td>
+      <td>0.213707</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>False</td>
@@ -1141,8 +1142,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.387438</td>
-      <td>0.169454</td>
-      <td>1.132743e-25</td>
+      <td>0.169451</td>
+      <td>0.000000</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>True</td>
@@ -1156,7 +1157,7 @@ transform_thin.score_frame_
       <td>True</td>
       <td>0.052826</td>
       <td>0.002158</td>
-      <td>2.371412e-01</td>
+      <td>0.237141</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>False</td>
@@ -1170,7 +1171,7 @@ transform_thin.score_frame_
       <td>True</td>
       <td>0.069126</td>
       <td>0.003709</td>
-      <td>1.212047e-01</td>
+      <td>0.121205</td>
       <td>2.0</td>
       <td>0.166667</td>
       <td>True</td>
@@ -1183,8 +1184,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>0.849837</td>
-      <td>0.645323</td>
-      <td>7.304511e-93</td>
+      <td>0.645319</td>
+      <td>0.000000</td>
       <td>4.0</td>
       <td>0.083333</td>
       <td>True</td>
@@ -1197,8 +1198,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.387438</td>
-      <td>0.169454</td>
-      <td>1.132743e-25</td>
+      <td>0.169451</td>
+      <td>0.000000</td>
       <td>4.0</td>
       <td>0.083333</td>
       <td>True</td>
@@ -1211,8 +1212,8 @@ transform_thin.score_frame_
       <td>False</td>
       <td>True</td>
       <td>-0.373767</td>
-      <td>0.158569</td>
-      <td>3.968788e-24</td>
+      <td>0.158566</td>
+      <td>0.000000</td>
       <td>4.0</td>
       <td>0.083333</td>
       <td>True</td>
@@ -1226,7 +1227,7 @@ transform_thin.score_frame_
       <td>True</td>
       <td>0.102752</td>
       <td>0.007894</td>
-      <td>2.377379e-02</td>
+      <td>0.023774</td>
       <td>4.0</td>
       <td>0.083333</td>
       <td>True</td>
@@ -1260,10 +1261,12 @@ In all cases (classification, regression, unsupervised, and multinomial classifi
 
 The preparation commands are organized as follows:
 
- * **Regression**: [`R` regression example](https://github.com/WinVector/vtreat/blob/master/Examples/Regression/Regression.md), [`Python` regression example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Regression/Regression.md).
- * **Classification**: [`R` classification example](https://github.com/WinVector/vtreat/blob/master/Examples/Classification/Classification.md), [`Python` classification  example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Classification/Classification.md).
- * **Unsupervised tasks**: [`R` unsupervised example](https://github.com/WinVector/vtreat/blob/master/Examples/Unsupervised/Unsupervised.md), [`Python` unsupervised example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Unsupervised/Unsupervised.md).
- * **Multinomial classification**: [`R` multinomial classification example](https://github.com/WinVector/vtreat/blob/master/Examples/Multinomial/MultinomialExample.md), [`Python` multinomial classification example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Multinomial/MultinomialExample.md).
+
+ * **Regression**: [`Python` regression example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Regression/Regression.md), [`R` regression example, fit/prepare interface](https://github.com/WinVector/vtreat/blob/master/Examples/Regression/Regression_FP.md), [`R` regression example, design/prepare/experiment interface](https://github.com/WinVector/vtreat/blob/master/Examples/Regression/Regression.md).
+ * **Classification**: [`Python` classification  example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Classification/Classification.md), [`R` classification example, fit/prepare interface](https://github.com/WinVector/vtreat/blob/master/Examples/Classification/Classification_FP.md), [`R` classification example, design/prepare/experiment interface](https://github.com/WinVector/vtreat/blob/master/Examples/Classification/Classification.md).
+ * **Unsupervised tasks**: [`Python` unsupervised example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Unsupervised/Unsupervised.md), [`R` unsupervised example, fit/prepare interface](https://github.com/WinVector/vtreat/blob/master/Examples/Unsupervised/Unsupervised_FP.md), [`R` unsupervised example, design/prepare/experiment interface](https://github.com/WinVector/vtreat/blob/master/Examples/Unsupervised/Unsupervised.md).
+ * **Multinomial classification**: [`Python` multinomial classification example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Multinomial/MultinomialExample.md), [`R` multinomial classification example, fit/prepare interface](https://github.com/WinVector/vtreat/blob/master/Examples/Multinomial/MultinomialExample_FP.md), [`R` multinomial classification example, design/prepare/experiment interface](https://github.com/WinVector/vtreat/blob/master/Examples/Multinomial/MultinomialExample.md).
+
 
 Some `vtreat` common capabilities are documented here:
 
@@ -1271,4 +1274,9 @@ Some `vtreat` common capabilities are documented here:
   * **Cross Validation** [Customized Cross Plans](https://github.com/WinVector/pyvtreat/blob/master/Examples/CustomizedCrossPlan/CustomizedCrossPlan.md), controlling the cross validation plan.
 
 These current revisions of the examples are designed to be small, yet complete.  So as a set they have some overlap, but the user can rely mostly on a single example for a single task type.
+
+
+```python
+
+```
 
