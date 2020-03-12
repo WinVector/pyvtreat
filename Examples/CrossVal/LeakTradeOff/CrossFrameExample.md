@@ -19,7 +19,7 @@ To show the information leak, we will use a simple artificial problem where ther
 
 We will demonstrate that even in this situation, target-encoding (or conditionally re-encoding) categorical variables prior to the model-fitting step leaks information about the dependent variable. *This is true even when using cross-methods*. This leaked information may cause the downstream modeling step to treat noise variables as informative ones, leading to overfit.
 
-Finally, we will conclude with a more realistic case: a combination of useless and useful explanatory variables.  For our last example we will use our recommended package [`vtreat`](https://github.com/WinVector/pyvtreat) ([available for `Python`](https://github.com/WinVector/pyvtreat) and [available for `R`](https://github.com/WinVector/vtreat)). The `vtreat` package manages impact coding, cross-validation, and reporting in a convenient unit.
+Finally, we will conclude with a more realistic case: a combination of useless and useful explanatory variables.  For our last example we will use our recommended package [`vtreat`](https://github.com/WinVector/pyvtreat) ([available for `Python`](https://github.com/WinVector/pyvtreat) and [available for `R`](https://github.com/WinVector/vtreat)). The `vtreat` package manages impact coding, cross-methods, and reporting in a convenient unit.
 
 ## Preliminaries
 
@@ -90,19 +90,7 @@ d_example
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -323,7 +311,7 @@ For more discussion, see [this article](http://www.win-vector.com/blog/2012/07/m
 
 For this first example we will use [`category_encoders.target_encoder.TargetEncoder`](https://contrib.scikit-learn.org/categorical-encoding/targetencoder.html) to re-encode our categorical variables prior to a linear regression.  This target encoder re-encodes categorical variables as smoothed conditional estimates.
 
-On its own, the encoder is not cross-validated. This means high complexity explanatory variables hide their true number of degrees of freedom and leak information.  This causes the variables to over-fit on training data even when they are useless on test data, as we will demonstrate below.
+On its own, the encoder is does not use cross-methods. This means high complexity explanatory variables hide their true number of degrees of freedom and leak information.  This causes the variables to over-fit on training data even when they are useless on test data, as we will demonstrate below.
 
 
 ```python
@@ -337,19 +325,7 @@ d_coded_0
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -561,7 +537,7 @@ overfit_result.summary()
   <th>Date:</th>             <td>Thu, 12 Mar 2020</td> <th>  Prob (F-statistic):</th> <td>5.29e-30</td>
 </tr>
 <tr>
-  <th>Time:</th>                 <td>09:38:47</td>     <th>  Log-Likelihood:    </th> <td> -60.214</td>
+  <th>Time:</th>                 <td>10:48:07</td>     <th>  Log-Likelihood:    </th> <td> -60.214</td>
 </tr>
 <tr>
   <th>No. Observations:</th>      <td>   100</td>      <th>  AIC:               </th> <td>   142.4</td>
@@ -660,7 +636,7 @@ r2
 
 This can be an insidious issue: over-estimating model performance, and also allowing complex noise variables to outcompete low-complexity but actually useful explanatory variables.
 
-Our advice to avoid this issue is to either use separate data for encoding and modeling, or use a cross-method when re-encoding the categorical variables.  This is what we are *very* careful to do correctly in [R vtreat](https://github.com/WinVector/vtreat) and [Python vtreat](https://github.com/WinVector/pyvtreat).
+Our advice to avoid this issue is to either use separate data for encoding and modeling, or use a cross-method when re-encoding the categorical variables.  This is what we are *very* careful to do correctly in [Python vtreat](https://github.com/WinVector/pyvtreat) and in [R vtreat](https://github.com/WinVector/vtreat).
 
 ## Leave-One-Out Cross-Methods Data Leak
 
@@ -668,7 +644,7 @@ Let's take a quick look at how problems can arise even when using cross-methods.
 
 In our opinion, to minimize data leaks one should avoid using a deterministic cross method plan, which can often pass through undesirable incidental structure in the data.  As such, we advise against using a leave-one-out cross-plan in production.
 
-Leave-one-out leaks information in many places, including even in a constant column (a column that does not vary). To see this, let's try to fit a model for `y_example` using only `const_col`. First, we target-code `const_col`. We don't *need* to cross-validate a constant, but it is a problem that it doesn't work.
+Leave-one-out leaks information in many places, including even in a constant column (a column that does not vary). To see this, let's try to fit a model for `y_example` using only `const_col`. First, we target-code `const_col`. We don't *need* to cross-encode a constant, but it is a problem that it doesn't work.
 
 
 ```python
@@ -678,7 +654,7 @@ cv_one_out = sklearn.model_selection.LeaveOneOut()
 te2 = TransformerAdapter(
     category_encoders.target_encoder.TargetEncoder())
 
-# Build the cross-validated encoding of the training data
+# Build the cross-encoding of the training data
 # For use in training the model
 cross_frame_0 = sklearn.model_selection.cross_val_predict(
     te2, 
@@ -696,19 +672,7 @@ cross_frame_0
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -811,7 +775,7 @@ overfit_result_2.summary()
   <th>Date:</th>             <td>Thu, 12 Mar 2020</td> <th>  Prob (F-statistic):</th>  <td>  0.00</td>  
 </tr>
 <tr>
-  <th>Time:</th>                 <td>09:38:49</td>     <th>  Log-Likelihood:    </th> <td>  3204.2</td> 
+  <th>Time:</th>                 <td>10:48:09</td>     <th>  Log-Likelihood:    </th> <td>  3204.2</td> 
 </tr>
 <tr>
   <th>No. Observations:</th>      <td>   100</td>      <th>  AIC:               </th> <td>  -6404.</td> 
@@ -856,7 +820,7 @@ overfit_result_2.summary()
 
 What we see here is that we have apparently fit a perfect linear regression model for `y_example` using only a (re-encoded) constant input!
 
-A crucial point to notice is that the regression used large magnitude (and negative) coefficients.  This is because there is a data leak, but it is low magnitude.  So to exploit the data leak we have to scale it up quite a bit. This is typical: many results in the literature that show the efficacy of cross-methods do so by proving that with high probability that method is very near a correct result *in norm*: that is, the norm of the difference between the cross-validated result and the true result is small. Our encoding was close to the true result, in this sense, but still represented a data leak, one that linear regression was able to exploit.
+A crucial point to notice is that the regression used large magnitude (and negative) coefficients.  This is because there is a data leak, but it is low magnitude.  So to exploit the data leak we have to scale it up quite a bit. This is typical: many results in the literature that show the efficacy of cross-methods do so by proving that with high probability that method is very near a correct result *in norm*: that is, the norm of the difference between the cross-encoded result and the ideal true result is small. Our encoding was close to the true result, in this sense, but still represented a data leak, one that linear regression was able to exploit.
 
 Again, this chimeric "well-fit model" will be useless on new data. Let's try it.
 
@@ -904,7 +868,7 @@ r2
 
 
 
-The leak we demonstrated above is one of the reasons `vtreat` uses impact codes (conditional difference from the mean) instead of target codes (conditional means). With cross-validated impact coding, constant variables will *always* code to zero, effectively identifying them as uninformative.
+The leak we demonstrated above is one of the reasons `vtreat` uses impact codes (conditional difference from the mean) instead of target codes (conditional means). With cross impact coding, constant variables will *always* code to zero, effectively identifying them as uninformative.
 
 ## Cross Method Done Correctly 
 
@@ -941,19 +905,7 @@ cross_frame
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1175,7 +1127,7 @@ proper_fit_result.summary()
   <th>Date:</th>             <td>Thu, 12 Mar 2020</td> <th>  Prob (F-statistic):</th>  <td> 0.258</td> 
 </tr>
 <tr>
-  <th>Time:</th>                 <td>09:38:50</td>     <th>  Log-Likelihood:    </th> <td> -141.53</td>
+  <th>Time:</th>                 <td>10:48:09</td>     <th>  Log-Likelihood:    </th> <td> -141.53</td>
 </tr>
 <tr>
   <th>No. Observations:</th>      <td>   100</td>      <th>  AIC:               </th> <td>   307.1</td>
@@ -1274,19 +1226,7 @@ partition_solution
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1403,19 +1343,7 @@ relns_x
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1591,122 +1519,122 @@ relns_x
     <tr>
       <th>1095</th>
       <td>0.004014</td>
+      <td>0.004014</td>
+      <td>0.004014</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
       <td>0.000000</td>
       <td>0.004014</td>
-      <td>0.004014</td>
-      <td>0.004014</td>
-      <td>0.004014</td>
-      <td>0.004014</td>
-      <td>0.004014</td>
+      <td>0.000000</td>
       <td>0.004014</td>
       <td>0.004014</td>
       <td>...</td>
-      <td>0.000000</td>
+      <td>0.004014</td>
+      <td>0.004014</td>
+      <td>0.004014</td>
       <td>0.004014</td>
       <td>0.000000</td>
       <td>0.000000</td>
       <td>0.004014</td>
-      <td>0.004014</td>
       <td>0.000000</td>
       <td>0.004014</td>
-      <td>0.004014</td>
-      <td>0.004014</td>
+      <td>0.369543</td>
     </tr>
     <tr>
       <th>1096</th>
-      <td>0.000708</td>
-      <td>0.000708</td>
-      <td>0.000708</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
       <td>0.000000</td>
       <td>0.000000</td>
       <td>0.000000</td>
-      <td>0.000708</td>
+      <td>0.014925</td>
       <td>0.000000</td>
-      <td>0.000708</td>
-      <td>0.000708</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
       <td>...</td>
-      <td>0.000708</td>
-      <td>0.000708</td>
-      <td>0.000708</td>
-      <td>0.000708</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
       <td>0.000000</td>
       <td>0.000000</td>
-      <td>0.000708</td>
+      <td>0.014925</td>
       <td>0.000000</td>
-      <td>0.000708</td>
-      <td>0.000708</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
     </tr>
     <tr>
       <th>1097</th>
-      <td>0.004014</td>
       <td>0.000000</td>
-      <td>0.004014</td>
-      <td>0.004014</td>
-      <td>0.004014</td>
-      <td>0.004014</td>
-      <td>0.004014</td>
-      <td>0.004014</td>
-      <td>0.004014</td>
-      <td>0.004014</td>
+      <td>0.004075</td>
+      <td>0.000000</td>
+      <td>0.004075</td>
+      <td>0.004075</td>
+      <td>0.004075</td>
+      <td>0.000000</td>
+      <td>0.004075</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
       <td>...</td>
+      <td>0.004075</td>
       <td>0.000000</td>
-      <td>0.004014</td>
+      <td>0.004075</td>
+      <td>0.004075</td>
+      <td>0.004075</td>
+      <td>0.004075</td>
+      <td>0.004075</td>
+      <td>0.004075</td>
       <td>0.000000</td>
       <td>0.000000</td>
-      <td>0.004014</td>
-      <td>0.004014</td>
-      <td>0.000000</td>
-      <td>0.004014</td>
-      <td>0.004014</td>
-      <td>0.369543</td>
     </tr>
     <tr>
       <th>1098</th>
+      <td>0.014925</td>
       <td>0.000000</td>
-      <td>0.004075</td>
-      <td>0.000000</td>
-      <td>0.004075</td>
-      <td>0.004075</td>
-      <td>0.004075</td>
-      <td>0.000000</td>
-      <td>0.004075</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
       <td>...</td>
-      <td>0.004075</td>
       <td>0.000000</td>
-      <td>0.004075</td>
-      <td>0.004075</td>
-      <td>0.004075</td>
-      <td>0.004075</td>
-      <td>0.004075</td>
-      <td>0.004075</td>
+      <td>0.014925</td>
       <td>0.000000</td>
       <td>0.000000</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
+      <td>0.000000</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
     </tr>
     <tr>
       <th>1099</th>
-      <td>0.004014</td>
-      <td>0.004014</td>
-      <td>0.004014</td>
+      <td>0.014925</td>
       <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.004014</td>
-      <td>0.000000</td>
-      <td>0.004014</td>
-      <td>0.004014</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
       <td>...</td>
-      <td>0.004014</td>
-      <td>0.004014</td>
-      <td>0.004014</td>
-      <td>0.004014</td>
+      <td>0.000000</td>
+      <td>0.014925</td>
       <td>0.000000</td>
       <td>0.000000</td>
-      <td>0.004014</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
       <td>0.000000</td>
-      <td>0.004014</td>
-      <td>0.369543</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
     </tr>
   </tbody>
 </table>
@@ -1724,19 +1652,7 @@ relns_y
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1792,38 +1708,38 @@ relns_y
     </tr>
     <tr>
       <th>1095</th>
-      <td>0.834244</td>
-      <td>82</td>
-      <td>10</td>
-      <td>nl_34</td>
-    </tr>
-    <tr>
-      <th>1096</th>
-      <td>0.519212</td>
-      <td>56</td>
-      <td>10</td>
-      <td>nl_34</td>
-    </tr>
-    <tr>
-      <th>1097</th>
-      <td>-1.052435</td>
-      <td>10</td>
-      <td>10</td>
-      <td>nl_4</td>
-    </tr>
-    <tr>
-      <th>1098</th>
-      <td>-0.309072</td>
-      <td>99</td>
-      <td>10</td>
-      <td>nl_4</td>
-    </tr>
-    <tr>
-      <th>1099</th>
       <td>-0.992296</td>
       <td>61</td>
       <td>10</td>
       <td>nl_4</td>
+    </tr>
+    <tr>
+      <th>1096</th>
+      <td>0.160505</td>
+      <td>84</td>
+      <td>10</td>
+      <td>nl_30</td>
+    </tr>
+    <tr>
+      <th>1097</th>
+      <td>0.489135</td>
+      <td>89</td>
+      <td>10</td>
+      <td>nl_12</td>
+    </tr>
+    <tr>
+      <th>1098</th>
+      <td>0.053041</td>
+      <td>44</td>
+      <td>10</td>
+      <td>nl_12</td>
+    </tr>
+    <tr>
+      <th>1099</th>
+      <td>0.053041</td>
+      <td>31</td>
+      <td>10</td>
+      <td>nl_12</td>
     </tr>
   </tbody>
 </table>
@@ -1888,7 +1804,7 @@ r2
 
 
 
-    0.9993249813376334
+    0.9993249813376301
 
 
 
@@ -1939,19 +1855,7 @@ d_example_s
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -2226,7 +2130,7 @@ vtreat_coder = vtreat.NumericOutcomeTreatment(
     }))
 vtreat_cross_frame = vtreat_coder.fit_transform(d_example_s, y_example_s)
 
-# the frame of cross-validated encoded variables
+# the frame of cross-encoded variables
 vtreat_cross_frame
 ```
 
@@ -2234,19 +2138,7 @@ vtreat_cross_frame
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -2474,7 +2366,9 @@ vtreat_cross_frame
 
 
 
-We have deliberately turned off `vtreat`'s feature pruning to allow the noise columns in, to demonstrate overfitting. `vtreat` itself has out-of-sample significance estimates which allow for reliable feature pruning.
+We have deliberately turned off `vtreat`'s feature pruning to allow the noise columns in, to demonstrate overfitting. We have a demonstration of the same `vtreat` encoding in `R` [here](https://github.com/WinVector/vtreat/blob/master/Examples/CrossVal/LeakTradeOff/CrossFrameExample.md).
+
+`vtreat` itself has out-of-sample significance estimates which allow for reliable feature pruning.
 
 
 ```python
@@ -2507,19 +2401,7 @@ vtreat_coder.score_frame_.loc[:, cols_to_show]
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -2690,7 +2572,7 @@ vtreat_coder.score_frame_.loc[:, cols_to_show]
 
 
 
-The above summary shows the R-squared (`R2`) of each variable when considered as a one-variable model for `y_example_s`, as well as the estimated significance (`significance`) of that fit. The R-squareds and significances are computed in a cross-validated manner, so they are good estimates of future out-of-sample performance.
+The above summary shows the R-squared (`R2`) of each variable when considered as a one-variable model for `y_example_s`, as well as the estimated significance (`significance`) of that fit. The R-squareds and significances are computed in using cross-methods, so they are good estimates of future out-of-sample performance.
 
 The `recommended` column marks which variables have significances below the `default_threshold`, which itself is chosen to allow at most one uninformative column through (in expectation). In this case, we see that all the signal variables and only one noise variable are recommended.
 
@@ -2765,7 +2647,7 @@ good_fit.summary()
   <th>Date:</th>             <td>Thu, 12 Mar 2020</td> <th>  Prob (F-statistic):</th> <td>4.52e-27</td>
 </tr>
 <tr>
-  <th>Time:</th>                 <td>09:38:56</td>     <th>  Log-Likelihood:    </th> <td> -136.14</td>
+  <th>Time:</th>                 <td>10:48:14</td>     <th>  Log-Likelihood:    </th> <td> -136.14</td>
 </tr>
 <tr>
   <th>No. Observations:</th>      <td>   100</td>      <th>  AIC:               </th> <td>   304.3</td>
@@ -2917,21 +2799,21 @@ The point is `vtreat` is easy to use, and supplies a wide variety of safe and us
 In this article, we've shown that cross-methods *do* leak information about the training data, so it is not as "safe" in that sense as splitting training data into multiple partitions: one for setting parameters or calculating data transformations, one for training the model, and one for evaluating it. So if you have a large enough data set, partitioning it is probably preferable to cross-methods.
 We've also seen that deterministic cross-method schemes like leave-one-out are particularly leaky.
 
-On the other hand, we've also seen that the leak from randomized cross-methods is small enough that linear regression does not seem to see it: the linear models fit to randomized cross-validated encodings above correctly identified noise variables as uninformative most of the time. From experience, we (the authors) have seen that tree ensemble methods like random forest and gradient boosted trees also do not seem too sensitive to the leak ([here's an `xgboost` example](https://github.com/WinVector/pyvtreat/blob/master/Examples/KDD2009Example/KDD2009Example_no_filter.ipynb)).
+On the other hand, we've also seen that the leak from randomized cross-methods is small enough that linear regression does not seem to see it: the linear models fit to randomized cross-encodings above correctly identified noise variables as uninformative most of the time. From experience, we (the authors) have seen that tree ensemble methods like random forest and gradient boosted trees also do not seem too sensitive to the leak ([here's an `xgboost` example](https://github.com/WinVector/pyvtreat/blob/master/Examples/KDD2009Example/KDD2009Example_no_filter.ipynb)).
 
 So what we seem to be able to say is that cross-methods lower the information leak enough that the transformed training data appears safe to use with a reasonable downstream modeling algorithm. This is consistent with the results from superlearning and stacking, which use cross-methods to build "features" corresponding to the individual sub-learners, and then fit a model from these features to learn the overall ensemble model. Just as sometimes it is appropriate to introduce a bit of bias to for a large reduction in variance (bias/variance trade-off), it can be appropriate to pursue a favorable leak/variance trade-off.
 
-It's worth noting that the recommended method to combine the sub-learners in stacking is non-negative linear regression, which is essentially a form of regularized regression. While [regularization is no substitute for cross-methods](http://www.win-vector.com/blog/2019/11/when-cross-validation-is-more-powerful-than-regularization/), it can certainly help reduce the possibility of overfit. As we saw above, linear regression *is* sensitive to the leave-one-out leak, because it can use large coefficients to multiply the leak's magnitude. Regularization would help prevent that, and non-negativity constraints completely eliminate the leak that we demonstrated, as that leak requires negative coefficients. So properly cross-validated encodings are typically "safe" at least when used with regularized regression.
+It's worth noting that the recommended method to combine the sub-learners in stacking is non-negative linear regression, which is essentially a form of regularized regression. While [regularization is no substitute for cross-methods](http://www.win-vector.com/blog/2019/11/when-cross-validation-is-more-powerful-than-regularization/), it can certainly help reduce the possibility of overfit. As we saw above, linear regression *is* sensitive to the leave-one-out leak, because it can use large coefficients to multiply the leak's magnitude. Regularization would help prevent that, and non-negativity constraints completely eliminate the leak that we demonstrated, as that leak requires negative coefficients. So proper cross-encodings are typically "safe" at least when used with regularized regression.
 
 What about tree ensemble methods? Random forest and gradient boosting are higher complexity models, so there is more risk that they might decode the leak. Our speculation is that the averaging inherent in random forest may serve as a "regularization" or smoothing step that helps mitigate this risk; and of course limiting the depth of the trees in a tree ensemble method is also a form of regularization.
 
 ### Even hold-out sets can be leaky!
 
-However, re-using a cross-validated set multiple times within the model fitting process, for example with stepwise regression, or using cross-methods for multiple layers of nested models, probably increases the chance that the modeling algorithm will decode the leak. In fact, even hold-out sets leak information when used this way!
+However, re-using a cross-set multiple times within the model fitting process, for example with stepwise regression, or using cross-methods for multiple layers of nested models, probably increases the chance that the modeling algorithm will decode the leak. In fact, even hold-out sets leak information when used this way!
 
 The last section of [this article](http://www.win-vector.com/blog/2015/10/a-simpler-explanation-of-differential-privacy/) shows an example of hold-out set leakage during stepwise regression. And [here](http://proceedings.mlr.press/v37/blum15.pdf) is an example of leaderboard hold-out set leakage during Kaggle competitions. The leakage in both these situations occurs because the hold-out set is used multiple times during the model fitting/model tuning/model selection process, and hence leaks information that leads to model overfit.
 
-Model selection is *not* an unbiased procedure, and the bias, however small, can lead to information leakage. For any sort of hyper-parameter tuning or model search, the procedure is biased (though likely of small magnitude) no matter what hold-out procedure we use. Therefore, avoiding cross-validation leakage isn't the only problem.
+Model selection is *not* an unbiased procedure, and the bias, however small, can lead to information leakage. For any sort of hyper-parameter tuning or model search, the procedure is biased (though likely of small magnitude) no matter what hold-out procedure we use. Therefore, avoiding cross-method leakage isn't the only problem.
 
 ## Practical Considerations
 
@@ -2944,10 +2826,11 @@ We can summarize the takeaways from the experiments that we've shown here:
 * If you have enough training data, partitioning it into sets for data transformations, model training, and evaluation may be preferable to cross-methods.
 * If partitioning is not an option, cross methods may be good enough for reasonable applications.
 * Avoid leave-one-out and other deterministic cross-method schemes.
-* When using cross-validated encoded data, prefer regularized methods for the downstream model fitting when possible.
+* When using cross-encoded data, prefer regularized methods for the downstream model fitting when possible.
 
 
 
 ```python
 
 ```
+
