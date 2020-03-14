@@ -90,19 +90,7 @@ d_example
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -337,19 +325,7 @@ d_coded_0
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -558,10 +534,10 @@ overfit_result.summary()
   <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   43.52</td>
 </tr>
 <tr>
-  <th>Date:</th>             <td>Thu, 12 Mar 2020</td> <th>  Prob (F-statistic):</th> <td>5.29e-30</td>
+  <th>Date:</th>             <td>Sat, 14 Mar 2020</td> <th>  Prob (F-statistic):</th> <td>5.29e-30</td>
 </tr>
 <tr>
-  <th>Time:</th>                 <td>13:57:00</td>     <th>  Log-Likelihood:    </th> <td> -60.214</td>
+  <th>Time:</th>                 <td>13:48:47</td>     <th>  Log-Likelihood:    </th> <td> -60.214</td>
 </tr>
 <tr>
   <th>No. Observations:</th>      <td>   100</td>      <th>  AIC:               </th> <td>   142.4</td>
@@ -696,19 +672,7 @@ cross_frame_0
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -808,10 +772,10 @@ overfit_result_2.summary()
   <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>1.305e+31</td>
 </tr>
 <tr>
-  <th>Date:</th>             <td>Thu, 12 Mar 2020</td> <th>  Prob (F-statistic):</th>  <td>  0.00</td>  
+  <th>Date:</th>             <td>Sat, 14 Mar 2020</td> <th>  Prob (F-statistic):</th>  <td>  0.00</td>  
 </tr>
 <tr>
-  <th>Time:</th>                 <td>13:57:02</td>     <th>  Log-Likelihood:    </th> <td>  3204.2</td> 
+  <th>Time:</th>                 <td>13:48:50</td>     <th>  Log-Likelihood:    </th> <td>  3204.2</td> 
 </tr>
 <tr>
   <th>No. Observations:</th>      <td>   100</td>      <th>  AIC:               </th> <td>  -6404.</td> 
@@ -941,19 +905,7 @@ cross_frame
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1172,10 +1124,10 @@ proper_fit_result.summary()
   <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   1.265</td>
 </tr>
 <tr>
-  <th>Date:</th>             <td>Thu, 12 Mar 2020</td> <th>  Prob (F-statistic):</th>  <td> 0.258</td> 
+  <th>Date:</th>             <td>Sat, 14 Mar 2020</td> <th>  Prob (F-statistic):</th>  <td> 0.258</td> 
 </tr>
 <tr>
-  <th>Time:</th>                 <td>13:57:03</td>     <th>  Log-Likelihood:    </th> <td> -141.53</td>
+  <th>Time:</th>                 <td>13:48:51</td>     <th>  Log-Likelihood:    </th> <td> -141.53</td>
 </tr>
 <tr>
   <th>No. Observations:</th>      <td>   100</td>      <th>  AIC:               </th> <td>   307.1</td>
@@ -1274,19 +1226,7 @@ partition_solution
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1403,19 +1343,7 @@ relns_x
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1590,27 +1518,27 @@ relns_x
     </tr>
     <tr>
       <th>1095</th>
-      <td>0.000000</td>
-      <td>0.015152</td>
-      <td>0.000000</td>
-      <td>0.015152</td>
-      <td>0.015152</td>
-      <td>0.015152</td>
-      <td>0.000000</td>
-      <td>0.015152</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
       <td>0.000000</td>
       <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.014925</td>
+      <td>0.000000</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
       <td>...</td>
-      <td>0.015152</td>
-      <td>0.000000</td>
-      <td>0.015152</td>
-      <td>0.015152</td>
-      <td>0.015152</td>
-      <td>0.015152</td>
-      <td>0.015152</td>
-      <td>0.015152</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
       <td>0.000000</td>
       <td>0.000000</td>
+      <td>0.014925</td>
+      <td>0.000000</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
     </tr>
     <tr>
       <th>1096</th>
@@ -1638,75 +1566,75 @@ relns_x
     </tr>
     <tr>
       <th>1097</th>
-      <td>0.014925</td>
       <td>0.000000</td>
-      <td>0.014925</td>
-      <td>0.014925</td>
-      <td>0.014925</td>
-      <td>0.014925</td>
-      <td>0.014925</td>
-      <td>0.014925</td>
-      <td>0.014925</td>
-      <td>0.014925</td>
+      <td>0.001806</td>
+      <td>0.000000</td>
+      <td>0.001806</td>
+      <td>0.001806</td>
+      <td>0.001806</td>
+      <td>0.000000</td>
+      <td>0.001806</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
       <td>...</td>
+      <td>0.001806</td>
       <td>0.000000</td>
-      <td>0.014925</td>
+      <td>0.001806</td>
+      <td>0.001806</td>
+      <td>0.001806</td>
+      <td>0.001806</td>
+      <td>0.001806</td>
+      <td>0.001806</td>
       <td>0.000000</td>
       <td>0.000000</td>
-      <td>0.014925</td>
-      <td>0.014925</td>
-      <td>0.000000</td>
-      <td>0.014925</td>
-      <td>0.014925</td>
-      <td>0.014925</td>
     </tr>
     <tr>
       <th>1098</th>
       <td>0.014925</td>
+      <td>0.014925</td>
+      <td>0.014925</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
       <td>0.000000</td>
       <td>0.014925</td>
-      <td>0.014925</td>
-      <td>0.014925</td>
-      <td>0.014925</td>
-      <td>0.014925</td>
-      <td>0.014925</td>
+      <td>0.000000</td>
       <td>0.014925</td>
       <td>0.014925</td>
       <td>...</td>
-      <td>0.000000</td>
       <td>0.014925</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
+      <td>0.014925</td>
       <td>0.014925</td>
       <td>0.014925</td>
       <td>0.000000</td>
+      <td>0.000000</td>
       <td>0.014925</td>
+      <td>0.000000</td>
       <td>0.014925</td>
       <td>0.014925</td>
     </tr>
     <tr>
       <th>1099</th>
-      <td>0.014925</td>
-      <td>0.014925</td>
-      <td>0.014925</td>
+      <td>0.000000</td>
+      <td>0.015152</td>
+      <td>0.000000</td>
+      <td>0.015152</td>
+      <td>0.015152</td>
+      <td>0.015152</td>
+      <td>0.000000</td>
+      <td>0.015152</td>
       <td>0.000000</td>
       <td>0.000000</td>
-      <td>0.000000</td>
-      <td>0.014925</td>
-      <td>0.000000</td>
-      <td>0.014925</td>
-      <td>0.014925</td>
       <td>...</td>
-      <td>0.014925</td>
-      <td>0.014925</td>
-      <td>0.014925</td>
-      <td>0.014925</td>
+      <td>0.015152</td>
+      <td>0.000000</td>
+      <td>0.015152</td>
+      <td>0.015152</td>
+      <td>0.015152</td>
+      <td>0.015152</td>
+      <td>0.015152</td>
+      <td>0.015152</td>
       <td>0.000000</td>
       <td>0.000000</td>
-      <td>0.014925</td>
-      <td>0.000000</td>
-      <td>0.014925</td>
-      <td>0.014925</td>
     </tr>
   </tbody>
 </table>
@@ -1724,19 +1652,7 @@ relns_y
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1792,38 +1708,38 @@ relns_y
     </tr>
     <tr>
       <th>1095</th>
-      <td>0.055096</td>
-      <td>78</td>
+      <td>0.160505</td>
+      <td>64</td>
       <td>10</td>
-      <td>nl_36</td>
+      <td>nl_17</td>
     </tr>
     <tr>
       <th>1096</th>
       <td>0.160505</td>
-      <td>88</td>
+      <td>17</td>
       <td>10</td>
-      <td>nl_49</td>
+      <td>nl_17</td>
     </tr>
     <tr>
       <th>1097</th>
-      <td>0.053041</td>
-      <td>28</td>
+      <td>-0.385604</td>
+      <td>35</td>
       <td>10</td>
-      <td>nl_49</td>
+      <td>nl_17</td>
     </tr>
     <tr>
       <th>1098</th>
-      <td>0.053041</td>
-      <td>80</td>
+      <td>0.160505</td>
+      <td>49</td>
       <td>10</td>
-      <td>nl_20</td>
+      <td>nl_17</td>
     </tr>
     <tr>
       <th>1099</th>
-      <td>0.160505</td>
-      <td>95</td>
+      <td>0.055096</td>
+      <td>81</td>
       <td>10</td>
-      <td>nl_35</td>
+      <td>nl_46</td>
     </tr>
   </tbody>
 </table>
@@ -1888,7 +1804,7 @@ r2
 
 
 
-    0.9993249813376333
+    0.9993249813376286
 
 
 
@@ -1915,6 +1831,8 @@ _ = matplotlib.pyplot.plot(
 
 Again: what we have shown is that even when we target encode a set of pure noise variables using cross-methods, we can still recover `y_example` from the encoded variables. This means that the encoded noise variables can still potentially appear informative about `y_example` when used in a downstream model: cross-methods still leak information about the output variable.
 
+For a related (and much simpler to exploit) outcome leak, please see ["Multiple Split Cross-Validation Data Leak"](https://github.com/WinVector/pyvtreat/blob/master/Examples/CrossVal/LeakTradeOff/RepeatCrossFrame.ipynb).
+
 Does this mean we shouldn't use cross-methods? Not necessarily. We'll discuss this more, below.
 
 ## Correct Cross Methods, The General Case
@@ -1939,19 +1857,7 @@ d_example_s
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -2234,19 +2140,7 @@ vtreat_cross_frame
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -2509,19 +2403,7 @@ vtreat_coder.score_frame_.loc[:, cols_to_show]
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -2770,10 +2652,10 @@ good_fit.summary()
   <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   29.31</td>
 </tr>
 <tr>
-  <th>Date:</th>             <td>Thu, 12 Mar 2020</td> <th>  Prob (F-statistic):</th> <td>4.52e-27</td>
+  <th>Date:</th>             <td>Sat, 14 Mar 2020</td> <th>  Prob (F-statistic):</th> <td>4.52e-27</td>
 </tr>
 <tr>
-  <th>Time:</th>                 <td>13:57:07</td>     <th>  Log-Likelihood:    </th> <td> -136.14</td>
+  <th>Time:</th>                 <td>13:48:54</td>     <th>  Log-Likelihood:    </th> <td> -136.14</td>
 </tr>
 <tr>
   <th>No. Observations:</th>      <td>   100</td>      <th>  AIC:               </th> <td>   304.3</td>
@@ -2959,3 +2841,4 @@ We can summarize the takeaways from the experiments that we've shown here:
 ```python
 
 ```
+
