@@ -2,17 +2,18 @@
 platform darwin -- Python 3.7.7, pytest-5.4.1, py-1.8.1, pluggy-0.13.1
 rootdir: /Users/johnmount/Documents/work/pyvtreat/pkg
 plugins: cov-2.8.1
-collected 20 items
+collected 21 items
 
-pkg/tests/test_classification.py ..                                      [ 10%]
-pkg/tests/test_col_name_issues.py ...                                    [ 25%]
-pkg/tests/test_imputation_controls.py .                                  [ 30%]
-pkg/tests/test_multinomial.py .                                          [ 35%]
-pkg/tests/test_nan_inf.py .                                              [ 40%]
-pkg/tests/test_outcome_name_required.py .                                [ 45%]
-pkg/tests/test_r1_issue.py .                                             [ 50%]
-pkg/tests/test_range.py .                                                [ 55%]
-pkg/tests/test_regression.py .                                           [ 60%]
+pkg/tests/test_classification.py ..                                      [  9%]
+pkg/tests/test_col_name_issues.py ...                                    [ 23%]
+pkg/tests/test_dup.py .                                                  [ 28%]
+pkg/tests/test_imputation_controls.py .                                  [ 33%]
+pkg/tests/test_multinomial.py .                                          [ 38%]
+pkg/tests/test_nan_inf.py .                                              [ 42%]
+pkg/tests/test_outcome_name_required.py .                                [ 47%]
+pkg/tests/test_r1_issue.py .                                             [ 52%]
+pkg/tests/test_range.py .                                                [ 57%]
+pkg/tests/test_regression.py .                                           [ 61%]
 pkg/tests/test_stats.py .....                                            [ 85%]
 pkg/tests/test_unsupervised.py .                                         [ 90%]
 pkg/tests/test_user_coders.py .                                          [ 95%]
@@ -26,10 +27,10 @@ pkg/vtreat/cross_plan.py       50     11    78%
 pkg/vtreat/stats_utils.py     101      4    96%
 pkg/vtreat/transform.py        17      4    76%
 pkg/vtreat/util.py            133     19    86%
-pkg/vtreat/vtreat_api.py      235     53    77%
+pkg/vtreat/vtreat_api.py      235     49    79%
 pkg/vtreat/vtreat_impl.py     584     86    85%
 -----------------------------------------------
-TOTAL                        1126    177    84%
+TOTAL                        1126    173    85%
 
 
-============================= 20 passed in 10.11s ==============================
+============================= 21 passed in 11.11s ==============================
