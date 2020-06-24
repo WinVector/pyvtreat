@@ -52,7 +52,7 @@ and also as an [`R` package](https://github.com/WinVector/vtreat).
 
 setuptools.setup(
     name='vtreat',
-    version='0.4.3',
+    version='0.4.4',
     author='John Mount, Nina Zumel',
     author_email='jmount@win-vector.com',
     url='https://github.com/WinVector/pyvtreat',

@@ -30,7 +30,11 @@ def vtreat_parameters(user_params=None):
         "sparse_indicators": True,
         "missingness_imputation": numpy.mean,
         "check_for_duplicate_frames": True,
+        "error_on_duplicate_frames": False,
         "retain_cross_plan": False,
+        "tunable_params": [
+            "indicator_min_fraction"
+            ],
     }
     if user_params is not None:
         pkeys = set(params.keys())
@@ -38,6 +42,8 @@ def vtreat_parameters(user_params=None):
             if k not in pkeys:
                 raise KeyError("parameter key " + str(k) + " not recognized")
             params[k] = user_params[k]
+    if params["error_on_duplicate_frames"]:
+        params["check_for_duplicate_frames"] = True
     return params
 
 
@@ -55,6 +61,9 @@ def unsupervised_parameters(user_params=None):
         "user_transforms": [],
         "sparse_indicators": True,
         "missingness_imputation": numpy.mean,
+        "tunable_params": [
+            "indicator_min_fraction"
+        ],
     }
     if user_params is not None:
         pkeys = set(params.keys())
@@ -104,6 +113,10 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
         if self.last_fit_x_id_ is None:
             raise ValueError("called transform on not yet fit treatment")
         if self.params_['check_for_duplicate_frames'] and (self.last_fit_x_id_ == id(X)):
+            if self.params_["error_on_duplicate_frames"]:
+                raise ValueError(
+                    "possibly called transform on same data used to fit\n" +
+                    "(this causes over-fit, please use fit_transform() instead)")
             warnings.warn(
                 "possibly called transform on same data used to fit\n" +
                 "(this causes over-fit, please use fit_transform() instead)")
@@ -231,6 +244,10 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         if self.last_fit_x_id_ is None:
             raise ValueError("called transform on not yet fit treatment")
         if self.params_['check_for_duplicate_frames'] and (self.last_fit_x_id_ == id(X)):
+            if self.params_["error_on_duplicate_frames"]:
+                raise ValueError(
+                    "possibly called transform on same data used to fit\n" +
+                    "(this causes over-fit, please use fit_transform() instead)")
             warnings.warn(
                 "possibly called transform on same data used to fit\n" +
                 "(this causes over-fit, please use fit_transform() instead)")
@@ -358,6 +375,10 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         if self.last_fit_x_id_ is None:
             raise ValueError("called transform on not yet fit treatment")
         if self.params_['check_for_duplicate_frames'] and (self.last_fit_x_id_ == id(X)):
+            if self.params_["error_on_duplicate_frames"]:
+                raise ValueError(
+                    "possibly called transform on same data used to fit\n" +
+                    "(this causes over-fit, please use fit_transform() instead)")
             warnings.warn(
                 "possibly called transform on same data used to fit\n" +
                 "(this causes over-fit, please use fit_transform() instead)")

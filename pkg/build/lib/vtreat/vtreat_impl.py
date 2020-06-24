@@ -984,17 +984,22 @@ class VariableTreatment(ABC):
     # https://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html
 
     # noinspection PyUnusedLocal,PyMethodMayBeStatic
-    def get_params(self, deep=False):
+    def get_params(self, deep=True):
         """
-        vtreat doesn't expose parameters so outside code doesn't attempt to optimize over them
+        vtreat exposes a subset of controls as tunable parameters, users can choose this set
+        by specifying the tunable_params list in object construction parameters
         """
-        return {}
+        return {ti: self.params_[ti] for ti in self.params_["tunable_params"]}
 
     # noinspection PyUnusedLocal,PyMethodMayBeStatic
     def set_params(self, **params):
         """
-        vtreat doesn't expose parameters so outside code doesn't attempt to optimize over them
+        vtreat exposes a subset of controls as tunable parameters, users can choose this set
+        by specifying the tunable_params list in object construction parameters
         """
+        for (k, v) in params:
+            if k in self.params_["tunable_params"]:
+                self.params_[k] = v
         return self
 
     # extra methods to look more like sklearn objects
