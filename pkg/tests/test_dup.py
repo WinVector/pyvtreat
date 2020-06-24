@@ -45,7 +45,10 @@ def test_dup():
     with pytest.raises(ValueError):
         d_prepared_wrong = transform.transform(d)
 
-    dtest = make_data(450)
+    # no warning or error
+    with pytest.warns(None) as record:
+        dtest = make_data(450)
+    assert not record
 
     dtest_prepared = transform.transform(dtest)
 
