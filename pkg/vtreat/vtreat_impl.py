@@ -917,6 +917,7 @@ class VariableTreatment(ABC):
         self.imputation_map_ = imputation_map.copy()
         self.plan_ = None
         self.score_frame_ = None
+        self.cross_rows_ = None
         self.cross_plan_ = None
         self.last_fit_x_id_ = None
         self.last_result_columns = None
@@ -935,6 +936,7 @@ class VariableTreatment(ABC):
     def clear(self):
         self.plan_ = None
         self.score_frame_ = None
+        self.cross_rows_ = None
         self.cross_plan_ = None
         self.last_fit_x_id_ = None
         self.last_result_columns = None
@@ -997,7 +999,7 @@ class VariableTreatment(ABC):
         vtreat exposes a subset of controls as tunable parameters, users can choose this set
         by specifying the tunable_params list in object construction parameters
         """
-        for (k, v) in params:
+        for (k, v) in params.items():
             if k in self.params_["tunable_params"]:
                 self.params_[k] = v
         return self

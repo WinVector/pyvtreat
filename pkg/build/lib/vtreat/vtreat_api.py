@@ -31,7 +31,7 @@ def vtreat_parameters(user_params=None):
         "missingness_imputation": numpy.mean,
         "check_for_duplicate_frames": True,
         "error_on_duplicate_frames": False,
-        "retain_cross_plan": False,
+        "retain_cross_plan": True,
         "tunable_params": [
             "indicator_min_fraction"
             ],
@@ -149,6 +149,11 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
             raise ValueError("y should not have any missing/NA/NaN values")
         if numpy.max(y) <= numpy.min(y):
             raise ValueError("y does not vary")
+        cross_rows = None
+        cross_plan = None
+        if self.params_['retain_cross_plan']:
+            cross_rows = self.cross_rows_
+            cross_plan = self.cross_plan_
         self.clear()
         self.last_fit_x_id_ = id(X)
         X = vtreat_impl.pre_prep_frame(
@@ -169,10 +174,14 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
             imputation_map=self.imputation_map_,
         )
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
+        if (cross_plan is None) or (cross_rows != X.shape[0]):
+            if cross_plan is not None:
+                warnings.warn("Number of rows different than previous fit with retain_cross_plan==True")
+            cross_plan = self.params_["cross_validation_plan"].split_plan(
+                n_rows=X.shape[0], k_folds=self.params_["cross_validation_k"], data=X, y=y
+            )
+            cross_rows = X.shape[0]
         # patch in cross-frame versions of complex columns such as impact
-        cross_plan = self.params_["cross_validation_plan"].split_plan(
-            n_rows=X.shape[0], k_folds=self.params_["cross_validation_k"], data=X, y=y
-        )
         cross_frame = vtreat_impl.cross_patch_refit_y_aware_cols(
             x=X, y=y, res=res, plan=self.plan_, cross_plan=cross_plan
         )
@@ -198,6 +207,10 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
         self.last_result_columns = res_columns
         if self.params_['retain_cross_plan']:
             self.cross_plan_ = cross_plan
+            self.cross_rows_ = cross_rows
+        else:
+            self.cross_plan_ = None
+            self.cross_rows_ = None
         return cross_frame
 
 
@@ -278,6 +291,11 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         y_mean = numpy.mean(y == self.outcome_target_)
         if y_mean <= 0 or y_mean >= 1:
             raise ValueError("y==outcome_target does not vary")
+        cross_rows = None
+        cross_plan = None
+        if self.params_['retain_cross_plan']:
+            cross_rows = self.cross_rows_
+            cross_plan = self.cross_plan_
         self.clear()
         self.last_fit_x_id_ = id(X)
         X = vtreat_impl.pre_prep_frame(
@@ -299,10 +317,14 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
             imputation_map=self.imputation_map_,
         )
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
+        if (cross_plan is None) or (cross_rows != X.shape[0]):
+            if cross_plan is not None:
+                warnings.warn("Number of rows different than previous fit with retain_cross_plan==True")
+            cross_plan = self.params_["cross_validation_plan"].split_plan(
+                n_rows=X.shape[0], k_folds=self.params_["cross_validation_k"], data=X, y=y
+            )
+            cross_rows = X.shape[0]
         # patch in cross-frame versions of complex columns such as impact
-        cross_plan = self.params_["cross_validation_plan"].split_plan(
-            n_rows=X.shape[0], k_folds=self.params_["cross_validation_k"], data=X, y=y
-        )
         cross_frame = vtreat_impl.cross_patch_refit_y_aware_cols(
             x=X, y=y, res=res, plan=self.plan_, cross_plan=cross_plan
         )
@@ -330,6 +352,10 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         self.last_result_columns = res_columns
         if self.params_['retain_cross_plan']:
             self.cross_plan_ = cross_plan
+            self.cross_rows_ = cross_rows
+        else:
+            self.cross_plan_ = None
+            self.cross_rows_ = None
         return cross_frame
 
 
@@ -408,6 +434,11 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
             raise ValueError("X.shape[0] should equal len(y)")
         if len(numpy.unique(y)) <= 1:
             raise ValueError("y must take on at least 2 values")
+        cross_rows = None
+        cross_plan = None
+        if self.params_['retain_cross_plan']:
+            cross_rows = self.cross_rows_
+            cross_plan = self.cross_plan_
         self.clear()
         self.last_fit_x_id_ = id(X)
         X = vtreat_impl.pre_prep_frame(
@@ -429,10 +460,13 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
             imputation_map=self.imputation_map_,
         )
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
-        # patch in cross-frame versions of complex columns such as impact
-        cross_plan = self.params_["cross_validation_plan"].split_plan(
-            n_rows=X.shape[0], k_folds=self.params_["cross_validation_k"], data=X, y=y
-        )
+        if (cross_plan is None) or (cross_rows != X.shape[0]):
+            if cross_plan is not None:
+                warnings.warn("Number of rows different than previous fit with retain_cross_plan==True")
+            cross_plan = self.params_["cross_validation_plan"].split_plan(
+                n_rows=X.shape[0], k_folds=self.params_["cross_validation_k"], data=X, y=y
+            )
+            cross_rows = X.shape[0]
         cross_frame = vtreat_impl.cross_patch_refit_y_aware_cols(
             x=X, y=y, res=res, plan=self.plan_, cross_plan=cross_plan
         )
@@ -466,6 +500,10 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         self.last_result_columns = res_columns
         if self.params_['retain_cross_plan']:
             self.cross_plan_ = cross_plan
+            self.cross_rows_ = cross_rows
+        else:
+            self.cross_plan_ = None
+            self.cross_rows_ = None
         return cross_frame
 
 
