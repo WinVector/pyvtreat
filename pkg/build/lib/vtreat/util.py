@@ -8,6 +8,8 @@ Created on Sat Jul 20 11:40:41 2019
 import math
 import statistics
 
+import hashlib
+
 import numpy
 import pandas
 
@@ -244,3 +246,7 @@ def build_level_codes(incoming_column_name, levels):
     if len(set(levels)) != len(levels):
         levels = [levels[i] + "_" + str(i) for i in range(len(levels))]
     return levels
+
+
+def hash_data_frame(d):
+    return hashlib.sha256(pandas.util.hash_pandas_object(d).values).hexdigest()

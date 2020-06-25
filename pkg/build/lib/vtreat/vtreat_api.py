@@ -118,7 +118,7 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
         self.check_column_names(X.columns)
         if self.last_fit_x_id_ is None:
             raise ValueError("called transform on not yet fit treatment")
-        if self.params_['check_for_duplicate_frames'] and (self.last_fit_x_id_ == id(X)):
+        if self.params_['check_for_duplicate_frames'] and (self.last_fit_x_id_ == vtreat.util.hash_data_frame(X)):
             if self.params_["error_on_duplicate_frames"]:
                 raise ValueError(
                     "possibly called transform on same data used to fit\n" +
@@ -161,7 +161,7 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
             cross_rows = self.cross_rows_
             cross_plan = self.cross_plan_
         self.clear()
-        self.last_fit_x_id_ = id(X)
+        self.last_fit_x_id_ = vtreat.util.hash_data_frame(X)
         X = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
@@ -262,7 +262,7 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         self.check_column_names(X.columns)
         if self.last_fit_x_id_ is None:
             raise ValueError("called transform on not yet fit treatment")
-        if self.params_['check_for_duplicate_frames'] and (self.last_fit_x_id_ == id(X)):
+        if self.params_['check_for_duplicate_frames'] and (self.last_fit_x_id_ == vtreat.util.hash_data_frame(X)):
             if self.params_["error_on_duplicate_frames"]:
                 raise ValueError(
                     "possibly called transform on same data used to fit\n" +
@@ -303,7 +303,7 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
             cross_rows = self.cross_rows_
             cross_plan = self.cross_plan_
         self.clear()
-        self.last_fit_x_id_ = id(X)
+        self.last_fit_x_id_ = vtreat.util.hash_data_frame(X)
         X = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
@@ -406,7 +406,7 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         self.check_column_names(X.columns)
         if self.last_fit_x_id_ is None:
             raise ValueError("called transform on not yet fit treatment")
-        if self.params_['check_for_duplicate_frames'] and (self.last_fit_x_id_ == id(X)):
+        if self.params_['check_for_duplicate_frames'] and (self.last_fit_x_id_ == vtreat.util.hash_data_frame(X)):
             if self.params_["error_on_duplicate_frames"]:
                 raise ValueError(
                     "possibly called transform on same data used to fit\n" +
@@ -446,7 +446,7 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
             cross_rows = self.cross_rows_
             cross_plan = self.cross_plan_
         self.clear()
-        self.last_fit_x_id_ = id(X)
+        self.last_fit_x_id_ = vtreat.util.hash_data_frame(X)
         X = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
@@ -564,7 +564,7 @@ class UnsupervisedTreatment(vtreat_impl.VariableTreatment):
         if y is not None:
             raise ValueError("y should be None")
         self.clear()
-        self.last_fit_x_id_ = id(X)
+        self.last_fit_x_id_ = vtreat.util.hash_data_frame(X)
         X = vtreat_impl.pre_prep_frame(
             X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
         )
