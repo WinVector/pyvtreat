@@ -36,14 +36,17 @@ def vtreat_parameters(user_params=None):
             "indicator_min_fraction"
             ],
     }
+    pkeys = set(params.keys())
     if user_params is not None:
-        pkeys = set(params.keys())
         for k in user_params.keys():
             if k not in pkeys:
                 raise KeyError("parameter key " + str(k) + " not recognized")
             params[k] = user_params[k]
     if params["error_on_duplicate_frames"]:
         params["check_for_duplicate_frames"] = True
+    for k in params["tunable_params"]:
+        if k not in pkeys:
+            raise KeyError("tunable_params key " + str(k) + " not recognized")
     return params
 
 
@@ -65,12 +68,15 @@ def unsupervised_parameters(user_params=None):
             "indicator_min_fraction"
         ],
     }
+    pkeys = set(params.keys())
     if user_params is not None:
-        pkeys = set(params.keys())
         for k in user_params.keys():
             if k not in pkeys:
                 raise KeyError("parameter key " + str(k) + " not recognized")
             params[k] = user_params[k]
+    for k in params["tunable_params"]:
+        if k not in pkeys:
+            raise KeyError("tunable_params key " + str(k) + " not recognized")
     return params
 
 
