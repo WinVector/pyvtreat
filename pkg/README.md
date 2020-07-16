@@ -14,6 +14,13 @@ Install `vtreat` with either of:
   * `pip install vtreat`
   * `pip install https://github.com/WinVector/pyvtreat/raw/master/pkg/dist/vtreat-0.4.6.tar.gz`
 
+
+# Video Introduction
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/qMCQFjEV90k" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+([link](https://youtu.be/qMCQFjEV90k))
+
 # Details
 
 `vtreat` takes an input `DataFrame`
