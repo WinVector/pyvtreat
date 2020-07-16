@@ -17,9 +17,9 @@ Install `vtreat` with either of:
 
 # Video Introduction
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/qMCQFjEV90k" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-([link](https://youtu.be/qMCQFjEV90k))
+[Our PyData LA 2019 talk](https://youtu.be/qMCQFjEV90k) on `vtreat` is a good video introduction
+to what problems `vtreat` can be used to solve.
 
 # Details
 
