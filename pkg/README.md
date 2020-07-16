@@ -19,7 +19,7 @@ Install `vtreat` with either of:
 
 
 [Our PyData LA 2019 talk](https://youtu.be/qMCQFjEV90k) on `vtreat` is a good video introduction
-to what problems `vtreat` can be used to solve.
+to what problems `vtreat` can be used to solve.  The slides can be found [here](https://github.com/WinVector/Examples/blob/master/PyDataLA2019/vtreat_pydata2019.pdf).
 
 # Details
 
