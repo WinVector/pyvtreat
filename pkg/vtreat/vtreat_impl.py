@@ -657,7 +657,9 @@ def limit_to_appropriate_columns(*, res, transform):
     cols_to_keep = [ci for ci in res.columns if ci in to_copy or ci in to_take]
     if len(cols_to_keep) <= 0:
         raise ValueError("no columns retained")
-    return res[cols_to_keep]
+    res = res[cols_to_keep].copy()
+    res.reset_index(inplace=True, drop=True)
+    return res
 
 
 # val_list is a list single column Pandas data frames
