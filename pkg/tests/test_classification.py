@@ -25,6 +25,13 @@ def test_classification():
         cols_to_copy=["y"],  # columns to "carry along" but not treat as input variables
     )
 
+    # show y-column doesn't get copied in, and can tolerate copy columns not being around
+    vars = [c for c in d.columns if c not in set(['y', 'yc'])]
+    d_prepared = transform.fit_transform(d[vars], d["yc"])
+    assert 'yc' not in d_prepared.columns
+
+    # design again
+
     d_prepared = transform.fit_transform(d, d["yc"])
 
     for c in d_prepared.columns:
@@ -70,6 +77,7 @@ def test_classification_numpy():
     )
 
     d_prepared = transform.fit_transform(d_n, numpy.asarray(d["yc"]))
+    assert isinstance(d_prepared, numpy.ndarray)
     d_prepared_columns = transform.last_result_columns
     sf = transform.score_frame_
 
@@ -78,6 +86,7 @@ def test_classification_numpy():
     dtest = make_data(450)
 
     dtest_prepared = transform.transform(numpy.asarray(dtest[vars]))
+    assert isinstance(dtest_prepared, numpy.ndarray)
     dtest_prepared_columns = transform.last_result_columns
 
     assert len(set(dtest_prepared_columns) - set(sf.variable)) == 0

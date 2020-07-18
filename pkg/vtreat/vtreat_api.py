@@ -145,7 +145,7 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
             y = numpy.asarray(X[self.outcome_name_])
         else:
             y = numpy.asarray(y)
-            if self.outcome_name_ is not None:
+            if (self.outcome_name_ is not None) and (self.outcome_name_ in X.columns):
                 if not numpy.all(X[self.outcome_name_] == y):
                     raise ValueError(".fit_transform(X, y) called with y != X[outcome_name]")
         if not X.shape[0] == len(y):
@@ -289,7 +289,7 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
             y = numpy.asarray(X[self.outcome_name_])
         else:
             y = numpy.asarray(y)
-            if self.outcome_name_ is not None:
+            if (self.outcome_name_ is not None) and (self.outcome_name_ in X.columns):
                 if not numpy.all(X[self.outcome_name_] == y):
                     raise ValueError(".fit_transform(X, y) called with y != X[outcome_name]")
         if not X.shape[0] == len(y):
@@ -433,7 +433,7 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
             y = numpy.asarray(X[self.outcome_name_])
         else:
             y = numpy.asarray(y)
-            if self.outcome_name_ is not None:
+            if (self.outcome_name_ is not None) and (self.outcome_name_ in X.columns):
                 if not numpy.all(X[self.outcome_name_] == y):
                     raise ValueError(".fit_transform(X, y) called with y != X[outcome_name]")
         if not X.shape[0] == len(y):
