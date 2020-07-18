@@ -206,6 +206,9 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
             params=self.params_,
             is_classification=False
         )
+        if ("filter_to_recommended" in self.params_.keys()) and self.params_["filter_to_recommended"]:
+            self.set_result_restriction(
+                set([ci for ci in self.score_frame_["variable"][self.score_frame_["recommended"]]]))
         cross_frame = vtreat_impl.limit_to_appropriate_columns(
             res=cross_frame, transform=self
         )
@@ -351,6 +354,9 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
             params=self.params_,
             is_classification=True
         )
+        if ("filter_to_recommended" in self.params_.keys()) and self.params_["filter_to_recommended"]:
+            self.set_result_restriction(
+                set([ci for ci in self.score_frame_["variable"][self.score_frame_["recommended"]]]))
         cross_frame = vtreat_impl.limit_to_appropriate_columns(
             res=cross_frame, transform=self
         )
@@ -499,6 +505,9 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         score_frames = [si(oi) for oi in self.outcomes_]
         self.score_frame_ = pandas.concat(score_frames, axis=0)
         self.score_frame_.reset_index(inplace=True, drop=True)
+        if ("filter_to_recommended" in self.params_.keys()) and self.params_["filter_to_recommended"]:
+            self.set_result_restriction(
+                set([ci for ci in self.score_frame_["variable"][self.score_frame_["recommended"]]]))
         cross_frame = vtreat_impl.limit_to_appropriate_columns(
             res=cross_frame, transform=self
         )
@@ -580,6 +589,9 @@ class UnsupervisedTreatment(vtreat_impl.VariableTreatment):
         self.score_frame_ = vtreat_impl.pseudo_score_plan_variables(
             cross_frame=res, plan=self.plan_, params=self.params_
         )
+        if ("filter_to_recommended" in self.params_.keys()) and self.params_["filter_to_recommended"]:
+            self.set_result_restriction(
+                set([ci for ci in self.score_frame_["variable"][self.score_frame_["recommended"]]]))
         res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
         res, res_columns = vtreat_impl.back_to_orig_type_data_frame(res, orig_type)
         self.last_result_columns = res_columns

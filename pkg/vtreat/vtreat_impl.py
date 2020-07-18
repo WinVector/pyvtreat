@@ -612,6 +612,8 @@ def pre_prep_frame(x, *, col_list, cols_to_copy):
 
 
 def perform_transform(*, x, transform, params):
+    # TODO: check early all required columns are present
+    # TODO: don't process columns we are later going to throw out all derived values from
     plan = transform.plan_
     new_frames = [xfi.transform(x) for xfi in plan["xforms"]]
     for stp in params["user_transforms"]:
@@ -634,27 +636,11 @@ def perform_transform(*, x, transform, params):
 def limit_to_appropriate_columns(*, res, transform):
     plan = transform.plan_
     to_copy = set(plan["cols_to_copy"])
-    if ("filter_to_recommended" in transform.params_.keys()) and transform.params_[
-        "filter_to_recommended"
-    ]:
-        to_take = set(
-            [
-                ci
-                for ci in transform.score_frame_["variable"][
-                    transform.score_frame_["recommended"]
-                ]
-            ]
-        )
-    else:
-        to_take = set(
-            [
-                ci
-                for ci in transform.score_frame_["variable"][
-                    transform.score_frame_["has_range"]
-                ]
-            ]
-        )
-    cols_to_keep = [ci for ci in res.columns if ci in to_copy or ci in to_take]
+    to_take = set([
+        ci for ci in transform.score_frame_["variable"][transform.score_frame_["has_range"]] ])
+    if (transform.result_restriction is not None) and (len(transform.result_restriction) > 0):
+        to_take = to_take.intersection(transform.result_restriction)
+    cols_to_keep = [ci for ci in res.columns if (ci in to_copy) or (ci in to_take)]
     if len(cols_to_keep) <= 0:
         raise ValueError("no columns retained")
     res = res[cols_to_keep].copy()
@@ -923,6 +909,7 @@ class VariableTreatment(ABC):
         self.cross_plan_ = None
         self.last_fit_x_id_ = None
         self.last_result_columns = None
+        self.result_restriction = None
         self.clear()
 
     def check_column_names(self, col_names):
@@ -942,6 +929,12 @@ class VariableTreatment(ABC):
         self.cross_plan_ = None
         self.last_fit_x_id_ = None
         self.last_result_columns = None
+        self.result_restriction = None
+
+    def set_result_restriction(self, new_vars):
+        self.result_restriction = None
+        if (new_vars is not None) and (len(new_vars) > 0):
+            self.result_restriction = set(new_vars)
 
     def merge_params(self, p):
         raise NotImplementedError("base class called")
