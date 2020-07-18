@@ -28,7 +28,7 @@ def ready_data_frame(d):
 
 def back_to_orig_type_data_frame(d, orig_type):
     if not isinstance(d, pandas.DataFrame):
-        raise TypeError("Expected result to be a pandas.DataFram, found: " + str(type(d)))
+        raise TypeError("Expected result to be a pandas.DataFrame, found: " + str(type(d)))
     columns = [c for c in d.columns]
     if orig_type == numpy.ndarray:
         d = numpy.asarray(d)
