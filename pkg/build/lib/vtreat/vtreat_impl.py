@@ -28,7 +28,7 @@ def ready_data_frame(d):
 
 def back_to_orig_type_data_frame(d, orig_type):
     if not isinstance(d, pandas.DataFrame):
-        raise TypeError("Expected result to be a pandas.DataFram, found: " + str(type(d)))
+        raise TypeError("Expected result to be a pandas.DataFrame, found: " + str(type(d)))
     columns = [c for c in d.columns]
     if orig_type == numpy.ndarray:
         d = numpy.asarray(d)
@@ -613,11 +613,28 @@ def pre_prep_frame(x, *, col_list, cols_to_copy):
 
 def perform_transform(*, x, transform, params):
     plan = transform.plan_
-    new_frames = [xfi.transform(x) for xfi in plan["xforms"]]
-    for stp in params["user_transforms"]:
-        frm = stp.transform(X=x)
-        if frm is not None and frm.shape[1] > 0:
-            new_frames = new_frames + [frm]
+    xform_steps = [xfi for xfi in plan["xforms"]]
+    user_steps = [stp for stp in params["user_transforms"]]
+    # restrict down to to results we are going to use
+    if (transform.result_restriction is not None) and (len(transform.result_restriction) > 0):
+        xform_steps = [xfi for xfi in xform_steps
+                       if len(set(xfi.derived_column_names_).intersection(transform.result_restriction)) > 0]
+        user_steps = [stp for stp in user_steps
+                      if len(set(stp.derived_vars_).intersection(transform.result_restriction)) > 0]
+    # check all required columns are present
+    needs = set()
+    for xfi in xform_steps:
+        if xfi.incoming_column_name_ is not None:
+            needs.add(xfi.incoming_column_name_)
+    for stp in user_steps:
+        if stp.incoming_vars_ is not None:
+            needs.update(stp.incoming_vars_)
+    missing = needs - set(x.columns)
+    if len(missing) > 0:
+        raise ValueError("missing required input columns " + str(missing))
+    # do the work
+    new_frames = [xfi.transform(x) for xfi in (xform_steps + user_steps)]
+    new_frames = [frm for frm in new_frames if (frm is not None) and (frm.shape[1] > 0)]
     # see if we want to copy over any columns
     copy_set = set(plan["cols_to_copy"])
     to_copy = [ci for ci in x.columns if ci in copy_set]
@@ -634,30 +651,16 @@ def perform_transform(*, x, transform, params):
 def limit_to_appropriate_columns(*, res, transform):
     plan = transform.plan_
     to_copy = set(plan["cols_to_copy"])
-    if ("filter_to_recommended" in transform.params_.keys()) and transform.params_[
-        "filter_to_recommended"
-    ]:
-        to_take = set(
-            [
-                ci
-                for ci in transform.score_frame_["variable"][
-                    transform.score_frame_["recommended"]
-                ]
-            ]
-        )
-    else:
-        to_take = set(
-            [
-                ci
-                for ci in transform.score_frame_["variable"][
-                    transform.score_frame_["has_range"]
-                ]
-            ]
-        )
-    cols_to_keep = [ci for ci in res.columns if ci in to_copy or ci in to_take]
+    to_take = set([
+        ci for ci in transform.score_frame_["variable"][transform.score_frame_["has_range"]] ])
+    if (transform.result_restriction is not None) and (len(transform.result_restriction) > 0):
+        to_take = to_take.intersection(transform.result_restriction)
+    cols_to_keep = [ci for ci in res.columns if (ci in to_copy) or (ci in to_take)]
     if len(cols_to_keep) <= 0:
         raise ValueError("no columns retained")
-    return res[cols_to_keep]
+    res = res[cols_to_keep].copy()
+    res.reset_index(inplace=True, drop=True)
+    return res
 
 
 # val_list is a list single column Pandas data frames
@@ -921,6 +924,7 @@ class VariableTreatment(ABC):
         self.cross_plan_ = None
         self.last_fit_x_id_ = None
         self.last_result_columns = None
+        self.result_restriction = None
         self.clear()
 
     def check_column_names(self, col_names):
@@ -940,6 +944,12 @@ class VariableTreatment(ABC):
         self.cross_plan_ = None
         self.last_fit_x_id_ = None
         self.last_result_columns = None
+        self.result_restriction = None
+
+    def set_result_restriction(self, new_vars):
+        self.result_restriction = None
+        if (new_vars is not None) and (len(new_vars) > 0):
+            self.result_restriction = set(new_vars)
 
     def merge_params(self, p):
         raise NotImplementedError("base class called")
