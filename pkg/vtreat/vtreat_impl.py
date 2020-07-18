@@ -612,14 +612,24 @@ def pre_prep_frame(x, *, col_list, cols_to_copy):
 
 
 def perform_transform(*, x, transform, params):
-    # TODO: check early all required columns are present
     # TODO: don't process columns we are later going to throw out all derived values from
     plan = transform.plan_
-    new_frames = [xfi.transform(x) for xfi in plan["xforms"]]
+    steps = [xfi for xfi in plan["xforms"]] + \
+            [stp for stp in params["user_transforms"]]
+    # check all required columns are present
+    needs = set()
+    for xfi in plan["xforms"]:
+        if xfi.incoming_column_name_ is not None:
+            needs.add(xfi.incoming_column_name_)
     for stp in params["user_transforms"]:
-        frm = stp.transform(X=x)
-        if frm is not None and frm.shape[1] > 0:
-            new_frames = new_frames + [frm]
+        if stp.incoming_vars_ is not None:
+            needs.update(stp.incoming_vars_)
+    missing = needs - set(x.columns)
+    if len(missing) > 0:
+        raise ValueError("missing required input columns " + str(missing))
+    # do the work
+    new_frames = [xfi.transform(x) for xfi in steps]
+    new_frames = [frm for frm in new_frames if (frm is not None) and (frm.shape[1] > 0)]
     # see if we want to copy over any columns
     copy_set = set(plan["cols_to_copy"])
     to_copy = [ci for ci in x.columns if ci in copy_set]
