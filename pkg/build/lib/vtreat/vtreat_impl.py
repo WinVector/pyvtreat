@@ -946,6 +946,11 @@ class VariableTreatment(ABC):
         self.last_result_columns = None
         self.result_restriction = None
 
+    def get_result_restriction(self):
+        if self.result_restriction is None:
+            return None
+        return self.result_restriction.copy()
+
     def set_result_restriction(self, new_vars):
         self.result_restriction = None
         if (new_vars is not None) and (len(new_vars) > 0):

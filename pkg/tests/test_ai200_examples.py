@@ -195,4 +195,4 @@ def test_diabetes_example():
     data_treated = treatment.fit_transform(data)
 
     assert data_treated.shape[0] == data.shape[0]
-    assert data_treated.shape[1] >= 5
+    assert data_treated.shape[1] >= 10
