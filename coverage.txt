@@ -2,33 +2,26 @@
 platform darwin -- Python 3.7.7, pytest-6.0.1, py-1.9.0, pluggy-0.13.1
 rootdir: /Users/johnmount/Documents/work/pyvtreat/pkg
 plugins: cov-2.10.1
-collected 25 items
+collected 26 items
 
-pkg/tests/test_ai200_examples.py ..                                      [  8%]
-pkg/tests/test_classification.py ..                                      [ 16%]
-pkg/tests/test_col_name_issues.py ...                                    [ 28%]
-pkg/tests/test_dup.py .                                                  [ 32%]
-pkg/tests/test_imputation_controls.py .                                  [ 36%]
-pkg/tests/test_multinomial.py .                                          [ 40%]
-pkg/tests/test_nan_inf.py .                                              [ 44%]
-pkg/tests/test_outcome_name_required.py .                                [ 48%]
-pkg/tests/test_pipeparams.py .                                           [ 52%]
-pkg/tests/test_r1_issue.py .                                             [ 56%]
-pkg/tests/test_range.py .                                                [ 60%]
-pkg/tests/test_regression.py .                                           [ 64%]
-pkg/tests/test_result_restriction.py .                                   [ 68%]
+pkg/tests/test_ai200_examples.py ..                                      [  7%]
+pkg/tests/test_classification.py ..                                      [ 15%]
+pkg/tests/test_col_name_issues.py ...                                    [ 26%]
+pkg/tests/test_dup.py .                                                  [ 30%]
+pkg/tests/test_id_column_check.py .                                      [ 34%]
+pkg/tests/test_imputation_controls.py .                                  [ 38%]
+pkg/tests/test_multinomial.py .                                          [ 42%]
+pkg/tests/test_nan_inf.py .                                              [ 46%]
+pkg/tests/test_outcome_name_required.py .                                [ 50%]
+pkg/tests/test_pipeparams.py .                                           [ 53%]
+pkg/tests/test_r1_issue.py .                                             [ 57%]
+pkg/tests/test_range.py .                                                [ 61%]
+pkg/tests/test_regression.py .                                           [ 65%]
+pkg/tests/test_result_restriction.py .                                   [ 69%]
 pkg/tests/test_stats.py .....                                            [ 88%]
 pkg/tests/test_unsupervised.py .                                         [ 92%]
 pkg/tests/test_user_coders.py .                                          [ 96%]
 pkg/tests/test_util.py .                                                 [100%]
-
-=============================== warnings summary ===============================
-tests/test_ai200_examples.py::test_diabetes_example
-tests/test_ai200_examples.py::test_diabetes_example
-  /Users/johnmount/opt/anaconda3/envs/ai_academy_3_7/lib/python3.7/site-packages/scipy/stats/stats.py:3875: PearsonRNearConstantInputWarning: An input array is nearly constant; the computed correlation coefficent may be inaccurate.
-    warnings.warn(PearsonRNearConstantInputWarning())
-
--- Docs: https://docs.pytest.org/en/stable/warnings.html
 
 ---------- coverage: platform darwin, python 3.7.7-final-0 -----------
 Name                        Stmts   Miss  Cover
@@ -37,10 +30,11 @@ pkg/vtreat/__init__.py          6      0   100%
 pkg/vtreat/cross_plan.py       50     11    78%
 pkg/vtreat/stats_utils.py     101      4    96%
 pkg/vtreat/transform.py        17      4    76%
-pkg/vtreat/util.py            136     18    87%
+pkg/vtreat/util.py            142     19    87%
 pkg/vtreat/vtreat_api.py      285     57    80%
-pkg/vtreat/vtreat_impl.py     610     76    88%
+pkg/vtreat/vtreat_impl.py     635     84    87%
 -----------------------------------------------
-TOTAL                        1205    170    86%
+TOTAL                        1236    179    86%
 
-======================= 25 passed, 2 warnings in 17.27s ========================
+
+============================= 26 passed in 16.15s ==============================

@@ -42,7 +42,7 @@ def is_bad(x):
     return pandas.isnull(x)
 
 
-def has_range(x):
+def numeric_has_range(x):
     x = safe_to_numeric_array(x)
     not_bad = numpy.logical_not(is_bad(x))
     n_not_bad = sum(not_bad)
@@ -102,6 +102,15 @@ def characterize_numeric(x):
         "varies": (mx > mn) or ((n_not_bad > 0) and (n_not_bad < n)),
         "has_range": (mx > mn),
     }
+
+
+def get_unique_value_count(x):
+    """compute how many unique values in list-x"""
+    if len(x) <= 1:
+        return(len(x))
+    p = pandas.DataFrame({'x': x, 'o': 1})
+    s = p.groupby('x').sum()  # drops None
+    return(max(pandas.isnull(x)) + s.shape[0])
 
 
 def grouped_by_x_statistics(x, y):

@@ -8,6 +8,7 @@ Created on Sat Jul 20 12:07:57 2019
 from abc import ABC
 import math
 import pprint
+import warnings
 
 import numpy
 import pandas
@@ -121,7 +122,7 @@ class IndicateMissingTransform(VarTransform):
 
 
 def fit_clean_code(*, incoming_column_name, x, params, imputation_map):
-    if not vtreat.util.has_range(x):
+    if not vtreat.util.numeric_has_range(x):
         return None
     replacement = params['missingness_imputation']
     try:
@@ -261,7 +262,7 @@ def fit_indicator_code(
         incoming_column_name,
         vtreat.util.build_level_codes(incoming_column_name, levels),
         levels=levels,
-        sparse_indicators=sparse_indicators,
+        sparse_indicators=sparse_indicators
     )
 
 
@@ -293,6 +294,8 @@ def fit_numeric_outcome_treatment(
         var_list = [co for co in X.columns]
     copy_set = set(cols_to_copy)
     var_list = [co for co in var_list if (not (co in copy_set))]
+    v_counts = {v: vtreat.util.get_unique_value_count(X[v]) for v in var_list}
+    var_list = {v for v in var_list if v_counts[v] > 1}
     if len(var_list) <= 0:
         raise ValueError("no variables")
     xforms = []
@@ -312,6 +315,10 @@ def fit_numeric_outcome_treatment(
     var_list = [co for co in var_list if (not (co in set(all_bad)))]
     num_list = [co for co in var_list if vtreat.util.can_convert_v_to_numeric(X[co])]
     cat_list = [co for co in var_list if co not in set(num_list)]
+    id_like = [co for co in cat_list if v_counts[co] >= n]
+    if len(id_like) > 0:
+        warnings.warn("variable(s) " + ', '.join(id_like) + " have unique values per-row, dropping")
+        cat_list = [co for co in var_list if co not in set(id_like)]
     if "clean_copy" in params["coders"]:
         for vi in num_list:
             xform = fit_clean_code(incoming_column_name=vi, x=X[vi], params=params, imputation_map=imputation_map)
@@ -374,6 +381,8 @@ def fit_binomial_outcome_treatment(
         var_list = [co for co in X.columns]
     copy_set = set(cols_to_copy)
     var_list = [co for co in var_list if (not (co in copy_set))]
+    v_counts = {v: vtreat.util.get_unique_value_count(X[v]) for v in var_list}
+    var_list = {v for v in var_list if v_counts[v] > 1}
     if len(var_list) <= 0:
         raise ValueError("no variables")
     xforms = []
@@ -394,6 +403,10 @@ def fit_binomial_outcome_treatment(
     var_list = [co for co in var_list if (not (co in set(all_bad)))]
     num_list = [co for co in var_list if vtreat.util.can_convert_v_to_numeric(X[co])]
     cat_list = [co for co in var_list if co not in set(num_list)]
+    id_like = [co for co in cat_list if v_counts[co] >= n]
+    if len(id_like) > 0:
+        warnings.warn("variable(s) " + ', '.join(id_like) + " have unique values per-row, dropping")
+        cat_list = [co for co in var_list if co not in set(id_like)]
     if "clean_copy" in params["coders"]:
         for vi in num_list:
             xform = fit_clean_code(incoming_column_name=vi, x=X[vi], params=params, imputation_map=imputation_map)
@@ -446,6 +459,8 @@ def fit_multinomial_outcome_treatment(
         var_list = [co for co in X.columns]
     copy_set = set(cols_to_copy)
     var_list = [co for co in var_list if (not (co in copy_set))]
+    v_counts = {v: vtreat.util.get_unique_value_count(X[v]) for v in var_list}
+    var_list = {v for v in var_list if v_counts[v] > 1}
     if len(var_list) <= 0:
         raise ValueError("no variables")
     xforms = []
@@ -467,6 +482,10 @@ def fit_multinomial_outcome_treatment(
     var_list = [co for co in var_list if (not (co in set(all_bad)))]
     num_list = [co for co in var_list if vtreat.util.can_convert_v_to_numeric(X[co])]
     cat_list = [co for co in var_list if co not in set(num_list)]
+    id_like = [co for co in cat_list if v_counts[co] >= n]
+    if len(id_like) > 0:
+        warnings.warn("variable(s) " + ', '.join(id_like) + " have unique values per-row, dropping")
+        cat_list = [co for co in var_list if co not in set(id_like)]
     if "clean_copy" in params["coders"]:
         for vi in num_list:
             xform = fit_clean_code(incoming_column_name=vi, x=X[vi], params=params, imputation_map=imputation_map)
@@ -523,6 +542,8 @@ def fit_unsupervised_treatment(*, X, var_list, outcome_name, cols_to_copy, param
         var_list = [co for co in X.columns]
     copy_set = set(cols_to_copy)
     var_list = [co for co in var_list if (not (co in copy_set))]
+    v_counts = {v: vtreat.util.get_unique_value_count(X[v]) for v in var_list}
+    var_list = {v for v in var_list if v_counts[v] > 1}
     if len(var_list) <= 0:
         raise ValueError("no variables")
     xforms = []
@@ -543,6 +564,10 @@ def fit_unsupervised_treatment(*, X, var_list, outcome_name, cols_to_copy, param
     var_list = [co for co in var_list if (not (co in set(all_bad)))]
     num_list = [co for co in var_list if vtreat.util.can_convert_v_to_numeric(X[co])]
     cat_list = [co for co in var_list if co not in set(num_list)]
+    id_like = [co for co in cat_list if v_counts[co] >= n]
+    if len(id_like) > 0:
+        warnings.warn("variable(s) " + ', '.join(id_like) + " have unique values per-row, dropping")
+        cat_list = [co for co in var_list if co not in set(id_like)]
     if "clean_copy" in params["coders"]:
         for vi in num_list:
             xform = fit_clean_code(incoming_column_name=vi, x=X[vi], params=params, imputation_map=imputation_map)
@@ -876,7 +901,7 @@ def pseudo_score_plan_variables(*, cross_frame, plan, params):
     score_frame.reset_index(inplace=True, drop=True)
 
     score_frame["has_range"] = [
-        vtreat.util.has_range(cross_frame[c]) for c in score_frame["variable"]
+        vtreat.util.numeric_has_range(cross_frame[c]) for c in score_frame["variable"]
     ]
     score_frame["PearsonR"] = numpy.nan
     score_frame["significance"] = numpy.nan

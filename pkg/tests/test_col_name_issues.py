@@ -19,7 +19,7 @@ def test_col_dups_1():
 def test_xgboost_col_name_issue_1():
     # https://stackoverflow.com/questions/48645846/pythons-xgoost-valueerrorfeature-names-may-not-contain-or
     # ValueError('feature_names may not contain [, ] or <')
-    d = pandas.DataFrame({'x': ['[', ']', '<' , '>']})
+    d = pandas.DataFrame({'x': ['[', ']', '<' , '>', '>']})
 
     transform = vtreat.UnsupervisedTreatment(
         var_list=['x']
@@ -34,7 +34,7 @@ def test_xgboost_col_name_issue_1():
 def test_xgboost_col_name_issue_2():
     # https://stackoverflow.com/questions/48645846/pythons-xgoost-valueerrorfeature-names-may-not-contain-or
     # ValueError('feature_names may not contain [, ] or <')
-    d = pandas.DataFrame({'x': ['[', ']', '<' , '_lt_']})
+    d = pandas.DataFrame({'x': ['[', ']', '<' , '_lt_', '_lt_']})
 
     transform = vtreat.UnsupervisedTreatment(
         var_list=['x']
