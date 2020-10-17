@@ -378,11 +378,11 @@ def fit_binomial_outcome_treatment(
         raise ValueError("no variables")
     xforms = []
     n = X.shape[0]
-    all_badd = []
+    all_bad = []
     for vi in var_list:
         n_bad = sum(vtreat.util.is_bad(X[vi]))
         if n_bad >= n:
-            all_badd = all_badd + [vi]
+            all_bad = all_bad + [vi]
         if (n_bad > 0) and (n_bad < n):
             if "missing_indicator" in params["coders"]:
                 # noinspection PyTypeChecker
@@ -391,7 +391,7 @@ def fit_binomial_outcome_treatment(
                         incoming_column_name=vi, derived_column_name=vi + "_is_bad"
                     )
                 ]
-    var_list = [co for co in var_list if (not (co in set(all_badd)))]
+    var_list = [co for co in var_list if (not (co in set(all_bad)))]
     num_list = [co for co in var_list if vtreat.util.can_convert_v_to_numeric(X[co])]
     cat_list = [co for co in var_list if co not in set(num_list)]
     if "clean_copy" in params["coders"]:
@@ -652,7 +652,7 @@ def limit_to_appropriate_columns(*, res, transform):
     plan = transform.plan_
     to_copy = set(plan["cols_to_copy"])
     to_take = set([
-        ci for ci in transform.score_frame_["variable"][transform.score_frame_["has_range"]] ])
+        ci for ci in transform.score_frame_["variable"][transform.score_frame_["has_range"]]])
     if (transform.result_restriction is not None) and (len(transform.result_restriction) > 0):
         to_take = to_take.intersection(transform.result_restriction)
     cols_to_keep = [ci for ci in res.columns if (ci in to_copy) or (ci in to_take)]

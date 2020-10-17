@@ -32,7 +32,9 @@ def test_pipeparams():
 
     df = df.drop(columns=['y'])
 
-    transform = vtreat.BinomialOutcomeTreatment(outcome_target=True)
+    transform = vtreat.BinomialOutcomeTreatment(
+        outcome_target=True,
+        params=vtreat.vtreat_parameters({'sparse_indicators': False}))
 
     clf = Pipeline(steps=[
         ('preprocessor', transform),

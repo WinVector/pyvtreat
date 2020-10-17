@@ -1,7 +1,7 @@
 ============================= test session starts ==============================
-platform darwin -- Python 3.7.7, pytest-5.4.1, py-1.8.1, pluggy-0.13.1
+platform darwin -- Python 3.7.7, pytest-6.0.1, py-1.9.0, pluggy-0.13.1
 rootdir: /Users/johnmount/Documents/work/pyvtreat/pkg
-plugins: cov-2.8.1
+plugins: cov-2.10.1
 collected 25 items
 
 pkg/tests/test_ai200_examples.py ..                                      [  8%]
@@ -22,6 +22,14 @@ pkg/tests/test_unsupervised.py .                                         [ 92%]
 pkg/tests/test_user_coders.py .                                          [ 96%]
 pkg/tests/test_util.py .                                                 [100%]
 
+=============================== warnings summary ===============================
+tests/test_ai200_examples.py::test_diabetes_example
+tests/test_ai200_examples.py::test_diabetes_example
+  /Users/johnmount/opt/anaconda3/envs/ai_academy_3_7/lib/python3.7/site-packages/scipy/stats/stats.py:3875: PearsonRNearConstantInputWarning: An input array is nearly constant; the computed correlation coefficent may be inaccurate.
+    warnings.warn(PearsonRNearConstantInputWarning())
+
+-- Docs: https://docs.pytest.org/en/stable/warnings.html
+
 ---------- coverage: platform darwin, python 3.7.7-final-0 -----------
 Name                        Stmts   Miss  Cover
 -----------------------------------------------
@@ -35,5 +43,4 @@ pkg/vtreat/vtreat_impl.py     610     76    88%
 -----------------------------------------------
 TOTAL                        1205    170    86%
 
-
-============================= 25 passed in 20.64s ==============================
+======================= 25 passed, 2 warnings in 17.27s ========================
