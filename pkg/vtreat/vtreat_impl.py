@@ -254,6 +254,7 @@ def fit_indicator_code(
     sf.loc[bad_posns, incoming_column_name] = "_NA_"
     counts = sf[incoming_column_name].value_counts()
     n = sf.shape[0]
+    counts = counts[counts > 0]
     counts = counts[counts >= min_fraction * n]  # no more than 1/min_fraction symbols
     levels = [str(v) for v in counts.index]
     if len(levels) < 1:

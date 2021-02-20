@@ -27,7 +27,7 @@ def vtreat_parameters(user_params=None):
         "cross_validation_plan": vtreat.cross_plan.KWayCrossPlanYStratified(),
         "cross_validation_k": 5,
         "user_transforms": [],
-        "sparse_indicators": True,
+        "sparse_indicators": False,
         "missingness_imputation": numpy.mean,
         "check_for_duplicate_frames": True,
         "error_on_duplicate_frames": False,
@@ -62,7 +62,7 @@ def unsupervised_parameters(user_params=None):
         },
         "indicator_min_fraction": 0.0,
         "user_transforms": [],
-        "sparse_indicators": True,
+        "sparse_indicators": False,
         "missingness_imputation": numpy.mean,
         "tunable_params": [
             "indicator_min_fraction"
