@@ -303,7 +303,7 @@ def fit_numeric_outcome_treatment(
     n = X.shape[0]
     all_bad = []
     for vi in var_list:
-        n_bad = sum(vtreat.util.is_bad(X[vi]))
+        n_bad = numpy.sum(vtreat.util.is_bad(X[vi]))
         if n_bad >= n:
             all_bad = all_bad + [vi]
         if (n_bad > 0) and (n_bad < n):
@@ -390,7 +390,7 @@ def fit_binomial_outcome_treatment(
     n = X.shape[0]
     all_bad = []
     for vi in var_list:
-        n_bad = sum(vtreat.util.is_bad(X[vi]))
+        n_bad = numpy.sum(vtreat.util.is_bad(X[vi]))
         if n_bad >= n:
             all_bad = all_bad + [vi]
         if (n_bad > 0) and (n_bad < n):
@@ -468,7 +468,7 @@ def fit_multinomial_outcome_treatment(
     n = X.shape[0]
     all_bad = []
     for vi in var_list:
-        n_bad = sum(vtreat.util.is_bad(X[vi]))
+        n_bad = numpy.sum(vtreat.util.is_bad(X[vi]))
         if n_bad >= n:
             all_bad = all_bad + [vi]
         if (n_bad > 0) and (n_bad < n):
@@ -551,7 +551,7 @@ def fit_unsupervised_treatment(*, X, var_list, outcome_name, cols_to_copy, param
     n = X.shape[0]
     all_bad = []
     for vi in var_list:
-        n_bad = sum(vtreat.util.is_bad(X[vi]))
+        n_bad = numpy.sum(vtreat.util.is_bad(X[vi]))
         if n_bad >= n:
             all_bad = all_bad + [vi]
         if (n_bad > 0) and (n_bad < n):
