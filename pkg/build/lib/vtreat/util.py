@@ -45,7 +45,7 @@ def is_bad(x):
 def numeric_has_range(x):
     x = safe_to_numeric_array(x)
     not_bad = numpy.logical_not(is_bad(x))
-    n_not_bad = sum(not_bad)
+    n_not_bad = numpy.sum(not_bad)
     if n_not_bad < 2:
         return False
     x = x[not_bad]
@@ -63,7 +63,7 @@ def summarize_column(x, *, fn=numpy.mean):
 
     x = safe_to_numeric_array(x)
     not_bad = numpy.logical_not(is_bad(x))
-    n_not_bad = sum(not_bad)
+    n_not_bad = numpy.sum(not_bad)
     if n_not_bad < 1:
         return 0.0
     x = x[not_bad]
@@ -78,7 +78,7 @@ def characterize_numeric(x):
 
     x = safe_to_numeric_array(x)
     not_bad = numpy.logical_not(is_bad(x))
-    n_not_bad = sum(not_bad)
+    n_not_bad = numpy.sum(not_bad)
     n = len(x)
     if n_not_bad <= 0:
         return {
@@ -110,7 +110,7 @@ def get_unique_value_count(x):
         return(len(x))
     p = pandas.DataFrame({'x': x, 'o': 1})
     s = p.groupby('x').sum()  # drops None
-    return(max(pandas.isnull(x)) + s.shape[0])
+    return(numpy.max(pandas.isnull(x)) + s.shape[0])
 
 
 def grouped_by_x_statistics(x, y):
@@ -137,7 +137,7 @@ def grouped_by_x_statistics(x, y):
     sf["_var"] = sf["_var"] / (sf["_ni"] - 1) + eps
     avg_var = 0
     bad_vars = is_bad(sf["_var"])
-    if sum(bad_vars) < len(sf["_var"]):
+    if numpy.sum(bad_vars) < len(sf["_var"]):
         avg_var = numpy.nanmean(sf["_var"])
     sf.loc[bad_vars, "_var"] = avg_var
     if sf.shape[0] > 1:

@@ -4,9 +4,9 @@ import vtreat  # https://github.com/WinVector/pyvtreat
 
 
 def test_unsupervised():
-    n_rows = 100000
+    n_rows = 10000
     n_levels = 10
-    n_cat = 5
+    n_cat = 10
     n_numeric = 10
     numpy.random.seed(235)
     zip = ["z" + str(i + 1).zfill(5) for i in range(n_levels)]
@@ -23,6 +23,7 @@ def test_unsupervised():
         params=vtreat.unsupervised_parameters({"indicator_min_fraction": 0.01})
     )
 
+    ## https://docs.python.org/3/library/profile.html
     # import cProfile
     # cProfile.run('d_treated = transform.fit_transform(d)')
     d_treated = transform.fit_transform(d)

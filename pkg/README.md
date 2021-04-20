@@ -9,11 +9,9 @@ in a statistically sound manner.
 
 # Installing
 
-Install `vtreat` with either of:
+Install `vtreat` with either:
 
   * `pip install vtreat`
-  * `pip install https://github.com/WinVector/pyvtreat/raw/master/pkg/dist/vtreat-0.4.8.tar.gz`
-
 
 # Video Introduction
 

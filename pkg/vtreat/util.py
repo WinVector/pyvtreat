@@ -110,7 +110,7 @@ def get_unique_value_count(x):
         return(len(x))
     p = pandas.DataFrame({'x': x, 'o': 1})
     s = p.groupby('x').sum()  # drops None
-    return(max(pandas.isnull(x)) + s.shape[0])
+    return(numpy.max(pandas.isnull(x)) + s.shape[0])
 
 
 def grouped_by_x_statistics(x, y):

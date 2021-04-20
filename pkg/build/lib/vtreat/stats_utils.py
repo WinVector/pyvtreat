@@ -107,7 +107,7 @@ def solve_logistic_regression(*, y, x):
     big_y_indices = y > 0
     x_b = x[big_y_indices]
     x_s = x[numpy.logical_not(big_y_indices)]
-    if (min(x_b) > max(x_s)) or (max(x_b) < min(x_s)):
+    if (numpy.min(x_b) > numpy.max(x_s)) or (numpy.max(x_b) < numpy.min(x_s)):
         r = numpy.zeros(n)
         r[big_y_indices] = 1
         return r
