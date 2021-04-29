@@ -639,12 +639,16 @@ def pre_prep_frame(x, *, col_list, cols_to_copy, cat_cols=None):
         if c in cset:
             continue
         bad_ind = vtreat.util.is_bad(x[c])
-        if ((cat_col_set is None) or (c not in cat_col_set)) and vtreat.util.can_convert_v_to_numeric(x[c]):
+        if cat_col_set is not None:
+            numeric_col = c not in cat_col_set
+        else:
+            numeric_col = vtreat.util.can_convert_v_to_numeric(x[c])
+        if numeric_col:
             x[c] = vtreat.util.safe_to_numeric_array(x[c])
         else:
             # https://stackoverflow.com/questions/22231592/pandas-change-data-type-of-series-to-string
             x[c] = x[c].astype(str)
-        x.loc[bad_ind, c] = numpy.nan
+        x.loc[bad_ind, c] = None
     return x
 
 
