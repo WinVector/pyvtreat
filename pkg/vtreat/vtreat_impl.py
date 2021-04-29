@@ -632,19 +632,19 @@ def pre_prep_frame(x, *, col_list, cols_to_copy, cat_cols=None):
         raise ValueError("no variables")
     x = x.loc[:, col_list]
     x = x.reset_index(inplace=False, drop=True)
+    cat_col_set = None
+    if cat_cols is not None:
+        cat_col_set = set(cat_cols)
     for c in x.columns:
         if c in cset:
             continue
         bad_ind = vtreat.util.is_bad(x[c])
-        if vtreat.util.can_convert_v_to_numeric(x[c]):
+        if ((cat_col_set is None) or (c not in cat_col_set)) and vtreat.util.can_convert_v_to_numeric(x[c]):
             x[c] = vtreat.util.safe_to_numeric_array(x[c])
         else:
             # https://stackoverflow.com/questions/22231592/pandas-change-data-type-of-series-to-string
-            x[c] = numpy.asarray(x[c].apply(str), dtype=str)
-        x.loc[bad_ind, c] = numpy.nan
-    if cat_cols is not None:
-        for c in cat_cols:
             x[c] = x[c].astype(str)
+        x.loc[bad_ind, c] = numpy.nan
     return x
 
 
