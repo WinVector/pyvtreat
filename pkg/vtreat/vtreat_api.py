@@ -23,7 +23,7 @@ def vtreat_parameters(user_params=None):
             "prevalence_code",
         },
         "filter_to_recommended": True,
-        "indicator_min_fraction": 0.1,
+        "indicator_min_fraction": 0.02,
         "cross_validation_plan": vtreat.cross_plan.KWayCrossPlanYStratified(),
         "cross_validation_k": 5,
         "user_transforms": [],
@@ -127,7 +127,7 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
                 "possibly called transform on same data used to fit\n" +
                 "(this causes over-fit, please use fit_transform() instead)")
         res = vtreat_impl.pre_prep_frame(
-            X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
+            X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_, cat_cols=self.plan_['cat_list']
         )
         res = vtreat_impl.perform_transform(x=res, transform=self, params=self.params_)
         res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
@@ -274,7 +274,7 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
                 "possibly called transform on same data used to fit\n" +
                 "(this causes over-fit, please use fit_transform() instead)")
         X = vtreat_impl.pre_prep_frame(
-            X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
+            X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_, cat_cols=self.plan_['cat_list']
         )
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
@@ -421,7 +421,7 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
                 "possibly called transform on same data used to fit\n" +
                 "(this causes over-fit, please use fit_transform() instead)")
         X = vtreat_impl.pre_prep_frame(
-            X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
+            X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_, cat_cols=self.plan_['cat_list']
         )
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
@@ -558,7 +558,7 @@ class UnsupervisedTreatment(vtreat_impl.VariableTreatment):
         if self.last_fit_x_id_ is None:
             raise ValueError("called transform on not yet fit treatment")
         X = vtreat_impl.pre_prep_frame(
-            X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_
+            X, col_list=self.var_list_, cols_to_copy=self.cols_to_copy_, cat_cols=self.plan_['cat_list']
         )
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)

@@ -90,3 +90,34 @@ def test_classification_numpy():
     dtest_prepared_columns = transform.last_result_columns
 
     assert len(set(dtest_prepared_columns) - set(sf.variable)) == 0
+
+
+def test_classification_type_free():
+    # confirm incoming column type does not matter during apply
+    numpy.random.seed(46546)
+
+    def make_data(nrows):
+        d = pandas.DataFrame({"x": numpy.random.normal(size=nrows)})
+        d["y"] = d["x"] + numpy.random.normal(size=nrows)
+        d["xcn"] = numpy.round(d['x']/5, 1)*5
+        d["yc"] = d["y"] > 0
+        return d
+
+    d = make_data(100)
+    d_head = d.loc[range(10), :].copy()
+    d_train = d.copy()
+    d_train['xcn'] = d_train['xcn'].astype(str)
+    vars = ['x', 'xcn']
+
+    transform = vtreat.BinomialOutcomeTreatment(
+        outcome_target=True,  # outcome of interest
+        outcome_name='yc',
+        cols_to_copy=['y']
+    )
+
+    d_prepared = transform.fit_transform(d_train, numpy.asarray(d["yc"]))
+    d_train_head = d_train.loc[range(10), :].copy()
+
+    t1 = transform.transform(d_train_head)
+    t2 = transform.transform(d_head)
+    assert t1.equals(t2)

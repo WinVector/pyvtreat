@@ -370,6 +370,8 @@ def fit_numeric_outcome_treatment(
     return {
         "outcome_name": outcome_name,
         "cols_to_copy": cols_to_copy,
+        "num_list": num_list,
+        "cat_list": cat_list,
         "xforms": xforms,
     }
 
@@ -448,6 +450,8 @@ def fit_binomial_outcome_treatment(
     return {
         "outcome_name": outcome_name,
         "cols_to_copy": cols_to_copy,
+        "num_list": num_list,
+        "cat_list": cat_list,
         "xforms": xforms,
     }
 
@@ -533,6 +537,8 @@ def fit_multinomial_outcome_treatment(
     return {
         "outcome_name": outcome_name,
         "cols_to_copy": cols_to_copy,
+        "num_list": num_list,
+        "cat_list": cat_list,
         "xforms": xforms,
     }
 
@@ -597,11 +603,13 @@ def fit_unsupervised_treatment(*, X, var_list, outcome_name, cols_to_copy, param
     return {
         "outcome_name": outcome_name,
         "cols_to_copy": cols_to_copy,
+        "num_list": num_list,
+        "cat_list": cat_list,
         "xforms": xforms,
     }
 
 
-def pre_prep_frame(x, *, col_list, cols_to_copy):
+def pre_prep_frame(x, *, col_list, cols_to_copy, cat_cols=None):
     """Create a copy of pandas.DataFrame x restricted to col_list union cols_to_copy with col_list - cols_to_copy
     converted to only string and numeric types.  New pandas.DataFrame has trivial indexing.  If col_list
     is empty it is interpreted as all columns."""
@@ -634,6 +642,9 @@ def pre_prep_frame(x, *, col_list, cols_to_copy):
             # https://stackoverflow.com/questions/22231592/pandas-change-data-type-of-series-to-string
             x[c] = numpy.asarray(x[c].apply(str), dtype=str)
         x.loc[bad_ind, c] = numpy.nan
+    if cat_cols is not None:
+        for c in cat_cols:
+            x[c] = x[c].astype(str)
     return x
 
 

@@ -20,7 +20,11 @@ import vtreat.stats_utils
 def safe_to_numeric_array(x):
     # work around https://github.com/WinVector/pyvtreat/issues/7
     # noinspection PyTypeChecker
-    return numpy.asarray(pandas.Series(x) + 0.0, dtype=float)
+    x = pandas.Series(x)
+    if pandas.api.types.is_float_dtype(x):
+        return x
+    # adding zero converts -0 to 0 in some cases, hence the early exit above
+    return numpy.asarray(x + 0.0, dtype=float)
 
 
 def can_convert_v_to_numeric(x):
