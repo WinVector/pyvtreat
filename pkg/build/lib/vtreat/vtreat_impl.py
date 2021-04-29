@@ -370,6 +370,8 @@ def fit_numeric_outcome_treatment(
     return {
         "outcome_name": outcome_name,
         "cols_to_copy": cols_to_copy,
+        "num_list": num_list,
+        "cat_list": cat_list,
         "xforms": xforms,
     }
 
@@ -448,6 +450,8 @@ def fit_binomial_outcome_treatment(
     return {
         "outcome_name": outcome_name,
         "cols_to_copy": cols_to_copy,
+        "num_list": num_list,
+        "cat_list": cat_list,
         "xforms": xforms,
     }
 
@@ -533,6 +537,8 @@ def fit_multinomial_outcome_treatment(
     return {
         "outcome_name": outcome_name,
         "cols_to_copy": cols_to_copy,
+        "num_list": num_list,
+        "cat_list": cat_list,
         "xforms": xforms,
     }
 
@@ -597,11 +603,13 @@ def fit_unsupervised_treatment(*, X, var_list, outcome_name, cols_to_copy, param
     return {
         "outcome_name": outcome_name,
         "cols_to_copy": cols_to_copy,
+        "num_list": num_list,
+        "cat_list": cat_list,
         "xforms": xforms,
     }
 
 
-def pre_prep_frame(x, *, col_list, cols_to_copy):
+def pre_prep_frame(x, *, col_list, cols_to_copy, cat_cols=None):
     """Create a copy of pandas.DataFrame x restricted to col_list union cols_to_copy with col_list - cols_to_copy
     converted to only string and numeric types.  New pandas.DataFrame has trivial indexing.  If col_list
     is empty it is interpreted as all columns."""
@@ -624,15 +632,18 @@ def pre_prep_frame(x, *, col_list, cols_to_copy):
         raise ValueError("no variables")
     x = x.loc[:, col_list]
     x = x.reset_index(inplace=False, drop=True)
+    cat_col_set = None
+    if cat_cols is not None:
+        cat_col_set = set(cat_cols)
     for c in x.columns:
         if c in cset:
             continue
         bad_ind = vtreat.util.is_bad(x[c])
-        if vtreat.util.can_convert_v_to_numeric(x[c]):
+        if ((cat_col_set is None) or (c not in cat_col_set)) and vtreat.util.can_convert_v_to_numeric(x[c]):
             x[c] = vtreat.util.safe_to_numeric_array(x[c])
         else:
             # https://stackoverflow.com/questions/22231592/pandas-change-data-type-of-series-to-string
-            x[c] = numpy.asarray(x[c].apply(str), dtype=str)
+            x[c] = x[c].astype(str)
         x.loc[bad_ind, c] = numpy.nan
     return x
 

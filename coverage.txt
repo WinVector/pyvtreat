@@ -1,41 +1,41 @@
 ============================= test session starts ==============================
-platform darwin -- Python 3.7.7, pytest-6.2.2, py-1.10.0, pluggy-0.13.1
+platform darwin -- Python 3.9.4, pytest-6.2.3, py-1.10.0, pluggy-0.13.1
 rootdir: /Users/johnmount/Documents/work/pyvtreat/pkg
 plugins: anyio-2.2.0, cov-2.11.1
-collected 27 items
+collected 28 items
 
 pkg/tests/test_ai200_examples.py ..                                      [  7%]
-pkg/tests/test_classification.py ..                                      [ 14%]
-pkg/tests/test_col_name_issues.py ...                                    [ 25%]
-pkg/tests/test_dup.py .                                                  [ 29%]
-pkg/tests/test_id_column_check.py .                                      [ 33%]
-pkg/tests/test_imputation_controls.py .                                  [ 37%]
-pkg/tests/test_multinomial.py .                                          [ 40%]
-pkg/tests/test_nan_inf.py .                                              [ 44%]
-pkg/tests/test_outcome_name_required.py .                                [ 48%]
-pkg/tests/test_pipeparams.py .                                           [ 51%]
-pkg/tests/test_r1_issue.py .                                             [ 55%]
-pkg/tests/test_range.py .                                                [ 59%]
-pkg/tests/test_regression.py .                                           [ 62%]
-pkg/tests/test_result_restriction.py .                                   [ 66%]
+pkg/tests/test_classification.py ...                                     [ 17%]
+pkg/tests/test_col_name_issues.py ...                                    [ 28%]
+pkg/tests/test_dup.py .                                                  [ 32%]
+pkg/tests/test_id_column_check.py .                                      [ 35%]
+pkg/tests/test_imputation_controls.py .                                  [ 39%]
+pkg/tests/test_multinomial.py .                                          [ 42%]
+pkg/tests/test_nan_inf.py .                                              [ 46%]
+pkg/tests/test_outcome_name_required.py .                                [ 50%]
+pkg/tests/test_pipeparams.py .                                           [ 53%]
+pkg/tests/test_r1_issue.py .                                             [ 57%]
+pkg/tests/test_range.py .                                                [ 60%]
+pkg/tests/test_regression.py .                                           [ 64%]
+pkg/tests/test_result_restriction.py .                                   [ 67%]
 pkg/tests/test_stats.py .....                                            [ 85%]
-pkg/tests/test_unsup_perf.py .                                           [ 88%]
+pkg/tests/test_unsup_perf.py .                                           [ 89%]
 pkg/tests/test_unsupervised.py .                                         [ 92%]
 pkg/tests/test_user_coders.py .                                          [ 96%]
 pkg/tests/test_util.py .                                                 [100%]
 
----------- coverage: platform darwin, python 3.7.7-final-0 -----------
+---------- coverage: platform darwin, python 3.9.4-final-0 -----------
 Name                        Stmts   Miss  Cover
 -----------------------------------------------
 pkg/vtreat/__init__.py          6      0   100%
 pkg/vtreat/cross_plan.py       50     11    78%
 pkg/vtreat/stats_utils.py     101      4    96%
 pkg/vtreat/transform.py        17      4    76%
-pkg/vtreat/util.py            142     19    87%
-pkg/vtreat/vtreat_api.py      285     57    80%
-pkg/vtreat/vtreat_impl.py     636     85    87%
+pkg/vtreat/util.py            145     20    86%
+pkg/vtreat/vtreat_api.py      285     56    80%
+pkg/vtreat/vtreat_impl.py     639     89    86%
 -----------------------------------------------
-TOTAL                        1237    180    85%
+TOTAL                        1243    184    85%
 
 
-============================= 27 passed in 19.97s ==============================
+============================= 28 passed in 21.90s ==============================
