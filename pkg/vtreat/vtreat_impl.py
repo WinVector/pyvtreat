@@ -38,6 +38,11 @@ def back_to_orig_type_data_frame(d, orig_type):
 
 class VarTransform:
     def __init__(self, incoming_column_name, derived_column_names, treatment):
+        assert isinstance(incoming_column_name, str)
+        assert len(derived_column_names) > 0
+        assert all([isinstance(dni, str) for dni in derived_column_names])
+        assert treatment is not None
+        assert isinstance(treatment, str)
         self.incoming_column_name_ = incoming_column_name
         self.derived_column_names_ = derived_column_names.copy()
         self.treatment_ = treatment
@@ -232,7 +237,7 @@ class IndicatorCodeTransform(VarTransform):
         col = sf[self.incoming_column_name_]
 
         def f(i):
-            v = numpy.asarray(col == self.levels_[i]) + 0.0
+            v = numpy.asarray(col == self.levels_[i]) + 0.0   # return numeric 0/1 coding
             if self.sparse_indicators_:
                 v = pandas.arrays.SparseArray(v, fill_value=0.0)
             return v
