@@ -2,15 +2,7 @@ import numpy
 
 import scipy.stats
 import scipy.optimize
-
-have_sklearn = False
-# noinspection PyBroadException
-try:
-    import sklearn.linear_model
-
-    have_sklearn = True
-except Exception:
-    pass
+import sklearn.linear_model
 
 
 # methods to avoid calling statsmodels which seems to be incompatible with many
@@ -51,30 +43,6 @@ def est_deviance(*, y, est, epsilon=1.0e-5):
 
 
 # assumes special cases of solve_logistic_regression already eliminated
-def brute_force_solve_logistic(*, y, x, regularization=1.e-6):
-    if not isinstance(y, numpy.ndarray):
-        y = numpy.asarray(y)
-    if not isinstance(x, numpy.ndarray):
-        x = numpy.asarray(x)
-
-    def predict(beta):
-        return 1 / (1 + numpy.exp(-(beta[0] + beta[1] * x)))
-
-    def loss(beta):
-        preds = predict(beta)
-        return (est_deviance(y=y, est=preds)
-                + regularization * (beta[0] * beta[0] + beta[1] * beta[1])  # regularization
-                )
-
-    soln = scipy.optimize.fmin_bfgs(
-        loss,
-        x0=[numpy.log(numpy.mean(y) / (1 - numpy.mean(y))), 0.001],
-        gtol=1.0e-3,
-        disp=0)
-    return predict(soln)
-
-
-# assumes special cases of solve_logistic_regression already eliminated
 def sklearn_solve_logistic(*, y, x, regularization=1.e-6):
     if not isinstance(y, numpy.ndarray):
         y = numpy.asarray(y)
@@ -112,10 +80,7 @@ def solve_logistic_regression(*, y, x):
         r[big_y_indices] = 1
         return r
     # run a full logistic regression
-    if have_sklearn:
-        preds = sklearn_solve_logistic(y=y, x=x)
-    else:
-        preds = brute_force_solve_logistic(y=y, x=x)
+    preds = sklearn_solve_logistic(y=y, x=x)
     return numpy.asarray(preds)
 
 
