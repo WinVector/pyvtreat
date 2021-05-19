@@ -33,6 +33,11 @@ def test_homes_example():
         ]
     assert set(df.columns) == set(expect_cols)
 
+    expect = pandas.read_csv(os.path.join(dir_path, 'homes_76_treated.csv'))
+    assert expect.shape == df.shape
+    assert set(expect.columns) == set(df.columns)
+    assert (expect - df).abs().max().max() < 1.0e-7
+
 
 def test_diabetes_example():
     dir_path = os.path.dirname(os.path.realpath(__file__))
