@@ -71,7 +71,7 @@ class MappedCodeTransform(VarTransform):
         )  # ordered by left table rows
         # could also try pandas .map()
         res = res[[derived_column_name]].copy()
-        res.loc[vtreat.util.is_bad(res[derived_column_name]), derived_column_name] = 0
+        res.loc[vtreat.util.is_bad(res[derived_column_name]), derived_column_name] = 0.0
         return res
 
 
@@ -122,8 +122,8 @@ class IndicateMissingTransform(VarTransform):
 
     def transform(self, data_frame):
         col = vtreat.util.is_bad(data_frame[self.incoming_column_name_])
-        res = pandas.DataFrame({self.derived_column_names_[0]: col})
-        return res.astype(float)
+        res = pandas.DataFrame({self.derived_column_names_[0]: col + 0.0})
+        return res
 
 
 def fit_clean_code(*, incoming_column_name, x, params, imputation_map):
@@ -242,12 +242,12 @@ class IndicatorCodeTransform(VarTransform):
                 v = pandas.arrays.SparseArray(v, fill_value=0.0)
             return v
 
-        res = [
-            pandas.DataFrame({self.derived_column_names_[i]: f(i)})
-            for i in range(len(self.levels_))
-        ]
-        res = pandas.concat(res, axis=1, sort=False)
-        res.reset_index(inplace=True, drop=True)
+        res = None
+        for i in range(len(self.levels_)):
+            if res is None:
+                res = pandas.DataFrame({self.derived_column_names_[i]: f(i)})
+            else:
+                res[self.derived_column_names_[i]] = f(i)
         return res
 
 
