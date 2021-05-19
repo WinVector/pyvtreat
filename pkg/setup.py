@@ -52,7 +52,7 @@ and also as an [`R` package](https://github.com/WinVector/vtreat).
 
 setuptools.setup(
     name='vtreat',
-    version='0.4.9',
+    version='0.4.91',
     author='John Mount, Nina Zumel',
     author_email='jmount@win-vector.com',
     url='https://github.com/WinVector/pyvtreat',
@@ -80,7 +80,7 @@ setuptools.setup(
           'Programming Language :: Python :: 3.7',
           'Programming Language :: Python :: 3.8',
           'Programming Language :: Python :: 3.9',
-        'License :: OSI Approved :: BSD License',
+          'License :: OSI Approved :: BSD License',
     ],
     long_description=LONG_DESCRIPTION
 )

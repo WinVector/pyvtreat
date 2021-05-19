@@ -38,7 +38,7 @@ def test_multinomial():
     for c in cross_frame.columns:
         if not c == "y":
             assert vtreat.util.can_convert_v_to_numeric(cross_frame[c])
-            assert sum(vtreat.util.is_bad(cross_frame[c])) == 0
+            assert numpy.sum(vtreat.util.is_bad(cross_frame[c])) == 0
 
     sf = treatment.score_frame_
 

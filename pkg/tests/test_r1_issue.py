@@ -28,4 +28,4 @@ def test_r1_issue():
 
     for c in prepped.columns:
         assert vtreat.util.can_convert_v_to_numeric(prepped[c])
-        assert sum(vtreat.util.is_bad(prepped[c])) == 0
+        assert numpy.sum(vtreat.util.is_bad(prepped[c])) == 0
