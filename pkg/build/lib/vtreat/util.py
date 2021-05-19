@@ -18,21 +18,23 @@ import vtreat.stats_utils
 
 
 def safe_to_numeric_array(x):
-    # work around https://github.com/WinVector/pyvtreat/issues/7
-    # noinspection PyTypeChecker
-    x = pandas.Series(x)
-    if pandas.api.types.is_float_dtype(x):
-        return x
-    # adding zero converts -0 to 0 in some cases, hence the early exit above
-    return numpy.asarray(x + 0.0, dtype=float)
+    ## note will parse strings!
+    return numpy.asarray(x, dtype=float)
 
 
 def can_convert_v_to_numeric(x):
     """check if non-empty vector can convert to numeric"""
+    x = numpy.asarray(x)
+    not_bad = numpy.logical_not(pandas.isnull(x))
+    n_not_bad = numpy.sum(not_bad)
+    if n_not_bad < 1:
+        return True
     try:
-        numpy.asarray(x + 0.0, dtype=float)
+        numpy.asarray(x[not_bad] + 0, dtype=float)  # +0 prevents string parse, leaving strings as strings
         return True
     except TypeError:
+        return False
+    except ValueError:
         return False
 
 
