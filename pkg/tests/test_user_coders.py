@@ -9,22 +9,15 @@ import numpy
 import numpy.random
 # import seaborn
 
+import sklearn.linear_model
+import sklearn
+
 import vtreat
 import vtreat.util
 import vtreat.transform
 
-have_sklearn = True
-try:
-    import sklearn.linear_model
-    import sklearn
-except Exception:
-    have_sklean = False
-
 
 def test_user_coders():
-    if not have_sklearn:
-        return
-
     with warnings.catch_warnings():
        warnings.filterwarnings("ignore")
    

@@ -92,19 +92,6 @@ def test_est_dev():
     assert numpy.abs(expect - est) < 1.0e-2
 
 
-def test_brute_logistic():
-    y_true = [1, 1, 0, 0, 0, 1, 1, 0, 1, 1]
-    y_pred = [0.8, 1, 1, 0.5, 0.5, 0.8, 1, 0.2, 0.5, 0.5]
-    soln = vtreat.stats_utils.brute_force_solve_logistic(y=y_true, x=y_pred)
-    expect = [0.70953711, 0.8298342 , 0.8298342 , 0.46410274, 0.46410274,
-       0.70953711, 0.8298342 , 0.23490658, 0.46410274, 0.46410274]
-    assert numpy.max(numpy.abs(numpy.asarray(expect) - soln)) < 1.0e-2
-
-    if vtreat.stats_utils.have_sklearn:
-        soln2 = vtreat.stats_utils.sklearn_solve_logistic(y=y_true, x=y_pred)
-        assert numpy.max(numpy.abs(numpy.asarray(expect) - soln2)) < 1.0e-2
-
-
 def test_logistic_r2():
     cor, sig = vtreat.stats_utils.our_pseudo_R2(y_true=[1], y_pred=[0])
     expect_cor, expect_sig = (1, 1)
