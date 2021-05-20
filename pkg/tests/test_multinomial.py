@@ -3,6 +3,8 @@ import numpy.random
 import pandas
 import vtreat
 
+import pytest
+
 
 def test_multinomial():
     numpy.random.seed(2019)
@@ -50,3 +52,6 @@ def test_multinomial():
         :,
     ]
     assert all(targets.recommended)
+
+    with pytest.warns(Warning):
+        t_f = treatment.transform(d)

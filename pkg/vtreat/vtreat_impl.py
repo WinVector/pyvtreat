@@ -1091,7 +1091,12 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
     def get_feature_names(self, input_features=None):
         if self.score_frame_ is None:
             raise ValueError("get_feature_names called on uninitialized vtreat transform")
-        if self.params_['filter_to_recommended']:
+        filter_to_recommended = False
+        try:
+            filter_to_recommended = self.params_['filter_to_recommended']
+        except KeyError:
+            pass
+        if filter_to_recommended:
             new_vars = [self.score_frame_['variable'][i] for i in range(self.score_frame_.shape[0])
                         if self.score_frame_['has_range'][i] and self.score_frame_['recommended'][i]
                         and (input_features is None or self.score_frame_['orig_variable'][i] in input_features)]

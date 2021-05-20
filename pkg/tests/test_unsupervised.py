@@ -2,6 +2,8 @@ import numpy.random
 import pandas
 import vtreat  # https://github.com/WinVector/pyvtreat
 
+import pytest
+
 
 def test_unsupervised():
     numpy.random.seed(235)
@@ -24,6 +26,11 @@ def test_unsupervised():
     sf = transform.score_frame_
     assert set(sf['orig_variable']) == {'zip'}
 
-    d_treated_2 = transform.transform(d)
+    # https://stackoverflow.com/a/45671804/6901725
+    with pytest.warns(None) as record:
+        d_treated_2 = transform.transform(d)
+    assert len(record) == 0
     assert d_treated.equals(d_treated_2)
+    fn = transform.get_feature_names()
+    assert set(sf['variable']) == set(fn)
 

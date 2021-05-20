@@ -7,6 +7,7 @@ pip install dist/vtreat-*.tar.gz
 popd
 pytest
 pytest --cov pkg/vtreat pkg/tests > coverage.txt
+# pytest --cov-report term-missing --cov pkg/vtreat pkg/tests > coverage.txt
 cat coverage.txt
 twine check pkg/dist/*
 
