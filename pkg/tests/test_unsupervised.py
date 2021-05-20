@@ -9,6 +9,7 @@ def test_unsupervised():
     d = pandas.DataFrame({"zip": numpy.random.choice(zip, size=1000)})
     d["const"] = 1
     d["const2"] = "b"
+    d["const3"] = None
 
     transform = vtreat.UnsupervisedTreatment(
         params=vtreat.unsupervised_parameters({"indicator_min_fraction": 0.01})
@@ -21,6 +22,8 @@ def test_unsupervised():
         assert numpy.sum(vtreat.util.is_bad(d_treated[c])) == 0
 
     sf = transform.score_frame_
+    assert set(sf['orig_variable']) == {'zip'}
 
     d_treated_2 = transform.transform(d)
+    assert d_treated.equals(d_treated_2)
 
