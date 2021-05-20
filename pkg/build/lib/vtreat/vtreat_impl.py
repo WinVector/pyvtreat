@@ -16,6 +16,8 @@ import pandas
 import vtreat.util
 import vtreat.transform
 
+import sklearn.base
+
 
 def ready_data_frame(d):
     orig_type = type(d)
@@ -243,11 +245,11 @@ class IndicatorCodeTransform(VarTransform):
             return v
 
         res = None
-        for i in range(len(self.levels_)):
+        for ii in range(len(self.levels_)):
             if res is None:
-                res = pandas.DataFrame({self.derived_column_names_[i]: f(i)})
+                res = pandas.DataFrame({self.derived_column_names_[ii]: f(ii)})
             else:
-                res[self.derived_column_names_[i]] = f(i)
+                res[self.derived_column_names_[ii]] = f(ii)
         return res
 
 
@@ -933,7 +935,9 @@ def pseudo_score_plan_variables(*, cross_frame, plan, params):
     return score_frame
 
 
-class VariableTreatment(ABC):
+# lashing into sklearn API
+# https://sklearn-template.readthedocs.io/en/latest/user_guide.html#transformer
+class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.TransformerMixin):
     def __init__(
             self, *,
             var_list=None,
@@ -1007,7 +1011,8 @@ class VariableTreatment(ABC):
 
     # display methods
 
-    def __repr__(self):
+    # noinspection PyPep8Naming
+    def __repr__(self, N_CHAR_MAX=700):
         fmted = str(self.__class__.__module__) + "." + str(self.__class__.__name__) + '('
         if self.outcome_name_ is not None:
             fmted = fmted + "outcome_name=" + pprint.pformat(self.outcome_name_) + ", "
