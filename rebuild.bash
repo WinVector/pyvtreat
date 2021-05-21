@@ -5,6 +5,7 @@ pip uninstall -y vtreat
 python3 setup.py sdist bdist_wheel
 pip install dist/vtreat-*.tar.gz
 popd
+pdoc -o docs pkg/vtreat
 pytest
 pytest --cov pkg/vtreat pkg/tests > coverage.txt
 # pytest --cov-report term-missing --cov pkg/vtreat pkg/tests > coverage.txt
