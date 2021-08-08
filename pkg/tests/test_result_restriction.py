@@ -18,41 +18,37 @@ def test_classification():
         return d
 
     d = make_data(500)
-    vars = [c for c in d.columns if c not in set(['y', 'yc'])]
+    vars = [c for c in d.columns if c not in set(["y", "yc"])]
     d_test = make_data(100)
 
     transform = vtreat.BinomialOutcomeTreatment(
         outcome_name="yc",  # outcome variable
         outcome_target=True,  # outcome of interest
         cols_to_copy=["y"],  # columns to "carry along" but not treat as input variables
-        params=vtreat.vtreat_parameters({
-            'filter_to_recommended': False
-        })
+        params=vtreat.vtreat_parameters({"filter_to_recommended": False}),
     )
     d_prepared = transform.fit_transform(d[vars], d["yc"])
 
     # show vars are under control
     assert transform.get_result_restriction() is None
-    assert 'x2' in set(d_prepared.columns)
+    assert "x2" in set(d_prepared.columns)
 
-    transform.set_result_restriction(['xc_logit_code', 'x2'])
+    transform.set_result_restriction(["xc_logit_code", "x2"])
     dt_prepared = transform.transform(d_test)
-    assert set(dt_prepared.columns) == set(['y', 'yc', 'x2', 'xc_logit_code'])
+    assert set(dt_prepared.columns) == set(["y", "yc", "x2", "xc_logit_code"])
 
     transform = vtreat.BinomialOutcomeTreatment(
         outcome_name="yc",  # outcome variable
         outcome_target=True,  # outcome of interest
         cols_to_copy=["y"],  # columns to "carry along" but not treat as input variables
-        params=vtreat.vtreat_parameters({
-            'filter_to_recommended': True
-        })
+        params=vtreat.vtreat_parameters({"filter_to_recommended": True}),
     )
     d_prepared = transform.fit_transform(d[vars], d["yc"])
 
     assert transform.get_result_restriction() is not None
-    assert 'x2' not in transform.get_result_restriction()
-    assert 'x2' not in set(d_prepared.columns)
+    assert "x2" not in transform.get_result_restriction()
+    assert "x2" not in set(d_prepared.columns)
 
-    transform.set_result_restriction(['xc_logit_code', 'x2'])
+    transform.set_result_restriction(["xc_logit_code", "x2"])
     dt_prepared = transform.transform(d_test)
-    assert set(dt_prepared.columns) == set(['y', 'yc', 'x2', 'xc_logit_code'])
+    assert set(dt_prepared.columns) == set(["y", "yc", "x2", "xc_logit_code"])

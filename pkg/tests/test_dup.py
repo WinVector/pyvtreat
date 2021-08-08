@@ -1,4 +1,3 @@
-
 import pytest
 
 import pandas
@@ -37,7 +36,7 @@ def test_dup():
         outcome_name="yc",  # outcome variable
         outcome_target=True,  # outcome of interest
         cols_to_copy=["y"],  # columns to "carry along" but not treat as input variables
-        params={'error_on_duplicate_frames': True}
+        params={"error_on_duplicate_frames": True},
     )
 
     d_prepared = transform.fit_transform(d, d["yc"])
@@ -51,6 +50,3 @@ def test_dup():
     assert not record
 
     dtest_prepared = transform.transform(dtest)
-
-
-

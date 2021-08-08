@@ -18,7 +18,7 @@ import vtreat.stats_utils
 
 
 def safe_to_numeric_array(x):
-    ## note will parse strings!
+    # note will parse strings!
     return numpy.asarray(x, dtype=float)
 
 
@@ -30,7 +30,9 @@ def can_convert_v_to_numeric(x):
     if n_not_bad < 1:
         return True
     try:
-        numpy.asarray(x[not_bad] + 0, dtype=float)  # +0 prevents string parse, leaving strings as strings
+        numpy.asarray(
+            x[not_bad] + 0, dtype=float
+        )  # +0 prevents string parse, leaving strings as strings
         return True
     except TypeError:
         return False
@@ -113,10 +115,10 @@ def characterize_numeric(x):
 def get_unique_value_count(x):
     """compute how many unique values in list-x"""
     if len(x) <= 1:
-        return(len(x))
-    p = pandas.DataFrame({'x': x, 'o': 1})
-    s = p.groupby('x').sum()  # drops None
-    return(numpy.max(pandas.isnull(x)) + s.shape[0])
+        return len(x)
+    p = pandas.DataFrame({"x": x, "o": 1})
+    s = p.groupby("x").sum()  # drops None
+    return numpy.max(pandas.isnull(x)) + s.shape[0]
 
 
 def grouped_by_x_statistics(x, y):
@@ -162,9 +164,7 @@ def grouped_by_x_statistics(x, y):
     return sf
 
 
-def score_variables(cross_frame, variables, outcome,
-                    *,
-                    is_classification=False):
+def score_variables(cross_frame, variables, outcome, *, is_classification=False):
     """score the linear relation of variables to outcome"""
 
     if len(variables) <= 0:
@@ -177,11 +177,13 @@ def score_variables(cross_frame, variables, outcome,
     def f(v):
         col = cross_frame[v]
         col = safe_to_numeric_array(col)
-        if (n > 2) and \
-                (numpy.max(col) > numpy.min(col)) and \
-                (numpy.max(outcome) > numpy.min(outcome)):
+        if (
+            (n > 2)
+            and (numpy.max(col) > numpy.min(col))
+            and (numpy.max(outcome) > numpy.min(outcome))
+        ):
             cor, sig = vtreat.stats_utils.our_corr_score(y_true=outcome, y_pred=col)
-            r2 = cor**2
+            r2 = cor ** 2
             if is_classification:
                 r2, sig = vtreat.stats_utils.our_pseudo_R2(y_true=outcome, y_pred=col)
             sfi = pandas.DataFrame(
@@ -242,14 +244,15 @@ def unique_itmes_in_order(lst):
 
 
 def clean_string(strng):
-    mp = {'<': '_lt_',
-          '>': '_gt_',
-          '[': '_osq_',
-          ']': '_csq_',
-          '(': '_op_',
-          ')': '_cp_',
-          '.': '_',
-          }
+    mp = {
+        "<": "_lt_",
+        ">": "_gt_",
+        "[": "_osq_",
+        "]": "_csq_",
+        "(": "_op_",
+        ")": "_cp_",
+        ".": "_",
+    }
     for (k, v) in mp.items():
         strng = strng.replace(k, v)
     return strng

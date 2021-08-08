@@ -26,9 +26,9 @@ def test_classification():
     )
 
     # show y-column doesn't get copied in, and can tolerate copy columns not being around
-    vars = [c for c in d.columns if c not in set(['y', 'yc'])]
+    vars = [c for c in d.columns if c not in set(["y", "yc"])]
     d_prepared = transform.fit_transform(d[vars], d["yc"])
-    assert 'yc' not in d_prepared.columns
+    assert "yc" not in d_prepared.columns
 
     # design again
 
@@ -69,7 +69,7 @@ def test_classification_numpy():
         return d
 
     d = make_data(500)
-    vars = [v for v in d.columns if v not in ['y', 'c']]
+    vars = [v for v in d.columns if v not in ["y", "c"]]
     d_n = numpy.asarray(d[vars])
 
     transform = vtreat.BinomialOutcomeTreatment(
@@ -99,20 +99,20 @@ def test_classification_type_free():
     def make_data(nrows):
         d = pandas.DataFrame({"x": numpy.random.normal(size=nrows)})
         d["y"] = d["x"] + numpy.random.normal(size=nrows)
-        d["xcn"] = numpy.round(d['x']/5, 1)*5
+        d["xcn"] = numpy.round(d["x"] / 5, 1) * 5
         d["yc"] = d["y"] > 0
         return d
 
     d = make_data(100)
     d_head = d.loc[range(10), :].copy()
     d_train = d.copy()
-    d_train['xcn'] = d_train['xcn'].astype(str)
-    vars = ['x', 'xcn']
+    d_train["xcn"] = d_train["xcn"].astype(str)
+    vars = ["x", "xcn"]
 
     transform = vtreat.BinomialOutcomeTreatment(
         outcome_target=True,  # outcome of interest
-        outcome_name='yc',
-        cols_to_copy=['y']
+        outcome_name="yc",
+        cols_to_copy=["y"],
     )
 
     d_prepared = transform.fit_transform(d_train, numpy.asarray(d["yc"]))

@@ -24,7 +24,7 @@ def test_unsupervised():
         assert numpy.sum(vtreat.util.is_bad(d_treated[c])) == 0
 
     sf = transform.score_frame_
-    assert set(sf['orig_variable']) == {'zip'}
+    assert set(sf["orig_variable"]) == {"zip"}
 
     # https://stackoverflow.com/a/45671804/6901725
     with pytest.warns(None) as record:
@@ -32,5 +32,4 @@ def test_unsupervised():
     assert len(record) == 0
     assert d_treated.equals(d_treated_2)
     fn = transform.get_feature_names()
-    assert set(sf['variable']) == set(fn)
-
+    assert set(sf["variable"]) == set(fn)

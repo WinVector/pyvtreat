@@ -32,9 +32,7 @@ def vtreat_parameters(user_params=None):
         "check_for_duplicate_frames": True,
         "error_on_duplicate_frames": False,
         "retain_cross_plan": True,
-        "tunable_params": [
-            "indicator_min_fraction"
-            ],
+        "tunable_params": ["indicator_min_fraction"],
     }
     pkeys = set(params.keys())
     if user_params is not None:
@@ -64,9 +62,7 @@ def unsupervised_parameters(user_params=None):
         "user_transforms": [],
         "sparse_indicators": False,
         "missingness_imputation": numpy.mean,
-        "tunable_params": [
-            "indicator_min_fraction"
-        ],
+        "tunable_params": ["indicator_min_fraction"],
     }
     pkeys = set(params.keys())
     if user_params is not None:
@@ -84,18 +80,19 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
     """manage a treatment plan for a numeric outcome (regression)"""
 
     def __init__(
-            self, *,
-            var_list=None,
-            outcome_name=None,
-            cols_to_copy=None,
-            params=None,
-            imputation_map=None,
+        self,
+        *,
+        var_list=None,
+        outcome_name=None,
+        cols_to_copy=None,
+        params=None,
+        imputation_map=None,
     ):
         """
 
-         :param var_list: list or touple of column names
+         :param var_list: list or tuple of column names
          :param outcome_name: name of column containing dependent variable
-         :param cols_to_copy: list or touple of column names
+         :param cols_to_copy: list or tuple of column names
          :param params: vtreat.vtreat_parameters()
          :param imputation_map: map of column names to custom missing imputation values or functions
         """
@@ -118,19 +115,23 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
         self.check_column_names(X.columns)
         if self.last_fit_x_id_ is None:
             raise ValueError("called transform on not yet fit treatment")
-        if self.params_['check_for_duplicate_frames'] and (self.last_fit_x_id_ == vtreat.util.hash_data_frame(X)):
+        if self.params_["check_for_duplicate_frames"] and (
+            self.last_fit_x_id_ == vtreat.util.hash_data_frame(X)
+        ):
             if self.params_["error_on_duplicate_frames"]:
                 raise ValueError(
-                    "possibly called transform on same data used to fit\n" +
-                    "(this causes over-fit, please use fit_transform() instead)")
+                    "possibly called transform on same data used to fit\n"
+                    + "(this causes over-fit, please use fit_transform() instead)"
+                )
             warnings.warn(
-                "possibly called transform on same data used to fit\n" +
-                "(this causes over-fit, please use fit_transform() instead)")
+                "possibly called transform on same data used to fit\n"
+                + "(this causes over-fit, please use fit_transform() instead)"
+            )
         res = vtreat_impl.pre_prep_frame(
             X,
-            col_list=self.plan_['num_list'] + self.plan_['cat_list'],
+            col_list=self.plan_["num_list"] + self.plan_["cat_list"],
             cols_to_copy=self.cols_to_copy_,
-            cat_cols=self.plan_['cat_list']
+            cat_cols=self.plan_["cat_list"],
         )
         res = vtreat_impl.perform_transform(x=res, transform=self, params=self.params_)
         res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
@@ -150,7 +151,9 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
             y = numpy.asarray(y)
             if (self.outcome_name_ is not None) and (self.outcome_name_ in X.columns):
                 if not numpy.all(X[self.outcome_name_] == y):
-                    raise ValueError(".fit_transform(X, y) called with y != X[outcome_name]")
+                    raise ValueError(
+                        ".fit_transform(X, y) called with y != X[outcome_name]"
+                    )
         if not X.shape[0] == len(y):
             raise ValueError("X.shape[0] should equal len(y)")
         y = vtreat.util.safe_to_numeric_array(y)
@@ -160,7 +163,7 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
             raise ValueError("y does not vary")
         cross_rows = None
         cross_plan = None
-        if self.params_['retain_cross_plan']:
+        if self.params_["retain_cross_plan"]:
             cross_rows = self.cross_rows_
             cross_plan = self.cross_plan_
         self.clear()
@@ -185,9 +188,14 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         if (cross_plan is None) or (cross_rows != X.shape[0]):
             if cross_plan is not None:
-                warnings.warn("Number of rows different than previous fit with retain_cross_plan==True")
+                warnings.warn(
+                    "Number of rows different than previous fit with retain_cross_plan==True"
+                )
             cross_plan = self.params_["cross_validation_plan"].split_plan(
-                n_rows=X.shape[0], k_folds=self.params_["cross_validation_k"], data=X, y=y
+                n_rows=X.shape[0],
+                k_folds=self.params_["cross_validation_k"],
+                data=X,
+                y=y,
             )
             cross_rows = X.shape[0]
         # patch in cross-frame versions of complex columns such as impact
@@ -195,11 +203,7 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
             x=X, y=y, res=res, plan=self.plan_, cross_plan=cross_plan
         )
         cross_frame = vtreat_impl.cross_patch_user_y_aware_cols(
-            x=cross_frame,
-            y=y,
-            res=res,
-            params=self.params_,
-            cross_plan=cross_plan,
+            x=cross_frame, y=y, res=res, params=self.params_, cross_plan=cross_plan,
         )
         # use cross_frame to compute variable effects
         self.score_frame_ = vtreat_impl.score_plan_variables(
@@ -207,17 +211,29 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
             outcome=y,
             plan=self.plan_,
             params=self.params_,
-            is_classification=False
+            is_classification=False,
         )
-        if ("filter_to_recommended" in self.params_.keys()) and self.params_["filter_to_recommended"]:
+        if ("filter_to_recommended" in self.params_.keys()) and self.params_[
+            "filter_to_recommended"
+        ]:
             self.set_result_restriction(
-                set([ci for ci in self.score_frame_["variable"][self.score_frame_["recommended"]]]))
+                set(
+                    [
+                        ci
+                        for ci in self.score_frame_["variable"][
+                            self.score_frame_["recommended"]
+                        ]
+                    ]
+                )
+            )
         cross_frame = vtreat_impl.limit_to_appropriate_columns(
             res=cross_frame, transform=self
         )
-        cross_frame, res_columns = vtreat_impl.back_to_orig_type_data_frame(cross_frame, orig_type)
+        cross_frame, res_columns = vtreat_impl.back_to_orig_type_data_frame(
+            cross_frame, orig_type
+        )
         self.last_result_columns = res_columns
-        if self.params_['retain_cross_plan']:
+        if self.params_["retain_cross_plan"]:
             self.cross_plan_ = cross_plan
             self.cross_rows_ = cross_rows
         else:
@@ -230,21 +246,21 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
     """manage a treatment plan for a target outcome (binomial classification)"""
 
     def __init__(
-            self,
-            *,
-            var_list=None,
-            outcome_name=None,
-            outcome_target=True,
-            cols_to_copy=None,
-            params=None,
-            imputation_map=None,
+        self,
+        *,
+        var_list=None,
+        outcome_name=None,
+        outcome_target=True,
+        cols_to_copy=None,
+        params=None,
+        imputation_map=None,
     ):
         """
 
-         :param var_list: list or touple of column names
+         :param var_list: list or tuple of column names
          :param outcome_name: name of column containing dependent variable
          :param outcome_target: value of outcome to consider "positive"
-         :param cols_to_copy: list or touple of column names
+         :param cols_to_copy: list or tuple of column names
          :param params: vtreat.vtreat_parameters()
          :param imputation_map: map of column names to custom missing imputation values or functions
         """
@@ -268,19 +284,23 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         self.check_column_names(X.columns)
         if self.last_fit_x_id_ is None:
             raise ValueError("called transform on not yet fit treatment")
-        if self.params_['check_for_duplicate_frames'] and (self.last_fit_x_id_ == vtreat.util.hash_data_frame(X)):
+        if self.params_["check_for_duplicate_frames"] and (
+            self.last_fit_x_id_ == vtreat.util.hash_data_frame(X)
+        ):
             if self.params_["error_on_duplicate_frames"]:
                 raise ValueError(
-                    "possibly called transform on same data used to fit\n" +
-                    "(this causes over-fit, please use fit_transform() instead)")
+                    "possibly called transform on same data used to fit\n"
+                    + "(this causes over-fit, please use fit_transform() instead)"
+                )
             warnings.warn(
-                "possibly called transform on same data used to fit\n" +
-                "(this causes over-fit, please use fit_transform() instead)")
+                "possibly called transform on same data used to fit\n"
+                + "(this causes over-fit, please use fit_transform() instead)"
+            )
         X = vtreat_impl.pre_prep_frame(
             X,
-            col_list=self.plan_['num_list'] + self.plan_['cat_list'],
+            col_list=self.plan_["num_list"] + self.plan_["cat_list"],
             cols_to_copy=self.cols_to_copy_,
-            cat_cols=self.plan_['cat_list']
+            cat_cols=self.plan_["cat_list"],
         )
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
@@ -300,7 +320,9 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
             y = numpy.asarray(y)
             if (self.outcome_name_ is not None) and (self.outcome_name_ in X.columns):
                 if not numpy.all(X[self.outcome_name_] == y):
-                    raise ValueError(".fit_transform(X, y) called with y != X[outcome_name]")
+                    raise ValueError(
+                        ".fit_transform(X, y) called with y != X[outcome_name]"
+                    )
         if not X.shape[0] == len(y):
             raise ValueError("X.shape[0] should equal len(y)")
         y_mean = numpy.mean(y == self.outcome_target_)
@@ -308,7 +330,7 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
             raise ValueError("y==outcome_target does not vary")
         cross_rows = None
         cross_plan = None
-        if self.params_['retain_cross_plan']:
+        if self.params_["retain_cross_plan"]:
             cross_rows = self.cross_rows_
             cross_plan = self.cross_plan_
         self.clear()
@@ -334,9 +356,14 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         if (cross_plan is None) or (cross_rows != X.shape[0]):
             if cross_plan is not None:
-                warnings.warn("Number of rows different than previous fit with retain_cross_plan==True")
+                warnings.warn(
+                    "Number of rows different than previous fit with retain_cross_plan==True"
+                )
             cross_plan = self.params_["cross_validation_plan"].split_plan(
-                n_rows=X.shape[0], k_folds=self.params_["cross_validation_k"], data=X, y=y
+                n_rows=X.shape[0],
+                k_folds=self.params_["cross_validation_k"],
+                data=X,
+                y=y,
             )
             cross_rows = X.shape[0]
         # patch in cross-frame versions of complex columns such as impact
@@ -344,11 +371,7 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
             x=X, y=y, res=res, plan=self.plan_, cross_plan=cross_plan
         )
         cross_frame = vtreat_impl.cross_patch_user_y_aware_cols(
-            x=cross_frame,
-            y=y,
-            res=res,
-            params=self.params_,
-            cross_plan=cross_plan,
+            x=cross_frame, y=y, res=res, params=self.params_, cross_plan=cross_plan,
         )
         # use cross_frame to compute variable effects
         self.score_frame_ = vtreat_impl.score_plan_variables(
@@ -358,17 +381,29 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
             ),
             plan=self.plan_,
             params=self.params_,
-            is_classification=True
+            is_classification=True,
         )
-        if ("filter_to_recommended" in self.params_.keys()) and self.params_["filter_to_recommended"]:
+        if ("filter_to_recommended" in self.params_.keys()) and self.params_[
+            "filter_to_recommended"
+        ]:
             self.set_result_restriction(
-                set([ci for ci in self.score_frame_["variable"][self.score_frame_["recommended"]]]))
+                set(
+                    [
+                        ci
+                        for ci in self.score_frame_["variable"][
+                            self.score_frame_["recommended"]
+                        ]
+                    ]
+                )
+            )
         cross_frame = vtreat_impl.limit_to_appropriate_columns(
             res=cross_frame, transform=self
         )
-        cross_frame, res_columns = vtreat_impl.back_to_orig_type_data_frame(cross_frame, orig_type)
+        cross_frame, res_columns = vtreat_impl.back_to_orig_type_data_frame(
+            cross_frame, orig_type
+        )
         self.last_result_columns = res_columns
-        if self.params_['retain_cross_plan']:
+        if self.params_["retain_cross_plan"]:
             self.cross_plan_ = cross_plan
             self.cross_rows_ = cross_rows
         else:
@@ -381,19 +416,19 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
     """manage a treatment plan for a set of outcomes (multinomial classification)"""
 
     def __init__(
-            self,
-            *,
-            var_list=None,
-            outcome_name=None,
-            cols_to_copy=None,
-            params=None,
-            imputation_map=None,
+        self,
+        *,
+        var_list=None,
+        outcome_name=None,
+        cols_to_copy=None,
+        params=None,
+        imputation_map=None,
     ):
         """
 
-         :param var_list: list or touple of column names
+         :param var_list: list or tuple of column names
          :param outcome_name: name of column containing dependent variable
-         :param cols_to_copy: list or touple of column names
+         :param cols_to_copy: list or tuple of column names
          :param params: vtreat.vtreat_parameters()
          :param imputation_map: map of column names to custom missing imputation values or functions
         """
@@ -418,19 +453,23 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         self.check_column_names(X.columns)
         if self.last_fit_x_id_ is None:
             raise ValueError("called transform on not yet fit treatment")
-        if self.params_['check_for_duplicate_frames'] and (self.last_fit_x_id_ == vtreat.util.hash_data_frame(X)):
+        if self.params_["check_for_duplicate_frames"] and (
+            self.last_fit_x_id_ == vtreat.util.hash_data_frame(X)
+        ):
             if self.params_["error_on_duplicate_frames"]:
                 raise ValueError(
-                    "possibly called transform on same data used to fit\n" +
-                    "(this causes over-fit, please use fit_transform() instead)")
+                    "possibly called transform on same data used to fit\n"
+                    + "(this causes over-fit, please use fit_transform() instead)"
+                )
             warnings.warn(
-                "possibly called transform on same data used to fit\n" +
-                "(this causes over-fit, please use fit_transform() instead)")
+                "possibly called transform on same data used to fit\n"
+                + "(this causes over-fit, please use fit_transform() instead)"
+            )
         X = vtreat_impl.pre_prep_frame(
             X,
-            col_list=self.plan_['num_list'] + self.plan_['cat_list'],
+            col_list=self.plan_["num_list"] + self.plan_["cat_list"],
             cols_to_copy=self.cols_to_copy_,
-            cat_cols=self.plan_['cat_list']
+            cat_cols=self.plan_["cat_list"],
         )
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
@@ -450,14 +489,16 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
             y = numpy.asarray(y)
             if (self.outcome_name_ is not None) and (self.outcome_name_ in X.columns):
                 if not numpy.all(X[self.outcome_name_] == y):
-                    raise ValueError(".fit_transform(X, y) called with y != X[outcome_name]")
+                    raise ValueError(
+                        ".fit_transform(X, y) called with y != X[outcome_name]"
+                    )
         if not X.shape[0] == len(y):
             raise ValueError("X.shape[0] should equal len(y)")
         if len(numpy.unique(y)) <= 1:
             raise ValueError("y must take on at least 2 values")
         cross_rows = None
         cross_plan = None
-        if self.params_['retain_cross_plan']:
+        if self.params_["retain_cross_plan"]:
             cross_rows = self.cross_rows_
             cross_plan = self.cross_plan_
         self.clear()
@@ -483,20 +524,21 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         if (cross_plan is None) or (cross_rows != X.shape[0]):
             if cross_plan is not None:
-                warnings.warn("Number of rows different than previous fit with retain_cross_plan==True")
+                warnings.warn(
+                    "Number of rows different than previous fit with retain_cross_plan==True"
+                )
             cross_plan = self.params_["cross_validation_plan"].split_plan(
-                n_rows=X.shape[0], k_folds=self.params_["cross_validation_k"], data=X, y=y
+                n_rows=X.shape[0],
+                k_folds=self.params_["cross_validation_k"],
+                data=X,
+                y=y,
             )
             cross_rows = X.shape[0]
         cross_frame = vtreat_impl.cross_patch_refit_y_aware_cols(
             x=X, y=y, res=res, plan=self.plan_, cross_plan=cross_plan
         )
         cross_frame = vtreat_impl.cross_patch_user_y_aware_cols(
-            x=cross_frame,
-            y=y,
-            res=res,
-            params=self.params_,
-            cross_plan=cross_plan,
+            x=cross_frame, y=y, res=res, params=self.params_, cross_plan=cross_plan,
         )
         # use cross_frame to compute variable effects
 
@@ -506,7 +548,7 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
                 outcome=numpy.asarray(numpy.asarray(y) == oi, dtype=float),
                 plan=self.plan_,
                 params=self.params_,
-                is_classification=True
+                is_classification=True,
             )
             sf["outcome_target"] = oi
             return sf
@@ -514,15 +556,27 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         score_frames = [si(oi) for oi in self.outcomes_]
         self.score_frame_ = pandas.concat(score_frames, axis=0)
         self.score_frame_.reset_index(inplace=True, drop=True)
-        if ("filter_to_recommended" in self.params_.keys()) and self.params_["filter_to_recommended"]:
+        if ("filter_to_recommended" in self.params_.keys()) and self.params_[
+            "filter_to_recommended"
+        ]:
             self.set_result_restriction(
-                set([ci for ci in self.score_frame_["variable"][self.score_frame_["recommended"]]]))
+                set(
+                    [
+                        ci
+                        for ci in self.score_frame_["variable"][
+                            self.score_frame_["recommended"]
+                        ]
+                    ]
+                )
+            )
         cross_frame = vtreat_impl.limit_to_appropriate_columns(
             res=cross_frame, transform=self
         )
-        cross_frame, res_columns = vtreat_impl.back_to_orig_type_data_frame(cross_frame, orig_type)
+        cross_frame, res_columns = vtreat_impl.back_to_orig_type_data_frame(
+            cross_frame, orig_type
+        )
         self.last_result_columns = res_columns
-        if self.params_['retain_cross_plan']:
+        if self.params_["retain_cross_plan"]:
             self.cross_plan_ = cross_plan
             self.cross_rows_ = cross_rows
         else:
@@ -534,16 +588,13 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
 class UnsupervisedTreatment(vtreat_impl.VariableTreatment):
     """manage an unsupervised treatment plan"""
 
-    def __init__(self,
-                 *,
-                 var_list=None,
-                 cols_to_copy=None,
-                 params=None,
-                 imputation_map=None):
+    def __init__(
+        self, *, var_list=None, cols_to_copy=None, params=None, imputation_map=None
+    ):
         """
 
-        :param var_list: list or touple of column names
-        :param cols_to_copy: list or touple of column names
+        :param var_list: list or tuple of column names
+        :param cols_to_copy: list or tuple of column names
         :param params: vtreat.unsupervised_parameters()
         :param imputation_map: map of column names to custom missing imputation values or functions
         """
@@ -568,9 +619,9 @@ class UnsupervisedTreatment(vtreat_impl.VariableTreatment):
             raise ValueError("called transform on not yet fit treatment")
         X = vtreat_impl.pre_prep_frame(
             X,
-            col_list=self.plan_['num_list'] + self.plan_['cat_list'],
+            col_list=self.plan_["num_list"] + self.plan_["cat_list"],
             cols_to_copy=self.cols_to_copy_,
-            cat_cols=self.plan_['cat_list']
+            cat_cols=self.plan_["cat_list"],
         )
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
@@ -601,9 +652,19 @@ class UnsupervisedTreatment(vtreat_impl.VariableTreatment):
         self.score_frame_ = vtreat_impl.pseudo_score_plan_variables(
             cross_frame=res, plan=self.plan_, params=self.params_
         )
-        if ("filter_to_recommended" in self.params_.keys()) and self.params_["filter_to_recommended"]:
+        if ("filter_to_recommended" in self.params_.keys()) and self.params_[
+            "filter_to_recommended"
+        ]:
             self.set_result_restriction(
-                set([ci for ci in self.score_frame_["variable"][self.score_frame_["recommended"]]]))
+                set(
+                    [
+                        ci
+                        for ci in self.score_frame_["variable"][
+                            self.score_frame_["recommended"]
+                        ]
+                    ]
+                )
+            )
         res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
         res, res_columns = vtreat_impl.back_to_orig_type_data_frame(res, orig_type)
         self.last_result_columns = res_columns
