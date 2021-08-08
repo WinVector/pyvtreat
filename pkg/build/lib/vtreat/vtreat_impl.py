@@ -31,7 +31,9 @@ def ready_data_frame(d):
 
 def back_to_orig_type_data_frame(d, orig_type):
     if not isinstance(d, pandas.DataFrame):
-        raise TypeError("Expected result to be a pandas.DataFrame, found: " + str(type(d)))
+        raise TypeError(
+            "Expected result to be a pandas.DataFrame, found: " + str(type(d))
+        )
     columns = [c for c in d.columns]
     if orig_type == numpy.ndarray:
         d = numpy.asarray(d)
@@ -131,7 +133,7 @@ class IndicateMissingTransform(VarTransform):
 def fit_clean_code(*, incoming_column_name, x, params, imputation_map):
     if not vtreat.util.numeric_has_range(x):
         return None
-    replacement = params['missingness_imputation']
+    replacement = params["missingness_imputation"]
     try:
         replacement = imputation_map[incoming_column_name]
     except KeyError:
@@ -141,12 +143,27 @@ def fit_clean_code(*, incoming_column_name, x, params, imputation_map):
     elif callable(replacement):
         replacement_value = vtreat.util.summarize_column(x, fn=replacement)
     else:
-        raise TypeError("unexpected imputation type " + str(type(replacement)) + " (" + incoming_column_name + ")")
-    if pandas.isnull(replacement_value) or math.isnan(replacement_value) or math.isinf(replacement_value):
-        raise ValueError("replacement was bad " + incoming_column_name + ": " + str(replacement_value))
-    return CleanNumericTransform(
-            incoming_column_name=incoming_column_name, replacement_value=replacement_value
+        raise TypeError(
+            "unexpected imputation type "
+            + str(type(replacement))
+            + " ("
+            + incoming_column_name
+            + ")"
         )
+    if (
+        pandas.isnull(replacement_value)
+        or math.isnan(replacement_value)
+        or math.isinf(replacement_value)
+    ):
+        raise ValueError(
+            "replacement was bad "
+            + incoming_column_name
+            + ": "
+            + str(replacement_value)
+        )
+    return CleanNumericTransform(
+        incoming_column_name=incoming_column_name, replacement_value=replacement_value
+    )
 
 
 def fit_regression_impact_code(*, incoming_column_name, x, y, extra_args, params):
@@ -223,7 +240,7 @@ class IndicatorCodeTransform(VarTransform):
         derived_column_names,
         levels,
         *,
-        sparse_indicators=False
+        sparse_indicators=False,
     ):
         VarTransform.__init__(
             self, incoming_column_name, derived_column_names, "indicator_code"
@@ -239,7 +256,7 @@ class IndicatorCodeTransform(VarTransform):
         col = sf[self.incoming_column_name_]
 
         def f(i):
-            v = numpy.asarray(col == self.levels_[i]) + 0.0   # return numeric 0/1 coding
+            v = numpy.asarray(col == self.levels_[i]) + 0.0  # return numeric 0/1 coding
             if self.sparse_indicators_:
                 v = pandas.arrays.SparseArray(v, fill_value=0.0)
             return v
@@ -270,7 +287,7 @@ def fit_indicator_code(
         incoming_column_name,
         vtreat.util.build_level_codes(incoming_column_name, levels),
         levels=levels,
-        sparse_indicators=sparse_indicators
+        sparse_indicators=sparse_indicators,
     )
 
 
@@ -325,11 +342,20 @@ def fit_numeric_outcome_treatment(
     cat_list = [co for co in var_list if co not in set(num_list)]
     id_like = [co for co in cat_list if v_counts[co] >= n]
     if len(id_like) > 0:
-        warnings.warn("variable(s) " + ', '.join(id_like) + " have unique values per-row, dropping")
+        warnings.warn(
+            "variable(s) "
+            + ", ".join(id_like)
+            + " have unique values per-row, dropping"
+        )
         cat_list = [co for co in var_list if co not in set(id_like)]
     if "clean_copy" in params["coders"]:
         for vi in num_list:
-            xform = fit_clean_code(incoming_column_name=vi, x=X[vi], params=params, imputation_map=imputation_map)
+            xform = fit_clean_code(
+                incoming_column_name=vi,
+                x=X[vi],
+                params=params,
+                imputation_map=imputation_map,
+            )
             if xform is not None:
                 # noinspection PyTypeChecker
                 xforms = xforms + [xform]
@@ -385,7 +411,15 @@ def fit_numeric_outcome_treatment(
 
 # noinspection PyPep8Naming
 def fit_binomial_outcome_treatment(
-    *, X, y, outcome_target, var_list, outcome_name, cols_to_copy, params, imputation_map
+    *,
+    X,
+    y,
+    outcome_target,
+    var_list,
+    outcome_name,
+    cols_to_copy,
+    params,
+    imputation_map,
 ):
     if (var_list is None) or (len(var_list) <= 0):
         var_list = [co for co in X.columns]
@@ -415,11 +449,20 @@ def fit_binomial_outcome_treatment(
     cat_list = [co for co in var_list if co not in set(num_list)]
     id_like = [co for co in cat_list if v_counts[co] >= n]
     if len(id_like) > 0:
-        warnings.warn("variable(s) " + ', '.join(id_like) + " have unique values per-row, dropping")
+        warnings.warn(
+            "variable(s) "
+            + ", ".join(id_like)
+            + " have unique values per-row, dropping"
+        )
         cat_list = [co for co in var_list if co not in set(id_like)]
     if "clean_copy" in params["coders"]:
         for vi in num_list:
-            xform = fit_clean_code(incoming_column_name=vi, x=X[vi], params=params, imputation_map=imputation_map)
+            xform = fit_clean_code(
+                incoming_column_name=vi,
+                x=X[vi],
+                params=params,
+                imputation_map=imputation_map,
+            )
             if xform is not None:
                 # noinspection PyTypeChecker
                 xforms = xforms + [xform]
@@ -496,11 +539,20 @@ def fit_multinomial_outcome_treatment(
     cat_list = [co for co in var_list if co not in set(num_list)]
     id_like = [co for co in cat_list if v_counts[co] >= n]
     if len(id_like) > 0:
-        warnings.warn("variable(s) " + ', '.join(id_like) + " have unique values per-row, dropping")
+        warnings.warn(
+            "variable(s) "
+            + ", ".join(id_like)
+            + " have unique values per-row, dropping"
+        )
         cat_list = [co for co in var_list if co not in set(id_like)]
     if "clean_copy" in params["coders"]:
         for vi in num_list:
-            xform = fit_clean_code(incoming_column_name=vi, x=X[vi], params=params, imputation_map=imputation_map)
+            xform = fit_clean_code(
+                incoming_column_name=vi,
+                x=X[vi],
+                params=params,
+                imputation_map=imputation_map,
+            )
             if xform is not None:
                 # noinspection PyTypeChecker
                 xforms = xforms + [xform]
@@ -551,7 +603,9 @@ def fit_multinomial_outcome_treatment(
 
 
 # noinspection PyPep8Naming
-def fit_unsupervised_treatment(*, X, var_list, outcome_name, cols_to_copy, params, imputation_map):
+def fit_unsupervised_treatment(
+    *, X, var_list, outcome_name, cols_to_copy, params, imputation_map
+):
     if (var_list is None) or (len(var_list) <= 0):
         var_list = [co for co in X.columns]
     copy_set = set(cols_to_copy)
@@ -580,11 +634,20 @@ def fit_unsupervised_treatment(*, X, var_list, outcome_name, cols_to_copy, param
     cat_list = [co for co in var_list if co not in set(num_list)]
     id_like = [co for co in cat_list if v_counts[co] >= n]
     if len(id_like) > 0:
-        warnings.warn("variable(s) " + ', '.join(id_like) + " have unique values per-row, dropping")
+        warnings.warn(
+            "variable(s) "
+            + ", ".join(id_like)
+            + " have unique values per-row, dropping"
+        )
         cat_list = [co for co in var_list if co not in set(id_like)]
     if "clean_copy" in params["coders"]:
         for vi in num_list:
-            xform = fit_clean_code(incoming_column_name=vi, x=X[vi], params=params, imputation_map=imputation_map)
+            xform = fit_clean_code(
+                incoming_column_name=vi,
+                x=X[vi],
+                params=params,
+                imputation_map=imputation_map,
+            )
             if xform is not None:
                 # noinspection PyTypeChecker
                 xforms = xforms + [xform]
@@ -664,11 +727,25 @@ def perform_transform(*, x, transform, params):
     xform_steps = [xfi for xfi in plan["xforms"]]
     user_steps = [stp for stp in params["user_transforms"]]
     # restrict down to to results we are going to use
-    if (transform.result_restriction is not None) and (len(transform.result_restriction) > 0):
-        xform_steps = [xfi for xfi in xform_steps
-                       if len(set(xfi.derived_column_names_).intersection(transform.result_restriction)) > 0]
-        user_steps = [stp for stp in user_steps
-                      if len(set(stp.derived_vars_).intersection(transform.result_restriction)) > 0]
+    if (transform.result_restriction is not None) and (
+        len(transform.result_restriction) > 0
+    ):
+        xform_steps = [
+            xfi
+            for xfi in xform_steps
+            if len(
+                set(xfi.derived_column_names_).intersection(
+                    transform.result_restriction
+                )
+            )
+            > 0
+        ]
+        user_steps = [
+            stp
+            for stp in user_steps
+            if len(set(stp.derived_vars_).intersection(transform.result_restriction))
+            > 0
+        ]
     # check all required columns are present
     needs = set()
     for xfi in xform_steps:
@@ -699,9 +776,17 @@ def perform_transform(*, x, transform, params):
 def limit_to_appropriate_columns(*, res, transform):
     plan = transform.plan_
     to_copy = set(plan["cols_to_copy"])
-    to_take = set([
-        ci for ci in transform.score_frame_["variable"][transform.score_frame_["has_range"]]])
-    if (transform.result_restriction is not None) and (len(transform.result_restriction) > 0):
+    to_take = set(
+        [
+            ci
+            for ci in transform.score_frame_["variable"][
+                transform.score_frame_["has_range"]
+            ]
+        ]
+    )
+    if (transform.result_restriction is not None) and (
+        len(transform.result_restriction) > 0
+    ):
         to_take = to_take.intersection(transform.result_restriction)
     cols_to_keep = [ci for ci in res.columns if (ci in to_copy) or (ci in to_take)]
     if len(cols_to_keep) <= 0:
@@ -783,7 +868,7 @@ def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
             cp = cross_plan[i]
             res.loc[cp["app"], derived_column_name] = numpy.asarray(
                 pi[derived_column_name]
-            ).reshape((len(pi), ))
+            ).reshape((len(pi),))
         res.loc[vtreat.util.is_bad(res[derived_column_name]), derived_column_name] = avg
     for xf in plan["xforms"]:
         xf.refitter_ = None
@@ -828,14 +913,14 @@ def cross_patch_user_y_aware_cols(*, x, y, res, params, cross_plan):
                     continue
                 pi.reset_index(inplace=True, drop=True)
                 cp = cross_plan[i]
-                res.loc[cp["app"], col] = numpy.asarray(pi[col]).reshape((len(pi), ))
+                res.loc[cp["app"], col] = numpy.asarray(pi[col]).reshape((len(pi),))
             res.loc[vtreat.util.is_bad(res[col]), col] = avg
     return res
 
 
-def score_plan_variables(cross_frame, outcome, plan, params,
-                         *,
-                         is_classification=False):
+def score_plan_variables(
+    cross_frame, outcome, plan, params, *, is_classification=False
+):
     def describe_xf(xf):
         description = pandas.DataFrame({"variable": xf.derived_column_names_})
         description["orig_variable"] = xf.incoming_column_name_
@@ -865,7 +950,7 @@ def score_plan_variables(cross_frame, outcome, plan, params,
         cross_frame,
         variables=var_table["variable"],
         outcome=outcome,
-        is_classification=is_classification
+        is_classification=is_classification,
     )
     score_frame = pandas.merge(var_table, sf, how="left", on=["variable"], sort=False)
     num_treatment_types = len(score_frame["treatment"].unique())
@@ -939,13 +1024,14 @@ def pseudo_score_plan_variables(*, cross_frame, plan, params):
 # https://sklearn-template.readthedocs.io/en/latest/user_guide.html#transformer
 class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.TransformerMixin):
     def __init__(
-            self, *,
-            var_list=None,
-            outcome_name=None,
-            outcome_target=None,
-            cols_to_copy=None,
-            params=None,
-            imputation_map=None,
+        self,
+        *,
+        var_list=None,
+        outcome_name=None,
+        outcome_target=None,
+        cols_to_copy=None,
+        params=None,
+        imputation_map=None,
     ):
         if var_list is None:
             var_list = []
@@ -959,7 +1045,9 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
             cols_to_copy = cols_to_copy + [outcome_name]
         confused = set(cols_to_copy).intersection(set(var_list))
         if len(confused) > 0:
-            raise ValueError("variables in treatment plan and non-treatment: " + ', '.join(confused))
+            raise ValueError(
+                "variables in treatment plan and non-treatment: " + ", ".join(confused)
+            )
         if imputation_map is None:
             imputation_map = {}  # dict
         self.outcome_name_ = outcome_name
@@ -1013,11 +1101,15 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
 
     # noinspection PyPep8Naming
     def __repr__(self, N_CHAR_MAX=700):
-        fmted = str(self.__class__.__module__) + "." + str(self.__class__.__name__) + '('
+        fmted = (
+            str(self.__class__.__module__) + "." + str(self.__class__.__name__) + "("
+        )
         if self.outcome_name_ is not None:
             fmted = fmted + "outcome_name=" + pprint.pformat(self.outcome_name_) + ", "
         if self.outcome_target_ is not None:
-            fmted = fmted + "outcome_target=" + pprint.pformat(self.outcome_target_) + ", "
+            fmted = (
+                fmted + "outcome_target=" + pprint.pformat(self.outcome_target_) + ", "
+            )
         if (self.var_list_ is not None) and (len(self.var_list_) > 0):
             fmted = fmted + "var_list=" + pprint.pformat(self.var_list_) + ", "
         if (self.cols_to_copy_ is not None) and (len(self.cols_to_copy_) > 0):
@@ -1026,7 +1118,7 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         #     fmted = fmted + "params=" + pprint.pformat(self.params_) + ",\n"
         # if (self.imputation_map_ is not None) and (len(self.imputation_map_) > 0):
         #     fmted = fmted + "imputation_map=" + pprint.pformat(self.imputation_map_) + ",\n"
-        fmted = fmted + ')'
+        fmted = fmted + ")"
         return fmted
 
     def __str__(self):
@@ -1090,19 +1182,34 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
 
     def get_feature_names(self, input_features=None):
         if self.score_frame_ is None:
-            raise ValueError("get_feature_names called on uninitialized vtreat transform")
+            raise ValueError(
+                "get_feature_names called on uninitialized vtreat transform"
+            )
         filter_to_recommended = False
         try:
-            filter_to_recommended = self.params_['filter_to_recommended']
+            filter_to_recommended = self.params_["filter_to_recommended"]
         except KeyError:
             pass
         if filter_to_recommended:
-            new_vars = [self.score_frame_['variable'][i] for i in range(self.score_frame_.shape[0])
-                        if self.score_frame_['has_range'][i] and self.score_frame_['recommended'][i]
-                        and (input_features is None or self.score_frame_['orig_variable'][i] in input_features)]
+            new_vars = [
+                self.score_frame_["variable"][i]
+                for i in range(self.score_frame_.shape[0])
+                if self.score_frame_["has_range"][i]
+                and self.score_frame_["recommended"][i]
+                and (
+                    input_features is None
+                    or self.score_frame_["orig_variable"][i] in input_features
+                )
+            ]
         else:
-            new_vars = [self.score_frame_['variable'][i] for i in range(self.score_frame_.shape[0])
-                        if self.score_frame_['has_range'][i]
-                        and (input_features is None or self.score_frame_['orig_variable'][i] in input_features)]
+            new_vars = [
+                self.score_frame_["variable"][i]
+                for i in range(self.score_frame_.shape[0])
+                if self.score_frame_["has_range"][i]
+                and (
+                    input_features is None
+                    or self.score_frame_["orig_variable"][i] in input_features
+                )
+            ]
         new_vars = new_vars + self.cols_to_copy_
         return new_vars

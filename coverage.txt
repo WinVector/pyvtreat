@@ -1,7 +1,7 @@
 ============================= test session starts ==============================
-platform darwin -- Python 3.9.4, pytest-6.2.3, py-1.10.0, pluggy-0.13.1
+platform darwin -- Python 3.9.6, pytest-6.2.4, py-1.10.0, pluggy-0.13.1
 rootdir: /Users/johnmount/Documents/work/pyvtreat/pkg
-plugins: anyio-2.2.0, cov-2.11.1
+plugins: cov-2.12.1, anyio-2.2.0
 collected 28 items
 
 pkg/tests/test_ai200_examples.py ..                                      [  7%]
@@ -24,7 +24,7 @@ pkg/tests/test_unsupervised.py .                                         [ 89%]
 pkg/tests/test_user_coders.py .                                          [ 92%]
 pkg/tests/test_util.py ..                                                [100%]
 
----------- coverage: platform darwin, python 3.9.4-final-0 -----------
+---------- coverage: platform darwin, python 3.9.6-final-0 -----------
 Name                        Stmts   Miss  Cover
 -----------------------------------------------
 pkg/vtreat/__init__.py          6      0   100%
@@ -38,4 +38,4 @@ pkg/vtreat/vtreat_impl.py     655     80    88%
 TOTAL                        1244    155    88%
 
 
-============================= 28 passed in 19.72s ==============================
+============================= 28 passed in 16.72s ==============================
