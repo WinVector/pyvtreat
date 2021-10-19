@@ -106,7 +106,7 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
     ):
         """
 
-         :param var_list: list or tuple of column names
+         :param var_list: list or tuple of column names, if empty all non outcome and copy columns are used
          :param outcome_name: name of column containing dependent variable
          :param cols_to_copy: list or tuple of column names
          :param params: vtreat.vtreat_parameters()
@@ -296,7 +296,7 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
     ):
         """
 
-         :param var_list: list or tuple of column names
+         :param var_list: list or tuple of column names, if empty all non outcome and copy columns are used
          :param outcome_name: name of column containing dependent variable
          :param outcome_target: value of outcome to consider "positive"
          :param cols_to_copy: list or tuple of column names
@@ -488,7 +488,7 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
     ):
         """
 
-         :param var_list: list or tuple of column names
+         :param var_list: list or tuple of column names, if empty all non outcome and copy columns are used
          :param outcome_name: name of column containing dependent variable
          :param cols_to_copy: list or tuple of column names
          :param params: vtreat.vtreat_parameters()
@@ -679,7 +679,7 @@ class UnsupervisedTreatment(vtreat_impl.VariableTreatment):
     ):
         """
 
-        :param var_list: list or tuple of column names
+        :param var_list: list or tuple of column names, if empty all non copy columns are used
         :param cols_to_copy: list or tuple of column names
         :param params: vtreat.unsupervised_parameters()
         :param imputation_map: map of column names to custom missing imputation values or functions

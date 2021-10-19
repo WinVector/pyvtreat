@@ -453,7 +453,7 @@ def _prepare_variable_lists(
 
     :param X: dependent variables
     :param cols_to_copy: columns to copy
-    :param var_list: dependent variable names
+    :param var_list: dependent variable names, if empty all non outcome and copy columns are used
     :return: cat_list, cols_to_copy, mis_list, num_list, var_list lists
     """
     if var_list is None:
@@ -511,7 +511,7 @@ def fit_numeric_outcome_treatment(
 
     :param X: training explanatory values
     :param y: training dependent values
-    :param var_list: list of dependent variable names
+    :param var_list: list of dependent variable names, if empty all non outcome and copy columns are used
     :param outcome_name: name for outcome column
     :param cols_to_copy: list of columns to copy to output
     :param params:
@@ -604,7 +604,7 @@ def fit_binomial_outcome_treatment(
     :param X: training explanatory values
     :param y: training dependent values
     :param outcome_target: dependent value to consider positive or in class
-    :param var_list: list of variables to process
+    :param var_list: list of variables to process, if empty all non outcome and copy columns are used
     :param outcome_name: name for outcome column
     :param cols_to_copy: list of columns to copy to output
     :param params:
@@ -686,7 +686,7 @@ def fit_multinomial_outcome_treatment(
 
     :param X: training explanatory values
     :param y: training dependent values
-    :param var_list: list of variables to process
+    :param var_list: list of variables to process, if empty all non outcome and copy columns are used
     :param outcome_name: name for outcome column
     :param cols_to_copy: list of columns to copy to output
     :param params:
@@ -776,7 +776,7 @@ def fit_unsupervised_treatment(
     Fit a data treatment in the unsupervised case.
 
     :param X: training explanatory values
-    :param var_list: list of variables to process
+    :param var_list: list of variables to process, if empty all non copy columns are used
     :param outcome_name: name for outcome column
     :param cols_to_copy: list of columns to copy to output
     :param params:

@@ -682,7 +682,7 @@
 
 <span class="sd">    :param X: dependent variables</span>
 <span class="sd">    :param cols_to_copy: columns to copy</span>
-<span class="sd">    :param var_list: dependent variable names</span>
+<span class="sd">    :param var_list: dependent variable names, if empty all non outcome and copy columns are used</span>
 <span class="sd">    :return: cat_list, cols_to_copy, mis_list, num_list, var_list lists</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">var_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -740,7 +740,7 @@
 
 <span class="sd">    :param X: training explanatory values</span>
 <span class="sd">    :param y: training dependent values</span>
-<span class="sd">    :param var_list: list of dependent variable names</span>
+<span class="sd">    :param var_list: list of dependent variable names, if empty all non outcome and copy columns are used</span>
 <span class="sd">    :param outcome_name: name for outcome column</span>
 <span class="sd">    :param cols_to_copy: list of columns to copy to output</span>
 <span class="sd">    :param params:</span>
@@ -833,7 +833,7 @@
 <span class="sd">    :param X: training explanatory values</span>
 <span class="sd">    :param y: training dependent values</span>
 <span class="sd">    :param outcome_target: dependent value to consider positive or in class</span>
-<span class="sd">    :param var_list: list of variables to process</span>
+<span class="sd">    :param var_list: list of variables to process, if empty all non outcome and copy columns are used</span>
 <span class="sd">    :param outcome_name: name for outcome column</span>
 <span class="sd">    :param cols_to_copy: list of columns to copy to output</span>
 <span class="sd">    :param params:</span>
@@ -915,7 +915,7 @@
 
 <span class="sd">    :param X: training explanatory values</span>
 <span class="sd">    :param y: training dependent values</span>
-<span class="sd">    :param var_list: list of variables to process</span>
+<span class="sd">    :param var_list: list of variables to process, if empty all non outcome and copy columns are used</span>
 <span class="sd">    :param outcome_name: name for outcome column</span>
 <span class="sd">    :param cols_to_copy: list of columns to copy to output</span>
 <span class="sd">    :param params:</span>
@@ -1005,7 +1005,7 @@
 <span class="sd">    Fit a data treatment in the unsupervised case.</span>
 
 <span class="sd">    :param X: training explanatory values</span>
-<span class="sd">    :param var_list: list of variables to process</span>
+<span class="sd">    :param var_list: list of variables to process, if empty all non copy columns are used</span>
 <span class="sd">    :param outcome_name: name for outcome column</span>
 <span class="sd">    :param cols_to_copy: list of columns to copy to output</span>
 <span class="sd">    :param params:</span>
@@ -2992,7 +2992,7 @@
 
 <span class="sd">    :param X: training explanatory values</span>
 <span class="sd">    :param y: training dependent values</span>
-<span class="sd">    :param var_list: list of dependent variable names</span>
+<span class="sd">    :param var_list: list of dependent variable names, if empty all non outcome and copy columns are used</span>
 <span class="sd">    :param outcome_name: name for outcome column</span>
 <span class="sd">    :param cols_to_copy: list of columns to copy to output</span>
 <span class="sd">    :param params:</span>
@@ -3075,7 +3075,7 @@
 
 <p>:param X: training explanatory values
 :param y: training dependent values
-:param var_list: list of dependent variable names
+:param var_list: list of dependent variable names, if empty all non outcome and copy columns are used
 :param outcome_name: name for outcome column
 :param cols_to_copy: list of columns to copy to output
 :param params:
@@ -3120,7 +3120,7 @@
 <span class="sd">    :param X: training explanatory values</span>
 <span class="sd">    :param y: training dependent values</span>
 <span class="sd">    :param outcome_target: dependent value to consider positive or in class</span>
-<span class="sd">    :param var_list: list of variables to process</span>
+<span class="sd">    :param var_list: list of variables to process, if empty all non outcome and copy columns are used</span>
 <span class="sd">    :param outcome_name: name for outcome column</span>
 <span class="sd">    :param cols_to_copy: list of columns to copy to output</span>
 <span class="sd">    :param params:</span>
@@ -3192,7 +3192,7 @@
             <div class="docstring"><p>:param X: training explanatory values
 :param y: training dependent values
 :param outcome_target: dependent value to consider positive or in class
-:param var_list: list of variables to process
+:param var_list: list of variables to process, if empty all non outcome and copy columns are used
 :param outcome_name: name for outcome column
 :param cols_to_copy: list of columns to copy to output
 :param params:
@@ -3235,7 +3235,7 @@
 
 <span class="sd">    :param X: training explanatory values</span>
 <span class="sd">    :param y: training dependent values</span>
-<span class="sd">    :param var_list: list of variables to process</span>
+<span class="sd">    :param var_list: list of variables to process, if empty all non outcome and copy columns are used</span>
 <span class="sd">    :param outcome_name: name for outcome column</span>
 <span class="sd">    :param cols_to_copy: list of columns to copy to output</span>
 <span class="sd">    :param params:</span>
@@ -3317,7 +3317,7 @@
 
 <p>:param X: training explanatory values
 :param y: training dependent values
-:param var_list: list of variables to process
+:param var_list: list of variables to process, if empty all non outcome and copy columns are used
 :param outcome_name: name for outcome column
 :param cols_to_copy: list of columns to copy to output
 :param params:
@@ -3358,7 +3358,7 @@
 <span class="sd">    Fit a data treatment in the unsupervised case.</span>
 
 <span class="sd">    :param X: training explanatory values</span>
-<span class="sd">    :param var_list: list of variables to process</span>
+<span class="sd">    :param var_list: list of variables to process, if empty all non copy columns are used</span>
 <span class="sd">    :param outcome_name: name for outcome column</span>
 <span class="sd">    :param cols_to_copy: list of columns to copy to output</span>
 <span class="sd">    :param params:</span>
@@ -3419,7 +3419,7 @@
             <div class="docstring"><p>Fit a data treatment in the unsupervised case.</p>
 
 <p>:param X: training explanatory values
-:param var_list: list of variables to process
+:param var_list: list of variables to process, if empty all non copy columns are used
 :param outcome_name: name for outcome column
 :param cols_to_copy: list of columns to copy to output
 :param params:
