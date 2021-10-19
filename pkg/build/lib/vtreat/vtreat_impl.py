@@ -6,7 +6,7 @@ from abc import ABC
 import math
 import pprint
 import warnings
-from typing import Iterable, Tuple
+from typing import Iterable, Optional, Tuple
 
 import numpy
 import pandas
@@ -72,8 +72,15 @@ class VarTransform(ABC):
         self.need_cross_treatment_ = False
         self.refitter_ = None
 
-    def transform(self, data_frame) -> pandas.DataFrame:
-        """return a transformed data frame"""
+    def transform(self, data_frame: pandas.DataFrame) -> pandas.DataFrame:
+        """
+        return a transformed data frame
+
+        :rtype: pandas.DataFrame
+        :param data_frame: incoming values
+        :return: transformed values
+        """
+
         raise NotImplementedError("base method called")
 
 
@@ -90,8 +97,15 @@ class MappedCodeTransform(VarTransform):
         )
         self.code_book_ = code_book
 
-    def transform(self, data_frame) -> pandas.DataFrame:
-        """return a transformed data frame"""
+    def transform(self, data_frame: pandas.DataFrame) -> pandas.DataFrame:
+        """
+        return a transformed data frame
+
+        :rtype: pandas.DataFrame
+        :param data_frame: incoming values
+        :return: transformed values
+        """
+
         incoming_column_name = self.incoming_column_name_
         derived_column_name = self.derived_column_names_[0]
         sf = pandas.DataFrame({incoming_column_name: data_frame[incoming_column_name]})
@@ -107,12 +121,13 @@ class MappedCodeTransform(VarTransform):
 
 
 class YAwareMappedCodeTransform(MappedCodeTransform):
+    """Class for transforms that are a y-aware dictionary mapping of values"""
     def __init__(
         self,
-        incoming_column_name,
-        derived_column_name,
-        treatment,
-        code_book,
+        incoming_column_name: str,
+        derived_column_name: str,
+        treatment: str,
+        code_book: pandas.DataFrame,
         refitter,
         extra_args,
         params,
@@ -131,13 +146,22 @@ class YAwareMappedCodeTransform(MappedCodeTransform):
 
 
 class CleanNumericTransform(VarTransform):
+    """Class for numeric column cleaner."""
     def __init__(self, incoming_column_name, replacement_value):
         VarTransform.__init__(
             self, incoming_column_name, [incoming_column_name], "clean_copy"
         )
         self.replacement_value_ = replacement_value
 
-    def transform(self, data_frame):
+    def transform(self, data_frame: pandas.DataFrame) -> pandas.DataFrame:
+        """
+        return a transformed data frame
+
+        :rtype: pandas.DataFrame
+        :param data_frame: incoming values
+        :return: transformed values
+        """
+
         col = vtreat.util.safe_to_numeric_array(data_frame[self.incoming_column_name_])
         bad_posns = vtreat.util.is_bad(col)
         col[bad_posns] = self.replacement_value_
@@ -146,18 +170,36 @@ class CleanNumericTransform(VarTransform):
 
 
 class IndicateMissingTransform(VarTransform):
+    """Class for missing value indicator."""
     def __init__(self, incoming_column_name, derived_column_name):
         VarTransform.__init__(
             self, incoming_column_name, [derived_column_name], "missing_indicator"
         )
 
-    def transform(self, data_frame):
+    def transform(self, data_frame: pandas.DataFrame) -> pandas.DataFrame:
+        """
+        return a transformed data frame
+
+        :rtype: pandas.DataFrame
+        :param data_frame: incoming values
+        :return: transformed values
+        """
+
         col = vtreat.util.is_bad(data_frame[self.incoming_column_name_])
         res = pandas.DataFrame({self.derived_column_names_[0]: col + 0.0})
         return res
 
 
-def fit_clean_code(*, incoming_column_name, x, params, imputation_map):
+def fit_clean_code(*, incoming_column_name: str, x, params, imputation_map) -> Optional[VarTransform]:
+    """
+    Fit numeric clean column imputation transform
+
+    :param incoming_column_name: name of column
+    :param x: training values for column
+    :param params:
+    :param imputation_map:
+    :return: transform
+    """
     if not vtreat.util.numeric_has_range(x):
         return None
     replacement = params["missingness_imputation"]
@@ -193,7 +235,17 @@ def fit_clean_code(*, incoming_column_name, x, params, imputation_map):
     )
 
 
-def fit_regression_impact_code(*, incoming_column_name, x, y, extra_args, params):
+def fit_regression_impact_code(*, incoming_column_name: str, x, y, extra_args, params) -> Optional[VarTransform]:
+    """
+    Fit regression impact code transform
+
+    :param incoming_column_name:
+    :param x: training explanatory values
+    :param y: training dependent values
+    :param extra_args:
+    :param params:
+    :return:
+    """
     sf = vtreat.util.grouped_by_x_statistics(x, y)
     if sf.shape[0] <= 1:
         return None
@@ -276,6 +328,14 @@ class IndicatorCodeTransform(VarTransform):
         self.sparse_indicators_ = sparse_indicators
 
     def transform(self, data_frame):
+        """
+        return a transformed data frame
+
+        :rtype: pandas.DataFrame
+        :param data_frame: incoming values
+        :return: transformed values
+        """
+
         incoming_column_name = self.incoming_column_name_
         sf = pandas.DataFrame({incoming_column_name: data_frame[incoming_column_name]})
         bad_posns = vtreat.util.is_bad(sf[incoming_column_name])

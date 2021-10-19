@@ -238,7 +238,7 @@
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">pprint</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">pandas</span>
@@ -304,8 +304,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">need_cross_treatment_</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">refitter_</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;return a transformed data frame&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return a transformed data frame</span>
+
+<span class="sd">        :rtype: pandas.DataFrame</span>
+<span class="sd">        :param data_frame: incoming values</span>
+<span class="sd">        :return: transformed values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base method called&quot;</span><span class="p">)</span>
 
 
@@ -322,8 +329,15 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span> <span class="o">=</span> <span class="n">code_book</span>
 
-    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;return a transformed data frame&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return a transformed data frame</span>
+
+<span class="sd">        :rtype: pandas.DataFrame</span>
+<span class="sd">        :param data_frame: incoming values</span>
+<span class="sd">        :return: transformed values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">incoming_column_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span>
         <span class="n">derived_column_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">sf</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">incoming_column_name</span><span class="p">:</span> <span class="n">data_frame</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">]})</span>
@@ -339,12 +353,13 @@
 
 
 <span class="k">class</span> <span class="nc">YAwareMappedCodeTransform</span><span class="p">(</span><span class="n">MappedCodeTransform</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class for transforms that are a y-aware dictionary mapping of values&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">incoming_column_name</span><span class="p">,</span>
-        <span class="n">derived_column_name</span><span class="p">,</span>
-        <span class="n">treatment</span><span class="p">,</span>
-        <span class="n">code_book</span><span class="p">,</span>
+        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">code_book</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
         <span class="n">refitter</span><span class="p">,</span>
         <span class="n">extra_args</span><span class="p">,</span>
         <span class="n">params</span><span class="p">,</span>
@@ -363,13 +378,22 @@
 
 
 <span class="k">class</span> <span class="nc">CleanNumericTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class for numeric column cleaner.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">replacement_value</span><span class="p">):</span>
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">incoming_column_name</span><span class="p">],</span> <span class="s2">&quot;clean_copy&quot;</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">replacement_value_</span> <span class="o">=</span> <span class="n">replacement_value</span>
 
-    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return a transformed data frame</span>
+
+<span class="sd">        :rtype: pandas.DataFrame</span>
+<span class="sd">        :param data_frame: incoming values</span>
+<span class="sd">        :return: transformed values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">col</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">safe_to_numeric_array</span><span class="p">(</span><span class="n">data_frame</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">])</span>
         <span class="n">bad_posns</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
         <span class="n">col</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replacement_value_</span>
@@ -378,18 +402,36 @@
 
 
 <span class="k">class</span> <span class="nc">IndicateMissingTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class for missing value indicator.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="p">):</span>
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">derived_column_name</span><span class="p">],</span> <span class="s2">&quot;missing_indicator&quot;</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return a transformed data frame</span>
+
+<span class="sd">        :rtype: pandas.DataFrame</span>
+<span class="sd">        :param data_frame: incoming values</span>
+<span class="sd">        :return: transformed values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">col</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">data_frame</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">])</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">col</span> <span class="o">+</span> <span class="mf">0.0</span><span class="p">})</span>
         <span class="k">return</span> <span class="n">res</span>
 
 
-<span class="k">def</span> <span class="nf">fit_clean_code</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">imputation_map</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">fit_clean_code</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">imputation_map</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fit numeric clean column imputation transform</span>
+
+<span class="sd">    :param incoming_column_name: name of column</span>
+<span class="sd">    :param x: training values for column</span>
+<span class="sd">    :param params:</span>
+<span class="sd">    :param imputation_map:</span>
+<span class="sd">    :return: transform</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">numeric_has_range</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="n">replacement</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;missingness_imputation&quot;</span><span class="p">]</span>
@@ -425,7 +467,17 @@
     <span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">fit_regression_impact_code</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">extra_args</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">fit_regression_impact_code</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">extra_args</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fit regression impact code transform</span>
+
+<span class="sd">    :param incoming_column_name:</span>
+<span class="sd">    :param x: training explanatory values</span>
+<span class="sd">    :param y: training dependent values</span>
+<span class="sd">    :param extra_args:</span>
+<span class="sd">    :param params:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">sf</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">grouped_by_x_statistics</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">sf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
@@ -508,6 +560,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">sparse_indicators_</span> <span class="o">=</span> <span class="n">sparse_indicators</span>
 
     <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return a transformed data frame</span>
+
+<span class="sd">        :rtype: pandas.DataFrame</span>
+<span class="sd">        :param data_frame: incoming values</span>
+<span class="sd">        :return: transformed values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">incoming_column_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span>
         <span class="n">sf</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">incoming_column_name</span><span class="p">:</span> <span class="n">data_frame</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">]})</span>
         <span class="n">bad_posns</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">sf</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">])</span>
@@ -1584,8 +1644,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">need_cross_treatment_</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">refitter_</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;return a transformed data frame&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return a transformed data frame</span>
+
+<span class="sd">        :rtype: pandas.DataFrame</span>
+<span class="sd">        :param data_frame: incoming values</span>
+<span class="sd">        :return: transformed values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base method called&quot;</span><span class="p">)</span>
 </pre></div>
 
@@ -1636,19 +1703,33 @@
 
         
             <span class="def">def</span>
-            <span class="name">transform</span><span class="signature">(self, data_frame) -&gt; pandas.core.frame.DataFrame</span>:
+            <span class="name">transform</span><span class="signature">(
+    self,
+    data_frame: pandas.core.frame.DataFrame
+) -&gt; pandas.core.frame.DataFrame</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;return a transformed data frame&quot;&quot;&quot;</span>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return a transformed data frame</span>
+
+<span class="sd">        :rtype: pandas.DataFrame</span>
+<span class="sd">        :param data_frame: incoming values</span>
+<span class="sd">        :return: transformed values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base method called&quot;</span><span class="p">)</span>
 </pre></div>
 
         </details>
 
             <div class="docstring"><p>return a transformed data frame</p>
+
+<p>:rtype: pandas.DataFrame
+:param data_frame: incoming values
+:return: transformed values</p>
 </div>
 
 
@@ -1678,8 +1759,15 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span> <span class="o">=</span> <span class="n">code_book</span>
 
-    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;return a transformed data frame&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return a transformed data frame</span>
+
+<span class="sd">        :rtype: pandas.DataFrame</span>
+<span class="sd">        :param data_frame: incoming values</span>
+<span class="sd">        :return: transformed values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">incoming_column_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span>
         <span class="n">derived_column_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">sf</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">incoming_column_name</span><span class="p">:</span> <span class="n">data_frame</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">]})</span>
@@ -1736,13 +1824,23 @@
 
         
             <span class="def">def</span>
-            <span class="name">transform</span><span class="signature">(self, data_frame) -&gt; pandas.core.frame.DataFrame</span>:
+            <span class="name">transform</span><span class="signature">(
+    self,
+    data_frame: pandas.core.frame.DataFrame
+) -&gt; pandas.core.frame.DataFrame</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;return a transformed data frame&quot;&quot;&quot;</span>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return a transformed data frame</span>
+
+<span class="sd">        :rtype: pandas.DataFrame</span>
+<span class="sd">        :param data_frame: incoming values</span>
+<span class="sd">        :return: transformed values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">incoming_column_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span>
         <span class="n">derived_column_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">sf</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">incoming_column_name</span><span class="p">:</span> <span class="n">data_frame</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">]})</span>
@@ -1760,6 +1858,10 @@
         </details>
 
             <div class="docstring"><p>return a transformed data frame</p>
+
+<p>:rtype: pandas.DataFrame
+:param data_frame: incoming values
+:return: transformed values</p>
 </div>
 
 
@@ -1777,12 +1879,13 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">YAwareMappedCodeTransform</span><span class="p">(</span><span class="n">MappedCodeTransform</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class for transforms that are a y-aware dictionary mapping of values&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">incoming_column_name</span><span class="p">,</span>
-        <span class="n">derived_column_name</span><span class="p">,</span>
-        <span class="n">treatment</span><span class="p">,</span>
-        <span class="n">code_book</span><span class="p">,</span>
+        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">code_book</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
         <span class="n">refitter</span><span class="p">,</span>
         <span class="n">extra_args</span><span class="p">,</span>
         <span class="n">params</span><span class="p">,</span>
@@ -1802,7 +1905,7 @@
 
         </details>
 
-            <div class="docstring"><p>Class for transforms that are a dictionary mapping of values</p>
+            <div class="docstring"><p>Class for transforms that are a y-aware dictionary mapping of values</p>
 </div>
 
 
@@ -1811,10 +1914,10 @@
 
         
             <span class="name">YAwareMappedCodeTransform</span><span class="signature">(
-    incoming_column_name,
-    derived_column_name,
-    treatment,
-    code_book,
+    incoming_column_name: str,
+    derived_column_name: str,
+    treatment: str,
+    code_book: pandas.core.frame.DataFrame,
     refitter,
     extra_args,
     params
@@ -1825,10 +1928,10 @@
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">incoming_column_name</span><span class="p">,</span>
-        <span class="n">derived_column_name</span><span class="p">,</span>
-        <span class="n">treatment</span><span class="p">,</span>
-        <span class="n">code_book</span><span class="p">,</span>
+        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">code_book</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
         <span class="n">refitter</span><span class="p">,</span>
         <span class="n">extra_args</span><span class="p">,</span>
         <span class="n">params</span><span class="p">,</span>
@@ -1873,13 +1976,22 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">CleanNumericTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class for numeric column cleaner.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">replacement_value</span><span class="p">):</span>
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">incoming_column_name</span><span class="p">],</span> <span class="s2">&quot;clean_copy&quot;</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">replacement_value_</span> <span class="o">=</span> <span class="n">replacement_value</span>
 
-    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return a transformed data frame</span>
+
+<span class="sd">        :rtype: pandas.DataFrame</span>
+<span class="sd">        :param data_frame: incoming values</span>
+<span class="sd">        :return: transformed values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">col</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">safe_to_numeric_array</span><span class="p">(</span><span class="n">data_frame</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">])</span>
         <span class="n">bad_posns</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
         <span class="n">col</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replacement_value_</span>
@@ -1889,7 +2001,7 @@
 
         </details>
 
-            <div class="docstring"><p>Base class for vtreat transforms</p>
+            <div class="docstring"><p>Class for numeric column cleaner.</p>
 </div>
 
 
@@ -1919,12 +2031,23 @@
 
         
             <span class="def">def</span>
-            <span class="name">transform</span><span class="signature">(self, data_frame)</span>:
+            <span class="name">transform</span><span class="signature">(
+    self,
+    data_frame: pandas.core.frame.DataFrame
+) -&gt; pandas.core.frame.DataFrame</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return a transformed data frame</span>
+
+<span class="sd">        :rtype: pandas.DataFrame</span>
+<span class="sd">        :param data_frame: incoming values</span>
+<span class="sd">        :return: transformed values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">col</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">safe_to_numeric_array</span><span class="p">(</span><span class="n">data_frame</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">])</span>
         <span class="n">bad_posns</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
         <span class="n">col</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replacement_value_</span>
@@ -1935,6 +2058,10 @@
         </details>
 
             <div class="docstring"><p>return a transformed data frame</p>
+
+<p>:rtype: pandas.DataFrame
+:param data_frame: incoming values
+:return: transformed values</p>
 </div>
 
 
@@ -1952,12 +2079,21 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">IndicateMissingTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class for missing value indicator.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="p">):</span>
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">derived_column_name</span><span class="p">],</span> <span class="s2">&quot;missing_indicator&quot;</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return a transformed data frame</span>
+
+<span class="sd">        :rtype: pandas.DataFrame</span>
+<span class="sd">        :param data_frame: incoming values</span>
+<span class="sd">        :return: transformed values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">col</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">data_frame</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">])</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">col</span> <span class="o">+</span> <span class="mf">0.0</span><span class="p">})</span>
         <span class="k">return</span> <span class="n">res</span>
@@ -1965,7 +2101,7 @@
 
         </details>
 
-            <div class="docstring"><p>Base class for vtreat transforms</p>
+            <div class="docstring"><p>Class for missing value indicator.</p>
 </div>
 
 
@@ -1994,12 +2130,23 @@
 
         
             <span class="def">def</span>
-            <span class="name">transform</span><span class="signature">(self, data_frame)</span>:
+            <span class="name">transform</span><span class="signature">(
+    self,
+    data_frame: pandas.core.frame.DataFrame
+) -&gt; pandas.core.frame.DataFrame</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return a transformed data frame</span>
+
+<span class="sd">        :rtype: pandas.DataFrame</span>
+<span class="sd">        :param data_frame: incoming values</span>
+<span class="sd">        :return: transformed values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">col</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">data_frame</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">])</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">col</span> <span class="o">+</span> <span class="mf">0.0</span><span class="p">})</span>
         <span class="k">return</span> <span class="n">res</span>
@@ -2008,6 +2155,10 @@
         </details>
 
             <div class="docstring"><p>return a transformed data frame</p>
+
+<p>:rtype: pandas.DataFrame
+:param data_frame: incoming values
+:return: transformed values</p>
 </div>
 
 
@@ -2018,12 +2169,27 @@
 
         
             <span class="def">def</span>
-            <span class="name">fit_clean_code</span><span class="signature">(*, incoming_column_name, x, params, imputation_map)</span>:
+            <span class="name">fit_clean_code</span><span class="signature">(
+    *,
+    incoming_column_name: str,
+    x,
+    params,
+    imputation_map
+) -&gt; Optional[<a href="#VarTransform">vtreat.vtreat_impl.VarTransform</a>]</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_clean_code</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">imputation_map</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_clean_code</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">imputation_map</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fit numeric clean column imputation transform</span>
+
+<span class="sd">    :param incoming_column_name: name of column</span>
+<span class="sd">    :param x: training values for column</span>
+<span class="sd">    :param params:</span>
+<span class="sd">    :param imputation_map:</span>
+<span class="sd">    :return: transform</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">numeric_has_range</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="n">replacement</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;missingness_imputation&quot;</span><span class="p">]</span>
@@ -2061,7 +2227,15 @@
 
         </details>
 
-    
+            <div class="docstring"><p>Fit numeric clean column imputation transform</p>
+
+<p>:param incoming_column_name: name of column
+:param x: training values for column
+:param params:
+:param imputation_map:
+:return: transform</p>
+</div>
+
 
                 </section>
                 <section id="fit_regression_impact_code">
@@ -2069,12 +2243,29 @@
 
         
             <span class="def">def</span>
-            <span class="name">fit_regression_impact_code</span><span class="signature">(*, incoming_column_name, x, y, extra_args, params)</span>:
+            <span class="name">fit_regression_impact_code</span><span class="signature">(
+    *,
+    incoming_column_name: str,
+    x,
+    y,
+    extra_args,
+    params
+) -&gt; Optional[<a href="#VarTransform">vtreat.vtreat_impl.VarTransform</a>]</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_regression_impact_code</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">extra_args</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_regression_impact_code</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">extra_args</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fit regression impact code transform</span>
+
+<span class="sd">    :param incoming_column_name:</span>
+<span class="sd">    :param x: training explanatory values</span>
+<span class="sd">    :param y: training dependent values</span>
+<span class="sd">    :param extra_args:</span>
+<span class="sd">    :param params:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">sf</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">grouped_by_x_statistics</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">sf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
@@ -2098,7 +2289,16 @@
 
         </details>
 
-    
+            <div class="docstring"><p>Fit regression impact code transform</p>
+
+<p>:param incoming_column_name:
+:param x: training explanatory values
+:param y: training dependent values
+:param extra_args:
+:param params:
+:return:</p>
+</div>
+
 
                 </section>
                 <section id="fit_regression_deviation_code">
@@ -2203,6 +2403,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">sparse_indicators_</span> <span class="o">=</span> <span class="n">sparse_indicators</span>
 
     <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return a transformed data frame</span>
+
+<span class="sd">        :rtype: pandas.DataFrame</span>
+<span class="sd">        :param data_frame: incoming values</span>
+<span class="sd">        :return: transformed values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">incoming_column_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span>
         <span class="n">sf</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">incoming_column_name</span><span class="p">:</span> <span class="n">data_frame</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">]})</span>
         <span class="n">bad_posns</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">sf</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">])</span>
@@ -2276,6 +2484,14 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return a transformed data frame</span>
+
+<span class="sd">        :rtype: pandas.DataFrame</span>
+<span class="sd">        :param data_frame: incoming values</span>
+<span class="sd">        :return: transformed values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">incoming_column_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span>
         <span class="n">sf</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">incoming_column_name</span><span class="p">:</span> <span class="n">data_frame</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">]})</span>
         <span class="n">bad_posns</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">sf</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">])</span>
@@ -2300,6 +2516,10 @@
         </details>
 
             <div class="docstring"><p>return a transformed data frame</p>
+
+<p>:rtype: pandas.DataFrame
+:param data_frame: incoming values
+:return: transformed values</p>
 </div>
 
 
