@@ -4,7 +4,7 @@ Define user visible vtreat API.
 """
 
 import warnings
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Iterable, Optional
 
 import pandas
 import numpy
@@ -98,11 +98,11 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
     def __init__(
         self,
         *,
-        var_list=None,
-        outcome_name=None,
-        cols_to_copy=None,
-        params=None,
-        imputation_map=None,
+        var_list: Optional[Iterable[str]] = None,
+        outcome_name: Optional[str] = None,
+        cols_to_copy: Optional[Iterable[str]] = None,
+        params: Optional[Dict[str, Any]] = None,
+        imputation_map: Optional[Dict[str, Any]] = None,
     ):
         """
 
@@ -122,7 +122,7 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
             imputation_map=imputation_map,
         )
 
-    def merge_params(self, p: Dict[str, Any]) -> Dict[str, Any]:
+    def merge_params(self, p: Optional[Dict[str, Any]]) -> Dict[str, Any]:
         """
         Merge user parameters, returns new parameters does not alter object.
 
@@ -287,12 +287,12 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
     def __init__(
         self,
         *,
-        var_list=None,
-        outcome_name=None,
-        outcome_target=True,
-        cols_to_copy=None,
-        params=None,
-        imputation_map=None,
+        var_list: Optional[Iterable[str]] = None,
+        outcome_name: Optional[str] = None,
+        outcome_target=None,
+        cols_to_copy: Optional[Iterable[str]] = None,
+        params: Optional[Dict[str, Any]] = None,
+        imputation_map: Optional[Dict[str, Any]] = None,
     ):
         """
 
@@ -314,7 +314,7 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
             imputation_map=imputation_map,
         )
 
-    def merge_params(self, p):
+    def merge_params(self, p: Optional[Dict[str, Any]]) -> Dict[str, Any]:
         """
         Merge user parameters, returns new parameters does not alter object.
 
@@ -480,11 +480,11 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
     def __init__(
         self,
         *,
-        var_list=None,
-        outcome_name=None,
-        cols_to_copy=None,
-        params=None,
-        imputation_map=None,
+        var_list: Optional[Iterable[str]] = None,
+        outcome_name: Optional[str] = None,
+        cols_to_copy: Optional[Iterable[str]] = None,
+        params: Optional[Dict[str, Any]] = None,
+        imputation_map: Optional[Dict[str, Any]] = None,
     ):
         """
 
@@ -506,7 +506,7 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         )
         self.outcomes_ = None
 
-    def merge_params(self, p):
+    def merge_params(self, p: Optional[Dict[str, Any]]) -> Dict[str, Any]:
         """
         Merge user parameters, returns new parameters does not alter object.
 
@@ -675,7 +675,12 @@ class UnsupervisedTreatment(vtreat_impl.VariableTreatment):
     """manage an unsupervised treatment plan"""
 
     def __init__(
-        self, *, var_list=None, cols_to_copy=None, params=None, imputation_map=None
+            self,
+            *,
+            var_list: Optional[Iterable[str]] = None,
+            cols_to_copy: Optional[Iterable[str]] = None,
+            params: Optional[Dict[str, Any]] = None,
+            imputation_map: Optional[Dict[str, Any]] = None,
     ):
         """
 
@@ -694,7 +699,7 @@ class UnsupervisedTreatment(vtreat_impl.VariableTreatment):
             imputation_map=imputation_map,
         )
 
-    def merge_params(self, p):
+    def merge_params(self, p: Optional[Dict[str, Any]]) -> Dict[str, Any]:
         """
         Merge user parameters, returns new parameters does not alter object.
 
