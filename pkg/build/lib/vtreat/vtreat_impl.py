@@ -60,6 +60,13 @@ class VarTransform(ABC):
             incoming_column_name: str,
             derived_column_names: Iterable[str],
             treatment: str):
+        """
+
+        :param incoming_column_name:
+        :param derived_column_names:
+        :param treatment:
+        """
+
         assert isinstance(incoming_column_name, str)
         derived_column_names = [c for c in derived_column_names]
         assert len(derived_column_names) > 0
@@ -92,6 +99,14 @@ class MappedCodeTransform(VarTransform):
             derived_column_name: str,
             treatment: str,
             code_book: pandas.DataFrame):
+        """
+
+        :param incoming_column_name:
+        :param derived_column_name:
+        :param treatment:
+        :param code_book: Pandas dataframe mapping values to impact codes
+        """
+
         VarTransform.__init__(
             self, incoming_column_name, [derived_column_name], treatment
         )
@@ -129,9 +144,20 @@ class YAwareMappedCodeTransform(MappedCodeTransform):
         treatment: str,
         code_book: pandas.DataFrame,
         refitter,
-        extra_args,
-        params,
+        extra_args: Optional[Dict[str, Any]],
+        params: Dict[str, Any],
     ):
+        """
+
+        :param incoming_column_name: name of incoming column
+        :param derived_column_name: name of incoming column
+        :param treatment: name of treatment
+        :param code_book: pandas data frame mapping values to codes
+        :param refitter: function to re-fit
+        :param extra_args: extra args for fit_* functions
+        :param params: configuration control parameters
+        """
+
         MappedCodeTransform.__init__(
             self,
             incoming_column_name=incoming_column_name,
@@ -148,6 +174,12 @@ class YAwareMappedCodeTransform(MappedCodeTransform):
 class CleanNumericTransform(VarTransform):
     """Class for numeric column cleaner."""
     def __init__(self, incoming_column_name: str, replacement_value: float):
+        """
+
+        :param incoming_column_name:
+        :param replacement_value:
+        """
+
         VarTransform.__init__(
             self, incoming_column_name, [incoming_column_name], "clean_copy"
         )
@@ -172,6 +204,12 @@ class CleanNumericTransform(VarTransform):
 class IndicateMissingTransform(VarTransform):
     """Class for missing value indicator."""
     def __init__(self, incoming_column_name: str, derived_column_name: str):
+        """
+
+        :param incoming_column_name:
+        :param derived_column_name:
+        """
+
         VarTransform.__init__(
             self, incoming_column_name, [derived_column_name], "missing_indicator"
         )
@@ -190,14 +228,19 @@ class IndicateMissingTransform(VarTransform):
         return res
 
 
-def fit_clean_code(*, incoming_column_name: str, x, params, imputation_map) -> Optional[VarTransform]:
+def fit_clean_code(
+        *,
+        incoming_column_name: str,
+        x,
+        params: Dict[str, Any],
+        imputation_map: Dict[str, Any]) -> Optional[VarTransform]:
     """
     Fit numeric clean column imputation transform
 
     :param incoming_column_name: name of column
     :param x: training values for column
-    :param params:
-    :param imputation_map:
+    :param params: control parameter dictionary
+    :param imputation_map: per-column map to imputation strategies or values
     :return: transform
     """
 
@@ -236,15 +279,20 @@ def fit_clean_code(*, incoming_column_name: str, x, params, imputation_map) -> O
     )
 
 
-def fit_regression_impact_code(*, incoming_column_name: str, x, y, extra_args, params) -> Optional[VarTransform]:
+def fit_regression_impact_code(
+        *,
+        incoming_column_name: str,
+        x, y,
+        extra_args: Optional[Dict[str, Any]],
+        params: Dict[str, Any]) -> Optional[VarTransform]:
     """
     Fit regression impact code transform
 
     :param incoming_column_name:
     :param x: training explanatory values
     :param y: training dependent values
-    :param extra_args:
-    :param params:
+    :param extra_args: optional extra arguments for fit_ methods
+    :param params: control parameter dictionary
     :return:
     """
 
@@ -269,15 +317,20 @@ def fit_regression_impact_code(*, incoming_column_name: str, x, y, extra_args, p
     )
 
 
-def fit_regression_deviation_code(*, incoming_column_name: str, x, y, extra_args, params) -> Optional[VarTransform]:
+def fit_regression_deviation_code(
+        *,
+        incoming_column_name: str,
+        x, y,
+        extra_args: Optional[Dict[str, Any]],
+        params: Dict[str, Any]) -> Optional[VarTransform]:
     """
     Fit regression deviation code transform
 
     :param incoming_column_name:
     :param x: training explanatory values
     :param y: training dependent values
-    :param extra_args:
-    :param params:
+    :param extra_args: optional extra arguments for fit_ methods
+    :param params: control parameter dictionary
     :return:
     """
 
@@ -299,18 +352,23 @@ def fit_regression_deviation_code(*, incoming_column_name: str, x, y, extra_args
     )
 
 
-def fit_binomial_impact_code(*, incoming_column_name: str, x, y, extra_args, params) -> Optional[VarTransform]:
+def fit_binomial_impact_code(
+        *,
+        incoming_column_name: str,
+        x, y,
+        extra_args: Dict[str, Any],
+        params: Dict[str, Any]) -> Optional[VarTransform]:
     """
     Fit categorical impact code.
 
     :param incoming_column_name:
     :param x: training explanatory values
     :param y: training dependent values
-    :param extra_args:
-    :param params:
+    :param extra_args: required extra arguments for fit_ methods
+    :param params: control parameter dictionary
     :return:
     """
-    outcome_target = (extra_args["outcome_target"],)
+    outcome_target = (extra_args["outcome_target"],)  # TODO: document why this is a tuple
     var_suffix = extra_args["var_suffix"]
     y = numpy.asarray(numpy.asarray(y) == outcome_target, dtype=float)
     sf = vtreat.util.grouped_by_x_statistics(x, y)
@@ -343,8 +401,15 @@ class IndicatorCodeTransform(VarTransform):
         derived_column_names: List[str],
         levels: List,
         *,
-        sparse_indicators=False,
+        sparse_indicators: bool = False,
     ):
+        """
+
+        :param incoming_column_name:
+        :param derived_column_names:
+        :param levels: leves we are encoding to indicators
+        :param sparse_indicators: if True use sparse data structure
+        """
         VarTransform.__init__(
             self, incoming_column_name, derived_column_names, "indicator_code"
         )
@@ -503,8 +568,8 @@ def fit_numeric_outcome_treatment(
         var_list: Optional[Iterable[str]],
         outcome_name: str,
         cols_to_copy: Optional[Iterable[str]],
-        params,
-        imputation_map
+        params: Dict[str, Any],
+        imputation_map: Dict[str, Any],
 ):
     """
     Fit set of treatments in a regression situation.
@@ -514,8 +579,8 @@ def fit_numeric_outcome_treatment(
     :param var_list: list of dependent variable names, if empty all non outcome and copy columns are used
     :param outcome_name: name for outcome column
     :param cols_to_copy: list of columns to copy to output
-    :param params:
-    :param imputation_map:
+    :param params: control parameter dictionary
+    :param imputation_map: per-column map to imputation strategies or values
     :return: transform plan
     """
     cat_list, cols_to_copy, mis_list, num_list, var_list = _prepare_variable_lists(
@@ -596,8 +661,8 @@ def fit_binomial_outcome_treatment(
     var_list: Optional[Iterable[str]],
     outcome_name: str,
     cols_to_copy: Optional[Iterable[str]],
-    params,
-    imputation_map,
+    params: Dict[str, Any],
+    imputation_map: Dict[str, Any],
 ):
     """
 
@@ -607,8 +672,8 @@ def fit_binomial_outcome_treatment(
     :param var_list: list of variables to process, if empty all non outcome and copy columns are used
     :param outcome_name: name for outcome column
     :param cols_to_copy: list of columns to copy to output
-    :param params:
-    :param imputation_map:
+    :param params: control parameter dictionary
+    :param imputation_map: per-column map to imputation strategies or values
     :return: transform plan
     """
     cat_list, cols_to_copy, mis_list, num_list, var_list = _prepare_variable_lists(
@@ -678,8 +743,8 @@ def fit_multinomial_outcome_treatment(
         var_list: Optional[Iterable[str]],
         outcome_name: str,
         cols_to_copy: Optional[Iterable[str]],
-        params,
-        imputation_map
+        params: Dict[str, Any],
+        imputation_map: Dict[str, Any],
 ):
     """
     Fit a variable treatment for multinomial outcomes.
@@ -689,8 +754,8 @@ def fit_multinomial_outcome_treatment(
     :param var_list: list of variables to process, if empty all non outcome and copy columns are used
     :param outcome_name: name for outcome column
     :param cols_to_copy: list of columns to copy to output
-    :param params:
-    :param imputation_map:
+    :param params: control parameter dictionary
+    :param imputation_map: per-column map to imputation strategies or values
     :return:
     """
 
@@ -769,8 +834,8 @@ def fit_unsupervised_treatment(
         var_list: Optional[Iterable[str]],
         outcome_name: str,
         cols_to_copy: Optional[Iterable[str]],
-        params,
-        imputation_map
+        params: Dict[str, Any],
+        imputation_map: Dict[str, Any],
 ):
     """
     Fit a data treatment in the unsupervised case.
@@ -779,8 +844,8 @@ def fit_unsupervised_treatment(
     :param var_list: list of variables to process, if empty all non copy columns are used
     :param outcome_name: name for outcome column
     :param cols_to_copy: list of columns to copy to output
-    :param params:
-    :param imputation_map:
+    :param params: control parameter dictionary
+    :param imputation_map: per-column map to imputation strategies or values
     :return:
     """
 
@@ -1009,7 +1074,7 @@ def cross_patch_user_y_aware_cols(
         x: pandas.DataFrame,
         y,
         res: pandas.DataFrame,
-        params,
+        params: Dict[str, Any],
         cross_plan) -> None:
     """
     Re fit the user y-aware columns according to cross plan.
@@ -1018,7 +1083,7 @@ def cross_patch_user_y_aware_cols(
     :param x: explanatory values
     :param y: dependent values
     :param res: transformed frame to patch results into, altered
-    :param params:
+    :param params: control parameter dictionary
     :param cross_plan: cross validation plan
     :return: no return, res altered in place
     """
@@ -1067,7 +1132,7 @@ def score_plan_variables(
         cross_frame: pandas.DataFrame,
         outcome,
         plan,
-        params,
+        params: Dict[str, Any],
         *,
         is_classification: bool = False
 ) -> pandas.DataFrame:
@@ -1077,7 +1142,7 @@ def score_plan_variables(
     :param cross_frame: cross transformed explanatory variables
     :param outcome: dependent variable
     :param plan: treatment plan dictionary
-    :param params:
+    :param params: control parameter dictionary
     :param is_classification: logical, if True classification if False regression
     :return: score frame
     """
@@ -1148,13 +1213,13 @@ def pseudo_score_plan_variables(
         *,
         cross_frame,
         plan,
-        params) -> pandas.DataFrame:
+        params: Dict[str, Any]) -> pandas.DataFrame:
     """
     Build a score frame look-alike for unsupervised case.
 
     :param cross_frame: cross transformed explanatory variables
     :param plan:
-    :param params:
+    :param params: control parameter dictionary
     :return: score frame
     """
 
@@ -1210,9 +1275,18 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         outcome_name: Optional[str] = None,
         outcome_target=None,
         cols_to_copy: Optional[Iterable[str]] = None,
-        params: Optional[Dict[str, Any]] = None,
+        params: Dict[str, Any] = None,
         imputation_map: Optional[Dict[str, Any]] = None,
     ):
+        """
+
+        :param var_list: variables we intend to encode, empty means all
+        :param outcome_name: column name of outcome
+        :param outcome_target: outcome column value we consider in class or True
+        :param cols_to_copy: columns to not process, but copy over
+        :param params: control and configuration parameters
+        :param imputation_map: per column imputation strategies or values
+        """
         if var_list is None:
             var_list = []
         else:
@@ -1477,13 +1551,13 @@ def perform_transform(
         *,
         x: pandas.DataFrame,
         transform: VariableTreatment,
-        params) -> pandas.DataFrame:
+        params: Dict[str, Any]) -> pandas.DataFrame:
     """
     Transform a data frame.
 
     :param x: data to be transformed.
     :param transform: transform
-    :param params:
+    :param params: control parameter dictionary
     :return: new data frame
     """
     plan = transform.plan_

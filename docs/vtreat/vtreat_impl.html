@@ -289,6 +289,13 @@
             <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
             <span class="n">derived_column_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
             <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param incoming_column_name:</span>
+<span class="sd">        :param derived_column_names:</span>
+<span class="sd">        :param treatment:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
         <span class="n">derived_column_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">derived_column_names</span><span class="p">]</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">derived_column_names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
@@ -321,6 +328,14 @@
             <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
             <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
             <span class="n">code_book</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param incoming_column_name:</span>
+<span class="sd">        :param derived_column_name:</span>
+<span class="sd">        :param treatment:</span>
+<span class="sd">        :param code_book: Pandas dataframe mapping values to impact codes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">derived_column_name</span><span class="p">],</span> <span class="n">treatment</span>
         <span class="p">)</span>
@@ -358,9 +373,20 @@
         <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">code_book</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
         <span class="n">refitter</span><span class="p">,</span>
-        <span class="n">extra_args</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">,</span>
+        <span class="n">extra_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param incoming_column_name: name of incoming column</span>
+<span class="sd">        :param derived_column_name: name of incoming column</span>
+<span class="sd">        :param treatment: name of treatment</span>
+<span class="sd">        :param code_book: pandas data frame mapping values to codes</span>
+<span class="sd">        :param refitter: function to re-fit</span>
+<span class="sd">        :param extra_args: extra args for fit_* functions</span>
+<span class="sd">        :param params: configuration control parameters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">MappedCodeTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">incoming_column_name</span><span class="p">,</span>
@@ -377,6 +403,12 @@
 <span class="k">class</span> <span class="nc">CleanNumericTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class for numeric column cleaner.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">replacement_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param incoming_column_name:</span>
+<span class="sd">        :param replacement_value:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">incoming_column_name</span><span class="p">],</span> <span class="s2">&quot;clean_copy&quot;</span>
         <span class="p">)</span>
@@ -401,6 +433,12 @@
 <span class="k">class</span> <span class="nc">IndicateMissingTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class for missing value indicator.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param incoming_column_name:</span>
+<span class="sd">        :param derived_column_name:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">derived_column_name</span><span class="p">],</span> <span class="s2">&quot;missing_indicator&quot;</span>
         <span class="p">)</span>
@@ -419,14 +457,19 @@
         <span class="k">return</span> <span class="n">res</span>
 
 
-<span class="k">def</span> <span class="nf">fit_clean_code</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">imputation_map</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">fit_clean_code</span><span class="p">(</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">x</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit numeric clean column imputation transform</span>
 
 <span class="sd">    :param incoming_column_name: name of column</span>
 <span class="sd">    :param x: training values for column</span>
-<span class="sd">    :param params:</span>
-<span class="sd">    :param imputation_map:</span>
+<span class="sd">    :param params: control parameter dictionary</span>
+<span class="sd">    :param imputation_map: per-column map to imputation strategies or values</span>
 <span class="sd">    :return: transform</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -465,15 +508,20 @@
     <span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">fit_regression_impact_code</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">extra_args</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">fit_regression_impact_code</span><span class="p">(</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+        <span class="n">extra_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit regression impact code transform</span>
 
 <span class="sd">    :param incoming_column_name:</span>
 <span class="sd">    :param x: training explanatory values</span>
 <span class="sd">    :param y: training dependent values</span>
-<span class="sd">    :param extra_args:</span>
-<span class="sd">    :param params:</span>
+<span class="sd">    :param extra_args: optional extra arguments for fit_ methods</span>
+<span class="sd">    :param params: control parameter dictionary</span>
 <span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -498,15 +546,20 @@
     <span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">fit_regression_deviation_code</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">extra_args</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">fit_regression_deviation_code</span><span class="p">(</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+        <span class="n">extra_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit regression deviation code transform</span>
 
 <span class="sd">    :param incoming_column_name:</span>
 <span class="sd">    :param x: training explanatory values</span>
 <span class="sd">    :param y: training dependent values</span>
-<span class="sd">    :param extra_args:</span>
-<span class="sd">    :param params:</span>
+<span class="sd">    :param extra_args: optional extra arguments for fit_ methods</span>
+<span class="sd">    :param params: control parameter dictionary</span>
 <span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -528,18 +581,23 @@
     <span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">fit_binomial_impact_code</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">extra_args</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">fit_binomial_impact_code</span><span class="p">(</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+        <span class="n">extra_args</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit categorical impact code.</span>
 
 <span class="sd">    :param incoming_column_name:</span>
 <span class="sd">    :param x: training explanatory values</span>
 <span class="sd">    :param y: training dependent values</span>
-<span class="sd">    :param extra_args:</span>
-<span class="sd">    :param params:</span>
+<span class="sd">    :param extra_args: required extra arguments for fit_ methods</span>
+<span class="sd">    :param params: control parameter dictionary</span>
 <span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">outcome_target</span> <span class="o">=</span> <span class="p">(</span><span class="n">extra_args</span><span class="p">[</span><span class="s2">&quot;outcome_target&quot;</span><span class="p">],)</span>
+    <span class="n">outcome_target</span> <span class="o">=</span> <span class="p">(</span><span class="n">extra_args</span><span class="p">[</span><span class="s2">&quot;outcome_target&quot;</span><span class="p">],)</span>  <span class="c1"># TODO: document why this is a tuple</span>
     <span class="n">var_suffix</span> <span class="o">=</span> <span class="n">extra_args</span><span class="p">[</span><span class="s2">&quot;var_suffix&quot;</span><span class="p">]</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="n">outcome_target</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="n">sf</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">grouped_by_x_statistics</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
@@ -572,8 +630,15 @@
         <span class="n">derived_column_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="n">levels</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
-        <span class="n">sparse_indicators</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">sparse_indicators</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param incoming_column_name:</span>
+<span class="sd">        :param derived_column_names:</span>
+<span class="sd">        :param levels: leves we are encoding to indicators</span>
+<span class="sd">        :param sparse_indicators: if True use sparse data structure</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">derived_column_names</span><span class="p">,</span> <span class="s2">&quot;indicator_code&quot;</span>
         <span class="p">)</span>
@@ -732,8 +797,8 @@
         <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
         <span class="n">outcome_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">params</span><span class="p">,</span>
-        <span class="n">imputation_map</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit set of treatments in a regression situation.</span>
@@ -743,8 +808,8 @@
 <span class="sd">    :param var_list: list of dependent variable names, if empty all non outcome and copy columns are used</span>
 <span class="sd">    :param outcome_name: name for outcome column</span>
 <span class="sd">    :param cols_to_copy: list of columns to copy to output</span>
-<span class="sd">    :param params:</span>
-<span class="sd">    :param imputation_map:</span>
+<span class="sd">    :param params: control parameter dictionary</span>
+<span class="sd">    :param imputation_map: per-column map to imputation strategies or values</span>
 <span class="sd">    :return: transform plan</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
@@ -825,8 +890,8 @@
     <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="n">outcome_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-    <span class="n">params</span><span class="p">,</span>
-    <span class="n">imputation_map</span><span class="p">,</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 
@@ -836,8 +901,8 @@
 <span class="sd">    :param var_list: list of variables to process, if empty all non outcome and copy columns are used</span>
 <span class="sd">    :param outcome_name: name for outcome column</span>
 <span class="sd">    :param cols_to_copy: list of columns to copy to output</span>
-<span class="sd">    :param params:</span>
-<span class="sd">    :param imputation_map:</span>
+<span class="sd">    :param params: control parameter dictionary</span>
+<span class="sd">    :param imputation_map: per-column map to imputation strategies or values</span>
 <span class="sd">    :return: transform plan</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
@@ -907,8 +972,8 @@
         <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
         <span class="n">outcome_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">params</span><span class="p">,</span>
-        <span class="n">imputation_map</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit a variable treatment for multinomial outcomes.</span>
@@ -918,8 +983,8 @@
 <span class="sd">    :param var_list: list of variables to process, if empty all non outcome and copy columns are used</span>
 <span class="sd">    :param outcome_name: name for outcome column</span>
 <span class="sd">    :param cols_to_copy: list of columns to copy to output</span>
-<span class="sd">    :param params:</span>
-<span class="sd">    :param imputation_map:</span>
+<span class="sd">    :param params: control parameter dictionary</span>
+<span class="sd">    :param imputation_map: per-column map to imputation strategies or values</span>
 <span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -998,8 +1063,8 @@
         <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
         <span class="n">outcome_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">params</span><span class="p">,</span>
-        <span class="n">imputation_map</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit a data treatment in the unsupervised case.</span>
@@ -1008,8 +1073,8 @@
 <span class="sd">    :param var_list: list of variables to process, if empty all non copy columns are used</span>
 <span class="sd">    :param outcome_name: name for outcome column</span>
 <span class="sd">    :param cols_to_copy: list of columns to copy to output</span>
-<span class="sd">    :param params:</span>
-<span class="sd">    :param imputation_map:</span>
+<span class="sd">    :param params: control parameter dictionary</span>
+<span class="sd">    :param imputation_map: per-column map to imputation strategies or values</span>
 <span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -1238,7 +1303,7 @@
         <span class="n">x</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
         <span class="n">y</span><span class="p">,</span>
         <span class="n">res</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
         <span class="n">cross_plan</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Re fit the user y-aware columns according to cross plan.</span>
@@ -1247,7 +1312,7 @@
 <span class="sd">    :param x: explanatory values</span>
 <span class="sd">    :param y: dependent values</span>
 <span class="sd">    :param res: transformed frame to patch results into, altered</span>
-<span class="sd">    :param params:</span>
+<span class="sd">    :param params: control parameter dictionary</span>
 <span class="sd">    :param cross_plan: cross validation plan</span>
 <span class="sd">    :return: no return, res altered in place</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1296,7 +1361,7 @@
         <span class="n">cross_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
         <span class="n">outcome</span><span class="p">,</span>
         <span class="n">plan</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">is_classification</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
@@ -1306,7 +1371,7 @@
 <span class="sd">    :param cross_frame: cross transformed explanatory variables</span>
 <span class="sd">    :param outcome: dependent variable</span>
 <span class="sd">    :param plan: treatment plan dictionary</span>
-<span class="sd">    :param params:</span>
+<span class="sd">    :param params: control parameter dictionary</span>
 <span class="sd">    :param is_classification: logical, if True classification if False regression</span>
 <span class="sd">    :return: score frame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1377,13 +1442,13 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">cross_frame</span><span class="p">,</span>
         <span class="n">plan</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build a score frame look-alike for unsupervised case.</span>
 
 <span class="sd">    :param cross_frame: cross transformed explanatory variables</span>
 <span class="sd">    :param plan:</span>
-<span class="sd">    :param params:</span>
+<span class="sd">    :param params: control parameter dictionary</span>
 <span class="sd">    :return: score frame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -1439,9 +1504,18 @@
         <span class="n">outcome_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">outcome_target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param var_list: variables we intend to encode, empty means all</span>
+<span class="sd">        :param outcome_name: column name of outcome</span>
+<span class="sd">        :param outcome_target: outcome column value we consider in class or True</span>
+<span class="sd">        :param cols_to_copy: columns to not process, but copy over</span>
+<span class="sd">        :param params: control and configuration parameters</span>
+<span class="sd">        :param imputation_map: per column imputation strategies or values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">var_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">var_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1706,13 +1780,13 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">x</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
         <span class="n">transform</span><span class="p">:</span> <span class="n">VariableTreatment</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Transform a data frame.</span>
 
 <span class="sd">    :param x: data to be transformed.</span>
 <span class="sd">    :param transform: transform</span>
-<span class="sd">    :param params:</span>
+<span class="sd">    :param params: control parameter dictionary</span>
 <span class="sd">    :return: new data frame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">plan</span> <span class="o">=</span> <span class="n">transform</span><span class="o">.</span><span class="n">plan_</span>
@@ -1899,6 +1973,13 @@
             <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
             <span class="n">derived_column_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
             <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param incoming_column_name:</span>
+<span class="sd">        :param derived_column_names:</span>
+<span class="sd">        :param treatment:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
         <span class="n">derived_column_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">derived_column_names</span><span class="p">]</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">derived_column_names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
@@ -1947,6 +2028,13 @@
             <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
             <span class="n">derived_column_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
             <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param incoming_column_name:</span>
+<span class="sd">        :param derived_column_names:</span>
+<span class="sd">        :param treatment:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
         <span class="n">derived_column_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">derived_column_names</span><span class="p">]</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">derived_column_names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
@@ -1962,7 +2050,11 @@
 
         </details>
 
-    
+            <div class="docstring"><p>:param incoming_column_name:
+:param derived_column_names:
+:param treatment:</p>
+</div>
+
 
                             </div>
                             <div id="VarTransform.transform" class="classattr">
@@ -2021,6 +2113,14 @@
             <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
             <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
             <span class="n">code_book</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param incoming_column_name:</span>
+<span class="sd">        :param derived_column_name:</span>
+<span class="sd">        :param treatment:</span>
+<span class="sd">        :param code_book: Pandas dataframe mapping values to impact codes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">derived_column_name</span><span class="p">],</span> <span class="n">treatment</span>
         <span class="p">)</span>
@@ -2075,6 +2175,14 @@
             <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
             <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
             <span class="n">code_book</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param incoming_column_name:</span>
+<span class="sd">        :param derived_column_name:</span>
+<span class="sd">        :param treatment:</span>
+<span class="sd">        :param code_book: Pandas dataframe mapping values to impact codes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">derived_column_name</span><span class="p">],</span> <span class="n">treatment</span>
         <span class="p">)</span>
@@ -2083,7 +2191,12 @@
 
         </details>
 
-    
+            <div class="docstring"><p>:param incoming_column_name:
+:param derived_column_name:
+:param treatment:
+:param code_book: Pandas dataframe mapping values to impact codes</p>
+</div>
+
 
                             </div>
                             <div id="MappedCodeTransform.transform" class="classattr">
@@ -2154,9 +2267,20 @@
         <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">code_book</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
         <span class="n">refitter</span><span class="p">,</span>
-        <span class="n">extra_args</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">,</span>
+        <span class="n">extra_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param incoming_column_name: name of incoming column</span>
+<span class="sd">        :param derived_column_name: name of incoming column</span>
+<span class="sd">        :param treatment: name of treatment</span>
+<span class="sd">        :param code_book: pandas data frame mapping values to codes</span>
+<span class="sd">        :param refitter: function to re-fit</span>
+<span class="sd">        :param extra_args: extra args for fit_* functions</span>
+<span class="sd">        :param params: configuration control parameters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">MappedCodeTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">incoming_column_name</span><span class="p">,</span>
@@ -2186,8 +2310,8 @@
     treatment: str,
     code_book: pandas.core.frame.DataFrame,
     refitter,
-    extra_args,
-    params
+    extra_args: Optional[Dict[str, Any]],
+    params: Dict[str, Any]
 )</span>
     </div>
 
@@ -2200,9 +2324,20 @@
         <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">code_book</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
         <span class="n">refitter</span><span class="p">,</span>
-        <span class="n">extra_args</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">,</span>
+        <span class="n">extra_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param incoming_column_name: name of incoming column</span>
+<span class="sd">        :param derived_column_name: name of incoming column</span>
+<span class="sd">        :param treatment: name of treatment</span>
+<span class="sd">        :param code_book: pandas data frame mapping values to codes</span>
+<span class="sd">        :param refitter: function to re-fit</span>
+<span class="sd">        :param extra_args: extra args for fit_* functions</span>
+<span class="sd">        :param params: configuration control parameters</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">MappedCodeTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">incoming_column_name</span><span class="p">,</span>
@@ -2218,7 +2353,15 @@
 
         </details>
 
-    
+            <div class="docstring"><p>:param incoming_column_name: name of incoming column
+:param derived_column_name: name of incoming column
+:param treatment: name of treatment
+:param code_book: pandas data frame mapping values to codes
+:param refitter: function to re-fit
+:param extra_args: extra args for fit_* functions
+:param params: configuration control parameters</p>
+</div>
+
 
                             </div>
                             <div class="inherited">
@@ -2245,6 +2388,12 @@
             <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">CleanNumericTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class for numeric column cleaner.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">replacement_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param incoming_column_name:</span>
+<span class="sd">        :param replacement_value:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">incoming_column_name</span><span class="p">],</span> <span class="s2">&quot;clean_copy&quot;</span>
         <span class="p">)</span>
@@ -2282,6 +2431,12 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">replacement_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param incoming_column_name:</span>
+<span class="sd">        :param replacement_value:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">incoming_column_name</span><span class="p">],</span> <span class="s2">&quot;clean_copy&quot;</span>
         <span class="p">)</span>
@@ -2290,7 +2445,10 @@
 
         </details>
 
-    
+            <div class="docstring"><p>:param incoming_column_name:
+:param replacement_value:</p>
+</div>
+
 
                             </div>
                             <div id="CleanNumericTransform.transform" class="classattr">
@@ -2348,6 +2506,12 @@
             <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">IndicateMissingTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class for missing value indicator.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param incoming_column_name:</span>
+<span class="sd">        :param derived_column_name:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">derived_column_name</span><span class="p">],</span> <span class="s2">&quot;missing_indicator&quot;</span>
         <span class="p">)</span>
@@ -2382,6 +2546,12 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param incoming_column_name:</span>
+<span class="sd">        :param derived_column_name:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">derived_column_name</span><span class="p">],</span> <span class="s2">&quot;missing_indicator&quot;</span>
         <span class="p">)</span>
@@ -2389,7 +2559,10 @@
 
         </details>
 
-    
+            <div class="docstring"><p>:param incoming_column_name:
+:param derived_column_name:</p>
+</div>
+
 
                             </div>
                             <div id="IndicateMissingTransform.transform" class="classattr">
@@ -2440,21 +2613,26 @@
     *,
     incoming_column_name: str,
     x,
-    params,
-    imputation_map
+    params: Dict[str, Any],
+    imputation_map: Dict[str, Any]
 ) -&gt; Optional[<a href="#VarTransform">vtreat.vtreat_impl.VarTransform</a>]</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_clean_code</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">imputation_map</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_clean_code</span><span class="p">(</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">x</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit numeric clean column imputation transform</span>
 
 <span class="sd">    :param incoming_column_name: name of column</span>
 <span class="sd">    :param x: training values for column</span>
-<span class="sd">    :param params:</span>
-<span class="sd">    :param imputation_map:</span>
+<span class="sd">    :param params: control parameter dictionary</span>
+<span class="sd">    :param imputation_map: per-column map to imputation strategies or values</span>
 <span class="sd">    :return: transform</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -2499,8 +2677,8 @@
 
 <p>:param incoming_column_name: name of column
 :param x: training values for column
-:param params:
-:param imputation_map:
+:param params: control parameter dictionary
+:param imputation_map: per-column map to imputation strategies or values
 :return: transform</p>
 </div>
 
@@ -2516,22 +2694,27 @@
     incoming_column_name: str,
     x,
     y,
-    extra_args,
-    params
+    extra_args: Optional[Dict[str, Any]],
+    params: Dict[str, Any]
 ) -&gt; Optional[<a href="#VarTransform">vtreat.vtreat_impl.VarTransform</a>]</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_regression_impact_code</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">extra_args</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_regression_impact_code</span><span class="p">(</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+        <span class="n">extra_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit regression impact code transform</span>
 
 <span class="sd">    :param incoming_column_name:</span>
 <span class="sd">    :param x: training explanatory values</span>
 <span class="sd">    :param y: training dependent values</span>
-<span class="sd">    :param extra_args:</span>
-<span class="sd">    :param params:</span>
+<span class="sd">    :param extra_args: optional extra arguments for fit_ methods</span>
+<span class="sd">    :param params: control parameter dictionary</span>
 <span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -2563,8 +2746,8 @@
 <p>:param incoming_column_name:
 :param x: training explanatory values
 :param y: training dependent values
-:param extra_args:
-:param params:
+:param extra_args: optional extra arguments for fit_ methods
+:param params: control parameter dictionary
 :return:</p>
 </div>
 
@@ -2580,22 +2763,27 @@
     incoming_column_name: str,
     x,
     y,
-    extra_args,
-    params
+    extra_args: Optional[Dict[str, Any]],
+    params: Dict[str, Any]
 ) -&gt; Optional[<a href="#VarTransform">vtreat.vtreat_impl.VarTransform</a>]</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_regression_deviation_code</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">extra_args</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_regression_deviation_code</span><span class="p">(</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+        <span class="n">extra_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit regression deviation code transform</span>
 
 <span class="sd">    :param incoming_column_name:</span>
 <span class="sd">    :param x: training explanatory values</span>
 <span class="sd">    :param y: training dependent values</span>
-<span class="sd">    :param extra_args:</span>
-<span class="sd">    :param params:</span>
+<span class="sd">    :param extra_args: optional extra arguments for fit_ methods</span>
+<span class="sd">    :param params: control parameter dictionary</span>
 <span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -2624,8 +2812,8 @@
 <p>:param incoming_column_name:
 :param x: training explanatory values
 :param y: training dependent values
-:param extra_args:
-:param params:
+:param extra_args: optional extra arguments for fit_ methods
+:param params: control parameter dictionary
 :return:</p>
 </div>
 
@@ -2641,25 +2829,30 @@
     incoming_column_name: str,
     x,
     y,
-    extra_args,
-    params
+    extra_args: Dict[str, Any],
+    params: Dict[str, Any]
 ) -&gt; Optional[<a href="#VarTransform">vtreat.vtreat_impl.VarTransform</a>]</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_binomial_impact_code</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">extra_args</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_binomial_impact_code</span><span class="p">(</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+        <span class="n">extra_args</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit categorical impact code.</span>
 
 <span class="sd">    :param incoming_column_name:</span>
 <span class="sd">    :param x: training explanatory values</span>
 <span class="sd">    :param y: training dependent values</span>
-<span class="sd">    :param extra_args:</span>
-<span class="sd">    :param params:</span>
+<span class="sd">    :param extra_args: required extra arguments for fit_ methods</span>
+<span class="sd">    :param params: control parameter dictionary</span>
 <span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">outcome_target</span> <span class="o">=</span> <span class="p">(</span><span class="n">extra_args</span><span class="p">[</span><span class="s2">&quot;outcome_target&quot;</span><span class="p">],)</span>
+    <span class="n">outcome_target</span> <span class="o">=</span> <span class="p">(</span><span class="n">extra_args</span><span class="p">[</span><span class="s2">&quot;outcome_target&quot;</span><span class="p">],)</span>  <span class="c1"># TODO: document why this is a tuple</span>
     <span class="n">var_suffix</span> <span class="o">=</span> <span class="n">extra_args</span><span class="p">[</span><span class="s2">&quot;var_suffix&quot;</span><span class="p">]</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="n">outcome_target</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="n">sf</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">grouped_by_x_statistics</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
@@ -2691,8 +2884,8 @@
 <p>:param incoming_column_name:
 :param x: training explanatory values
 :param y: training dependent values
-:param extra_args:
-:param params:
+:param extra_args: required extra arguments for fit_ methods
+:param params: control parameter dictionary
 :return:</p>
 </div>
 
@@ -2717,8 +2910,15 @@
         <span class="n">derived_column_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="n">levels</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
-        <span class="n">sparse_indicators</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">sparse_indicators</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param incoming_column_name:</span>
+<span class="sd">        :param derived_column_names:</span>
+<span class="sd">        :param levels: leves we are encoding to indicators</span>
+<span class="sd">        :param sparse_indicators: if True use sparse data structure</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">derived_column_names</span><span class="p">,</span> <span class="s2">&quot;indicator_code&quot;</span>
         <span class="p">)</span>
@@ -2771,7 +2971,7 @@
     derived_column_names: List[str],
     levels: List,
     *,
-    sparse_indicators=False
+    sparse_indicators: bool = False
 )</span>
     </div>
 
@@ -2783,8 +2983,15 @@
         <span class="n">derived_column_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="n">levels</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
-        <span class="n">sparse_indicators</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">sparse_indicators</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param incoming_column_name:</span>
+<span class="sd">        :param derived_column_names:</span>
+<span class="sd">        :param levels: leves we are encoding to indicators</span>
+<span class="sd">        :param sparse_indicators: if True use sparse data structure</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">derived_column_names</span><span class="p">,</span> <span class="s2">&quot;indicator_code&quot;</span>
         <span class="p">)</span>
@@ -2794,7 +3001,12 @@
 
         </details>
 
-    
+            <div class="docstring"><p>:param incoming_column_name:
+:param derived_column_names:
+:param levels: leves we are encoding to indicators
+:param sparse_indicators: if True use sparse data structure</p>
+</div>
+
 
                             </div>
                             <div id="IndicatorCodeTransform.transform" class="classattr">
@@ -2974,8 +3186,8 @@
     var_list: Optional[Iterable[str]],
     outcome_name: str,
     cols_to_copy: Optional[Iterable[str]],
-    params,
-    imputation_map
+    params: Dict[str, Any],
+    imputation_map: Dict[str, Any]
 )</span>:
     </div>
 
@@ -2987,8 +3199,8 @@
         <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
         <span class="n">outcome_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">params</span><span class="p">,</span>
-        <span class="n">imputation_map</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit set of treatments in a regression situation.</span>
@@ -2998,8 +3210,8 @@
 <span class="sd">    :param var_list: list of dependent variable names, if empty all non outcome and copy columns are used</span>
 <span class="sd">    :param outcome_name: name for outcome column</span>
 <span class="sd">    :param cols_to_copy: list of columns to copy to output</span>
-<span class="sd">    :param params:</span>
-<span class="sd">    :param imputation_map:</span>
+<span class="sd">    :param params: control parameter dictionary</span>
+<span class="sd">    :param imputation_map: per-column map to imputation strategies or values</span>
 <span class="sd">    :return: transform plan</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
@@ -3081,8 +3293,8 @@
 :param var_list: list of dependent variable names, if empty all non outcome and copy columns are used
 :param outcome_name: name for outcome column
 :param cols_to_copy: list of columns to copy to output
-:param params:
-:param imputation_map:
+:param params: control parameter dictionary
+:param imputation_map: per-column map to imputation strategies or values
 :return: transform plan</p>
 </div>
 
@@ -3101,8 +3313,8 @@
     var_list: Optional[Iterable[str]],
     outcome_name: str,
     cols_to_copy: Optional[Iterable[str]],
-    params,
-    imputation_map
+    params: Dict[str, Any],
+    imputation_map: Dict[str, Any]
 )</span>:
     </div>
 
@@ -3115,8 +3327,8 @@
     <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="n">outcome_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-    <span class="n">params</span><span class="p">,</span>
-    <span class="n">imputation_map</span><span class="p">,</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 
@@ -3126,8 +3338,8 @@
 <span class="sd">    :param var_list: list of variables to process, if empty all non outcome and copy columns are used</span>
 <span class="sd">    :param outcome_name: name for outcome column</span>
 <span class="sd">    :param cols_to_copy: list of columns to copy to output</span>
-<span class="sd">    :param params:</span>
-<span class="sd">    :param imputation_map:</span>
+<span class="sd">    :param params: control parameter dictionary</span>
+<span class="sd">    :param imputation_map: per-column map to imputation strategies or values</span>
 <span class="sd">    :return: transform plan</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
@@ -3198,8 +3410,8 @@
 :param var_list: list of variables to process, if empty all non outcome and copy columns are used
 :param outcome_name: name for outcome column
 :param cols_to_copy: list of columns to copy to output
-:param params:
-:param imputation_map:
+:param params: control parameter dictionary
+:param imputation_map: per-column map to imputation strategies or values
 :return: transform plan</p>
 </div>
 
@@ -3217,8 +3429,8 @@
     var_list: Optional[Iterable[str]],
     outcome_name: str,
     cols_to_copy: Optional[Iterable[str]],
-    params,
-    imputation_map
+    params: Dict[str, Any],
+    imputation_map: Dict[str, Any]
 )</span>:
     </div>
 
@@ -3230,8 +3442,8 @@
         <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
         <span class="n">outcome_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">params</span><span class="p">,</span>
-        <span class="n">imputation_map</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit a variable treatment for multinomial outcomes.</span>
@@ -3241,8 +3453,8 @@
 <span class="sd">    :param var_list: list of variables to process, if empty all non outcome and copy columns are used</span>
 <span class="sd">    :param outcome_name: name for outcome column</span>
 <span class="sd">    :param cols_to_copy: list of columns to copy to output</span>
-<span class="sd">    :param params:</span>
-<span class="sd">    :param imputation_map:</span>
+<span class="sd">    :param params: control parameter dictionary</span>
+<span class="sd">    :param imputation_map: per-column map to imputation strategies or values</span>
 <span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -3323,8 +3535,8 @@
 :param var_list: list of variables to process, if empty all non outcome and copy columns are used
 :param outcome_name: name for outcome column
 :param cols_to_copy: list of columns to copy to output
-:param params:
-:param imputation_map:
+:param params: control parameter dictionary
+:param imputation_map: per-column map to imputation strategies or values
 :return:</p>
 </div>
 
@@ -3341,8 +3553,8 @@
     var_list: Optional[Iterable[str]],
     outcome_name: str,
     cols_to_copy: Optional[Iterable[str]],
-    params,
-    imputation_map
+    params: Dict[str, Any],
+    imputation_map: Dict[str, Any]
 )</span>:
     </div>
 
@@ -3354,8 +3566,8 @@
         <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
         <span class="n">outcome_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">params</span><span class="p">,</span>
-        <span class="n">imputation_map</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit a data treatment in the unsupervised case.</span>
@@ -3364,8 +3576,8 @@
 <span class="sd">    :param var_list: list of variables to process, if empty all non copy columns are used</span>
 <span class="sd">    :param outcome_name: name for outcome column</span>
 <span class="sd">    :param cols_to_copy: list of columns to copy to output</span>
-<span class="sd">    :param params:</span>
-<span class="sd">    :param imputation_map:</span>
+<span class="sd">    :param params: control parameter dictionary</span>
+<span class="sd">    :param imputation_map: per-column map to imputation strategies or values</span>
 <span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -3425,8 +3637,8 @@
 :param var_list: list of variables to process, if empty all non copy columns are used
 :param outcome_name: name for outcome column
 :param cols_to_copy: list of columns to copy to output
-:param params:
-:param imputation_map:
+:param params: control parameter dictionary
+:param imputation_map: per-column map to imputation strategies or values
 :return:</p>
 </div>
 
@@ -3652,7 +3864,7 @@ Assumes each y-aware variable produces one derived column.</p>
     x: pandas.core.frame.DataFrame,
     y,
     res: pandas.core.frame.DataFrame,
-    params,
+    params: Dict[str, Any],
     cross_plan
 ) -&gt; None</span>:
     </div>
@@ -3664,7 +3876,7 @@ Assumes each y-aware variable produces one derived column.</p>
         <span class="n">x</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
         <span class="n">y</span><span class="p">,</span>
         <span class="n">res</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
         <span class="n">cross_plan</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Re fit the user y-aware columns according to cross plan.</span>
@@ -3673,7 +3885,7 @@ Assumes each y-aware variable produces one derived column.</p>
 <span class="sd">    :param x: explanatory values</span>
 <span class="sd">    :param y: dependent values</span>
 <span class="sd">    :param res: transformed frame to patch results into, altered</span>
-<span class="sd">    :param params:</span>
+<span class="sd">    :param params: control parameter dictionary</span>
 <span class="sd">    :param cross_plan: cross validation plan</span>
 <span class="sd">    :return: no return, res altered in place</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -3726,7 +3938,7 @@ Assumes each y-aware variable produces one derived column.</p>
 <p>:param x: explanatory values
 :param y: dependent values
 :param res: transformed frame to patch results into, altered
-:param params:
+:param params: control parameter dictionary
 :param cross_plan: cross validation plan
 :return: no return, res altered in place</p>
 </div>
@@ -3742,7 +3954,7 @@ Assumes each y-aware variable produces one derived column.</p>
     cross_frame: pandas.core.frame.DataFrame,
     outcome,
     plan,
-    params,
+    params: Dict[str, Any],
     *,
     is_classification: bool = False
 ) -&gt; pandas.core.frame.DataFrame</span>:
@@ -3754,7 +3966,7 @@ Assumes each y-aware variable produces one derived column.</p>
         <span class="n">cross_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
         <span class="n">outcome</span><span class="p">,</span>
         <span class="n">plan</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">is_classification</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
@@ -3764,7 +3976,7 @@ Assumes each y-aware variable produces one derived column.</p>
 <span class="sd">    :param cross_frame: cross transformed explanatory variables</span>
 <span class="sd">    :param outcome: dependent variable</span>
 <span class="sd">    :param plan: treatment plan dictionary</span>
-<span class="sd">    :param params:</span>
+<span class="sd">    :param params: control parameter dictionary</span>
 <span class="sd">    :param is_classification: logical, if True classification if False regression</span>
 <span class="sd">    :return: score frame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -3838,7 +4050,7 @@ Assumes each y-aware variable produces one derived column.</p>
 <p>:param cross_frame: cross transformed explanatory variables
 :param outcome: dependent variable
 :param plan: treatment plan dictionary
-:param params:
+:param params: control parameter dictionary
 :param is_classification: logical, if True classification if False regression
 :return: score frame</p>
 </div>
@@ -3850,7 +4062,12 @@ Assumes each y-aware variable produces one derived column.</p>
 
         
             <span class="def">def</span>
-            <span class="name">pseudo_score_plan_variables</span><span class="signature">(*, cross_frame, plan, params) -&gt; pandas.core.frame.DataFrame</span>:
+            <span class="name">pseudo_score_plan_variables</span><span class="signature">(
+    *,
+    cross_frame,
+    plan,
+    params: Dict[str, Any]
+) -&gt; pandas.core.frame.DataFrame</span>:
     </div>
 
                 <details>
@@ -3859,13 +4076,13 @@ Assumes each y-aware variable produces one derived column.</p>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">cross_frame</span><span class="p">,</span>
         <span class="n">plan</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build a score frame look-alike for unsupervised case.</span>
 
 <span class="sd">    :param cross_frame: cross transformed explanatory variables</span>
 <span class="sd">    :param plan:</span>
-<span class="sd">    :param params:</span>
+<span class="sd">    :param params: control parameter dictionary</span>
 <span class="sd">    :return: score frame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -3915,7 +4132,7 @@ Assumes each y-aware variable produces one derived column.</p>
 
 <p>:param cross_frame: cross transformed explanatory variables
 :param plan:
-:param params:
+:param params: control parameter dictionary
 :return: score frame</p>
 </div>
 
@@ -3944,9 +4161,18 @@ Assumes each y-aware variable produces one derived column.</p>
         <span class="n">outcome_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">outcome_target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param var_list: variables we intend to encode, empty means all</span>
+<span class="sd">        :param outcome_name: column name of outcome</span>
+<span class="sd">        :param outcome_target: outcome column value we consider in class or True</span>
+<span class="sd">        :param cols_to_copy: columns to not process, but copy over</span>
+<span class="sd">        :param params: control and configuration parameters</span>
+<span class="sd">        :param imputation_map: per column imputation strategies or values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">var_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">var_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">else</span><span class="p">:</span>
@@ -4224,7 +4450,7 @@ API. https://sklearn-template.readthedocs.io/en/latest/user_guide.html#transform
     outcome_name: Optional[str] = None,
     outcome_target=None,
     cols_to_copy: Optional[Iterable[str]] = None,
-    params: Optional[Dict[str, Any]] = None,
+    params: Dict[str, Any] = None,
     imputation_map: Optional[Dict[str, Any]] = None
 )</span>
     </div>
@@ -4238,9 +4464,18 @@ API. https://sklearn-template.readthedocs.io/en/latest/user_guide.html#transform
         <span class="n">outcome_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">outcome_target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param var_list: variables we intend to encode, empty means all</span>
+<span class="sd">        :param outcome_name: column name of outcome</span>
+<span class="sd">        :param outcome_target: outcome column value we consider in class or True</span>
+<span class="sd">        :param cols_to_copy: columns to not process, but copy over</span>
+<span class="sd">        :param params: control and configuration parameters</span>
+<span class="sd">        :param imputation_map: per column imputation strategies or values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">var_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">var_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">else</span><span class="p">:</span>
@@ -4276,7 +4511,14 @@ API. https://sklearn-template.readthedocs.io/en/latest/user_guide.html#transform
 
         </details>
 
-    
+            <div class="docstring"><p>:param var_list: variables we intend to encode, empty means all
+:param outcome_name: column name of outcome
+:param outcome_target: outcome column value we consider in class or True
+:param cols_to_copy: columns to not process, but copy over
+:param params: control and configuration parameters
+:param imputation_map: per column imputation strategies or values</p>
+</div>
+
 
                             </div>
                             <div id="VariableTreatment.check_column_names" class="classattr">
@@ -4760,7 +5002,7 @@ by specifying the tunable_params list in object construction parameters</p>
     *,
     x: pandas.core.frame.DataFrame,
     transform: <a href="#VariableTreatment">vtreat.vtreat_impl.VariableTreatment</a>,
-    params
+    params: Dict[str, Any]
 ) -&gt; pandas.core.frame.DataFrame</span>:
     </div>
 
@@ -4770,13 +5012,13 @@ by specifying the tunable_params list in object construction parameters</p>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">x</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
         <span class="n">transform</span><span class="p">:</span> <span class="n">VariableTreatment</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Transform a data frame.</span>
 
 <span class="sd">    :param x: data to be transformed.</span>
 <span class="sd">    :param transform: transform</span>
-<span class="sd">    :param params:</span>
+<span class="sd">    :param params: control parameter dictionary</span>
 <span class="sd">    :return: new data frame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">plan</span> <span class="o">=</span> <span class="n">transform</span><span class="o">.</span><span class="n">plan_</span>
@@ -4835,7 +5077,7 @@ by specifying the tunable_params list in object construction parameters</p>
 
 <p>:param x: data to be transformed.
 :param transform: transform
-:param params:
+:param params: control parameter dictionary
 :return: new data frame</p>
 </div>
 
