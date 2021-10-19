@@ -1,4 +1,10 @@
+
+"""
+Define user visible vtreat API.
+"""
+
 import warnings
+from typing import Any, Dict, Optional
 
 import pandas
 import numpy
@@ -8,8 +14,13 @@ import vtreat.util
 import vtreat.cross_plan
 
 
-def vtreat_parameters(user_params=None):
-    """build a vtreat parameters dictionary, adding in user choices"""
+def vtreat_parameters(user_params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    """
+    build a vtreat parameters dictionary, adding in user choices
+
+    :param user_params: dictionary of user choices
+    :return: dictionary of user and default choices
+    """
 
     params = {
         "use_hierarchical_estimate": True,
@@ -48,8 +59,13 @@ def vtreat_parameters(user_params=None):
     return params
 
 
-def unsupervised_parameters(user_params=None):
-    """build a vtreat parameters dictionary for unsupervised tasks, adding in user choices"""
+def unsupervised_parameters(user_params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    """
+    build a vtreat parameters dictionary for unsupervised tasks, adding in user choices
+
+    :param user_params: dictionary of user choices
+    :return: dictionary of user and default choices
+    """
 
     params = {
         "coders": {

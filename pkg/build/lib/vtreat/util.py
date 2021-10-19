@@ -1,12 +1,12 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Jul 20 11:40:41 2019
 
-@author: johnmount
+"""
+Utility functions for vtreat
 """
 
 import math
+import re
 import statistics
+from typing import Iterable, List
 
 import hashlib
 
@@ -18,12 +18,23 @@ import vtreat.stats_utils
 
 
 def safe_to_numeric_array(x):
+    """
+    Convert array to numeric. Note, will parse strings (due to numpy)!
+
+    :param x: array to process
+    :return: numeric array
+    """
     # note will parse strings!
     return numpy.asarray(x, dtype=float)
 
 
-def can_convert_v_to_numeric(x):
-    """check if non-empty vector can convert to numeric"""
+def can_convert_v_to_numeric(x) -> bool:
+    """
+    check if non-empty vector can convert to numeric
+
+    :param x:
+    :return: True if can convert to numeric, false otherwise (no string parsing).
+    """
     x = numpy.asarray(x)
     not_bad = numpy.logical_not(pandas.isnull(x))
     n_not_bad = numpy.sum(not_bad)
@@ -41,7 +52,12 @@ def can_convert_v_to_numeric(x):
 
 
 def is_bad(x):
-    """ for numeric vector x, return logical vector of positions that are null, NaN, infinite"""
+    """
+    For numeric vector x, return logical vector of positions that are null, NaN, infinite.
+
+    :param x:
+    :return:
+    """
     if can_convert_v_to_numeric(x):
         x = safe_to_numeric_array(x)
         return numpy.logical_or(
@@ -50,7 +66,13 @@ def is_bad(x):
     return pandas.isnull(x)
 
 
-def numeric_has_range(x):
+def numeric_has_range(x) -> bool:
+    """
+    Check if a numeric vector has numeric range.
+
+    :param x: vector to check
+    :return: True if max > min values in vector, else False.
+    """
     x = safe_to_numeric_array(x)
     not_bad = numpy.logical_not(is_bad(x))
     n_not_bad = numpy.sum(not_bad)
@@ -60,7 +82,7 @@ def numeric_has_range(x):
     return numpy.max(x) > numpy.min(x)
 
 
-def summarize_column(x, *, fn=numpy.mean):
+def summarize_column(x, *, fn=numpy.mean) -> float:
     """
     Summarize column to a non-missing scalar.
 
@@ -175,6 +197,7 @@ def score_variables(cross_frame, variables, outcome, *, is_classification=False)
     outcome = safe_to_numeric_array(outcome)
 
     def f(v):
+        """summarizing fn"""
         col = cross_frame[v]
         col = safe_to_numeric_array(col)
         if (
@@ -232,18 +255,30 @@ def check_matching_numeric_frames(*, res, expect, tol=1.0e-4):
         assert numpy.max(numpy.abs(ec - rc)) <= tol
 
 
-def unique_itmes_in_order(lst):
+def unique_items_in_order(x) -> list:
+    """
+    Return de-duplicated list of items in order they are in supplied array.
+
+    :param x: vector to inspect
+    :return: list
+    """
     ret = []
-    if lst is not None:
+    if x is not None:
         seen = set()
-        for item in lst:
+        for item in x:
             if item not in seen:
                 ret.append(item)
                 seen.add(item)
     return ret
 
 
-def clean_string(strng):
+def clean_string(s: str) -> str:
+    """
+    Replace common symbols with column-name safe alternatives.
+
+    :param s: incoming string
+    :return: string
+    """
     mp = {
         "<": "_lt_",
         ">": "_gt_",
@@ -252,13 +287,23 @@ def clean_string(strng):
         "(": "_op_",
         ")": "_cp_",
         ".": "_",
+        " ": "_",
     }
+    s = s.strip()
+    s = re.sub(r'\s+', ' ', s)
     for (k, v) in mp.items():
-        strng = strng.replace(k, v)
-    return strng
+        s = s.replace(k, v)
+    return s
 
 
-def build_level_codes(incoming_column_name, levels):
+def build_level_codes(incoming_column_name: str, levels: Iterable) -> List[str]:
+    """
+    Pick level names for a set of levels.
+
+    :param incoming_column_name:
+    :param levels:
+    :return:
+    """
     levels = [str(lev) for lev in levels]
     levels = [incoming_column_name + "_lev_" + clean_string(lev) for lev in levels]
     if len(set(levels)) != len(levels):
@@ -266,5 +311,11 @@ def build_level_codes(incoming_column_name, levels):
     return levels
 
 
-def hash_data_frame(d):
+def hash_data_frame(d: pandas.DataFrame) -> str:
+    """
+    Get a hash code representing a data frame.
+
+    :param d: data frame
+    :return: hash code as a string
+    """
     return hashlib.sha256(pandas.util.hash_pandas_object(d).values).hexdigest()

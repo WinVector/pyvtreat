@@ -123,10 +123,17 @@
                     <h1 class="modulename">
 <a href="./../vtreat.html">vtreat</a><wbr>.vtreat_api    </h1>
 
-                
+                        <div class="docstring"><p>Define user visible vtreat API.</p>
+</div>
+
                         <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+            <div class="codehilite"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Define user visible vtreat API.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
@@ -136,8 +143,13 @@
 <span class="kn">import</span> <span class="nn">vtreat.cross_plan</span>
 
 
-<span class="k">def</span> <span class="nf">vtreat_parameters</span><span class="p">(</span><span class="n">user_params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;build a vtreat parameters dictionary, adding in user choices&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">vtreat_parameters</span><span class="p">(</span><span class="n">user_params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    build a vtreat parameters dictionary, adding in user choices</span>
+
+<span class="sd">    :param user_params: dictionary of user choices</span>
+<span class="sd">    :return: dictionary of user and default choices</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;use_hierarchical_estimate&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
@@ -176,8 +188,13 @@
     <span class="k">return</span> <span class="n">params</span>
 
 
-<span class="k">def</span> <span class="nf">unsupervised_parameters</span><span class="p">(</span><span class="n">user_params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;build a vtreat parameters dictionary for unsupervised tasks, adding in user choices&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">unsupervised_parameters</span><span class="p">(</span><span class="n">user_params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    build a vtreat parameters dictionary for unsupervised tasks, adding in user choices</span>
+
+<span class="sd">    :param user_params: dictionary of user choices</span>
+<span class="sd">    :return: dictionary of user and default choices</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;coders&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -807,13 +824,18 @@
 
         
             <span class="def">def</span>
-            <span class="name">vtreat_parameters</span><span class="signature">(user_params=None)</span>:
+            <span class="name">vtreat_parameters</span><span class="signature">(user_params: Optional[Dict[str, Any]] = None) -&gt; Dict[str, Any]</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">vtreat_parameters</span><span class="p">(</span><span class="n">user_params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;build a vtreat parameters dictionary, adding in user choices&quot;&quot;&quot;</span>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">vtreat_parameters</span><span class="p">(</span><span class="n">user_params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    build a vtreat parameters dictionary, adding in user choices</span>
+
+<span class="sd">    :param user_params: dictionary of user choices</span>
+<span class="sd">    :return: dictionary of user and default choices</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;use_hierarchical_estimate&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
@@ -855,6 +877,9 @@
         </details>
 
             <div class="docstring"><p>build a vtreat parameters dictionary, adding in user choices</p>
+
+<p>:param user_params: dictionary of user choices
+:return: dictionary of user and default choices</p>
 </div>
 
 
@@ -864,13 +889,18 @@
 
         
             <span class="def">def</span>
-            <span class="name">unsupervised_parameters</span><span class="signature">(user_params=None)</span>:
+            <span class="name">unsupervised_parameters</span><span class="signature">(user_params: Optional[Dict[str, Any]] = None) -&gt; Dict[str, Any]</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">unsupervised_parameters</span><span class="p">(</span><span class="n">user_params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;build a vtreat parameters dictionary for unsupervised tasks, adding in user choices&quot;&quot;&quot;</span>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">unsupervised_parameters</span><span class="p">(</span><span class="n">user_params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    build a vtreat parameters dictionary for unsupervised tasks, adding in user choices</span>
+
+<span class="sd">    :param user_params: dictionary of user choices</span>
+<span class="sd">    :return: dictionary of user and default choices</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;coders&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -900,6 +930,9 @@
         </details>
 
             <div class="docstring"><p>build a vtreat parameters dictionary for unsupervised tasks, adding in user choices</p>
+
+<p>:param user_params: dictionary of user choices
+:return: dictionary of user and default choices</p>
 </div>
 
 

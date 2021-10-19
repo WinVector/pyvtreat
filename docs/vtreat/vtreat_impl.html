@@ -225,24 +225,20 @@
                     <h1 class="modulename">
 <a href="./../vtreat.html">vtreat</a><wbr>.vtreat_impl    </h1>
 
-                        <div class="docstring"><p>Created on Sat Jul 20 12:07:57 2019</p>
-
-<p>@author: johnmount</p>
+                        <div class="docstring"><p>vtreat main implementation</p>
 </div>
 
                         <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Created on Sat Jul 20 12:07:57 2019</span>
-
-<span class="sd">@author: johnmount</span>
+            <div class="codehilite"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">vtreat main implementation</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">pprint</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">pandas</span>
@@ -253,17 +249,30 @@
 <span class="kn">import</span> <span class="nn">sklearn.base</span>
 
 
-<span class="k">def</span> <span class="nf">ready_data_frame</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">ready_data_frame</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="nb">type</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert an array-like object to a data frame for processing.</span>
+
+<span class="sd">    :param d: data frame like object to work with</span>
+<span class="sd">    :return: dataframe with string-named columns</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">orig_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">orig_type</span> <span class="o">==</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-        <span class="n">d</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;not prepared to process type &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">orig_type</span><span class="p">))</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">d</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>  <span class="c1"># convert column names to strings</span>
     <span class="k">return</span> <span class="n">d</span><span class="p">,</span> <span class="n">orig_type</span>
 
 
-<span class="k">def</span> <span class="nf">back_to_orig_type_data_frame</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">orig_type</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">back_to_orig_type_data_frame</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">orig_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert data frame back to ndarray if that was the original type.</span>
+
+<span class="sd">    :param d: data frame</span>
+<span class="sd">    :param orig_type: type of original object</span>
+<span class="sd">    :return: converted result</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
             <span class="s2">&quot;Expected result to be a pandas.DataFrame, found: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
@@ -274,31 +283,47 @@
     <span class="k">return</span> <span class="n">d</span><span class="p">,</span> <span class="n">columns</span>
 
 
-<span class="k">class</span> <span class="nc">VarTransform</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">derived_column_names</span><span class="p">,</span> <span class="n">treatment</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">VarTransform</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for vtreat transforms</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="n">derived_column_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+            <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="n">derived_column_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">derived_column_names</span><span class="p">]</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">derived_column_names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
         <span class="k">assert</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dni</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">dni</span> <span class="ow">in</span> <span class="n">derived_column_names</span><span class="p">])</span>
         <span class="k">assert</span> <span class="n">treatment</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">treatment</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span> <span class="o">=</span> <span class="n">incoming_column_name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span> <span class="o">=</span> <span class="n">derived_column_names</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span> <span class="o">=</span> <span class="n">derived_column_names</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span> <span class="o">=</span> <span class="n">treatment</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">need_cross_treatment_</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">refitter_</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;return a transformed data frame&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base method called&quot;</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">MappedCodeTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="p">,</span> <span class="n">treatment</span><span class="p">,</span> <span class="n">code_book</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class for transforms that are a dictionary mapping of values&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="n">code_book</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">derived_column_name</span><span class="p">],</span> <span class="n">treatment</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span> <span class="o">=</span> <span class="n">code_book</span>
 
-    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;return a transformed data frame&quot;&quot;&quot;</span>
         <span class="n">incoming_column_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span>
         <span class="n">derived_column_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">sf</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">incoming_column_name</span><span class="p">:</span> <span class="n">data_frame</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">]})</span>
@@ -1270,11 +1295,11 @@
         <span class="k">if</span> <span class="n">var_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">var_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">var_list</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">unique_itmes_in_order</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span>
+            <span class="n">var_list</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">unique_items_in_order</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">cols_to_copy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">cols_to_copy</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">cols_to_copy</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">unique_itmes_in_order</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">)</span>
+            <span class="n">cols_to_copy</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">unique_items_in_order</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">outcome_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">outcome_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">):</span>
             <span class="n">cols_to_copy</span> <span class="o">=</span> <span class="n">cols_to_copy</span> <span class="o">+</span> <span class="p">[</span><span class="n">outcome_name</span><span class="p">]</span>
         <span class="n">confused</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">var_list</span><span class="p">))</span>
@@ -1457,24 +1482,35 @@
 
         
             <span class="def">def</span>
-            <span class="name">ready_data_frame</span><span class="signature">(d)</span>:
+            <span class="name">ready_data_frame</span><span class="signature">(d) -&gt; Tuple[pandas.core.frame.DataFrame, type]</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">ready_data_frame</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">ready_data_frame</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="nb">type</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert an array-like object to a data frame for processing.</span>
+
+<span class="sd">    :param d: data frame like object to work with</span>
+<span class="sd">    :return: dataframe with string-named columns</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">orig_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">orig_type</span> <span class="o">==</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-        <span class="n">d</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;not prepared to process type &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">orig_type</span><span class="p">))</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">d</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>  <span class="c1"># convert column names to strings</span>
     <span class="k">return</span> <span class="n">d</span><span class="p">,</span> <span class="n">orig_type</span>
 </pre></div>
 
         </details>
 
-    
+            <div class="docstring"><p>Convert an array-like object to a data frame for processing.</p>
+
+<p>:param d: data frame like object to work with
+:return: dataframe with string-named columns</p>
+</div>
+
 
                 </section>
                 <section id="back_to_orig_type_data_frame">
@@ -1482,12 +1518,19 @@
 
         
             <span class="def">def</span>
-            <span class="name">back_to_orig_type_data_frame</span><span class="signature">(d, orig_type)</span>:
+            <span class="name">back_to_orig_type_data_frame</span><span class="signature">(d: pandas.core.frame.DataFrame, orig_type: type)</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">back_to_orig_type_data_frame</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">orig_type</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">back_to_orig_type_data_frame</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">orig_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert data frame back to ndarray if that was the original type.</span>
+
+<span class="sd">    :param d: data frame</span>
+<span class="sd">    :param orig_type: type of original object</span>
+<span class="sd">    :return: converted result</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
             <span class="s2">&quot;Expected result to be a pandas.DataFrame, found: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
@@ -1500,7 +1543,13 @@
 
         </details>
 
-    
+            <div class="docstring"><p>Convert data frame back to ndarray if that was the original type.</p>
+
+<p>:param d: data frame
+:param orig_type: type of original object
+:return: converted result</p>
+</div>
+
 
                 </section>
                 <section id="VarTransform">
@@ -1509,49 +1558,69 @@
 
         
         <span class="def">class</span>
-        <span class="name">VarTransform</span>:
+        <span class="name">VarTransform</span><wbr>(<span class="base">abc.ABC</span>):
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">VarTransform</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">derived_column_names</span><span class="p">,</span> <span class="n">treatment</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">VarTransform</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for vtreat transforms</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="n">derived_column_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+            <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="n">derived_column_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">derived_column_names</span><span class="p">]</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">derived_column_names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
         <span class="k">assert</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dni</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">dni</span> <span class="ow">in</span> <span class="n">derived_column_names</span><span class="p">])</span>
         <span class="k">assert</span> <span class="n">treatment</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">treatment</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span> <span class="o">=</span> <span class="n">incoming_column_name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span> <span class="o">=</span> <span class="n">derived_column_names</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span> <span class="o">=</span> <span class="n">derived_column_names</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span> <span class="o">=</span> <span class="n">treatment</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">need_cross_treatment_</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">refitter_</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;return a transformed data frame&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base method called&quot;</span><span class="p">)</span>
 </pre></div>
 
         </details>
 
-    
+            <div class="docstring"><p>Base class for vtreat transforms</p>
+</div>
+
 
                             <div id="VarTransform.__init__" class="classattr">
                                         <div class="attr function"><a class="headerlink" href="#VarTransform.__init__">#&nbsp;&nbsp</a>
 
         
-            <span class="name">VarTransform</span><span class="signature">(incoming_column_name, derived_column_names, treatment)</span>
+            <span class="name">VarTransform</span><span class="signature">(
+    incoming_column_name: str,
+    derived_column_names: Iterable[str],
+    treatment: str
+)</span>
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">derived_column_names</span><span class="p">,</span> <span class="n">treatment</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="n">derived_column_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+            <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="n">derived_column_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">derived_column_names</span><span class="p">]</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">derived_column_names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
         <span class="k">assert</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dni</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">dni</span> <span class="ow">in</span> <span class="n">derived_column_names</span><span class="p">])</span>
         <span class="k">assert</span> <span class="n">treatment</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">treatment</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span> <span class="o">=</span> <span class="n">incoming_column_name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span> <span class="o">=</span> <span class="n">derived_column_names</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span> <span class="o">=</span> <span class="n">derived_column_names</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span> <span class="o">=</span> <span class="n">treatment</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">need_cross_treatment_</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">refitter_</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1567,18 +1636,21 @@
 
         
             <span class="def">def</span>
-            <span class="name">transform</span><span class="signature">(self, data_frame)</span>:
+            <span class="name">transform</span><span class="signature">(self, data_frame) -&gt; pandas.core.frame.DataFrame</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;return a transformed data frame&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base method called&quot;</span><span class="p">)</span>
 </pre></div>
 
         </details>
 
-    
+            <div class="docstring"><p>return a transformed data frame</p>
+</div>
+
 
                             </div>
                 </section>
@@ -1594,13 +1666,20 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">MappedCodeTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="p">,</span> <span class="n">treatment</span><span class="p">,</span> <span class="n">code_book</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class for transforms that are a dictionary mapping of values&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="n">code_book</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">derived_column_name</span><span class="p">],</span> <span class="n">treatment</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span> <span class="o">=</span> <span class="n">code_book</span>
 
-    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;return a transformed data frame&quot;&quot;&quot;</span>
         <span class="n">incoming_column_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span>
         <span class="n">derived_column_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">sf</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">incoming_column_name</span><span class="p">:</span> <span class="n">data_frame</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">]})</span>
@@ -1617,18 +1696,30 @@
 
         </details>
 
-    
+            <div class="docstring"><p>Class for transforms that are a dictionary mapping of values</p>
+</div>
+
 
                             <div id="MappedCodeTransform.__init__" class="classattr">
                                         <div class="attr function"><a class="headerlink" href="#MappedCodeTransform.__init__">#&nbsp;&nbsp</a>
 
         
-            <span class="name">MappedCodeTransform</span><span class="signature">(incoming_column_name, derived_column_name, treatment, code_book)</span>
+            <span class="name">MappedCodeTransform</span><span class="signature">(
+    incoming_column_name: str,
+    derived_column_name: str,
+    treatment: str,
+    code_book: pandas.core.frame.DataFrame
+)</span>
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="p">,</span> <span class="n">treatment</span><span class="p">,</span> <span class="n">code_book</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="n">code_book</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">derived_column_name</span><span class="p">],</span> <span class="n">treatment</span>
         <span class="p">)</span>
@@ -1645,12 +1736,13 @@
 
         
             <span class="def">def</span>
-            <span class="name">transform</span><span class="signature">(self, data_frame)</span>:
+            <span class="name">transform</span><span class="signature">(self, data_frame) -&gt; pandas.core.frame.DataFrame</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;return a transformed data frame&quot;&quot;&quot;</span>
         <span class="n">incoming_column_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span>
         <span class="n">derived_column_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">sf</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">incoming_column_name</span><span class="p">:</span> <span class="n">data_frame</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">]})</span>
@@ -1667,7 +1759,9 @@
 
         </details>
 
-    
+            <div class="docstring"><p>return a transformed data frame</p>
+</div>
+
 
                             </div>
                 </section>
@@ -1708,7 +1802,9 @@
 
         </details>
 
-    
+            <div class="docstring"><p>Class for transforms that are a dictionary mapping of values</p>
+</div>
+
 
                             <div id="YAwareMappedCodeTransform.__init__" class="classattr">
                                         <div class="attr function"><a class="headerlink" href="#YAwareMappedCodeTransform.__init__">#&nbsp;&nbsp</a>
@@ -1793,7 +1889,9 @@
 
         </details>
 
-    
+            <div class="docstring"><p>Base class for vtreat transforms</p>
+</div>
+
 
                             <div id="CleanNumericTransform.__init__" class="classattr">
                                         <div class="attr function"><a class="headerlink" href="#CleanNumericTransform.__init__">#&nbsp;&nbsp</a>
@@ -1836,7 +1934,9 @@
 
         </details>
 
-    
+            <div class="docstring"><p>return a transformed data frame</p>
+</div>
+
 
                             </div>
                 </section>
@@ -1865,7 +1965,9 @@
 
         </details>
 
-    
+            <div class="docstring"><p>Base class for vtreat transforms</p>
+</div>
+
 
                             <div id="IndicateMissingTransform.__init__" class="classattr">
                                         <div class="attr function"><a class="headerlink" href="#IndicateMissingTransform.__init__">#&nbsp;&nbsp</a>
@@ -1905,7 +2007,9 @@
 
         </details>
 
-    
+            <div class="docstring"><p>return a transformed data frame</p>
+</div>
+
 
                             </div>
                 </section>
@@ -2122,7 +2226,9 @@
 
         </details>
 
-    
+            <div class="docstring"><p>Base class for vtreat transforms</p>
+</div>
+
 
                             <div id="IndicatorCodeTransform.__init__" class="classattr">
                                         <div class="attr function"><a class="headerlink" href="#IndicatorCodeTransform.__init__">#&nbsp;&nbsp</a>
@@ -2193,7 +2299,9 @@
 
         </details>
 
-    
+            <div class="docstring"><p>return a transformed data frame</p>
+</div>
+
 
                             </div>
                 </section>
@@ -3207,11 +3315,11 @@ is empty it is interpreted as all columns.</p>
         <span class="k">if</span> <span class="n">var_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">var_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">var_list</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">unique_itmes_in_order</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span>
+            <span class="n">var_list</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">unique_items_in_order</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">cols_to_copy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">cols_to_copy</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">cols_to_copy</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">unique_itmes_in_order</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">)</span>
+            <span class="n">cols_to_copy</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">unique_items_in_order</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">outcome_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">outcome_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">):</span>
             <span class="n">cols_to_copy</span> <span class="o">=</span> <span class="n">cols_to_copy</span> <span class="o">+</span> <span class="p">[</span><span class="n">outcome_name</span><span class="p">]</span>
         <span class="n">confused</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">var_list</span><span class="p">))</span>
@@ -3423,11 +3531,11 @@ inheritance.</p>
         <span class="k">if</span> <span class="n">var_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">var_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">var_list</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">unique_itmes_in_order</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span>
+            <span class="n">var_list</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">unique_items_in_order</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">cols_to_copy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">cols_to_copy</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">cols_to_copy</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">unique_itmes_in_order</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">)</span>
+            <span class="n">cols_to_copy</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">unique_items_in_order</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">outcome_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">outcome_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">):</span>
             <span class="n">cols_to_copy</span> <span class="o">=</span> <span class="n">cols_to_copy</span> <span class="o">+</span> <span class="p">[</span><span class="n">outcome_name</span><span class="p">]</span>
         <span class="n">confused</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">var_list</span><span class="p">))</span>

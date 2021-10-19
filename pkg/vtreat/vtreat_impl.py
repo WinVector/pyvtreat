@@ -1,14 +1,12 @@
-# -*- coding: utf-8 -*-
 """
-Created on Sat Jul 20 12:07:57 2019
-
-@author: johnmount
+vtreat main implementation
 """
 
 from abc import ABC
 import math
 import pprint
 import warnings
+from typing import Iterable, Tuple
 
 import numpy
 import pandas
@@ -19,17 +17,30 @@ import vtreat.transform
 import sklearn.base
 
 
-def ready_data_frame(d):
+def ready_data_frame(d) -> Tuple[pandas.DataFrame, type]:
+    """
+    Convert an array-like object to a data frame for processing.
+
+    :param d: data frame like object to work with
+    :return: dataframe with string-named columns
+    """
     orig_type = type(d)
-    if orig_type == numpy.ndarray:
-        d = pandas.DataFrame(d)
-        d.columns = [str(c) for c in d.columns]
     if not isinstance(d, pandas.DataFrame):
-        raise TypeError("not prepared to process type " + str(orig_type))
+        d = pandas.DataFrame(d)
+    else:
+        d = d.copy()
+    d.columns = [str(c) for c in d.columns]  # convert column names to strings
     return d, orig_type
 
 
-def back_to_orig_type_data_frame(d, orig_type):
+def back_to_orig_type_data_frame(d: pandas.DataFrame, orig_type: type):
+    """
+    Convert data frame back to ndarray if that was the original type.
+
+    :param d: data frame
+    :param orig_type: type of original object
+    :return: converted result
+    """
     if not isinstance(d, pandas.DataFrame):
         raise TypeError(
             "Expected result to be a pandas.DataFrame, found: " + str(type(d))
@@ -40,31 +51,47 @@ def back_to_orig_type_data_frame(d, orig_type):
     return d, columns
 
 
-class VarTransform:
-    def __init__(self, incoming_column_name, derived_column_names, treatment):
+class VarTransform(ABC):
+    """
+    Base class for vtreat transforms
+    """
+    def __init__(
+            self,
+            incoming_column_name: str,
+            derived_column_names: Iterable[str],
+            treatment: str):
         assert isinstance(incoming_column_name, str)
+        derived_column_names = [c for c in derived_column_names]
         assert len(derived_column_names) > 0
         assert all([isinstance(dni, str) for dni in derived_column_names])
         assert treatment is not None
         assert isinstance(treatment, str)
         self.incoming_column_name_ = incoming_column_name
-        self.derived_column_names_ = derived_column_names.copy()
+        self.derived_column_names_ = derived_column_names
         self.treatment_ = treatment
         self.need_cross_treatment_ = False
         self.refitter_ = None
 
-    def transform(self, data_frame):
+    def transform(self, data_frame) -> pandas.DataFrame:
+        """return a transformed data frame"""
         raise NotImplementedError("base method called")
 
 
 class MappedCodeTransform(VarTransform):
-    def __init__(self, incoming_column_name, derived_column_name, treatment, code_book):
+    """Class for transforms that are a dictionary mapping of values"""
+    def __init__(
+            self,
+            incoming_column_name: str,
+            derived_column_name: str,
+            treatment: str,
+            code_book: pandas.DataFrame):
         VarTransform.__init__(
             self, incoming_column_name, [derived_column_name], treatment
         )
         self.code_book_ = code_book
 
-    def transform(self, data_frame):
+    def transform(self, data_frame) -> pandas.DataFrame:
+        """return a transformed data frame"""
         incoming_column_name = self.incoming_column_name_
         derived_column_name = self.derived_column_names_[0]
         sf = pandas.DataFrame({incoming_column_name: data_frame[incoming_column_name]})
@@ -1036,11 +1063,11 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         if var_list is None:
             var_list = []
         else:
-            var_list = vtreat.util.unique_itmes_in_order(var_list)
+            var_list = vtreat.util.unique_items_in_order(var_list)
         if cols_to_copy is None:
             cols_to_copy = []
         else:
-            cols_to_copy = vtreat.util.unique_itmes_in_order(cols_to_copy)
+            cols_to_copy = vtreat.util.unique_items_in_order(cols_to_copy)
         if outcome_name is not None and outcome_name not in set(cols_to_copy):
             cols_to_copy = cols_to_copy + [outcome_name]
         confused = set(cols_to_copy).intersection(set(var_list))
