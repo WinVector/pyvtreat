@@ -201,7 +201,7 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
             params=self.params_,
             imputation_map=self.imputation_map_,
         )
-        res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
+        cross_frame = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         if (cross_plan is None) or (cross_rows != X.shape[0]):
             if cross_plan is not None:
                 warnings.warn(
@@ -215,11 +215,11 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
             )
             cross_rows = X.shape[0]
         # patch in cross-frame versions of complex columns such as impact
-        cross_frame = vtreat_impl.cross_patch_refit_y_aware_cols(
-            x=X, y=y, res=res, plan=self.plan_, cross_plan=cross_plan
+        vtreat_impl.cross_patch_refit_y_aware_cols(
+            x=X, y=y, res=cross_frame, plan=self.plan_, cross_plan=cross_plan
         )
         cross_frame = vtreat_impl.cross_patch_user_y_aware_cols(
-            x=cross_frame, y=y, res=res, params=self.params_, cross_plan=cross_plan,
+            x=cross_frame, y=y, res=cross_frame, params=self.params_, cross_plan=cross_plan,
         )
         # use cross_frame to compute variable effects
         self.score_frame_ = vtreat_impl.score_plan_variables(
@@ -369,7 +369,7 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
             params=self.params_,
             imputation_map=self.imputation_map_,
         )
-        res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
+        cross_frame = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         if (cross_plan is None) or (cross_rows != X.shape[0]):
             if cross_plan is not None:
                 warnings.warn(
@@ -383,11 +383,11 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
             )
             cross_rows = X.shape[0]
         # patch in cross-frame versions of complex columns such as impact
-        cross_frame = vtreat_impl.cross_patch_refit_y_aware_cols(
-            x=X, y=y, res=res, plan=self.plan_, cross_plan=cross_plan
+        vtreat_impl.cross_patch_refit_y_aware_cols(
+            x=X, y=y, res=cross_frame, plan=self.plan_, cross_plan=cross_plan
         )
         cross_frame = vtreat_impl.cross_patch_user_y_aware_cols(
-            x=cross_frame, y=y, res=res, params=self.params_, cross_plan=cross_plan,
+            x=cross_frame, y=y, res=cross_frame, params=self.params_, cross_plan=cross_plan,
         )
         # use cross_frame to compute variable effects
         self.score_frame_ = vtreat_impl.score_plan_variables(
@@ -537,7 +537,7 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
             params=self.params_,
             imputation_map=self.imputation_map_,
         )
-        res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
+        cross_frame = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         if (cross_plan is None) or (cross_rows != X.shape[0]):
             if cross_plan is not None:
                 warnings.warn(
@@ -550,11 +550,11 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
                 y=y,
             )
             cross_rows = X.shape[0]
-        cross_frame = vtreat_impl.cross_patch_refit_y_aware_cols(
-            x=X, y=y, res=res, plan=self.plan_, cross_plan=cross_plan
+        vtreat_impl.cross_patch_refit_y_aware_cols(
+            x=X, y=y, res=cross_frame, plan=self.plan_, cross_plan=cross_plan
         )
         cross_frame = vtreat_impl.cross_patch_user_y_aware_cols(
-            x=cross_frame, y=y, res=res, params=self.params_, cross_plan=cross_plan,
+            x=cross_frame, y=y, res=cross_frame, params=self.params_, cross_plan=cross_plan,
         )
         # use cross_frame to compute variable effects
 

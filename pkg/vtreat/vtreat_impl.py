@@ -6,7 +6,7 @@ from abc import ABC
 import math
 import pprint
 import warnings
-from typing import Iterable, Optional, Tuple
+from typing import Iterable, List, Optional, Tuple
 
 import numpy
 import pandas
@@ -447,7 +447,7 @@ def _prepare_variable_lists(
         X,
         cols_to_copy: Optional[Iterable[str]],
         var_list: Optional[Iterable[str]],
-):
+) -> Tuple[List[str], List[str], List[str], List[str], List[str]]:
     """
     Prepare lists of variables for variable treatment.
 
@@ -675,12 +675,25 @@ def fit_binomial_outcome_treatment(
 def fit_multinomial_outcome_treatment(
         *,
         X, y,
-        var_list,
-        outcome_name,
-        cols_to_copy,
+        var_list: Optional[Iterable[str]],
+        outcome_name: str,
+        cols_to_copy: Optional[Iterable[str]],
         params,
         imputation_map
 ):
+    """
+    Fit a variable treatment for multinomial outcomes.
+
+    :param X: training explanatory values
+    :param y: training dependent values
+    :param var_list: list of variables to process
+    :param outcome_name: name for outcome column
+    :param cols_to_copy: list of columns to copy to output
+    :param params:
+    :param imputation_map:
+    :return:
+    """
+
     outcomes = [oi for oi in set(y)]
     assert len(outcomes) > 1
     cat_list, cols_to_copy, mis_list, num_list, var_list = _prepare_variable_lists(
@@ -751,8 +764,26 @@ def fit_multinomial_outcome_treatment(
 
 # noinspection PyPep8Naming
 def fit_unsupervised_treatment(
-    *, X, var_list, outcome_name, cols_to_copy, params, imputation_map
+        *,
+        X,
+        var_list: Optional[Iterable[str]],
+        outcome_name: str,
+        cols_to_copy: Optional[Iterable[str]],
+        params,
+        imputation_map
 ):
+    """
+    Fit a data treatment in the unsupervised case.
+
+    :param X: training explanatory values
+    :param var_list: list of variables to process
+    :param outcome_name: name for outcome column
+    :param cols_to_copy: list of columns to copy to output
+    :param params:
+    :param imputation_map:
+    :return:
+    """
+
     cat_list, cols_to_copy, mis_list, num_list, var_list = _prepare_variable_lists(
         X=X, cols_to_copy=cols_to_copy, var_list=var_list)
     xforms = []
@@ -801,15 +832,34 @@ def fit_unsupervised_treatment(
     }
 
 
-def pre_prep_frame(x, *, col_list, cols_to_copy, cat_cols=None):
-    """Create a copy of pandas.DataFrame x restricted to col_list union cols_to_copy with col_list - cols_to_copy
+def pre_prep_frame(
+        x: pandas.DataFrame,
+        *,
+        col_list: Optional[Iterable[str]],
+        cols_to_copy: Optional[Iterable[str]],
+        cat_cols=None) -> pandas.DataFrame:
+    """
+    Create a copy of pandas.DataFrame x restricted to col_list union cols_to_copy with col_list - cols_to_copy
     converted to only string and numeric types.  New pandas.DataFrame has trivial indexing.  If col_list
-    is empty it is interpreted as all columns."""
+    is empty it is interpreted as all columns.
+
+    :param x:
+    :param col_list:
+    :param cols_to_copy:
+    :param cat_cols:
+    :return:
+    """
 
     if cols_to_copy is None:
         cols_to_copy = []
-    if (col_list is None) or (len(col_list) <= 0):
+    else:
+        cols_to_copy = [c for c in cols_to_copy]
+    if col_list is None:
+        col_list = []
+    if len(col_list) <= 0:
         col_list = [co for co in x.columns]
+    else:
+        col_list = [c for c in col_list]
     x_set = set(x.columns)
     col_set = set(col_list)
     for ci in cols_to_copy:
@@ -844,99 +894,56 @@ def pre_prep_frame(x, *, col_list, cols_to_copy, cat_cols=None):
     return x
 
 
-def perform_transform(*, x, transform, params):
-    plan = transform.plan_
-    xform_steps = [xfi for xfi in plan["xforms"]]
-    user_steps = [stp for stp in params["user_transforms"]]
-    # restrict down to to results we are going to use
-    if (transform.result_restriction is not None) and (
-        len(transform.result_restriction) > 0
-    ):
-        xform_steps = [
-            xfi
-            for xfi in xform_steps
-            if len(
-                set(xfi.derived_column_names_).intersection(
-                    transform.result_restriction
-                )
-            )
-            > 0
-        ]
-        user_steps = [
-            stp
-            for stp in user_steps
-            if len(set(stp.derived_vars_).intersection(transform.result_restriction))
-            > 0
-        ]
-    # check all required columns are present
-    needs = set()
-    for xfi in xform_steps:
-        if xfi.incoming_column_name_ is not None:
-            needs.add(xfi.incoming_column_name_)
-    for stp in user_steps:
-        if stp.incoming_vars_ is not None:
-            needs.update(stp.incoming_vars_)
-    missing = needs - set(x.columns)
-    if len(missing) > 0:
-        raise ValueError("missing required input columns " + str(missing))
-    # do the work
-    new_frames = [xfi.transform(x) for xfi in (xform_steps + user_steps)]
-    new_frames = [frm for frm in new_frames if (frm is not None) and (frm.shape[1] > 0)]
-    # see if we want to copy over any columns
-    copy_set = set(plan["cols_to_copy"])
-    to_copy = [ci for ci in x.columns if ci in copy_set]
-    if len(to_copy) > 0:
-        cp = x.loc[:, to_copy].copy()
-        new_frames = [cp] + new_frames
-    if len(new_frames) <= 0:
-        raise ValueError("no columns transformed")
-    res = pandas.concat(new_frames, axis=1, sort=False)
-    res.reset_index(inplace=True, drop=True)
-    return res
+def _mean_of_single_column_pandas_list(val_list: Iterable[pandas.DataFrame]) -> float:
+    """
+    Compute the mean of non-nan positions of a bunch of single column data frames
 
+    :param val_list: a list of single column Pandas data frames
+    :return: mean, or numpy.nan if there are no values
+    """
 
-def limit_to_appropriate_columns(*, res, transform):
-    plan = transform.plan_
-    to_copy = set(plan["cols_to_copy"])
-    to_take = set(
-        [
-            ci
-            for ci in transform.score_frame_["variable"][
-                transform.score_frame_["has_range"]
-            ]
-        ]
-    )
-    if (transform.result_restriction is not None) and (
-        len(transform.result_restriction) > 0
-    ):
-        to_take = to_take.intersection(transform.result_restriction)
-    cols_to_keep = [ci for ci in res.columns if (ci in to_copy) or (ci in to_take)]
-    if len(cols_to_keep) <= 0:
-        raise ValueError("no columns retained")
-    res = res[cols_to_keep].copy()
-    res.reset_index(inplace=True, drop=True)
-    return res
-
-
-# val_list is a list single column Pandas data frames
-def mean_of_single_column_pandas_list(val_list):
-    if val_list is None or len(val_list) <= 0:
+    if val_list is None:
         return numpy.nan
-    d = pandas.concat(val_list, axis=0, sort=False)
+    val_list = [v for v in val_list]
+    if len(val_list) <= 0:
+        return numpy.nan
+    if len(val_list) <= 1:
+        d = val_list[0]
+    else:
+        d = pandas.concat(val_list, axis=0, sort=False)
     col = d.columns[0]
     d = d.loc[numpy.logical_not(vtreat.util.is_bad(d[col])), [col]]
     if d.shape[0] < 1:
         return numpy.nan
-    return numpy.mean(d[col])
+    res = numpy.mean(d[col].values)
+    assert isinstance(res, float)  # type hint for PyCharm IDE
+    return res
 
 
-# assumes each y-aware variable produces one derived column
-# also clears out refitter_ values to None
-def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
+def cross_patch_refit_y_aware_cols(
+        *,
+        x: pandas.DataFrame,
+        y,
+        res: pandas.DataFrame,
+        plan,
+        cross_plan) -> None:
+    """
+    Re fit the y-aware columns according to cross plan.
+    Clears out refitter_ values to None.
+    Assumes each y-aware variable produces one derived column.
+
+    :param x: explanatory values
+    :param y: dependent values
+    :param res: transformed frame to patch results into, altered
+    :param plan: fitting plan
+    :param cross_plan: cross validation plan
+    :return: no return, res is altered in place
+    """
+
     if cross_plan is None or len(cross_plan) <= 1:
         for xf in plan["xforms"]:
             xf.refitter_ = None
-        return res
+        return
     incoming_colset = set(x.columns)
     derived_colset = set(res.columns)
     for xf in plan["xforms"]:
@@ -976,7 +983,7 @@ def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
             for cp in cross_plan
         ]
         # replace any missing sections with global average (slight data leak potential)
-        avg = mean_of_single_column_pandas_list(
+        avg = _mean_of_single_column_pandas_list(
             [pi for pi in patches if pi is not None]
         )
         if numpy.isnan(avg):
@@ -994,7 +1001,6 @@ def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
         res.loc[vtreat.util.is_bad(res[derived_column_name]), derived_column_name] = avg
     for xf in plan["xforms"]:
         xf.refitter_ = None
-    return res
 
 
 def cross_patch_user_y_aware_cols(*, x, y, res, params, cross_plan):
@@ -1023,7 +1029,7 @@ def cross_patch_user_y_aware_cols(*, x, y, res, params, cross_plan):
         ]
         for col in ut.derived_vars_:
             # replace any missing sections with global average (slight data leak potential)
-            avg = mean_of_single_column_pandas_list(
+            avg = _mean_of_single_column_pandas_list(
                 [pi.loc[:, [col]] for pi in patches if pi is not None]
             )
             if numpy.isnan(avg):
@@ -1335,3 +1341,92 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
             ]
         new_vars = new_vars + self.cols_to_copy_
         return new_vars
+
+
+def perform_transform(
+        *,
+        x: pandas.DataFrame,
+        transform: VariableTreatment,
+        params) -> pandas.DataFrame:
+    """
+    Transform a data frame.
+
+    :param x: data to be transformed.
+    :param transform: transform
+    :param params:
+    :return: new data frame
+    """
+    plan = transform.plan_
+    xform_steps = [xfi for xfi in plan["xforms"]]
+    user_steps = [stp for stp in params["user_transforms"]]
+    # restrict down to to results we are going to use
+    if (transform.result_restriction is not None) and (
+        len(transform.result_restriction) > 0
+    ):
+        xform_steps = [
+            xfi
+            for xfi in xform_steps
+            if len(
+                set(xfi.derived_column_names_).intersection(
+                    transform.result_restriction
+                )
+            )
+            > 0
+        ]
+        user_steps = [
+            stp
+            for stp in user_steps
+            if len(set(stp.derived_vars_).intersection(transform.result_restriction))
+            > 0
+        ]
+    # check all required columns are present
+    needs = set()
+    for xfi in xform_steps:
+        if xfi.incoming_column_name_ is not None:
+            needs.add(xfi.incoming_column_name_)
+    for stp in user_steps:
+        if stp.incoming_vars_ is not None:
+            needs.update(stp.incoming_vars_)
+    missing = needs - set(x.columns)
+    if len(missing) > 0:
+        raise ValueError("missing required input columns " + str(missing))
+    # do the work
+    new_frames = [xfi.transform(x) for xfi in (xform_steps + user_steps)]
+    new_frames = [frm for frm in new_frames if (frm is not None) and (frm.shape[1] > 0)]
+    # see if we want to copy over any columns
+    copy_set = set(plan["cols_to_copy"])
+    to_copy = [ci for ci in x.columns if ci in copy_set]
+    if len(to_copy) > 0:
+        cp = x.loc[:, to_copy].copy()
+        new_frames = [cp] + new_frames
+    if len(new_frames) <= 0:
+        raise ValueError("no columns transformed")
+    res = pandas.concat(new_frames, axis=1, sort=False)
+    res.reset_index(inplace=True, drop=True)
+    return res
+
+
+def limit_to_appropriate_columns(
+        *,
+        res: pandas.DataFrame,
+        transform: VariableTreatment) -> pandas.DataFrame:
+    plan = transform.plan_
+    to_copy = set(plan["cols_to_copy"])
+    to_take = set(
+        [
+            ci
+            for ci in transform.score_frame_["variable"][
+                transform.score_frame_["has_range"]
+            ]
+        ]
+    )
+    if (transform.result_restriction is not None) and (
+        len(transform.result_restriction) > 0
+    ):
+        to_take = to_take.intersection(transform.result_restriction)
+    cols_to_keep = [ci for ci in res.columns if (ci in to_copy) or (ci in to_take)]
+    if len(cols_to_keep) <= 0:
+        raise ValueError("no columns retained")
+    res = res[cols_to_keep].copy()
+    res.reset_index(inplace=True, drop=True)
+    return res

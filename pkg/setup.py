@@ -1,11 +1,19 @@
+"""
+vtreat is a pandas.DataFrame processor/conditioner that prepares real-world data for predictive modeling in a
+statistically sound manner.
+
+https://github.com/WinVector/pyvtreat
+"""
+
+
 # setup.py
 import setuptools
 
-DESCRIPTION="""vtreat is a pandas.DataFrame processor/conditioner that prepares real-world data for predictive modeling in a statistically sound manner. """
+DESCRIPTION = """vtreat is a pandas.DataFrame processor/conditioner that prepares real-world data for predictive modeling in a statistically sound manner. """
 
-LONG_DESCRIPTION="""
+LONG_DESCRIPTION = """
 [This](https://github.com/WinVector/pyvtreat) is the Python version of the `vtreat` data preparation system
-(also available as an [`R` package](http://winvector.github.io/vtreat/)).
+(also available as an [`R` package](https://winvector.github.io/vtreat/)).
 
 `vtreat` is a `DataFrame` processor/conditioner that prepares
 real-world data for supervised machine learning or predictive modeling
