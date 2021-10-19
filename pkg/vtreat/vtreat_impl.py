@@ -965,6 +965,7 @@ def cross_patch_refit_y_aware_cols(
 
         # noinspection PyPep8Naming
         def maybe_transform(*, fit, X):
+            """conditional patching"""
             if fit is None:
                 return None
             return fit.transform(X)
@@ -1003,13 +1004,30 @@ def cross_patch_refit_y_aware_cols(
         xf.refitter_ = None
 
 
-def cross_patch_user_y_aware_cols(*, x, y, res, params, cross_plan):
+def cross_patch_user_y_aware_cols(
+        *,
+        x: pandas.DataFrame,
+        y,
+        res: pandas.DataFrame,
+        params,
+        cross_plan) -> None:
+    """
+    Re fit the user y-aware columns according to cross plan.
+    Assumes each y-aware variable produces one derived column.
+
+    :param x: explanatory values
+    :param y: dependent values
+    :param res: transformed frame to patch results into, altered
+    :param params:
+    :param cross_plan: cross validation plan
+    :return: no return, res altered in place
+    """
     if cross_plan is None or len(cross_plan) <= 1:
-        return res
+        return
     incoming_colset = set(x.columns)
     derived_colset = set(res.columns)
     if len(derived_colset) <= 0:
-        return res
+        return
     for ut in params["user_transforms"]:
         if not ut.y_aware_:
             continue
@@ -1043,13 +1061,29 @@ def cross_patch_user_y_aware_cols(*, x, y, res, params, cross_plan):
                 cp = cross_plan[i]
                 res.loc[cp["app"], col] = numpy.asarray(pi[col]).reshape((len(pi),))
             res.loc[vtreat.util.is_bad(res[col]), col] = avg
-    return res
 
 
 def score_plan_variables(
-    cross_frame, outcome, plan, params, *, is_classification=False
-):
+        cross_frame: pandas.DataFrame,
+        outcome,
+        plan,
+        params,
+        *,
+        is_classification: bool = False
+) -> pandas.DataFrame:
+    """
+    Quality score variables to build up score frame.
+
+    :param cross_frame: cross transformed explanatory variables
+    :param outcome: dependent variable
+    :param plan: treatment plan dictionary
+    :param params:
+    :param is_classification: logical, if True classification if False regression
+    :return: score frame
+    """
+
     def describe_xf(xf):
+        """describe variable transform"""
         description = pandas.DataFrame({"variable": xf.derived_column_names_})
         description["orig_variable"] = xf.incoming_column_name_
         description["treatment"] = xf.treatment_
@@ -1057,6 +1091,7 @@ def score_plan_variables(
         return description
 
     def describe_ut(ut):
+        """describe user variable transform"""
         description = pandas.DataFrame(
             {"orig_variable": ut.incoming_vars_, "variable": ut.derived_vars_}
         )
@@ -1109,8 +1144,22 @@ def score_plan_variables(
     return score_frame
 
 
-def pseudo_score_plan_variables(*, cross_frame, plan, params):
+def pseudo_score_plan_variables(
+        *,
+        cross_frame,
+        plan,
+        params) -> pandas.DataFrame:
+    """
+    Build a score frame look-alike for unsupervised case.
+
+    :param cross_frame: cross transformed explanatory variables
+    :param plan:
+    :param params:
+    :return: score frame
+    """
+
     def describe_xf(xf):
+        """describe variable transform"""
         description = pandas.DataFrame({"variable": xf.derived_column_names_})
         description["orig_variable"] = xf.incoming_column_name_
         description["treatment"] = xf.treatment_
@@ -1118,6 +1167,7 @@ def pseudo_score_plan_variables(*, cross_frame, plan, params):
         return description
 
     def describe_ut(ut):
+        """describe user variable transform"""
         description = pandas.DataFrame(
             {"orig_variable": ut.incoming_vars_, "variable": ut.derived_vars_}
         )
@@ -1148,16 +1198,18 @@ def pseudo_score_plan_variables(*, cross_frame, plan, params):
     return score_frame
 
 
-# lashing into sklearn API
-# https://sklearn-template.readthedocs.io/en/latest/user_guide.html#transformer
 class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.TransformerMixin):
+    """
+    Class for variable treatments, implements much of the sklearn pipeline/transformer
+    API. https://sklearn-template.readthedocs.io/en/latest/user_guide.html#transformer
+    """
     def __init__(
         self,
         *,
-        var_list=None,
-        outcome_name=None,
+        var_list: Optional[Iterable[str]] = None,
+        outcome_name: Optional[str] = None,
         outcome_target=None,
-        cols_to_copy=None,
+        cols_to_copy: Optional[Iterable[str]] = None,
         params=None,
         imputation_map=None,
     ):
@@ -1169,15 +1221,15 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
             cols_to_copy = []
         else:
             cols_to_copy = vtreat.util.unique_items_in_order(cols_to_copy)
-        if outcome_name is not None and outcome_name not in set(cols_to_copy):
-            cols_to_copy = cols_to_copy + [outcome_name]
+        if (outcome_name is not None) and (outcome_name not in set(cols_to_copy)):
+            cols_to_copy.append(outcome_name)
         confused = set(cols_to_copy).intersection(set(var_list))
         if len(confused) > 0:
             raise ValueError(
                 "variables in treatment plan and non-treatment: " + ", ".join(confused)
             )
         if imputation_map is None:
-            imputation_map = {}  # dict
+            imputation_map = dict()
         self.outcome_name_ = outcome_name
         self.outcome_target_ = outcome_target
         self.var_list_ = [vi for vi in var_list if vi not in set(cols_to_copy)]
@@ -1193,7 +1245,16 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         self.result_restriction = None
         self.clear()
 
-    def check_column_names(self, col_names):
+    def check_column_names(self, col_names: Iterable[str]):
+        """
+        Check that none of the column names we are working with are non-unique.
+        Also check variable columns are all present (columns to copy and outcome allowed to be missing).
+
+        :param col_names:
+        :return: None, raises exception if there is a problem
+        """
+
+        col_names = [c for c in col_names]
         to_check = set(self.var_list_)
         if self.outcome_name_ is not None:
             to_check.add(self.outcome_name_)
@@ -1202,8 +1263,12 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         seen = [c for c in col_names if c in to_check]
         if len(seen) != len(set(seen)):
             raise ValueError("duplicate column names in frame")
+        missing = set(self.var_list_) - set(col_names)
+        if len(missing) > 0:
+            raise ValueError(f"missing required columns: {missing}")
 
     def clear(self):
+        """reset state"""
         self.plan_ = None
         self.score_frame_ = None
         self.cross_rows_ = None
@@ -1213,16 +1278,19 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         self.result_restriction = None
 
     def get_result_restriction(self):
+        """accessor"""
         if self.result_restriction is None:
             return None
         return self.result_restriction.copy()
 
     def set_result_restriction(self, new_vars):
+        """setter"""
         self.result_restriction = None
         if (new_vars is not None) and (len(new_vars) > 0):
             self.result_restriction = set(new_vars)
 
     def merge_params(self, p):
+        """merge in use parameters"""
         raise NotImplementedError("base class called")
 
     # display methods
@@ -1258,15 +1326,40 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
 
     # noinspection PyPep8Naming, PyUnusedLocal
     def fit(self, X, y=None, **fit_params):
+        """
+        sklearn fit.
+
+        :param X: explanatory variables
+        :param y: (optional) dependent variable
+        :param fit_params:
+        :return: self (for method chaining)
+        """
+
         self.fit_transform(X=X, y=y)
         return self
 
     # noinspection PyPep8Naming, PyUnusedLocal
     def fit_transform(self, X, y=None, **fit_params):
+        """
+        sklearn fit_transform, correct way to trigger cross methods.
+
+        :param X: explanatory variables
+        :param y: (optional) dependent variable
+        :param fit_params:
+        :return: transformed data
+        """
+
         raise NotImplementedError("base class method called")
 
     # noinspection PyPep8Naming
     def transform(self, X):
+        """
+        sklearn transform
+
+        :param X: explanatory variables
+        :return: transformed data
+        """
+
         raise NotImplementedError("base class method called")
 
     # https://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html
@@ -1276,6 +1369,9 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         """
         vtreat exposes a subset of controls as tunable parameters, users can choose this set
         by specifying the tunable_params list in object construction parameters
+
+        :param deep: ignored
+        :return: dict of tunable parameters
         """
         return {ti: self.params_[ti] for ti in self.params_["tunable_params"]}
 
@@ -1284,7 +1380,11 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         """
         vtreat exposes a subset of controls as tunable parameters, users can choose this set
         by specifying the tunable_params list in object construction parameters
+
+        :param params:
+        :return: self (for method chaining)
         """
+
         for (k, v) in params.items():
             if k in self.params_["tunable_params"]:
                 self.params_[k] = v
@@ -1296,23 +1396,53 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
 
     # noinspection PyPep8Naming
     def fit_predict(self, X, y=None, **fit_params):
+        """
+        Alias for fit_transform()
+
+        :param X: explanatory variables
+        :param y: (optional) dependent variable
+        :param fit_params:
+        :return: transformed data
+        """
         return self.fit_transform(X=X, y=y, **fit_params)
 
     # noinspection PyPep8Naming
     def predict(self, X):
+        """
+        Alias for transform.
+
+        :param X: explanatory variables
+        :return: transformed data
+        """
+
         return self.transform(X)
 
     # noinspection PyPep8Naming
     def predict_proba(self, X):
+        """
+        Alias for transform.
+
+        :param X: explanatory variables
+        :return: transformed data
+        """
+
         return self.transform(X)
 
     # https://github.com/scikit-learn/scikit-learn/blob/master/sklearn/compose/_column_transformer.py
 
     def get_feature_names(self, input_features=None):
+        """
+        Get list of produced feature names.
+
+        :param input_features: Optional, restrict to these features
+        :return:
+        """
         if self.score_frame_ is None:
             raise ValueError(
                 "get_feature_names called on uninitialized vtreat transform"
             )
+        if input_features is not None:
+            input_features = [c for c in input_features]
         filter_to_recommended = False
         try:
             filter_to_recommended = self.params_["filter_to_recommended"]
@@ -1410,6 +1540,13 @@ def limit_to_appropriate_columns(
         *,
         res: pandas.DataFrame,
         transform: VariableTreatment) -> pandas.DataFrame:
+    """
+    Limit down to appropriate columns.
+
+    :param res:
+    :param transform:
+    :return:
+    """
     plan = transform.plan_
     to_copy = set(plan["cols_to_copy"])
     to_take = set(
