@@ -441,6 +441,60 @@ def fit_prevalence_code(incoming_column_name: str, x) -> Optional[VarTransform]:
     )
 
 
+def _prepare_variable_lists(
+        *,
+        X,
+        cols_to_copy: Optional[Iterable[str]],
+        var_list: Optional[Iterable[str]],
+):
+    """
+    Prepare lists of variables for variable treatment.
+
+    :param X: dependent variables
+    :param cols_to_copy: columns to copy
+    :param var_list: dependent variable names
+    :return: cat_list, cols_to_copy, mis_list, num_list, var_list lists
+    """
+    if var_list is None:
+        var_list = [co for co in X.columns]
+    else:
+        var_list = [co for co in var_list]
+    if len(var_list) < 1:
+        var_list = [co for co in X.columns]
+    assert len(var_list) > 0
+    if cols_to_copy is None:
+        cols_to_copy = []
+    else:
+        cols_to_copy = [c for c in cols_to_copy]
+    copy_set = set(cols_to_copy)
+    var_list = [co for co in var_list if (not (co in copy_set))]
+    v_counts = {v: vtreat.util.get_unique_value_count(X[v]) for v in var_list}
+    var_list = {v for v in var_list if v_counts[v] > 1}
+    if len(var_list) <= 0:
+        raise ValueError("no variables")
+    n = X.shape[0]
+    all_bad = []
+    mis_list = []
+    for vi in var_list:
+        n_bad = numpy.sum(vtreat.util.is_bad(X[vi]))
+        if n_bad >= n:
+            all_bad = all_bad + [vi]
+        if (n_bad > 0) and (n_bad < n):
+            mis_list.append(vi)
+    var_list = [co for co in var_list if (not (co in set(all_bad)))]
+    num_list = [co for co in var_list if vtreat.util.can_convert_v_to_numeric(X[co])]
+    cat_list = [co for co in var_list if co not in set(num_list)]
+    id_like = [co for co in cat_list if v_counts[co] >= n]
+    if len(id_like) > 0:
+        warnings.warn(
+            "variable(s) "
+            + ", ".join(id_like)
+            + " have unique values per-row, dropping"
+        )
+        cat_list = [co for co in var_list if co not in set(id_like)]
+    return cat_list, cols_to_copy, mis_list, num_list, var_list
+
+
 # noinspection PyPep8Naming
 def fit_numeric_outcome_treatment(
         *,
@@ -463,48 +517,15 @@ def fit_numeric_outcome_treatment(
     :param imputation_map:
     :return: transform plan
     """
-    if var_list is None:
-        var_list = [co for co in X.columns]
-    else:
-        var_list = [co for co in var_list]
-    if len(var_list) < 1:
-        var_list = [co for co in X.columns]
-    assert len(var_list) > 0
-    if cols_to_copy is None:
-        cols_to_copy = []
-    else:
-        cols_to_copy = [c for c in cols_to_copy]
-    copy_set = set(cols_to_copy)
-    var_list = [co for co in var_list if (not (co in copy_set))]
-    v_counts = {v: vtreat.util.get_unique_value_count(X[v]) for v in var_list}
-    var_list = {v for v in var_list if v_counts[v] > 1}
-    if len(var_list) <= 0:
-        raise ValueError("no variables")
+    cat_list, cols_to_copy, mis_list, num_list, var_list = _prepare_variable_lists(
+        X=X, cols_to_copy=cols_to_copy, var_list=var_list)
     xforms = []
-    n = X.shape[0]
-    all_bad = []
-    for vi in var_list:
-        n_bad = numpy.sum(vtreat.util.is_bad(X[vi]))
-        if n_bad >= n:
-            all_bad = all_bad + [vi]
-        if (n_bad > 0) and (n_bad < n):
-            if "missing_indicator" in params["coders"]:
-                xforms = xforms + [
-                    IndicateMissingTransform(
-                        incoming_column_name=vi, derived_column_name=vi + "_is_bad"
-                    )
-                ]
-    var_list = [co for co in var_list if (not (co in set(all_bad)))]
-    num_list = [co for co in var_list if vtreat.util.can_convert_v_to_numeric(X[co])]
-    cat_list = [co for co in var_list if co not in set(num_list)]
-    id_like = [co for co in cat_list if v_counts[co] >= n]
-    if len(id_like) > 0:
-        warnings.warn(
-            "variable(s) "
-            + ", ".join(id_like)
-            + " have unique values per-row, dropping"
-        )
-        cat_list = [co for co in var_list if co not in set(id_like)]
+    if "missing_indicator" in params["coders"]:
+        for vi in mis_list:
+            xforms.append(
+                IndicateMissingTransform(
+                    incoming_column_name=vi, derived_column_name=vi + "_is_bad"
+                ))
     if "clean_copy" in params["coders"]:
         for vi in num_list:
             xform = fit_clean_code(
@@ -515,11 +536,11 @@ def fit_numeric_outcome_treatment(
             )
             if xform is not None:
                 # noinspection PyTypeChecker
-                xforms = xforms + [xform]
+                xforms.append(xform)
     for vi in cat_list:
         if "impact_code" in params["coders"]:
             # noinspection PyTypeChecker
-            xforms = xforms + [
+            xforms.append(
                 fit_regression_impact_code(
                     incoming_column_name=vi,
                     x=numpy.asarray(X[vi]),
@@ -527,10 +548,10 @@ def fit_numeric_outcome_treatment(
                     extra_args=None,
                     params=params,
                 )
-            ]
+            )
         if "deviation_code" in params["coders"]:
             # noinspection PyTypeChecker
-            xforms = xforms + [
+            xforms.append(
                 fit_regression_deviation_code(
                     incoming_column_name=vi,
                     x=numpy.asarray(X[vi]),
@@ -538,22 +559,22 @@ def fit_numeric_outcome_treatment(
                     extra_args=None,
                     params=params,
                 )
-            ]
+            )
         if "prevalence_code" in params["coders"]:
             # noinspection PyTypeChecker
-            xforms = xforms + [
+            xforms.append(
                 fit_prevalence_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
-            ]
+            )
         if "indicator_code" in params["coders"]:
             # noinspection PyTypeChecker
-            xforms = xforms + [
+            xforms.append(
                 fit_indicator_code(
                     incoming_column_name=vi,
                     x=numpy.asarray(X[vi]),
                     min_fraction=params["indicator_min_fraction"],
                     sparse_indicators=params["sparse_indicators"],
                 )
-            ]
+            )
     xforms = [xf for xf in xforms if xf is not None]
     for stp in params["user_transforms"]:
         stp.fit(X=X[var_list], y=y)
@@ -589,49 +610,15 @@ def fit_binomial_outcome_treatment(
     :param imputation_map:
     :return: transform plan
     """
-    if var_list is None:
-        var_list = [co for co in X.columns]
-    else:
-        var_list = [co for co in var_list]
-    if len(var_list) < 1:
-        var_list = [co for co in X.columns]
-    assert len(var_list) > 0
-    if cols_to_copy is None:
-        cols_to_copy = []
-    else:
-        cols_to_copy = [c for c in cols_to_copy]
-    copy_set = set(cols_to_copy)
-    var_list = [co for co in var_list if (not (co in copy_set))]
-    v_counts = {v: vtreat.util.get_unique_value_count(X[v]) for v in var_list}
-    var_list = {v for v in var_list if v_counts[v] > 1}
-    if len(var_list) <= 0:
-        raise ValueError("no variables")
+    cat_list, cols_to_copy, mis_list, num_list, var_list = _prepare_variable_lists(
+        X=X, cols_to_copy=cols_to_copy, var_list=var_list)
     xforms = []
-    n = X.shape[0]
-    all_bad = []
-    for vi in var_list:
-        n_bad = numpy.sum(vtreat.util.is_bad(X[vi]))
-        if n_bad >= n:
-            all_bad = all_bad + [vi]
-        if (n_bad > 0) and (n_bad < n):
-            if "missing_indicator" in params["coders"]:
-                # noinspection PyTypeChecker
-                xforms = xforms + [
-                    IndicateMissingTransform(
-                        incoming_column_name=vi, derived_column_name=vi + "_is_bad"
-                    )
-                ]
-    var_list = [co for co in var_list if (not (co in set(all_bad)))]
-    num_list = [co for co in var_list if vtreat.util.can_convert_v_to_numeric(X[co])]
-    cat_list = [co for co in var_list if co not in set(num_list)]
-    id_like = [co for co in cat_list if v_counts[co] >= n]
-    if len(id_like) > 0:
-        warnings.warn(
-            "variable(s) "
-            + ", ".join(id_like)
-            + " have unique values per-row, dropping"
-        )
-        cat_list = [co for co in var_list if co not in set(id_like)]
+    if "missing_indicator" in params["coders"]:
+        for vi in mis_list:
+            xforms.append(
+                IndicateMissingTransform(
+                    incoming_column_name=vi, derived_column_name=vi + "_is_bad"
+                ))
     if "clean_copy" in params["coders"]:
         for vi in num_list:
             xform = fit_clean_code(
@@ -642,12 +629,12 @@ def fit_binomial_outcome_treatment(
             )
             if xform is not None:
                 # noinspection PyTypeChecker
-                xforms = xforms + [xform]
+                xforms.append(xform)
     extra_args = {"outcome_target": outcome_target, "var_suffix": ""}
     for vi in cat_list:
         if "logit_code" in params["coders"]:
             # noinspection PyTypeChecker
-            xforms = xforms + [
+            xforms.append(
                 fit_binomial_impact_code(
                     incoming_column_name=vi,
                     x=numpy.asarray(X[vi]),
@@ -655,22 +642,22 @@ def fit_binomial_outcome_treatment(
                     extra_args=extra_args,
                     params=params,
                 )
-            ]
+            )
         if "prevalence_code" in params["coders"]:
             # noinspection PyTypeChecker
-            xforms = xforms + [
+            xforms.append(
                 fit_prevalence_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
-            ]
+            )
         if "indicator_code" in params["coders"]:
             # noinspection PyTypeChecker
-            xforms = xforms + [
+            xforms.append(
                 fit_indicator_code(
                     incoming_column_name=vi,
                     x=numpy.asarray(X[vi]),
                     min_fraction=params["indicator_min_fraction"],
                     sparse_indicators=params["sparse_indicators"],
                 )
-            ]
+            )
     xforms = [xf for xf in xforms if xf is not None]
     for stp in params["user_transforms"]:
         stp.fit(X=X[var_list], y=y)
@@ -693,41 +680,17 @@ def fit_multinomial_outcome_treatment(
         params,
         imputation_map
 ):
-    if (var_list is None) or (len(var_list) <= 0):
-        var_list = [co for co in X.columns]
-    copy_set = set(cols_to_copy)
-    var_list = [co for co in var_list if (not (co in copy_set))]
-    v_counts = {v: vtreat.util.get_unique_value_count(X[v]) for v in var_list}
-    var_list = {v for v in var_list if v_counts[v] > 1}
-    if len(var_list) <= 0:
-        raise ValueError("no variables")
-    xforms = []
-    n = X.shape[0]
-    all_bad = []
-    for vi in var_list:
-        n_bad = numpy.sum(vtreat.util.is_bad(X[vi]))
-        if n_bad >= n:
-            all_bad = all_bad + [vi]
-        if (n_bad > 0) and (n_bad < n):
-            if "missing_indicator" in params["coders"]:
-                # noinspection PyTypeChecker
-                xforms = xforms + [
-                    IndicateMissingTransform(
-                        incoming_column_name=vi, derived_column_name=vi + "_is_bad"
-                    )
-                ]
     outcomes = [oi for oi in set(y)]
-    var_list = [co for co in var_list if (not (co in set(all_bad)))]
-    num_list = [co for co in var_list if vtreat.util.can_convert_v_to_numeric(X[co])]
-    cat_list = [co for co in var_list if co not in set(num_list)]
-    id_like = [co for co in cat_list if v_counts[co] >= n]
-    if len(id_like) > 0:
-        warnings.warn(
-            "variable(s) "
-            + ", ".join(id_like)
-            + " have unique values per-row, dropping"
-        )
-        cat_list = [co for co in var_list if co not in set(id_like)]
+    assert len(outcomes) > 1
+    cat_list, cols_to_copy, mis_list, num_list, var_list = _prepare_variable_lists(
+        X=X, cols_to_copy=cols_to_copy, var_list=var_list)
+    xforms = []
+    if "missing_indicator" in params["coders"]:
+        for vi in mis_list:
+            xforms.append(
+                IndicateMissingTransform(
+                    incoming_column_name=vi, derived_column_name=vi + "_is_bad"
+                ))
     if "clean_copy" in params["coders"]:
         for vi in num_list:
             xform = fit_clean_code(
@@ -738,7 +701,7 @@ def fit_multinomial_outcome_treatment(
             )
             if xform is not None:
                 # noinspection PyTypeChecker
-                xforms = xforms + [xform]
+                xforms.append(xform)
     for vi in cat_list:
         for outcome in outcomes:
             if "impact_code" in params["coders"]:
@@ -747,7 +710,7 @@ def fit_multinomial_outcome_treatment(
                     "var_suffix": ("_" + str(outcome)),
                 }
                 # noinspection PyTypeChecker
-                xforms = xforms + [
+                xforms.append(
                     fit_binomial_impact_code(
                         incoming_column_name=vi,
                         x=numpy.asarray(X[vi]),
@@ -755,22 +718,22 @@ def fit_multinomial_outcome_treatment(
                         extra_args=extra_args,
                         params=params,
                     )
-                ]
+                )
         if "prevalence_code" in params["coders"]:
             # noinspection PyTypeChecker
-            xforms = xforms + [
+            xforms.append(
                 fit_prevalence_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
-            ]
+            )
         if "indicator_code" in params["coders"]:
             # noinspection PyTypeChecker
-            xforms = xforms + [
+            xforms.append(
                 fit_indicator_code(
                     incoming_column_name=vi,
                     x=numpy.asarray(X[vi]),
                     min_fraction=params["indicator_min_fraction"],
                     sparse_indicators=params["sparse_indicators"],
                 )
-            ]
+            )
     xforms = [xf for xf in xforms if xf is not None]
     if len(xforms) <= 0:
         raise ValueError("no variables created")
@@ -789,40 +752,15 @@ def fit_multinomial_outcome_treatment(
 def fit_unsupervised_treatment(
     *, X, var_list, outcome_name, cols_to_copy, params, imputation_map
 ):
-    if (var_list is None) or (len(var_list) <= 0):
-        var_list = [co for co in X.columns]
-    copy_set = set(cols_to_copy)
-    var_list = [co for co in var_list if (not (co in copy_set))]
-    v_counts = {v: vtreat.util.get_unique_value_count(X[v]) for v in var_list}
-    var_list = {v for v in var_list if v_counts[v] > 1}
-    if len(var_list) <= 0:
-        raise ValueError("no variables")
+    cat_list, cols_to_copy, mis_list, num_list, var_list = _prepare_variable_lists(
+        X=X, cols_to_copy=cols_to_copy, var_list=var_list)
     xforms = []
-    n = X.shape[0]
-    all_bad = []
-    for vi in var_list:
-        n_bad = numpy.sum(vtreat.util.is_bad(X[vi]))
-        if n_bad >= n:
-            all_bad = all_bad + [vi]
-        if (n_bad > 0) and (n_bad < n):
-            if "missing_indicator" in params["coders"]:
-                # noinspection PyTypeChecker
-                xforms = xforms + [
-                    IndicateMissingTransform(
-                        incoming_column_name=vi, derived_column_name=vi + "_is_bad"
-                    )
-                ]
-    var_list = [co for co in var_list if (not (co in set(all_bad)))]
-    num_list = [co for co in var_list if vtreat.util.can_convert_v_to_numeric(X[co])]
-    cat_list = [co for co in var_list if co not in set(num_list)]
-    id_like = [co for co in cat_list if v_counts[co] >= n]
-    if len(id_like) > 0:
-        warnings.warn(
-            "variable(s) "
-            + ", ".join(id_like)
-            + " have unique values per-row, dropping"
-        )
-        cat_list = [co for co in var_list if co not in set(id_like)]
+    if "missing_indicator" in params["coders"]:
+        for vi in mis_list:
+            xforms.append(
+                IndicateMissingTransform(
+                    incoming_column_name=vi, derived_column_name=vi + "_is_bad"
+                ))
     if "clean_copy" in params["coders"]:
         for vi in num_list:
             xform = fit_clean_code(
@@ -833,23 +771,23 @@ def fit_unsupervised_treatment(
             )
             if xform is not None:
                 # noinspection PyTypeChecker
-                xforms = xforms + [xform]
+                xforms.append(xform)
     for vi in cat_list:
         if "prevalence_code" in params["coders"]:
             # noinspection PyTypeChecker
-            xforms = xforms + [
+            xforms.append(
                 fit_prevalence_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
-            ]
+            )
         if "indicator_code" in params["coders"]:
             # noinspection PyTypeChecker
-            xforms = xforms + [
+            xforms.append(
                 fit_indicator_code(
                     incoming_column_name=vi,
                     x=numpy.asarray(X[vi]),
                     min_fraction=params["indicator_min_fraction"],
                     sparse_indicators=params["sparse_indicators"],
                 )
-            ]
+            )
     xforms = [xf for xf in xforms if xf is not None]
     for stp in params["user_transforms"]:
         stp.fit(X=X[var_list], y=None)
