@@ -1,3 +1,7 @@
+"""
+vtreat data preparation package: https://github.com/WinVector/pyvtreat
+"""
+
 # noinspection PyUnresolvedReferences
 import pandas
 
@@ -7,11 +11,11 @@ import numpy
 from vtreat.vtreat_api import *
 
 __docformat__ = "restructuredtext"
-__version__ = "0.5.1"
+__version__ = "1.0.0"
 
 __doc__ = """
 This<https://github.com/WinVector/pyvtreat> is the Python version of the vtreat data preparation system
-(also available as an R package<http://winvector.github.io/vtreat/>.
+(also available as an R package<https://winvector.github.io/vtreat/>.
 
 vtreat is a DataFrame processor/conditioner that prepares
 real-world data for supervised machine learning or predictive modeling

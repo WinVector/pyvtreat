@@ -432,6 +432,7 @@
 <span class="sd">    :param imputation_map:</span>
 <span class="sd">    :return: transform</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="ow">not</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">numeric_has_range</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="n">replacement</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;missingness_imputation&quot;</span><span class="p">]</span>
@@ -478,6 +479,7 @@
 <span class="sd">    :param params:</span>
 <span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">sf</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">grouped_by_x_statistics</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">sf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
@@ -499,7 +501,18 @@
     <span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">fit_regression_deviation_code</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">extra_args</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">fit_regression_deviation_code</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">extra_args</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fit regression deviation code transform</span>
+
+<span class="sd">    :param incoming_column_name:</span>
+<span class="sd">    :param x: training explanatory values</span>
+<span class="sd">    :param y: training dependent values</span>
+<span class="sd">    :param extra_args:</span>
+<span class="sd">    :param params:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">sf</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">grouped_by_x_statistics</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">sf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
@@ -518,7 +531,17 @@
     <span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">fit_binomial_impact_code</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">extra_args</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">fit_binomial_impact_code</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">extra_args</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fit categorical impact code.</span>
+
+<span class="sd">    :param incoming_column_name:</span>
+<span class="sd">    :param x: training explanatory values</span>
+<span class="sd">    :param y: training dependent values</span>
+<span class="sd">    :param extra_args:</span>
+<span class="sd">    :param params:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">outcome_target</span> <span class="o">=</span> <span class="p">(</span><span class="n">extra_args</span><span class="p">[</span><span class="s2">&quot;outcome_target&quot;</span><span class="p">],)</span>
     <span class="n">var_suffix</span> <span class="o">=</span> <span class="n">extra_args</span><span class="p">[</span><span class="s2">&quot;var_suffix&quot;</span><span class="p">]</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="n">outcome_target</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
@@ -545,6 +568,7 @@
 
 
 <span class="k">class</span> <span class="nc">IndicatorCodeTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class for indicator codes&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">incoming_column_name</span><span class="p">,</span>
@@ -575,6 +599,7 @@
         <span class="n">col</span> <span class="o">=</span> <span class="n">sf</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">]</span>
 
         <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;transform one column&quot;&quot;&quot;</span>
             <span class="n">v</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">col</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="mf">0.0</span>  <span class="c1"># return numeric 0/1 coding</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse_indicators_</span><span class="p">:</span>
                 <span class="n">v</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">arrays</span><span class="o">.</span><span class="n">SparseArray</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
@@ -590,8 +615,18 @@
 
 
 <span class="k">def</span> <span class="nf">fit_indicator_code</span><span class="p">(</span>
-    <span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">min_fraction</span><span class="p">,</span> <span class="n">sparse_indicators</span><span class="o">=</span><span class="kc">False</span>
-<span class="p">):</span>
+    <span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">min_fraction</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sparse_indicators</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fit indicator codes</span>
+
+<span class="sd">    :param incoming_column_name:</span>
+<span class="sd">    :param x: training explanatory variables</span>
+<span class="sd">    :param min_fraction:</span>
+<span class="sd">    :param sparse_indicators:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">sf</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">incoming_column_name</span><span class="p">:</span> <span class="n">x</span><span class="p">})</span>
     <span class="n">bad_posns</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">sf</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">])</span>
     <span class="n">sf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;_NA_&quot;</span>
@@ -610,7 +645,15 @@
     <span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">fit_prevalence_code</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">fit_prevalence_code</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fit a prevalence code</span>
+
+<span class="sd">    :param incoming_column_name:</span>
+<span class="sd">    :param x: training explanatory values</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">sf</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">})</span>
     <span class="n">bad_posns</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">sf</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">])</span>
     <span class="n">sf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;_NA_&quot;</span>
@@ -631,31 +674,46 @@
 
 
 <span class="c1"># noinspection PyPep8Naming</span>
-<span class="k">def</span> <span class="nf">fit_numeric_outcome_treatment</span><span class="p">(</span>
-    <span class="o">*</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">var_list</span><span class="p">,</span> <span class="n">outcome_name</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">imputation_map</span>
+<span class="k">def</span> <span class="nf">_prepare_variable_lists</span><span class="p">(</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">,</span>
+        <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+        <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
 <span class="p">):</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">var_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Prepare lists of variables for variable treatment.</span>
+
+<span class="sd">    :param X: dependent variables</span>
+<span class="sd">    :param cols_to_copy: columns to copy</span>
+<span class="sd">    :param var_list: dependent variable names</span>
+<span class="sd">    :return: cat_list, cols_to_copy, mis_list, num_list, var_list lists</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">var_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">cols_to_copy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cols_to_copy</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cols_to_copy</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cols_to_copy</span><span class="p">]</span>
     <span class="n">copy_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">)</span>
     <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">co</span> <span class="ow">in</span> <span class="n">copy_set</span><span class="p">))]</span>
     <span class="n">v_counts</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">get_unique_value_count</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">}</span>
     <span class="n">var_list</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">v_counts</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">}</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;no variables&quot;</span><span class="p">)</span>
-    <span class="n">xforms</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">all_bad</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">mis_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">:</span>
         <span class="n">n_bad</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]))</span>
         <span class="k">if</span> <span class="n">n_bad</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">:</span>
             <span class="n">all_bad</span> <span class="o">=</span> <span class="n">all_bad</span> <span class="o">+</span> <span class="p">[</span><span class="n">vi</span><span class="p">]</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">n_bad</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">n_bad</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">):</span>
-            <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-                <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
-                    <span class="n">IndicateMissingTransform</span><span class="p">(</span>
-                        <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
-                    <span class="p">)</span>
-                <span class="p">]</span>
+            <span class="n">mis_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vi</span><span class="p">)</span>
     <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">co</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">all_bad</span><span class="p">)))]</span>
     <span class="n">num_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">can_convert_v_to_numeric</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">co</span><span class="p">])]</span>
     <span class="n">cat_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">co</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">num_list</span><span class="p">)]</span>
@@ -667,6 +725,40 @@
             <span class="o">+</span> <span class="s2">&quot; have unique values per-row, dropping&quot;</span>
         <span class="p">)</span>
         <span class="n">cat_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">co</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">id_like</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span>
+
+
+<span class="c1"># noinspection PyPep8Naming</span>
+<span class="k">def</span> <span class="nf">fit_numeric_outcome_treatment</span><span class="p">(</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+        <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+        <span class="n">outcome_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+        <span class="n">params</span><span class="p">,</span>
+        <span class="n">imputation_map</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fit set of treatments in a regression situation.</span>
+
+<span class="sd">    :param X: training explanatory values</span>
+<span class="sd">    :param y: training dependent values</span>
+<span class="sd">    :param var_list: list of dependent variable names</span>
+<span class="sd">    :param outcome_name: name for outcome column</span>
+<span class="sd">    :param cols_to_copy: list of columns to copy to output</span>
+<span class="sd">    :param params:</span>
+<span class="sd">    :param imputation_map:</span>
+<span class="sd">    :return: transform plan</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
+        <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span><span class="p">)</span>
+    <span class="n">xforms</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">IndicateMissingTransform</span><span class="p">(</span>
+                    <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
+                <span class="p">))</span>
     <span class="k">if</span> <span class="s2">&quot;clean_copy&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">num_list</span><span class="p">:</span>
             <span class="n">xform</span> <span class="o">=</span> <span class="n">fit_clean_code</span><span class="p">(</span>
@@ -677,11 +769,11 @@
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">xform</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="c1"># noinspection PyTypeChecker</span>
-                <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span><span class="n">xform</span><span class="p">]</span>
+                <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xform</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">cat_list</span><span class="p">:</span>
         <span class="k">if</span> <span class="s2">&quot;impact_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
             <span class="c1"># noinspection PyTypeChecker</span>
-            <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_regression_impact_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
                     <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]),</span>
@@ -689,10 +781,10 @@
                     <span class="n">extra_args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
                 <span class="p">)</span>
-            <span class="p">]</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;deviation_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
             <span class="c1"># noinspection PyTypeChecker</span>
-            <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_regression_deviation_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
                     <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]),</span>
@@ -700,22 +792,22 @@
                     <span class="n">extra_args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
                 <span class="p">)</span>
-            <span class="p">]</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;prevalence_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
             <span class="c1"># noinspection PyTypeChecker</span>
-            <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_prevalence_code</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]))</span>
-            <span class="p">]</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;indicator_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
             <span class="c1"># noinspection PyTypeChecker</span>
-            <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_indicator_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
                     <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]),</span>
                     <span class="n">min_fraction</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;indicator_min_fraction&quot;</span><span class="p">],</span>
                     <span class="n">sparse_indicators</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;sparse_indicators&quot;</span><span class="p">],</span>
                 <span class="p">)</span>
-            <span class="p">]</span>
+            <span class="p">)</span>
     <span class="n">xforms</span> <span class="o">=</span> <span class="p">[</span><span class="n">xf</span> <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">xforms</span> <span class="k">if</span> <span class="n">xf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">stp</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;user_transforms&quot;</span><span class="p">]:</span>
         <span class="n">stp</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">[</span><span class="n">var_list</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
@@ -731,49 +823,35 @@
 <span class="c1"># noinspection PyPep8Naming</span>
 <span class="k">def</span> <span class="nf">fit_binomial_outcome_treatment</span><span class="p">(</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">X</span><span class="p">,</span>
-    <span class="n">y</span><span class="p">,</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
     <span class="n">outcome_target</span><span class="p">,</span>
-    <span class="n">var_list</span><span class="p">,</span>
-    <span class="n">outcome_name</span><span class="p">,</span>
-    <span class="n">cols_to_copy</span><span class="p">,</span>
+    <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">outcome_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="n">params</span><span class="p">,</span>
     <span class="n">imputation_map</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">var_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
-        <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
-    <span class="n">copy_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">)</span>
-    <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">co</span> <span class="ow">in</span> <span class="n">copy_set</span><span class="p">))]</span>
-    <span class="n">v_counts</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">get_unique_value_count</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">}</span>
-    <span class="n">var_list</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">v_counts</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">}</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;no variables&quot;</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :param X: training explanatory values</span>
+<span class="sd">    :param y: training dependent values</span>
+<span class="sd">    :param outcome_target: dependent value to consider positive or in class</span>
+<span class="sd">    :param var_list: list of variables to process</span>
+<span class="sd">    :param outcome_name: name for outcome column</span>
+<span class="sd">    :param cols_to_copy: list of columns to copy to output</span>
+<span class="sd">    :param params:</span>
+<span class="sd">    :param imputation_map:</span>
+<span class="sd">    :return: transform plan</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
+        <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span><span class="p">)</span>
     <span class="n">xforms</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">all_bad</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">:</span>
-        <span class="n">n_bad</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]))</span>
-        <span class="k">if</span> <span class="n">n_bad</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">:</span>
-            <span class="n">all_bad</span> <span class="o">=</span> <span class="n">all_bad</span> <span class="o">+</span> <span class="p">[</span><span class="n">vi</span><span class="p">]</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">n_bad</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">n_bad</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">):</span>
-            <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-                <span class="c1"># noinspection PyTypeChecker</span>
-                <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
-                    <span class="n">IndicateMissingTransform</span><span class="p">(</span>
-                        <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
-                    <span class="p">)</span>
-                <span class="p">]</span>
-    <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">co</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">all_bad</span><span class="p">)))]</span>
-    <span class="n">num_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">can_convert_v_to_numeric</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">co</span><span class="p">])]</span>
-    <span class="n">cat_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">co</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">num_list</span><span class="p">)]</span>
-    <span class="n">id_like</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">cat_list</span> <span class="k">if</span> <span class="n">v_counts</span><span class="p">[</span><span class="n">co</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">id_like</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s2">&quot;variable(s) &quot;</span>
-            <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">id_like</span><span class="p">)</span>
-            <span class="o">+</span> <span class="s2">&quot; have unique values per-row, dropping&quot;</span>
-        <span class="p">)</span>
-        <span class="n">cat_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">co</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">id_like</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">IndicateMissingTransform</span><span class="p">(</span>
+                    <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
+                <span class="p">))</span>
     <span class="k">if</span> <span class="s2">&quot;clean_copy&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">num_list</span><span class="p">:</span>
             <span class="n">xform</span> <span class="o">=</span> <span class="n">fit_clean_code</span><span class="p">(</span>
@@ -784,12 +862,12 @@
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">xform</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="c1"># noinspection PyTypeChecker</span>
-                <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span><span class="n">xform</span><span class="p">]</span>
+                <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xform</span><span class="p">)</span>
     <span class="n">extra_args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;outcome_target&quot;</span><span class="p">:</span> <span class="n">outcome_target</span><span class="p">,</span> <span class="s2">&quot;var_suffix&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span>
     <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">cat_list</span><span class="p">:</span>
         <span class="k">if</span> <span class="s2">&quot;logit_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
             <span class="c1"># noinspection PyTypeChecker</span>
-            <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_binomial_impact_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
                     <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]),</span>
@@ -797,22 +875,22 @@
                     <span class="n">extra_args</span><span class="o">=</span><span class="n">extra_args</span><span class="p">,</span>
                     <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
                 <span class="p">)</span>
-            <span class="p">]</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;prevalence_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
             <span class="c1"># noinspection PyTypeChecker</span>
-            <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_prevalence_code</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]))</span>
-            <span class="p">]</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;indicator_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
             <span class="c1"># noinspection PyTypeChecker</span>
-            <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_indicator_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
                     <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]),</span>
                     <span class="n">min_fraction</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;indicator_min_fraction&quot;</span><span class="p">],</span>
                     <span class="n">sparse_indicators</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;sparse_indicators&quot;</span><span class="p">],</span>
                 <span class="p">)</span>
-            <span class="p">]</span>
+            <span class="p">)</span>
     <span class="n">xforms</span> <span class="o">=</span> <span class="p">[</span><span class="n">xf</span> <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">xforms</span> <span class="k">if</span> <span class="n">xf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">stp</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;user_transforms&quot;</span><span class="p">]:</span>
         <span class="n">stp</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">[</span><span class="n">var_list</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
@@ -827,43 +905,25 @@
 
 <span class="c1"># noinspection PyPep8Naming</span>
 <span class="k">def</span> <span class="nf">fit_multinomial_outcome_treatment</span><span class="p">(</span>
-    <span class="o">*</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">var_list</span><span class="p">,</span> <span class="n">outcome_name</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">imputation_map</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+        <span class="n">var_list</span><span class="p">,</span>
+        <span class="n">outcome_name</span><span class="p">,</span>
+        <span class="n">cols_to_copy</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">,</span>
+        <span class="n">imputation_map</span>
 <span class="p">):</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">var_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
-        <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
-    <span class="n">copy_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">)</span>
-    <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">co</span> <span class="ow">in</span> <span class="n">copy_set</span><span class="p">))]</span>
-    <span class="n">v_counts</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">get_unique_value_count</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">}</span>
-    <span class="n">var_list</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">v_counts</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">}</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;no variables&quot;</span><span class="p">)</span>
-    <span class="n">xforms</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">all_bad</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">:</span>
-        <span class="n">n_bad</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]))</span>
-        <span class="k">if</span> <span class="n">n_bad</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">:</span>
-            <span class="n">all_bad</span> <span class="o">=</span> <span class="n">all_bad</span> <span class="o">+</span> <span class="p">[</span><span class="n">vi</span><span class="p">]</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">n_bad</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">n_bad</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">):</span>
-            <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-                <span class="c1"># noinspection PyTypeChecker</span>
-                <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
-                    <span class="n">IndicateMissingTransform</span><span class="p">(</span>
-                        <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
-                    <span class="p">)</span>
-                <span class="p">]</span>
     <span class="n">outcomes</span> <span class="o">=</span> <span class="p">[</span><span class="n">oi</span> <span class="k">for</span> <span class="n">oi</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">y</span><span class="p">)]</span>
-    <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">co</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">all_bad</span><span class="p">)))]</span>
-    <span class="n">num_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">can_convert_v_to_numeric</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">co</span><span class="p">])]</span>
-    <span class="n">cat_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">co</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">num_list</span><span class="p">)]</span>
-    <span class="n">id_like</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">cat_list</span> <span class="k">if</span> <span class="n">v_counts</span><span class="p">[</span><span class="n">co</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">id_like</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s2">&quot;variable(s) &quot;</span>
-            <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">id_like</span><span class="p">)</span>
-            <span class="o">+</span> <span class="s2">&quot; have unique values per-row, dropping&quot;</span>
-        <span class="p">)</span>
-        <span class="n">cat_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">co</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">id_like</span><span class="p">)]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">outcomes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
+    <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
+        <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span><span class="p">)</span>
+    <span class="n">xforms</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">IndicateMissingTransform</span><span class="p">(</span>
+                    <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
+                <span class="p">))</span>
     <span class="k">if</span> <span class="s2">&quot;clean_copy&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">num_list</span><span class="p">:</span>
             <span class="n">xform</span> <span class="o">=</span> <span class="n">fit_clean_code</span><span class="p">(</span>
@@ -874,7 +934,7 @@
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">xform</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="c1"># noinspection PyTypeChecker</span>
-                <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span><span class="n">xform</span><span class="p">]</span>
+                <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xform</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">cat_list</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">outcome</span> <span class="ow">in</span> <span class="n">outcomes</span><span class="p">:</span>
             <span class="k">if</span> <span class="s2">&quot;impact_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
@@ -883,7 +943,7 @@
                     <span class="s2">&quot;var_suffix&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">outcome</span><span class="p">)),</span>
                 <span class="p">}</span>
                 <span class="c1"># noinspection PyTypeChecker</span>
-                <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
+                <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                     <span class="n">fit_binomial_impact_code</span><span class="p">(</span>
                         <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
                         <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]),</span>
@@ -891,22 +951,22 @@
                         <span class="n">extra_args</span><span class="o">=</span><span class="n">extra_args</span><span class="p">,</span>
                         <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
                     <span class="p">)</span>
-                <span class="p">]</span>
+                <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;prevalence_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
             <span class="c1"># noinspection PyTypeChecker</span>
-            <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_prevalence_code</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]))</span>
-            <span class="p">]</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;indicator_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
             <span class="c1"># noinspection PyTypeChecker</span>
-            <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_indicator_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
                     <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]),</span>
                     <span class="n">min_fraction</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;indicator_min_fraction&quot;</span><span class="p">],</span>
                     <span class="n">sparse_indicators</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;sparse_indicators&quot;</span><span class="p">],</span>
                 <span class="p">)</span>
-            <span class="p">]</span>
+            <span class="p">)</span>
     <span class="n">xforms</span> <span class="o">=</span> <span class="p">[</span><span class="n">xf</span> <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">xforms</span> <span class="k">if</span> <span class="n">xf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">xforms</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;no variables created&quot;</span><span class="p">)</span>
@@ -925,40 +985,15 @@
 <span class="k">def</span> <span class="nf">fit_unsupervised_treatment</span><span class="p">(</span>
     <span class="o">*</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">var_list</span><span class="p">,</span> <span class="n">outcome_name</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">imputation_map</span>
 <span class="p">):</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">var_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
-        <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
-    <span class="n">copy_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">)</span>
-    <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">co</span> <span class="ow">in</span> <span class="n">copy_set</span><span class="p">))]</span>
-    <span class="n">v_counts</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">get_unique_value_count</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">}</span>
-    <span class="n">var_list</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">v_counts</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">}</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;no variables&quot;</span><span class="p">)</span>
+    <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
+        <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span><span class="p">)</span>
     <span class="n">xforms</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">all_bad</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">:</span>
-        <span class="n">n_bad</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]))</span>
-        <span class="k">if</span> <span class="n">n_bad</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">:</span>
-            <span class="n">all_bad</span> <span class="o">=</span> <span class="n">all_bad</span> <span class="o">+</span> <span class="p">[</span><span class="n">vi</span><span class="p">]</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">n_bad</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">n_bad</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">):</span>
-            <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-                <span class="c1"># noinspection PyTypeChecker</span>
-                <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
-                    <span class="n">IndicateMissingTransform</span><span class="p">(</span>
-                        <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
-                    <span class="p">)</span>
-                <span class="p">]</span>
-    <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">co</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">all_bad</span><span class="p">)))]</span>
-    <span class="n">num_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">can_convert_v_to_numeric</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">co</span><span class="p">])]</span>
-    <span class="n">cat_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">co</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">num_list</span><span class="p">)]</span>
-    <span class="n">id_like</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">cat_list</span> <span class="k">if</span> <span class="n">v_counts</span><span class="p">[</span><span class="n">co</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">id_like</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s2">&quot;variable(s) &quot;</span>
-            <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">id_like</span><span class="p">)</span>
-            <span class="o">+</span> <span class="s2">&quot; have unique values per-row, dropping&quot;</span>
-        <span class="p">)</span>
-        <span class="n">cat_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">co</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">id_like</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">IndicateMissingTransform</span><span class="p">(</span>
+                    <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
+                <span class="p">))</span>
     <span class="k">if</span> <span class="s2">&quot;clean_copy&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">num_list</span><span class="p">:</span>
             <span class="n">xform</span> <span class="o">=</span> <span class="n">fit_clean_code</span><span class="p">(</span>
@@ -969,23 +1004,23 @@
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">xform</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="c1"># noinspection PyTypeChecker</span>
-                <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span><span class="n">xform</span><span class="p">]</span>
+                <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xform</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">cat_list</span><span class="p">:</span>
         <span class="k">if</span> <span class="s2">&quot;prevalence_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
             <span class="c1"># noinspection PyTypeChecker</span>
-            <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_prevalence_code</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]))</span>
-            <span class="p">]</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;indicator_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
             <span class="c1"># noinspection PyTypeChecker</span>
-            <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_indicator_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
                     <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]),</span>
                     <span class="n">min_fraction</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;indicator_min_fraction&quot;</span><span class="p">],</span>
                     <span class="n">sparse_indicators</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;sparse_indicators&quot;</span><span class="p">],</span>
                 <span class="p">)</span>
-            <span class="p">]</span>
+            <span class="p">)</span>
     <span class="n">xforms</span> <span class="o">=</span> <span class="p">[</span><span class="n">xf</span> <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">xforms</span> <span class="k">if</span> <span class="n">xf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">stp</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;user_transforms&quot;</span><span class="p">]:</span>
         <span class="n">stp</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">[</span><span class="n">var_list</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
@@ -2190,6 +2225,7 @@
 <span class="sd">    :param imputation_map:</span>
 <span class="sd">    :return: transform</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="ow">not</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">numeric_has_range</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="n">replacement</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;missingness_imputation&quot;</span><span class="p">]</span>
@@ -2266,6 +2302,7 @@
 <span class="sd">    :param params:</span>
 <span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">sf</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">grouped_by_x_statistics</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">sf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
@@ -2306,12 +2343,30 @@
 
         
             <span class="def">def</span>
-            <span class="name">fit_regression_deviation_code</span><span class="signature">(*, incoming_column_name, x, y, extra_args, params)</span>:
+            <span class="name">fit_regression_deviation_code</span><span class="signature">(
+    *,
+    incoming_column_name: str,
+    x,
+    y,
+    extra_args,
+    params
+) -&gt; Optional[<a href="#VarTransform">vtreat.vtreat_impl.VarTransform</a>]</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_regression_deviation_code</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">extra_args</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_regression_deviation_code</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">extra_args</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fit regression deviation code transform</span>
+
+<span class="sd">    :param incoming_column_name:</span>
+<span class="sd">    :param x: training explanatory values</span>
+<span class="sd">    :param y: training dependent values</span>
+<span class="sd">    :param extra_args:</span>
+<span class="sd">    :param params:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">sf</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">grouped_by_x_statistics</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">sf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
@@ -2332,7 +2387,16 @@
 
         </details>
 
-    
+            <div class="docstring"><p>Fit regression deviation code transform</p>
+
+<p>:param incoming_column_name:
+:param x: training explanatory values
+:param y: training dependent values
+:param extra_args:
+:param params:
+:return:</p>
+</div>
+
 
                 </section>
                 <section id="fit_binomial_impact_code">
@@ -2340,12 +2404,29 @@
 
         
             <span class="def">def</span>
-            <span class="name">fit_binomial_impact_code</span><span class="signature">(*, incoming_column_name, x, y, extra_args, params)</span>:
+            <span class="name">fit_binomial_impact_code</span><span class="signature">(
+    *,
+    incoming_column_name: str,
+    x,
+    y,
+    extra_args,
+    params
+) -&gt; Optional[<a href="#VarTransform">vtreat.vtreat_impl.VarTransform</a>]</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_binomial_impact_code</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">extra_args</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_binomial_impact_code</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">extra_args</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fit categorical impact code.</span>
+
+<span class="sd">    :param incoming_column_name:</span>
+<span class="sd">    :param x: training explanatory values</span>
+<span class="sd">    :param y: training dependent values</span>
+<span class="sd">    :param extra_args:</span>
+<span class="sd">    :param params:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">outcome_target</span> <span class="o">=</span> <span class="p">(</span><span class="n">extra_args</span><span class="p">[</span><span class="s2">&quot;outcome_target&quot;</span><span class="p">],)</span>
     <span class="n">var_suffix</span> <span class="o">=</span> <span class="n">extra_args</span><span class="p">[</span><span class="s2">&quot;var_suffix&quot;</span><span class="p">]</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="n">outcome_target</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
@@ -2373,7 +2454,16 @@
 
         </details>
 
-    
+            <div class="docstring"><p>Fit categorical impact code.</p>
+
+<p>:param incoming_column_name:
+:param x: training explanatory values
+:param y: training dependent values
+:param extra_args:
+:param params:
+:return:</p>
+</div>
+
 
                 </section>
                 <section id="IndicatorCodeTransform">
@@ -2388,6 +2478,7 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">IndicatorCodeTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class for indicator codes&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">incoming_column_name</span><span class="p">,</span>
@@ -2418,6 +2509,7 @@
         <span class="n">col</span> <span class="o">=</span> <span class="n">sf</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">]</span>
 
         <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;transform one column&quot;&quot;&quot;</span>
             <span class="n">v</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">col</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="mf">0.0</span>  <span class="c1"># return numeric 0/1 coding</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse_indicators_</span><span class="p">:</span>
                 <span class="n">v</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">arrays</span><span class="o">.</span><span class="n">SparseArray</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
@@ -2434,7 +2526,7 @@
 
         </details>
 
-            <div class="docstring"><p>Base class for vtreat transforms</p>
+            <div class="docstring"><p>Class for indicator codes</p>
 </div>
 
 
@@ -2499,6 +2591,7 @@
         <span class="n">col</span> <span class="o">=</span> <span class="n">sf</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">]</span>
 
         <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;transform one column&quot;&quot;&quot;</span>
             <span class="n">v</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">col</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="mf">0.0</span>  <span class="c1"># return numeric 0/1 coding</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse_indicators_</span><span class="p">:</span>
                 <span class="n">v</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">arrays</span><span class="o">.</span><span class="n">SparseArray</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
@@ -2530,14 +2623,30 @@
 
         
             <span class="def">def</span>
-            <span class="name">fit_indicator_code</span><span class="signature">(*, incoming_column_name, x, min_fraction, sparse_indicators=False)</span>:
+            <span class="name">fit_indicator_code</span><span class="signature">(
+    *,
+    incoming_column_name: str,
+    x,
+    min_fraction: float,
+    sparse_indicators: bool = False
+) -&gt; Optional[<a href="#VarTransform">vtreat.vtreat_impl.VarTransform</a>]</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_indicator_code</span><span class="p">(</span>
-    <span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">min_fraction</span><span class="p">,</span> <span class="n">sparse_indicators</span><span class="o">=</span><span class="kc">False</span>
-<span class="p">):</span>
+    <span class="o">*</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">min_fraction</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sparse_indicators</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fit indicator codes</span>
+
+<span class="sd">    :param incoming_column_name:</span>
+<span class="sd">    :param x: training explanatory variables</span>
+<span class="sd">    :param min_fraction:</span>
+<span class="sd">    :param sparse_indicators:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">sf</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">incoming_column_name</span><span class="p">:</span> <span class="n">x</span><span class="p">})</span>
     <span class="n">bad_posns</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">sf</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">])</span>
     <span class="n">sf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;_NA_&quot;</span>
@@ -2558,7 +2667,15 @@
 
         </details>
 
-    
+            <div class="docstring"><p>Fit indicator codes</p>
+
+<p>:param incoming_column_name:
+:param x: training explanatory variables
+:param min_fraction:
+:param sparse_indicators:
+:return:</p>
+</div>
+
 
                 </section>
                 <section id="fit_prevalence_code">
@@ -2566,12 +2683,23 @@
 
         
             <span class="def">def</span>
-            <span class="name">fit_prevalence_code</span><span class="signature">(incoming_column_name, x)</span>:
+            <span class="name">fit_prevalence_code</span><span class="signature">(
+    incoming_column_name: str,
+    x
+) -&gt; Optional[<a href="#VarTransform">vtreat.vtreat_impl.VarTransform</a>]</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_prevalence_code</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_prevalence_code</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fit a prevalence code</span>
+
+<span class="sd">    :param incoming_column_name:</span>
+<span class="sd">    :param x: training explanatory values</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">sf</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">})</span>
     <span class="n">bad_posns</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">sf</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">])</span>
     <span class="n">sf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;_NA_&quot;</span>
@@ -2593,7 +2721,13 @@
 
         </details>
 
-    
+            <div class="docstring"><p>Fit a prevalence code</p>
+
+<p>:param incoming_column_name:
+:param x: training explanatory values
+:return:</p>
+</div>
+
 
                 </section>
                 <section id="fit_numeric_outcome_treatment">
@@ -2605,9 +2739,9 @@
     *,
     X,
     y,
-    var_list,
-    outcome_name,
-    cols_to_copy,
+    var_list: Optional[Iterable[str]],
+    outcome_name: str,
+    cols_to_copy: Optional[Iterable[str]],
     params,
     imputation_map
 )</span>:
@@ -2616,41 +2750,35 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_numeric_outcome_treatment</span><span class="p">(</span>
-    <span class="o">*</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">var_list</span><span class="p">,</span> <span class="n">outcome_name</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">imputation_map</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+        <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+        <span class="n">outcome_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+        <span class="n">params</span><span class="p">,</span>
+        <span class="n">imputation_map</span>
 <span class="p">):</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">var_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
-        <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
-    <span class="n">copy_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">)</span>
-    <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">co</span> <span class="ow">in</span> <span class="n">copy_set</span><span class="p">))]</span>
-    <span class="n">v_counts</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">get_unique_value_count</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">}</span>
-    <span class="n">var_list</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">v_counts</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">}</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;no variables&quot;</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fit set of treatments in a regression situation.</span>
+
+<span class="sd">    :param X: training explanatory values</span>
+<span class="sd">    :param y: training dependent values</span>
+<span class="sd">    :param var_list: list of dependent variable names</span>
+<span class="sd">    :param outcome_name: name for outcome column</span>
+<span class="sd">    :param cols_to_copy: list of columns to copy to output</span>
+<span class="sd">    :param params:</span>
+<span class="sd">    :param imputation_map:</span>
+<span class="sd">    :return: transform plan</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
+        <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span><span class="p">)</span>
     <span class="n">xforms</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">all_bad</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">:</span>
-        <span class="n">n_bad</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]))</span>
-        <span class="k">if</span> <span class="n">n_bad</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">:</span>
-            <span class="n">all_bad</span> <span class="o">=</span> <span class="n">all_bad</span> <span class="o">+</span> <span class="p">[</span><span class="n">vi</span><span class="p">]</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">n_bad</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">n_bad</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">):</span>
-            <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-                <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
-                    <span class="n">IndicateMissingTransform</span><span class="p">(</span>
-                        <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
-                    <span class="p">)</span>
-                <span class="p">]</span>
-    <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">co</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">all_bad</span><span class="p">)))]</span>
-    <span class="n">num_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">can_convert_v_to_numeric</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">co</span><span class="p">])]</span>
-    <span class="n">cat_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">co</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">num_list</span><span class="p">)]</span>
-    <span class="n">id_like</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">cat_list</span> <span class="k">if</span> <span class="n">v_counts</span><span class="p">[</span><span class="n">co</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">id_like</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s2">&quot;variable(s) &quot;</span>
-            <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">id_like</span><span class="p">)</span>
-            <span class="o">+</span> <span class="s2">&quot; have unique values per-row, dropping&quot;</span>
-        <span class="p">)</span>
-        <span class="n">cat_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">co</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">id_like</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">IndicateMissingTransform</span><span class="p">(</span>
+                    <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
+                <span class="p">))</span>
     <span class="k">if</span> <span class="s2">&quot;clean_copy&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">num_list</span><span class="p">:</span>
             <span class="n">xform</span> <span class="o">=</span> <span class="n">fit_clean_code</span><span class="p">(</span>
@@ -2661,11 +2789,11 @@
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">xform</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="c1"># noinspection PyTypeChecker</span>
-                <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span><span class="n">xform</span><span class="p">]</span>
+                <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xform</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">cat_list</span><span class="p">:</span>
         <span class="k">if</span> <span class="s2">&quot;impact_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
             <span class="c1"># noinspection PyTypeChecker</span>
-            <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_regression_impact_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
                     <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]),</span>
@@ -2673,10 +2801,10 @@
                     <span class="n">extra_args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
                 <span class="p">)</span>
-            <span class="p">]</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;deviation_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
             <span class="c1"># noinspection PyTypeChecker</span>
-            <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_regression_deviation_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
                     <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]),</span>
@@ -2684,22 +2812,22 @@
                     <span class="n">extra_args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
                 <span class="p">)</span>
-            <span class="p">]</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;prevalence_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
             <span class="c1"># noinspection PyTypeChecker</span>
-            <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_prevalence_code</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]))</span>
-            <span class="p">]</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;indicator_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
             <span class="c1"># noinspection PyTypeChecker</span>
-            <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_indicator_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
                     <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]),</span>
                     <span class="n">min_fraction</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;indicator_min_fraction&quot;</span><span class="p">],</span>
                     <span class="n">sparse_indicators</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;sparse_indicators&quot;</span><span class="p">],</span>
                 <span class="p">)</span>
-            <span class="p">]</span>
+            <span class="p">)</span>
     <span class="n">xforms</span> <span class="o">=</span> <span class="p">[</span><span class="n">xf</span> <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">xforms</span> <span class="k">if</span> <span class="n">xf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">stp</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;user_transforms&quot;</span><span class="p">]:</span>
         <span class="n">stp</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">[</span><span class="n">var_list</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
@@ -2714,7 +2842,18 @@
 
         </details>
 
-    
+            <div class="docstring"><p>Fit set of treatments in a regression situation.</p>
+
+<p>:param X: training explanatory values
+:param y: training dependent values
+:param var_list: list of dependent variable names
+:param outcome_name: name for outcome column
+:param cols_to_copy: list of columns to copy to output
+:param params:
+:param imputation_map:
+:return: transform plan</p>
+</div>
+
 
                 </section>
                 <section id="fit_binomial_outcome_treatment">
@@ -2727,9 +2866,9 @@
     X,
     y,
     outcome_target,
-    var_list,
-    outcome_name,
-    cols_to_copy,
+    var_list: Optional[Iterable[str]],
+    outcome_name: str,
+    cols_to_copy: Optional[Iterable[str]],
     params,
     imputation_map
 )</span>:
@@ -2739,49 +2878,35 @@
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_binomial_outcome_treatment</span><span class="p">(</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">X</span><span class="p">,</span>
-    <span class="n">y</span><span class="p">,</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
     <span class="n">outcome_target</span><span class="p">,</span>
-    <span class="n">var_list</span><span class="p">,</span>
-    <span class="n">outcome_name</span><span class="p">,</span>
-    <span class="n">cols_to_copy</span><span class="p">,</span>
+    <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">outcome_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="n">params</span><span class="p">,</span>
     <span class="n">imputation_map</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">var_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
-        <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
-    <span class="n">copy_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">)</span>
-    <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">co</span> <span class="ow">in</span> <span class="n">copy_set</span><span class="p">))]</span>
-    <span class="n">v_counts</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">get_unique_value_count</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">}</span>
-    <span class="n">var_list</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">v_counts</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">}</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;no variables&quot;</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :param X: training explanatory values</span>
+<span class="sd">    :param y: training dependent values</span>
+<span class="sd">    :param outcome_target: dependent value to consider positive or in class</span>
+<span class="sd">    :param var_list: list of variables to process</span>
+<span class="sd">    :param outcome_name: name for outcome column</span>
+<span class="sd">    :param cols_to_copy: list of columns to copy to output</span>
+<span class="sd">    :param params:</span>
+<span class="sd">    :param imputation_map:</span>
+<span class="sd">    :return: transform plan</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
+        <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span><span class="p">)</span>
     <span class="n">xforms</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">all_bad</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">:</span>
-        <span class="n">n_bad</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]))</span>
-        <span class="k">if</span> <span class="n">n_bad</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">:</span>
-            <span class="n">all_bad</span> <span class="o">=</span> <span class="n">all_bad</span> <span class="o">+</span> <span class="p">[</span><span class="n">vi</span><span class="p">]</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">n_bad</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">n_bad</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">):</span>
-            <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-                <span class="c1"># noinspection PyTypeChecker</span>
-                <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
-                    <span class="n">IndicateMissingTransform</span><span class="p">(</span>
-                        <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
-                    <span class="p">)</span>
-                <span class="p">]</span>
-    <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">co</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">all_bad</span><span class="p">)))]</span>
-    <span class="n">num_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">can_convert_v_to_numeric</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">co</span><span class="p">])]</span>
-    <span class="n">cat_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">co</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">num_list</span><span class="p">)]</span>
-    <span class="n">id_like</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">cat_list</span> <span class="k">if</span> <span class="n">v_counts</span><span class="p">[</span><span class="n">co</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">id_like</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s2">&quot;variable(s) &quot;</span>
-            <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">id_like</span><span class="p">)</span>
-            <span class="o">+</span> <span class="s2">&quot; have unique values per-row, dropping&quot;</span>
-        <span class="p">)</span>
-        <span class="n">cat_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">co</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">id_like</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">IndicateMissingTransform</span><span class="p">(</span>
+                    <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
+                <span class="p">))</span>
     <span class="k">if</span> <span class="s2">&quot;clean_copy&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">num_list</span><span class="p">:</span>
             <span class="n">xform</span> <span class="o">=</span> <span class="n">fit_clean_code</span><span class="p">(</span>
@@ -2792,12 +2917,12 @@
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">xform</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="c1"># noinspection PyTypeChecker</span>
-                <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span><span class="n">xform</span><span class="p">]</span>
+                <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xform</span><span class="p">)</span>
     <span class="n">extra_args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;outcome_target&quot;</span><span class="p">:</span> <span class="n">outcome_target</span><span class="p">,</span> <span class="s2">&quot;var_suffix&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span>
     <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">cat_list</span><span class="p">:</span>
         <span class="k">if</span> <span class="s2">&quot;logit_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
             <span class="c1"># noinspection PyTypeChecker</span>
-            <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_binomial_impact_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
                     <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]),</span>
@@ -2805,22 +2930,22 @@
                     <span class="n">extra_args</span><span class="o">=</span><span class="n">extra_args</span><span class="p">,</span>
                     <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
                 <span class="p">)</span>
-            <span class="p">]</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;prevalence_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
             <span class="c1"># noinspection PyTypeChecker</span>
-            <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_prevalence_code</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]))</span>
-            <span class="p">]</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;indicator_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
             <span class="c1"># noinspection PyTypeChecker</span>
-            <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_indicator_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
                     <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]),</span>
                     <span class="n">min_fraction</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;indicator_min_fraction&quot;</span><span class="p">],</span>
                     <span class="n">sparse_indicators</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;sparse_indicators&quot;</span><span class="p">],</span>
                 <span class="p">)</span>
-            <span class="p">]</span>
+            <span class="p">)</span>
     <span class="n">xforms</span> <span class="o">=</span> <span class="p">[</span><span class="n">xf</span> <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">xforms</span> <span class="k">if</span> <span class="n">xf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">stp</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;user_transforms&quot;</span><span class="p">]:</span>
         <span class="n">stp</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">[</span><span class="n">var_list</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
@@ -2835,7 +2960,17 @@
 
         </details>
 
-    
+            <div class="docstring"><p>:param X: training explanatory values
+:param y: training dependent values
+:param outcome_target: dependent value to consider positive or in class
+:param var_list: list of variables to process
+:param outcome_name: name for outcome column
+:param cols_to_copy: list of columns to copy to output
+:param params:
+:param imputation_map:
+:return: transform plan</p>
+</div>
+
 
                 </section>
                 <section id="fit_multinomial_outcome_treatment">
@@ -2858,43 +2993,25 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_multinomial_outcome_treatment</span><span class="p">(</span>
-    <span class="o">*</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">var_list</span><span class="p">,</span> <span class="n">outcome_name</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">imputation_map</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+        <span class="n">var_list</span><span class="p">,</span>
+        <span class="n">outcome_name</span><span class="p">,</span>
+        <span class="n">cols_to_copy</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">,</span>
+        <span class="n">imputation_map</span>
 <span class="p">):</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">var_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
-        <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
-    <span class="n">copy_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">)</span>
-    <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">co</span> <span class="ow">in</span> <span class="n">copy_set</span><span class="p">))]</span>
-    <span class="n">v_counts</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">get_unique_value_count</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">}</span>
-    <span class="n">var_list</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">v_counts</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">}</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;no variables&quot;</span><span class="p">)</span>
-    <span class="n">xforms</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">all_bad</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">:</span>
-        <span class="n">n_bad</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]))</span>
-        <span class="k">if</span> <span class="n">n_bad</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">:</span>
-            <span class="n">all_bad</span> <span class="o">=</span> <span class="n">all_bad</span> <span class="o">+</span> <span class="p">[</span><span class="n">vi</span><span class="p">]</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">n_bad</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">n_bad</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">):</span>
-            <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-                <span class="c1"># noinspection PyTypeChecker</span>
-                <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
-                    <span class="n">IndicateMissingTransform</span><span class="p">(</span>
-                        <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
-                    <span class="p">)</span>
-                <span class="p">]</span>
     <span class="n">outcomes</span> <span class="o">=</span> <span class="p">[</span><span class="n">oi</span> <span class="k">for</span> <span class="n">oi</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">y</span><span class="p">)]</span>
-    <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">co</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">all_bad</span><span class="p">)))]</span>
-    <span class="n">num_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">can_convert_v_to_numeric</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">co</span><span class="p">])]</span>
-    <span class="n">cat_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">co</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">num_list</span><span class="p">)]</span>
-    <span class="n">id_like</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">cat_list</span> <span class="k">if</span> <span class="n">v_counts</span><span class="p">[</span><span class="n">co</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">id_like</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s2">&quot;variable(s) &quot;</span>
-            <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">id_like</span><span class="p">)</span>
-            <span class="o">+</span> <span class="s2">&quot; have unique values per-row, dropping&quot;</span>
-        <span class="p">)</span>
-        <span class="n">cat_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">co</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">id_like</span><span class="p">)]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">outcomes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
+    <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
+        <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span><span class="p">)</span>
+    <span class="n">xforms</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">IndicateMissingTransform</span><span class="p">(</span>
+                    <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
+                <span class="p">))</span>
     <span class="k">if</span> <span class="s2">&quot;clean_copy&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">num_list</span><span class="p">:</span>
             <span class="n">xform</span> <span class="o">=</span> <span class="n">fit_clean_code</span><span class="p">(</span>
@@ -2905,7 +3022,7 @@
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">xform</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="c1"># noinspection PyTypeChecker</span>
-                <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span><span class="n">xform</span><span class="p">]</span>
+                <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xform</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">cat_list</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">outcome</span> <span class="ow">in</span> <span class="n">outcomes</span><span class="p">:</span>
             <span class="k">if</span> <span class="s2">&quot;impact_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
@@ -2914,7 +3031,7 @@
                     <span class="s2">&quot;var_suffix&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">outcome</span><span class="p">)),</span>
                 <span class="p">}</span>
                 <span class="c1"># noinspection PyTypeChecker</span>
-                <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
+                <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                     <span class="n">fit_binomial_impact_code</span><span class="p">(</span>
                         <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
                         <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]),</span>
@@ -2922,22 +3039,22 @@
                         <span class="n">extra_args</span><span class="o">=</span><span class="n">extra_args</span><span class="p">,</span>
                         <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span>
                     <span class="p">)</span>
-                <span class="p">]</span>
+                <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;prevalence_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
             <span class="c1"># noinspection PyTypeChecker</span>
-            <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_prevalence_code</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]))</span>
-            <span class="p">]</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;indicator_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
             <span class="c1"># noinspection PyTypeChecker</span>
-            <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_indicator_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
                     <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]),</span>
                     <span class="n">min_fraction</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;indicator_min_fraction&quot;</span><span class="p">],</span>
                     <span class="n">sparse_indicators</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;sparse_indicators&quot;</span><span class="p">],</span>
                 <span class="p">)</span>
-            <span class="p">]</span>
+            <span class="p">)</span>
     <span class="n">xforms</span> <span class="o">=</span> <span class="p">[</span><span class="n">xf</span> <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">xforms</span> <span class="k">if</span> <span class="n">xf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">xforms</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;no variables created&quot;</span><span class="p">)</span>
@@ -2970,40 +3087,15 @@
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_unsupervised_treatment</span><span class="p">(</span>
     <span class="o">*</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">var_list</span><span class="p">,</span> <span class="n">outcome_name</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">imputation_map</span>
 <span class="p">):</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">var_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
-        <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
-    <span class="n">copy_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">)</span>
-    <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">co</span> <span class="ow">in</span> <span class="n">copy_set</span><span class="p">))]</span>
-    <span class="n">v_counts</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">get_unique_value_count</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">}</span>
-    <span class="n">var_list</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">v_counts</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">}</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;no variables&quot;</span><span class="p">)</span>
+    <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
+        <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span><span class="p">)</span>
     <span class="n">xforms</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">all_bad</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">:</span>
-        <span class="n">n_bad</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]))</span>
-        <span class="k">if</span> <span class="n">n_bad</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">:</span>
-            <span class="n">all_bad</span> <span class="o">=</span> <span class="n">all_bad</span> <span class="o">+</span> <span class="p">[</span><span class="n">vi</span><span class="p">]</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">n_bad</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">n_bad</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">):</span>
-            <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-                <span class="c1"># noinspection PyTypeChecker</span>
-                <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
-                    <span class="n">IndicateMissingTransform</span><span class="p">(</span>
-                        <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
-                    <span class="p">)</span>
-                <span class="p">]</span>
-    <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">co</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">all_bad</span><span class="p">)))]</span>
-    <span class="n">num_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">can_convert_v_to_numeric</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">co</span><span class="p">])]</span>
-    <span class="n">cat_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">co</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">num_list</span><span class="p">)]</span>
-    <span class="n">id_like</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">cat_list</span> <span class="k">if</span> <span class="n">v_counts</span><span class="p">[</span><span class="n">co</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">id_like</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="s2">&quot;variable(s) &quot;</span>
-            <span class="o">+</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">id_like</span><span class="p">)</span>
-            <span class="o">+</span> <span class="s2">&quot; have unique values per-row, dropping&quot;</span>
-        <span class="p">)</span>
-        <span class="n">cat_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">co</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">id_like</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">IndicateMissingTransform</span><span class="p">(</span>
+                    <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
+                <span class="p">))</span>
     <span class="k">if</span> <span class="s2">&quot;clean_copy&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">num_list</span><span class="p">:</span>
             <span class="n">xform</span> <span class="o">=</span> <span class="n">fit_clean_code</span><span class="p">(</span>
@@ -3014,23 +3106,23 @@
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">xform</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="c1"># noinspection PyTypeChecker</span>
-                <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span><span class="n">xform</span><span class="p">]</span>
+                <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xform</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">cat_list</span><span class="p">:</span>
         <span class="k">if</span> <span class="s2">&quot;prevalence_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
             <span class="c1"># noinspection PyTypeChecker</span>
-            <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_prevalence_code</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]))</span>
-            <span class="p">]</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;indicator_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
             <span class="c1"># noinspection PyTypeChecker</span>
-            <span class="n">xforms</span> <span class="o">=</span> <span class="n">xforms</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_indicator_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
                     <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]),</span>
                     <span class="n">min_fraction</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;indicator_min_fraction&quot;</span><span class="p">],</span>
                     <span class="n">sparse_indicators</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;sparse_indicators&quot;</span><span class="p">],</span>
                 <span class="p">)</span>
-            <span class="p">]</span>
+            <span class="p">)</span>
     <span class="n">xforms</span> <span class="o">=</span> <span class="p">[</span><span class="n">xf</span> <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">xforms</span> <span class="k">if</span> <span class="n">xf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">stp</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;user_transforms&quot;</span><span class="p">]:</span>
         <span class="n">stp</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">[</span><span class="n">var_list</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>

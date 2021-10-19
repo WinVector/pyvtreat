@@ -34,9 +34,9 @@ pkg/vtreat/stats_utils.py      82      3    96%
 pkg/vtreat/transform.py        17      4    76%
 pkg/vtreat/util.py            153     21    86%
 pkg/vtreat/vtreat_api.py      287     36    87%
-pkg/vtreat/vtreat_impl.py     655     79    88%
+pkg/vtreat/vtreat_impl.py     609     68    89%
 -----------------------------------------------
-TOTAL                        1250    154    88%
+TOTAL                        1204    143    88%
 
 
-============================= 29 passed in 18.24s ==============================
+============================= 29 passed in 17.00s ==============================
