@@ -6,7 +6,7 @@ from abc import ABC
 import math
 import pprint
 import warnings
-from typing import Iterable, Optional, Tuple
+from typing import Iterable, List, Optional, Tuple
 
 import numpy
 import pandas
@@ -447,7 +447,7 @@ def _prepare_variable_lists(
         X,
         cols_to_copy: Optional[Iterable[str]],
         var_list: Optional[Iterable[str]],
-):
+) -> Tuple[List[str], List[str], List[str], List[str], List[str]]:
     """
     Prepare lists of variables for variable treatment.
 
@@ -675,12 +675,25 @@ def fit_binomial_outcome_treatment(
 def fit_multinomial_outcome_treatment(
         *,
         X, y,
-        var_list,
-        outcome_name,
-        cols_to_copy,
+        var_list: Optional[Iterable[str]],
+        outcome_name: str,
+        cols_to_copy: Optional[Iterable[str]],
         params,
         imputation_map
 ):
+    """
+    Fit a variable treatment for multinomial outcomes.
+
+    :param X: training explanatory values
+    :param y: training dependent values
+    :param var_list: list of variables to process
+    :param outcome_name: name for outcome column
+    :param cols_to_copy: list of columns to copy to output
+    :param params:
+    :param imputation_map:
+    :return:
+    """
+
     outcomes = [oi for oi in set(y)]
     assert len(outcomes) > 1
     cat_list, cols_to_copy, mis_list, num_list, var_list = _prepare_variable_lists(
@@ -751,8 +764,26 @@ def fit_multinomial_outcome_treatment(
 
 # noinspection PyPep8Naming
 def fit_unsupervised_treatment(
-    *, X, var_list, outcome_name, cols_to_copy, params, imputation_map
+        *,
+        X,
+        var_list: Optional[Iterable[str]],
+        outcome_name: str,
+        cols_to_copy: Optional[Iterable[str]],
+        params,
+        imputation_map
 ):
+    """
+    Fit a data treatment in the unsupervised case.
+
+    :param X: training explanatory values
+    :param var_list: list of variables to process
+    :param outcome_name: name for outcome column
+    :param cols_to_copy: list of columns to copy to output
+    :param params:
+    :param imputation_map:
+    :return:
+    """
+
     cat_list, cols_to_copy, mis_list, num_list, var_list = _prepare_variable_lists(
         X=X, cols_to_copy=cols_to_copy, var_list=var_list)
     xforms = []
@@ -801,15 +832,34 @@ def fit_unsupervised_treatment(
     }
 
 
-def pre_prep_frame(x, *, col_list, cols_to_copy, cat_cols=None):
-    """Create a copy of pandas.DataFrame x restricted to col_list union cols_to_copy with col_list - cols_to_copy
+def pre_prep_frame(
+        x: pandas.DataFrame,
+        *,
+        col_list: Optional[Iterable[str]],
+        cols_to_copy: Optional[Iterable[str]],
+        cat_cols=None) -> pandas.DataFrame:
+    """
+    Create a copy of pandas.DataFrame x restricted to col_list union cols_to_copy with col_list - cols_to_copy
     converted to only string and numeric types.  New pandas.DataFrame has trivial indexing.  If col_list
-    is empty it is interpreted as all columns."""
+    is empty it is interpreted as all columns.
+
+    :param x:
+    :param col_list:
+    :param cols_to_copy:
+    :param cat_cols:
+    :return:
+    """
 
     if cols_to_copy is None:
         cols_to_copy = []
-    if (col_list is None) or (len(col_list) <= 0):
+    else:
+        cols_to_copy = [c for c in cols_to_copy]
+    if col_list is None:
+        col_list = []
+    if len(col_list) <= 0:
         col_list = [co for co in x.columns]
+    else:
+        col_list = [c for c in col_list]
     x_set = set(x.columns)
     col_set = set(col_list)
     for ci in cols_to_copy:
@@ -844,99 +894,56 @@ def pre_prep_frame(x, *, col_list, cols_to_copy, cat_cols=None):
     return x
 
 
-def perform_transform(*, x, transform, params):
-    plan = transform.plan_
-    xform_steps = [xfi for xfi in plan["xforms"]]
-    user_steps = [stp for stp in params["user_transforms"]]
-    # restrict down to to results we are going to use
-    if (transform.result_restriction is not None) and (
-        len(transform.result_restriction) > 0
-    ):
-        xform_steps = [
-            xfi
-            for xfi in xform_steps
-            if len(
-                set(xfi.derived_column_names_).intersection(
-                    transform.result_restriction
-                )
-            )
-            > 0
-        ]
-        user_steps = [
-            stp
-            for stp in user_steps
-            if len(set(stp.derived_vars_).intersection(transform.result_restriction))
-            > 0
-        ]
-    # check all required columns are present
-    needs = set()
-    for xfi in xform_steps:
-        if xfi.incoming_column_name_ is not None:
-            needs.add(xfi.incoming_column_name_)
-    for stp in user_steps:
-        if stp.incoming_vars_ is not None:
-            needs.update(stp.incoming_vars_)
-    missing = needs - set(x.columns)
-    if len(missing) > 0:
-        raise ValueError("missing required input columns " + str(missing))
-    # do the work
-    new_frames = [xfi.transform(x) for xfi in (xform_steps + user_steps)]
-    new_frames = [frm for frm in new_frames if (frm is not None) and (frm.shape[1] > 0)]
-    # see if we want to copy over any columns
-    copy_set = set(plan["cols_to_copy"])
-    to_copy = [ci for ci in x.columns if ci in copy_set]
-    if len(to_copy) > 0:
-        cp = x.loc[:, to_copy].copy()
-        new_frames = [cp] + new_frames
-    if len(new_frames) <= 0:
-        raise ValueError("no columns transformed")
-    res = pandas.concat(new_frames, axis=1, sort=False)
-    res.reset_index(inplace=True, drop=True)
-    return res
+def _mean_of_single_column_pandas_list(val_list: Iterable[pandas.DataFrame]) -> float:
+    """
+    Compute the mean of non-nan positions of a bunch of single column data frames
 
+    :param val_list: a list of single column Pandas data frames
+    :return: mean, or numpy.nan if there are no values
+    """
 
-def limit_to_appropriate_columns(*, res, transform):
-    plan = transform.plan_
-    to_copy = set(plan["cols_to_copy"])
-    to_take = set(
-        [
-            ci
-            for ci in transform.score_frame_["variable"][
-                transform.score_frame_["has_range"]
-            ]
-        ]
-    )
-    if (transform.result_restriction is not None) and (
-        len(transform.result_restriction) > 0
-    ):
-        to_take = to_take.intersection(transform.result_restriction)
-    cols_to_keep = [ci for ci in res.columns if (ci in to_copy) or (ci in to_take)]
-    if len(cols_to_keep) <= 0:
-        raise ValueError("no columns retained")
-    res = res[cols_to_keep].copy()
-    res.reset_index(inplace=True, drop=True)
-    return res
-
-
-# val_list is a list single column Pandas data frames
-def mean_of_single_column_pandas_list(val_list):
-    if val_list is None or len(val_list) <= 0:
+    if val_list is None:
         return numpy.nan
-    d = pandas.concat(val_list, axis=0, sort=False)
+    val_list = [v for v in val_list]
+    if len(val_list) <= 0:
+        return numpy.nan
+    if len(val_list) <= 1:
+        d = val_list[0]
+    else:
+        d = pandas.concat(val_list, axis=0, sort=False)
     col = d.columns[0]
     d = d.loc[numpy.logical_not(vtreat.util.is_bad(d[col])), [col]]
     if d.shape[0] < 1:
         return numpy.nan
-    return numpy.mean(d[col])
+    res = numpy.mean(d[col].values)
+    assert isinstance(res, float)  # type hint for PyCharm IDE
+    return res
 
 
-# assumes each y-aware variable produces one derived column
-# also clears out refitter_ values to None
-def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
+def cross_patch_refit_y_aware_cols(
+        *,
+        x: pandas.DataFrame,
+        y,
+        res: pandas.DataFrame,
+        plan,
+        cross_plan) -> None:
+    """
+    Re fit the y-aware columns according to cross plan.
+    Clears out refitter_ values to None.
+    Assumes each y-aware variable produces one derived column.
+
+    :param x: explanatory values
+    :param y: dependent values
+    :param res: transformed frame to patch results into, altered
+    :param plan: fitting plan
+    :param cross_plan: cross validation plan
+    :return: no return, res is altered in place
+    """
+
     if cross_plan is None or len(cross_plan) <= 1:
         for xf in plan["xforms"]:
             xf.refitter_ = None
-        return res
+        return
     incoming_colset = set(x.columns)
     derived_colset = set(res.columns)
     for xf in plan["xforms"]:
@@ -958,6 +965,7 @@ def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
 
         # noinspection PyPep8Naming
         def maybe_transform(*, fit, X):
+            """conditional patching"""
             if fit is None:
                 return None
             return fit.transform(X)
@@ -976,7 +984,7 @@ def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
             for cp in cross_plan
         ]
         # replace any missing sections with global average (slight data leak potential)
-        avg = mean_of_single_column_pandas_list(
+        avg = _mean_of_single_column_pandas_list(
             [pi for pi in patches if pi is not None]
         )
         if numpy.isnan(avg):
@@ -994,16 +1002,32 @@ def cross_patch_refit_y_aware_cols(*, x, y, res, plan, cross_plan):
         res.loc[vtreat.util.is_bad(res[derived_column_name]), derived_column_name] = avg
     for xf in plan["xforms"]:
         xf.refitter_ = None
-    return res
 
 
-def cross_patch_user_y_aware_cols(*, x, y, res, params, cross_plan):
+def cross_patch_user_y_aware_cols(
+        *,
+        x: pandas.DataFrame,
+        y,
+        res: pandas.DataFrame,
+        params,
+        cross_plan) -> None:
+    """
+    Re fit the user y-aware columns according to cross plan.
+    Assumes each y-aware variable produces one derived column.
+
+    :param x: explanatory values
+    :param y: dependent values
+    :param res: transformed frame to patch results into, altered
+    :param params:
+    :param cross_plan: cross validation plan
+    :return: no return, res altered in place
+    """
     if cross_plan is None or len(cross_plan) <= 1:
-        return res
+        return
     incoming_colset = set(x.columns)
     derived_colset = set(res.columns)
     if len(derived_colset) <= 0:
-        return res
+        return
     for ut in params["user_transforms"]:
         if not ut.y_aware_:
             continue
@@ -1023,7 +1047,7 @@ def cross_patch_user_y_aware_cols(*, x, y, res, params, cross_plan):
         ]
         for col in ut.derived_vars_:
             # replace any missing sections with global average (slight data leak potential)
-            avg = mean_of_single_column_pandas_list(
+            avg = _mean_of_single_column_pandas_list(
                 [pi.loc[:, [col]] for pi in patches if pi is not None]
             )
             if numpy.isnan(avg):
@@ -1037,13 +1061,29 @@ def cross_patch_user_y_aware_cols(*, x, y, res, params, cross_plan):
                 cp = cross_plan[i]
                 res.loc[cp["app"], col] = numpy.asarray(pi[col]).reshape((len(pi),))
             res.loc[vtreat.util.is_bad(res[col]), col] = avg
-    return res
 
 
 def score_plan_variables(
-    cross_frame, outcome, plan, params, *, is_classification=False
-):
+        cross_frame: pandas.DataFrame,
+        outcome,
+        plan,
+        params,
+        *,
+        is_classification: bool = False
+) -> pandas.DataFrame:
+    """
+    Quality score variables to build up score frame.
+
+    :param cross_frame: cross transformed explanatory variables
+    :param outcome: dependent variable
+    :param plan: treatment plan dictionary
+    :param params:
+    :param is_classification: logical, if True classification if False regression
+    :return: score frame
+    """
+
     def describe_xf(xf):
+        """describe variable transform"""
         description = pandas.DataFrame({"variable": xf.derived_column_names_})
         description["orig_variable"] = xf.incoming_column_name_
         description["treatment"] = xf.treatment_
@@ -1051,6 +1091,7 @@ def score_plan_variables(
         return description
 
     def describe_ut(ut):
+        """describe user variable transform"""
         description = pandas.DataFrame(
             {"orig_variable": ut.incoming_vars_, "variable": ut.derived_vars_}
         )
@@ -1103,8 +1144,22 @@ def score_plan_variables(
     return score_frame
 
 
-def pseudo_score_plan_variables(*, cross_frame, plan, params):
+def pseudo_score_plan_variables(
+        *,
+        cross_frame,
+        plan,
+        params) -> pandas.DataFrame:
+    """
+    Build a score frame look-alike for unsupervised case.
+
+    :param cross_frame: cross transformed explanatory variables
+    :param plan:
+    :param params:
+    :return: score frame
+    """
+
     def describe_xf(xf):
+        """describe variable transform"""
         description = pandas.DataFrame({"variable": xf.derived_column_names_})
         description["orig_variable"] = xf.incoming_column_name_
         description["treatment"] = xf.treatment_
@@ -1112,6 +1167,7 @@ def pseudo_score_plan_variables(*, cross_frame, plan, params):
         return description
 
     def describe_ut(ut):
+        """describe user variable transform"""
         description = pandas.DataFrame(
             {"orig_variable": ut.incoming_vars_, "variable": ut.derived_vars_}
         )
@@ -1142,16 +1198,18 @@ def pseudo_score_plan_variables(*, cross_frame, plan, params):
     return score_frame
 
 
-# lashing into sklearn API
-# https://sklearn-template.readthedocs.io/en/latest/user_guide.html#transformer
 class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.TransformerMixin):
+    """
+    Class for variable treatments, implements much of the sklearn pipeline/transformer
+    API. https://sklearn-template.readthedocs.io/en/latest/user_guide.html#transformer
+    """
     def __init__(
         self,
         *,
-        var_list=None,
-        outcome_name=None,
+        var_list: Optional[Iterable[str]] = None,
+        outcome_name: Optional[str] = None,
         outcome_target=None,
-        cols_to_copy=None,
+        cols_to_copy: Optional[Iterable[str]] = None,
         params=None,
         imputation_map=None,
     ):
@@ -1163,15 +1221,15 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
             cols_to_copy = []
         else:
             cols_to_copy = vtreat.util.unique_items_in_order(cols_to_copy)
-        if outcome_name is not None and outcome_name not in set(cols_to_copy):
-            cols_to_copy = cols_to_copy + [outcome_name]
+        if (outcome_name is not None) and (outcome_name not in set(cols_to_copy)):
+            cols_to_copy.append(outcome_name)
         confused = set(cols_to_copy).intersection(set(var_list))
         if len(confused) > 0:
             raise ValueError(
                 "variables in treatment plan and non-treatment: " + ", ".join(confused)
             )
         if imputation_map is None:
-            imputation_map = {}  # dict
+            imputation_map = dict()
         self.outcome_name_ = outcome_name
         self.outcome_target_ = outcome_target
         self.var_list_ = [vi for vi in var_list if vi not in set(cols_to_copy)]
@@ -1187,7 +1245,16 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         self.result_restriction = None
         self.clear()
 
-    def check_column_names(self, col_names):
+    def check_column_names(self, col_names: Iterable[str]):
+        """
+        Check that none of the column names we are working with are non-unique.
+        Also check variable columns are all present (columns to copy and outcome allowed to be missing).
+
+        :param col_names:
+        :return: None, raises exception if there is a problem
+        """
+
+        col_names = [c for c in col_names]
         to_check = set(self.var_list_)
         if self.outcome_name_ is not None:
             to_check.add(self.outcome_name_)
@@ -1196,8 +1263,12 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         seen = [c for c in col_names if c in to_check]
         if len(seen) != len(set(seen)):
             raise ValueError("duplicate column names in frame")
+        missing = set(self.var_list_) - set(col_names)
+        if len(missing) > 0:
+            raise ValueError(f"missing required columns: {missing}")
 
     def clear(self):
+        """reset state"""
         self.plan_ = None
         self.score_frame_ = None
         self.cross_rows_ = None
@@ -1207,16 +1278,19 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         self.result_restriction = None
 
     def get_result_restriction(self):
+        """accessor"""
         if self.result_restriction is None:
             return None
         return self.result_restriction.copy()
 
     def set_result_restriction(self, new_vars):
+        """setter"""
         self.result_restriction = None
         if (new_vars is not None) and (len(new_vars) > 0):
             self.result_restriction = set(new_vars)
 
     def merge_params(self, p):
+        """merge in use parameters"""
         raise NotImplementedError("base class called")
 
     # display methods
@@ -1252,15 +1326,40 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
 
     # noinspection PyPep8Naming, PyUnusedLocal
     def fit(self, X, y=None, **fit_params):
+        """
+        sklearn fit.
+
+        :param X: explanatory variables
+        :param y: (optional) dependent variable
+        :param fit_params:
+        :return: self (for method chaining)
+        """
+
         self.fit_transform(X=X, y=y)
         return self
 
     # noinspection PyPep8Naming, PyUnusedLocal
     def fit_transform(self, X, y=None, **fit_params):
+        """
+        sklearn fit_transform, correct way to trigger cross methods.
+
+        :param X: explanatory variables
+        :param y: (optional) dependent variable
+        :param fit_params:
+        :return: transformed data
+        """
+
         raise NotImplementedError("base class method called")
 
     # noinspection PyPep8Naming
     def transform(self, X):
+        """
+        sklearn transform
+
+        :param X: explanatory variables
+        :return: transformed data
+        """
+
         raise NotImplementedError("base class method called")
 
     # https://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html
@@ -1270,6 +1369,9 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         """
         vtreat exposes a subset of controls as tunable parameters, users can choose this set
         by specifying the tunable_params list in object construction parameters
+
+        :param deep: ignored
+        :return: dict of tunable parameters
         """
         return {ti: self.params_[ti] for ti in self.params_["tunable_params"]}
 
@@ -1278,7 +1380,11 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         """
         vtreat exposes a subset of controls as tunable parameters, users can choose this set
         by specifying the tunable_params list in object construction parameters
+
+        :param params:
+        :return: self (for method chaining)
         """
+
         for (k, v) in params.items():
             if k in self.params_["tunable_params"]:
                 self.params_[k] = v
@@ -1290,23 +1396,53 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
 
     # noinspection PyPep8Naming
     def fit_predict(self, X, y=None, **fit_params):
+        """
+        Alias for fit_transform()
+
+        :param X: explanatory variables
+        :param y: (optional) dependent variable
+        :param fit_params:
+        :return: transformed data
+        """
         return self.fit_transform(X=X, y=y, **fit_params)
 
     # noinspection PyPep8Naming
     def predict(self, X):
+        """
+        Alias for transform.
+
+        :param X: explanatory variables
+        :return: transformed data
+        """
+
         return self.transform(X)
 
     # noinspection PyPep8Naming
     def predict_proba(self, X):
+        """
+        Alias for transform.
+
+        :param X: explanatory variables
+        :return: transformed data
+        """
+
         return self.transform(X)
 
     # https://github.com/scikit-learn/scikit-learn/blob/master/sklearn/compose/_column_transformer.py
 
     def get_feature_names(self, input_features=None):
+        """
+        Get list of produced feature names.
+
+        :param input_features: Optional, restrict to these features
+        :return:
+        """
         if self.score_frame_ is None:
             raise ValueError(
                 "get_feature_names called on uninitialized vtreat transform"
             )
+        if input_features is not None:
+            input_features = [c for c in input_features]
         filter_to_recommended = False
         try:
             filter_to_recommended = self.params_["filter_to_recommended"]
@@ -1335,3 +1471,99 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
             ]
         new_vars = new_vars + self.cols_to_copy_
         return new_vars
+
+
+def perform_transform(
+        *,
+        x: pandas.DataFrame,
+        transform: VariableTreatment,
+        params) -> pandas.DataFrame:
+    """
+    Transform a data frame.
+
+    :param x: data to be transformed.
+    :param transform: transform
+    :param params:
+    :return: new data frame
+    """
+    plan = transform.plan_
+    xform_steps = [xfi for xfi in plan["xforms"]]
+    user_steps = [stp for stp in params["user_transforms"]]
+    # restrict down to to results we are going to use
+    if (transform.result_restriction is not None) and (
+        len(transform.result_restriction) > 0
+    ):
+        xform_steps = [
+            xfi
+            for xfi in xform_steps
+            if len(
+                set(xfi.derived_column_names_).intersection(
+                    transform.result_restriction
+                )
+            )
+            > 0
+        ]
+        user_steps = [
+            stp
+            for stp in user_steps
+            if len(set(stp.derived_vars_).intersection(transform.result_restriction))
+            > 0
+        ]
+    # check all required columns are present
+    needs = set()
+    for xfi in xform_steps:
+        if xfi.incoming_column_name_ is not None:
+            needs.add(xfi.incoming_column_name_)
+    for stp in user_steps:
+        if stp.incoming_vars_ is not None:
+            needs.update(stp.incoming_vars_)
+    missing = needs - set(x.columns)
+    if len(missing) > 0:
+        raise ValueError("missing required input columns " + str(missing))
+    # do the work
+    new_frames = [xfi.transform(x) for xfi in (xform_steps + user_steps)]
+    new_frames = [frm for frm in new_frames if (frm is not None) and (frm.shape[1] > 0)]
+    # see if we want to copy over any columns
+    copy_set = set(plan["cols_to_copy"])
+    to_copy = [ci for ci in x.columns if ci in copy_set]
+    if len(to_copy) > 0:
+        cp = x.loc[:, to_copy].copy()
+        new_frames = [cp] + new_frames
+    if len(new_frames) <= 0:
+        raise ValueError("no columns transformed")
+    res = pandas.concat(new_frames, axis=1, sort=False)
+    res.reset_index(inplace=True, drop=True)
+    return res
+
+
+def limit_to_appropriate_columns(
+        *,
+        res: pandas.DataFrame,
+        transform: VariableTreatment) -> pandas.DataFrame:
+    """
+    Limit down to appropriate columns.
+
+    :param res:
+    :param transform:
+    :return:
+    """
+    plan = transform.plan_
+    to_copy = set(plan["cols_to_copy"])
+    to_take = set(
+        [
+            ci
+            for ci in transform.score_frame_["variable"][
+                transform.score_frame_["has_range"]
+            ]
+        ]
+    )
+    if (transform.result_restriction is not None) and (
+        len(transform.result_restriction) > 0
+    ):
+        to_take = to_take.intersection(transform.result_restriction)
+    cols_to_keep = [ci for ci in res.columns if (ci in to_copy) or (ci in to_take)]
+    if len(cols_to_keep) <= 0:
+        raise ValueError("no columns retained")
+    res = res[cols_to_keep].copy()
+    res.reset_index(inplace=True, drop=True)
+    return res

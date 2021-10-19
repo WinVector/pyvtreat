@@ -60,10 +60,16 @@
                     <h1 class="modulename">
 <a href="./../vtreat.html">vtreat</a><wbr>.stats_utils    </h1>
 
-                
+                        <div class="docstring"><p>util for basic statistical steps</p>
+</div>
+
                         <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span>
+            <div class="codehilite"><pre><span></span><span class="sd">&quot;&quot;&quot;util for basic statistical steps&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span>
 
 <span class="kn">import</span> <span class="nn">scipy.stats</span>
 <span class="kn">import</span> <span class="nn">scipy.optimize</span>
@@ -75,8 +81,15 @@
 <span class="c1">#  https://github.com/WinVector/pyvtreat/issues/14</span>
 
 
-<span class="k">def</span> <span class="nf">our_corr_score</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-    <span class="c1"># compute Pearson correlation</span>
+<span class="k">def</span> <span class="nf">our_corr_score</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute Pearson correlation. Case-out some corner cases.</span>
+
+<span class="sd">    :param y_true: truth values</span>
+<span class="sd">    :param y_pred: predictions</span>
+<span class="sd">    :return: (pearson r, significance)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="n">y_true</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
@@ -94,7 +107,16 @@
     <span class="k">return</span> <span class="n">r</span><span class="p">,</span> <span class="n">sig</span>
 
 
-<span class="k">def</span> <span class="nf">est_deviance</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">est</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1.0e-5</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">est_deviance</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">est</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0e-5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Estimate the deviance</span>
+
+<span class="sd">    :param y: truth values</span>
+<span class="sd">    :param est: predictions</span>
+<span class="sd">    :param epsilon: how close to get to 0 and 1</span>
+<span class="sd">    :return: deviance estimate</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">est</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
@@ -105,8 +127,17 @@
     <span class="k">return</span> <span class="n">deviance</span>
 
 
-<span class="c1"># assumes special cases of solve_logistic_regression already eliminated</span>
-<span class="k">def</span> <span class="nf">sklearn_solve_logistic</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">regularization</span><span class="o">=</span><span class="mf">1.0e-6</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">sklearn_solve_logistic</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">regularization</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0e-6</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Single variable logistic regression.</span>
+<span class="sd">    Assumes special cases of solve_logistic_regression already eliminated.</span>
+
+<span class="sd">    :param y: dependent variable</span>
+<span class="sd">    :param x: explanatory variable</span>
+<span class="sd">    :param regularization:</span>
+<span class="sd">    :return: model predictions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
@@ -122,17 +153,26 @@
 
 <span class="c1"># x, y - numpy numeric vectors, y 0/1.  solve for y- return predictions</span>
 <span class="k">def</span> <span class="nf">solve_logistic_regression</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-    <span class="c1"># catch some corner cases</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Single variable logistic regression. Returns predictions, corner</span>
+<span class="sd">    cases removed.</span>
+
+<span class="sd">    :param y: dependent variable</span>
+<span class="sd">    :param x: explanatory variable</span>
+<span class="sd">    :return: predictions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="c1"># catch some corner cases</span>
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">y</span><span class="p">)):</span>
         <span class="k">return</span> <span class="n">y</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">)]</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>
-    <span class="c1"># check for fully seperable cases</span>
+    <span class="c1"># check for fully separable cases</span>
     <span class="n">big_y_indices</span> <span class="o">=</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="mi">0</span>
     <span class="n">x_b</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">big_y_indices</span><span class="p">]</span>
     <span class="n">x_s</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">big_y_indices</span><span class="p">)]</span>
@@ -146,7 +186,15 @@
 
 
 <span class="c1"># noinspection PyPep8Naming</span>
-<span class="k">def</span> <span class="nf">our_pseudo_R2</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">our_pseudo_R2</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the logistic pseudo-R2</span>
+
+<span class="sd">    :param y_true: dependent variable</span>
+<span class="sd">    :param y_pred: explanatory variable</span>
+<span class="sd">    :return: (pseudo-R2, significance)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="n">y_true</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
@@ -181,13 +229,20 @@
 
         
             <span class="def">def</span>
-            <span class="name">our_corr_score</span><span class="signature">(*, y_true, y_pred)</span>:
+            <span class="name">our_corr_score</span><span class="signature">(*, y_true, y_pred) -&gt; Tuple[float, float]</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">our_corr_score</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
-    <span class="c1"># compute Pearson correlation</span>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">our_corr_score</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute Pearson correlation. Case-out some corner cases.</span>
+
+<span class="sd">    :param y_true: truth values</span>
+<span class="sd">    :param y_pred: predictions</span>
+<span class="sd">    :return: (pearson r, significance)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="n">y_true</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
@@ -207,7 +262,13 @@
 
         </details>
 
-    
+            <div class="docstring"><p>Compute Pearson correlation. Case-out some corner cases.</p>
+
+<p>:param y_true: truth values
+:param y_pred: predictions
+:return: (pearson r, significance)</p>
+</div>
+
 
                 </section>
                 <section id="est_deviance">
@@ -215,12 +276,21 @@
 
         
             <span class="def">def</span>
-            <span class="name">est_deviance</span><span class="signature">(*, y, est, epsilon=1e-05)</span>:
+            <span class="name">est_deviance</span><span class="signature">(*, y, est, epsilon: float = 1e-05) -&gt; float</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">est_deviance</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">est</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1.0e-5</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">est_deviance</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">est</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0e-5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Estimate the deviance</span>
+
+<span class="sd">    :param y: truth values</span>
+<span class="sd">    :param est: predictions</span>
+<span class="sd">    :param epsilon: how close to get to 0 and 1</span>
+<span class="sd">    :return: deviance estimate</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">est</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
@@ -233,7 +303,14 @@
 
         </details>
 
-    
+            <div class="docstring"><p>Estimate the deviance</p>
+
+<p>:param y: truth values
+:param est: predictions
+:param epsilon: how close to get to 0 and 1
+:return: deviance estimate</p>
+</div>
+
 
                 </section>
                 <section id="sklearn_solve_logistic">
@@ -241,12 +318,22 @@
 
         
             <span class="def">def</span>
-            <span class="name">sklearn_solve_logistic</span><span class="signature">(*, y, x, regularization=1e-06)</span>:
+            <span class="name">sklearn_solve_logistic</span><span class="signature">(*, y, x, regularization: float = 1e-06)</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">sklearn_solve_logistic</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">regularization</span><span class="o">=</span><span class="mf">1.0e-6</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">sklearn_solve_logistic</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">regularization</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0e-6</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Single variable logistic regression.</span>
+<span class="sd">    Assumes special cases of solve_logistic_regression already eliminated.</span>
+
+<span class="sd">    :param y: dependent variable</span>
+<span class="sd">    :param x: explanatory variable</span>
+<span class="sd">    :param regularization:</span>
+<span class="sd">    :return: model predictions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
@@ -262,7 +349,15 @@
 
         </details>
 
-    
+            <div class="docstring"><p>Single variable logistic regression.
+Assumes special cases of solve_logistic_regression already eliminated.</p>
+
+<p>:param y: dependent variable
+:param x: explanatory variable
+:param regularization:
+:return: model predictions</p>
+</div>
+
 
                 </section>
                 <section id="solve_logistic_regression">
@@ -276,17 +371,26 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">solve_logistic_regression</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-    <span class="c1"># catch some corner cases</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Single variable logistic regression. Returns predictions, corner</span>
+<span class="sd">    cases removed.</span>
+
+<span class="sd">    :param y: dependent variable</span>
+<span class="sd">    :param x: explanatory variable</span>
+<span class="sd">    :return: predictions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="c1"># catch some corner cases</span>
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">y</span><span class="p">)):</span>
         <span class="k">return</span> <span class="n">y</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">)]</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>
-    <span class="c1"># check for fully seperable cases</span>
+    <span class="c1"># check for fully separable cases</span>
     <span class="n">big_y_indices</span> <span class="o">=</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="mi">0</span>
     <span class="n">x_b</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">big_y_indices</span><span class="p">]</span>
     <span class="n">x_s</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">big_y_indices</span><span class="p">)]</span>
@@ -301,7 +405,14 @@
 
         </details>
 
-    
+            <div class="docstring"><p>Single variable logistic regression. Returns predictions, corner
+cases removed.</p>
+
+<p>:param y: dependent variable
+:param x: explanatory variable
+:return: predictions</p>
+</div>
+
 
                 </section>
                 <section id="our_pseudo_R2">
@@ -309,12 +420,20 @@
 
         
             <span class="def">def</span>
-            <span class="name">our_pseudo_R2</span><span class="signature">(*, y_true, y_pred)</span>:
+            <span class="name">our_pseudo_R2</span><span class="signature">(*, y_true, y_pred) -&gt; Tuple[float, float]</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">our_pseudo_R2</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">our_pseudo_R2</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the logistic pseudo-R2</span>
+
+<span class="sd">    :param y_true: dependent variable</span>
+<span class="sd">    :param y_pred: explanatory variable</span>
+<span class="sd">    :return: (pseudo-R2, significance)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="n">y_true</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
@@ -343,7 +462,13 @@
 
         </details>
 
-    
+            <div class="docstring"><p>Return the logistic pseudo-R2</p>
+
+<p>:param y_true: dependent variable
+:param y_pred: explanatory variable
+:return: (pseudo-R2, significance)</p>
+</div>
+
 
                 </section>
     </main>

@@ -1,3 +1,7 @@
+"""util for basic statistical steps"""
+
+from typing import Tuple
+
 import numpy
 
 import scipy.stats
@@ -10,8 +14,15 @@ import sklearn.linear_model
 #  https://github.com/WinVector/pyvtreat/issues/14
 
 
-def our_corr_score(*, y_true, y_pred):
-    # compute Pearson correlation
+def our_corr_score(*, y_true, y_pred) -> Tuple[float, float]:
+    """
+    Compute Pearson correlation. Case-out some corner cases.
+
+    :param y_true: truth values
+    :param y_pred: predictions
+    :return: (pearson r, significance)
+    """
+
     if not isinstance(y_true, numpy.ndarray):
         y_true = numpy.asarray(y_true)
     if not isinstance(y_pred, numpy.ndarray):
@@ -29,7 +40,16 @@ def our_corr_score(*, y_true, y_pred):
     return r, sig
 
 
-def est_deviance(*, y, est, epsilon=1.0e-5):
+def est_deviance(*, y, est, epsilon: float = 1.0e-5) -> float:
+    """
+    Estimate the deviance
+
+    :param y: truth values
+    :param est: predictions
+    :param epsilon: how close to get to 0 and 1
+    :return: deviance estimate
+    """
+
     if not isinstance(y, numpy.ndarray):
         y = numpy.asarray(y)
     if not isinstance(est, numpy.ndarray):
@@ -40,8 +60,17 @@ def est_deviance(*, y, est, epsilon=1.0e-5):
     return deviance
 
 
-# assumes special cases of solve_logistic_regression already eliminated
-def sklearn_solve_logistic(*, y, x, regularization=1.0e-6):
+def sklearn_solve_logistic(*, y, x, regularization: float = 1.0e-6):
+    """
+    Single variable logistic regression.
+    Assumes special cases of solve_logistic_regression already eliminated.
+
+    :param y: dependent variable
+    :param x: explanatory variable
+    :param regularization:
+    :return: model predictions
+    """
+
     if not isinstance(y, numpy.ndarray):
         y = numpy.asarray(y)
     if not isinstance(x, numpy.ndarray):
@@ -57,17 +86,26 @@ def sklearn_solve_logistic(*, y, x, regularization=1.0e-6):
 
 # x, y - numpy numeric vectors, y 0/1.  solve for y- return predictions
 def solve_logistic_regression(*, y, x):
-    # catch some corner cases
+    """
+    Single variable logistic regression. Returns predictions, corner
+    cases removed.
+
+    :param y: dependent variable
+    :param x: explanatory variable
+    :return: predictions
+    """
+
     if not isinstance(y, numpy.ndarray):
         y = numpy.asarray(y)
     if not isinstance(x, numpy.ndarray):
         x = numpy.asarray(x)
+    # catch some corner cases
     n = len(y)
     if (n < 2) or (numpy.min(y) >= numpy.max(y)):
         return y.copy()
     if numpy.min(x) >= numpy.max(x):
         return numpy.asarray([numpy.mean(y)] * n)
-    # check for fully seperable cases
+    # check for fully separable cases
     big_y_indices = y > 0
     x_b = x[big_y_indices]
     x_s = x[numpy.logical_not(big_y_indices)]
@@ -81,7 +119,15 @@ def solve_logistic_regression(*, y, x):
 
 
 # noinspection PyPep8Naming
-def our_pseudo_R2(*, y_true, y_pred):
+def our_pseudo_R2(*, y_true, y_pred) -> Tuple[float, float]:
+    """
+    Return the logistic pseudo-R2
+
+    :param y_true: dependent variable
+    :param y_pred: explanatory variable
+    :return: (pseudo-R2, significance)
+    """
+
     if not isinstance(y_true, numpy.ndarray):
         y_true = numpy.asarray(y_true)
     if not isinstance(y_pred, numpy.ndarray):
