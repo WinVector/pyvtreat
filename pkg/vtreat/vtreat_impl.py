@@ -200,6 +200,7 @@ def fit_clean_code(*, incoming_column_name: str, x, params, imputation_map) -> O
     :param imputation_map:
     :return: transform
     """
+
     if not vtreat.util.numeric_has_range(x):
         return None
     replacement = params["missingness_imputation"]
@@ -246,6 +247,7 @@ def fit_regression_impact_code(*, incoming_column_name: str, x, y, extra_args, p
     :param params:
     :return:
     """
+
     sf = vtreat.util.grouped_by_x_statistics(x, y)
     if sf.shape[0] <= 1:
         return None
@@ -267,7 +269,18 @@ def fit_regression_impact_code(*, incoming_column_name: str, x, y, extra_args, p
     )
 
 
-def fit_regression_deviation_code(*, incoming_column_name, x, y, extra_args, params):
+def fit_regression_deviation_code(*, incoming_column_name: str, x, y, extra_args, params) -> Optional[VarTransform]:
+    """
+    Fit regression deviation code transform
+
+    :param incoming_column_name:
+    :param x: training explanatory values
+    :param y: training dependent values
+    :param extra_args:
+    :param params:
+    :return:
+    """
+
     sf = vtreat.util.grouped_by_x_statistics(x, y)
     if sf.shape[0] <= 1:
         return None
@@ -286,7 +299,17 @@ def fit_regression_deviation_code(*, incoming_column_name, x, y, extra_args, par
     )
 
 
-def fit_binomial_impact_code(*, incoming_column_name, x, y, extra_args, params):
+def fit_binomial_impact_code(*, incoming_column_name: str, x, y, extra_args, params) -> Optional[VarTransform]:
+    """
+    Fit categorical impact code.
+
+    :param incoming_column_name:
+    :param x: training explanatory values
+    :param y: training dependent values
+    :param extra_args:
+    :param params:
+    :return:
+    """
     outcome_target = (extra_args["outcome_target"],)
     var_suffix = extra_args["var_suffix"]
     y = numpy.asarray(numpy.asarray(y) == outcome_target, dtype=float)
@@ -313,6 +336,7 @@ def fit_binomial_impact_code(*, incoming_column_name, x, y, extra_args, params):
 
 
 class IndicatorCodeTransform(VarTransform):
+    """Class for indicator codes"""
     def __init__(
         self,
         incoming_column_name,
@@ -343,6 +367,7 @@ class IndicatorCodeTransform(VarTransform):
         col = sf[self.incoming_column_name_]
 
         def f(i):
+            """transform one column"""
             v = numpy.asarray(col == self.levels_[i]) + 0.0  # return numeric 0/1 coding
             if self.sparse_indicators_:
                 v = pandas.arrays.SparseArray(v, fill_value=0.0)
@@ -358,8 +383,18 @@ class IndicatorCodeTransform(VarTransform):
 
 
 def fit_indicator_code(
-    *, incoming_column_name, x, min_fraction, sparse_indicators=False
-):
+    *, incoming_column_name: str, x, min_fraction: float, sparse_indicators: bool = False
+) -> Optional[VarTransform]:
+    """
+    Fit indicator codes
+
+    :param incoming_column_name:
+    :param x: training explanatory variables
+    :param min_fraction:
+    :param sparse_indicators:
+    :return:
+    """
+
     sf = pandas.DataFrame({incoming_column_name: x})
     bad_posns = vtreat.util.is_bad(sf[incoming_column_name])
     sf.loc[bad_posns, incoming_column_name] = "_NA_"
@@ -378,7 +413,15 @@ def fit_indicator_code(
     )
 
 
-def fit_prevalence_code(incoming_column_name, x):
+def fit_prevalence_code(incoming_column_name: str, x) -> Optional[VarTransform]:
+    """
+    Fit a prevalence code
+
+    :param incoming_column_name:
+    :param x: training explanatory values
+    :return:
+    """
+
     sf = pandas.DataFrame({"x": x})
     bad_posns = vtreat.util.is_bad(sf["x"])
     sf.loc[bad_posns, "x"] = "_NA_"
@@ -400,10 +443,37 @@ def fit_prevalence_code(incoming_column_name, x):
 
 # noinspection PyPep8Naming
 def fit_numeric_outcome_treatment(
-    *, X, y, var_list, outcome_name, cols_to_copy, params, imputation_map
+        *,
+        X, y,
+        var_list: Optional[Iterable[str]],
+        outcome_name: str,
+        cols_to_copy: Optional[Iterable[str]],
+        params,
+        imputation_map
 ):
-    if (var_list is None) or (len(var_list) <= 0):
+    """
+    Fit set of treatments in a regression situation.
+
+    :param X: training explanatory values
+    :param y: training dependent values
+    :param var_list: list of dependent variable names
+    :param outcome_name: name for outcome column
+    :param cols_to_copy: list of columns to copy to output
+    :param params:
+    :param imputation_map:
+    :return: transform plan
+    """
+    if var_list is None:
         var_list = [co for co in X.columns]
+    else:
+        var_list = [co for co in var_list]
+    if len(var_list) < 1:
+        var_list = [co for co in X.columns]
+    assert len(var_list) > 0
+    if cols_to_copy is None:
+        cols_to_copy = []
+    else:
+        cols_to_copy = [c for c in cols_to_copy]
     copy_set = set(cols_to_copy)
     var_list = [co for co in var_list if (not (co in copy_set))]
     v_counts = {v: vtreat.util.get_unique_value_count(X[v]) for v in var_list}
@@ -499,17 +569,37 @@ def fit_numeric_outcome_treatment(
 # noinspection PyPep8Naming
 def fit_binomial_outcome_treatment(
     *,
-    X,
-    y,
+    X, y,
     outcome_target,
-    var_list,
-    outcome_name,
-    cols_to_copy,
+    var_list: Optional[Iterable[str]],
+    outcome_name: str,
+    cols_to_copy: Optional[Iterable[str]],
     params,
     imputation_map,
 ):
-    if (var_list is None) or (len(var_list) <= 0):
+    """
+
+    :param X: training explanatory values
+    :param y: training dependent values
+    :param outcome_target: dependent value to consider positive or in class
+    :param var_list: list of variables to process
+    :param outcome_name: name for outcome column
+    :param cols_to_copy: list of columns to copy to output
+    :param params:
+    :param imputation_map:
+    :return: transform plan
+    """
+    if var_list is None:
         var_list = [co for co in X.columns]
+    else:
+        var_list = [co for co in var_list]
+    if len(var_list) < 1:
+        var_list = [co for co in X.columns]
+    assert len(var_list) > 0
+    if cols_to_copy is None:
+        cols_to_copy = []
+    else:
+        cols_to_copy = [c for c in cols_to_copy]
     copy_set = set(cols_to_copy)
     var_list = [co for co in var_list if (not (co in copy_set))]
     v_counts = {v: vtreat.util.get_unique_value_count(X[v]) for v in var_list}
@@ -595,7 +685,13 @@ def fit_binomial_outcome_treatment(
 
 # noinspection PyPep8Naming
 def fit_multinomial_outcome_treatment(
-    *, X, y, var_list, outcome_name, cols_to_copy, params, imputation_map
+        *,
+        X, y,
+        var_list,
+        outcome_name,
+        cols_to_copy,
+        params,
+        imputation_map
 ):
     if (var_list is None) or (len(var_list) <= 0):
         var_list = [co for co in X.columns]
