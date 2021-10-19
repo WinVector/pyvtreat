@@ -6,7 +6,7 @@ from abc import ABC
 import math
 import pprint
 import warnings
-from typing import Iterable, List, Optional, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 import numpy
 import pandas
@@ -33,7 +33,7 @@ def ready_data_frame(d) -> Tuple[pandas.DataFrame, type]:
     return d, orig_type
 
 
-def back_to_orig_type_data_frame(d: pandas.DataFrame, orig_type: type):
+def back_to_orig_type_data_frame(d: pandas.DataFrame, orig_type: type) -> Tuple[Any, List[str]]:
     """
     Convert data frame back to ndarray if that was the original type.
 
@@ -147,7 +147,7 @@ class YAwareMappedCodeTransform(MappedCodeTransform):
 
 class CleanNumericTransform(VarTransform):
     """Class for numeric column cleaner."""
-    def __init__(self, incoming_column_name, replacement_value):
+    def __init__(self, incoming_column_name: str, replacement_value: float):
         VarTransform.__init__(
             self, incoming_column_name, [incoming_column_name], "clean_copy"
         )
@@ -171,7 +171,7 @@ class CleanNumericTransform(VarTransform):
 
 class IndicateMissingTransform(VarTransform):
     """Class for missing value indicator."""
-    def __init__(self, incoming_column_name, derived_column_name):
+    def __init__(self, incoming_column_name: str, derived_column_name: str):
         VarTransform.__init__(
             self, incoming_column_name, [derived_column_name], "missing_indicator"
         )
@@ -339,9 +339,9 @@ class IndicatorCodeTransform(VarTransform):
     """Class for indicator codes"""
     def __init__(
         self,
-        incoming_column_name,
-        derived_column_names,
-        levels,
+        incoming_column_name: str,
+        derived_column_names: List[str],
+        levels: List,
         *,
         sparse_indicators=False,
     ):
@@ -366,7 +366,7 @@ class IndicatorCodeTransform(VarTransform):
         sf.loc[bad_posns, incoming_column_name] = "_NA_"
         col = sf[self.incoming_column_name_]
 
-        def f(i):
+        def f(i: int):
             """transform one column"""
             v = numpy.asarray(col == self.levels_[i]) + 0.0  # return numeric 0/1 coding
             if self.sparse_indicators_:
@@ -837,7 +837,7 @@ def pre_prep_frame(
         *,
         col_list: Optional[Iterable[str]],
         cols_to_copy: Optional[Iterable[str]],
-        cat_cols=None) -> pandas.DataFrame:
+        cat_cols: Optional[Iterable[str]] = None) -> pandas.DataFrame:
     """
     Create a copy of pandas.DataFrame x restricted to col_list union cols_to_copy with col_list - cols_to_copy
     converted to only string and numeric types.  New pandas.DataFrame has trivial indexing.  If col_list
@@ -1210,8 +1210,8 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         outcome_name: Optional[str] = None,
         outcome_target=None,
         cols_to_copy: Optional[Iterable[str]] = None,
-        params=None,
-        imputation_map=None,
+        params: Optional[Dict[str, Any]] = None,
+        imputation_map: Optional[Dict[str, Any]] = None,
     ):
         if var_list is None:
             var_list = []
@@ -1245,7 +1245,7 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         self.result_restriction = None
         self.clear()
 
-    def check_column_names(self, col_names: Iterable[str]):
+    def check_column_names(self, col_names: Iterable[str]) -> None:
         """
         Check that none of the column names we are working with are non-unique.
         Also check variable columns are all present (columns to copy and outcome allowed to be missing).
@@ -1267,7 +1267,7 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         if len(missing) > 0:
             raise ValueError(f"missing required columns: {missing}")
 
-    def clear(self):
+    def clear(self) -> None:
         """reset state"""
         self.plan_ = None
         self.score_frame_ = None
@@ -1283,13 +1283,13 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
             return None
         return self.result_restriction.copy()
 
-    def set_result_restriction(self, new_vars):
+    def set_result_restriction(self, new_vars) -> None:
         """setter"""
         self.result_restriction = None
         if (new_vars is not None) and (len(new_vars) > 0):
             self.result_restriction = set(new_vars)
 
-    def merge_params(self, p):
+    def merge_params(self, p: Optional[Dict[str, Any]]) -> Dict[str, Any]:
         """merge in use parameters"""
         raise NotImplementedError("base class called")
 

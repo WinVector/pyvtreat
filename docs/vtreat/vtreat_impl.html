@@ -235,7 +235,7 @@
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">pprint</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">pandas</span>
@@ -262,7 +262,7 @@
     <span class="k">return</span> <span class="n">d</span><span class="p">,</span> <span class="n">orig_type</span>
 
 
-<span class="k">def</span> <span class="nf">back_to_orig_type_data_frame</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">orig_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">back_to_orig_type_data_frame</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">orig_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert data frame back to ndarray if that was the original type.</span>
 
@@ -376,7 +376,7 @@
 
 <span class="k">class</span> <span class="nc">CleanNumericTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class for numeric column cleaner.&quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">replacement_value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">replacement_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">incoming_column_name</span><span class="p">],</span> <span class="s2">&quot;clean_copy&quot;</span>
         <span class="p">)</span>
@@ -400,7 +400,7 @@
 
 <span class="k">class</span> <span class="nc">IndicateMissingTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class for missing value indicator.&quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">derived_column_name</span><span class="p">],</span> <span class="s2">&quot;missing_indicator&quot;</span>
         <span class="p">)</span>
@@ -568,9 +568,9 @@
     <span class="sd">&quot;&quot;&quot;Class for indicator codes&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">incoming_column_name</span><span class="p">,</span>
-        <span class="n">derived_column_names</span><span class="p">,</span>
-        <span class="n">levels</span><span class="p">,</span>
+        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">derived_column_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">levels</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">sparse_indicators</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
@@ -595,7 +595,7 @@
         <span class="n">sf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;_NA_&quot;</span>
         <span class="n">col</span> <span class="o">=</span> <span class="n">sf</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">]</span>
 
-        <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;transform one column&quot;&quot;&quot;</span>
             <span class="n">v</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">col</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="mf">0.0</span>  <span class="c1"># return numeric 0/1 coding</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse_indicators_</span><span class="p">:</span>
@@ -1066,7 +1066,7 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">col_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
         <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">cat_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="n">cat_cols</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create a copy of pandas.DataFrame x restricted to col_list union cols_to_copy with col_list - cols_to_copy</span>
 <span class="sd">    converted to only string and numeric types.  New pandas.DataFrame has trivial indexing.  If col_list</span>
@@ -1439,8 +1439,8 @@
         <span class="n">outcome_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">outcome_target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">imputation_map</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="k">if</span> <span class="n">var_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">var_list</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1474,7 +1474,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">result_restriction</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">check_column_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="k">def</span> <span class="nf">check_column_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check that none of the column names we are working with are non-unique.</span>
 <span class="sd">        Also check variable columns are all present (columns to copy and outcome allowed to be missing).</span>
@@ -1496,7 +1496,7 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;missing required columns: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;reset state&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">plan_</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">score_frame_</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1512,13 +1512,13 @@
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_restriction</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">set_result_restriction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_vars</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">set_result_restriction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_vars</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;setter&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">result_restriction</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">new_vars</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">new_vars</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">result_restriction</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">new_vars</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">merge_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">merge_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;merge in use parameters&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base class called&quot;</span><span class="p">)</span>
 
@@ -1842,12 +1842,15 @@
 
         
             <span class="def">def</span>
-            <span class="name">back_to_orig_type_data_frame</span><span class="signature">(d: pandas.core.frame.DataFrame, orig_type: type)</span>:
+            <span class="name">back_to_orig_type_data_frame</span><span class="signature">(
+    d: pandas.core.frame.DataFrame,
+    orig_type: type
+) -&gt; Tuple[Any, List[str]]</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">back_to_orig_type_data_frame</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">orig_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">back_to_orig_type_data_frame</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">orig_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert data frame back to ndarray if that was the original type.</span>
 
@@ -2241,7 +2244,7 @@
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">CleanNumericTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class for numeric column cleaner.&quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">replacement_value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">replacement_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">incoming_column_name</span><span class="p">],</span> <span class="s2">&quot;clean_copy&quot;</span>
         <span class="p">)</span>
@@ -2273,12 +2276,12 @@
                                         <div class="attr function"><a class="headerlink" href="#CleanNumericTransform.__init__">#&nbsp;&nbsp</a>
 
         
-            <span class="name">CleanNumericTransform</span><span class="signature">(incoming_column_name, replacement_value)</span>
+            <span class="name">CleanNumericTransform</span><span class="signature">(incoming_column_name: str, replacement_value: float)</span>
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">replacement_value</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">replacement_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">incoming_column_name</span><span class="p">],</span> <span class="s2">&quot;clean_copy&quot;</span>
         <span class="p">)</span>
@@ -2344,7 +2347,7 @@
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">IndicateMissingTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class for missing value indicator.&quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">derived_column_name</span><span class="p">],</span> <span class="s2">&quot;missing_indicator&quot;</span>
         <span class="p">)</span>
@@ -2373,12 +2376,12 @@
                                         <div class="attr function"><a class="headerlink" href="#IndicateMissingTransform.__init__">#&nbsp;&nbsp</a>
 
         
-            <span class="name">IndicateMissingTransform</span><span class="signature">(incoming_column_name, derived_column_name)</span>
+            <span class="name">IndicateMissingTransform</span><span class="signature">(incoming_column_name: str, derived_column_name: str)</span>
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">derived_column_name</span><span class="p">],</span> <span class="s2">&quot;missing_indicator&quot;</span>
         <span class="p">)</span>
@@ -2710,9 +2713,9 @@
     <span class="sd">&quot;&quot;&quot;Class for indicator codes&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">incoming_column_name</span><span class="p">,</span>
-        <span class="n">derived_column_names</span><span class="p">,</span>
-        <span class="n">levels</span><span class="p">,</span>
+        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">derived_column_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">levels</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">sparse_indicators</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
@@ -2737,7 +2740,7 @@
         <span class="n">sf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;_NA_&quot;</span>
         <span class="n">col</span> <span class="o">=</span> <span class="n">sf</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">]</span>
 
-        <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;transform one column&quot;&quot;&quot;</span>
             <span class="n">v</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">col</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="mf">0.0</span>  <span class="c1"># return numeric 0/1 coding</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse_indicators_</span><span class="p">:</span>
@@ -2764,9 +2767,9 @@
 
         
             <span class="name">IndicatorCodeTransform</span><span class="signature">(
-    incoming_column_name,
-    derived_column_names,
-    levels,
+    incoming_column_name: str,
+    derived_column_names: List[str],
+    levels: List,
     *,
     sparse_indicators=False
 )</span>
@@ -2776,9 +2779,9 @@
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">incoming_column_name</span><span class="p">,</span>
-        <span class="n">derived_column_names</span><span class="p">,</span>
-        <span class="n">levels</span><span class="p">,</span>
+        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">derived_column_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">levels</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">sparse_indicators</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
@@ -2819,7 +2822,7 @@
         <span class="n">sf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;_NA_&quot;</span>
         <span class="n">col</span> <span class="o">=</span> <span class="n">sf</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">]</span>
 
-        <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
             <span class="sd">&quot;&quot;&quot;transform one column&quot;&quot;&quot;</span>
             <span class="n">v</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">col</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="mf">0.0</span>  <span class="c1"># return numeric 0/1 coding</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sparse_indicators_</span><span class="p">:</span>
@@ -3439,7 +3442,7 @@
     *,
     col_list: Optional[Iterable[str]],
     cols_to_copy: Optional[Iterable[str]],
-    cat_cols=None
+    cat_cols: Optional[Iterable[str]] = None
 ) -&gt; pandas.core.frame.DataFrame</span>:
     </div>
 
@@ -3450,7 +3453,7 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">col_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
         <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">cat_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="n">cat_cols</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create a copy of pandas.DataFrame x restricted to col_list union cols_to_copy with col_list - cols_to_copy</span>
 <span class="sd">    converted to only string and numeric types.  New pandas.DataFrame has trivial indexing.  If col_list</span>
@@ -3941,8 +3944,8 @@ Assumes each y-aware variable produces one derived column.</p>
         <span class="n">outcome_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">outcome_target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">imputation_map</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="k">if</span> <span class="n">var_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">var_list</span> <span class="o">=</span> <span class="p">[]</span>
@@ -3976,7 +3979,7 @@ Assumes each y-aware variable produces one derived column.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">result_restriction</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">check_column_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+    <span class="k">def</span> <span class="nf">check_column_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check that none of the column names we are working with are non-unique.</span>
 <span class="sd">        Also check variable columns are all present (columns to copy and outcome allowed to be missing).</span>
@@ -3998,7 +4001,7 @@ Assumes each y-aware variable produces one derived column.</p>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;missing required columns: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;reset state&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">plan_</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">score_frame_</span> <span class="o">=</span> <span class="kc">None</span>
@@ -4014,13 +4017,13 @@ Assumes each y-aware variable produces one derived column.</p>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_restriction</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">set_result_restriction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_vars</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">set_result_restriction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_vars</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;setter&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">result_restriction</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">new_vars</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">new_vars</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">result_restriction</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">new_vars</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">merge_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">merge_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;merge in use parameters&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base class called&quot;</span><span class="p">)</span>
 
@@ -4221,8 +4224,8 @@ API. https://sklearn-template.readthedocs.io/en/latest/user_guide.html#transform
     outcome_name: Optional[str] = None,
     outcome_target=None,
     cols_to_copy: Optional[Iterable[str]] = None,
-    params=None,
-    imputation_map=None
+    params: Optional[Dict[str, Any]] = None,
+    imputation_map: Optional[Dict[str, Any]] = None
 )</span>
     </div>
 
@@ -4235,8 +4238,8 @@ API. https://sklearn-template.readthedocs.io/en/latest/user_guide.html#transform
         <span class="n">outcome_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">outcome_target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">imputation_map</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="k">if</span> <span class="n">var_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">var_list</span> <span class="o">=</span> <span class="p">[]</span>
@@ -4281,12 +4284,12 @@ API. https://sklearn-template.readthedocs.io/en/latest/user_guide.html#transform
 
         
             <span class="def">def</span>
-            <span class="name">check_column_names</span><span class="signature">(self, col_names: Iterable[str])</span>:
+            <span class="name">check_column_names</span><span class="signature">(self, col_names: Iterable[str]) -&gt; None</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">check_column_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">check_column_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check that none of the column names we are working with are non-unique.</span>
 <span class="sd">        Also check variable columns are all present (columns to copy and outcome allowed to be missing).</span>
@@ -4325,12 +4328,12 @@ Also check variable columns are all present (columns to copy and outcome allowed
 
         
             <span class="def">def</span>
-            <span class="name">clear</span><span class="signature">(self)</span>:
+            <span class="name">clear</span><span class="signature">(self) -&gt; None</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;reset state&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">plan_</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">score_frame_</span> <span class="o">=</span> <span class="kc">None</span>
@@ -4377,12 +4380,12 @@ Also check variable columns are all present (columns to copy and outcome allowed
 
         
             <span class="def">def</span>
-            <span class="name">set_result_restriction</span><span class="signature">(self, new_vars)</span>:
+            <span class="name">set_result_restriction</span><span class="signature">(self, new_vars) -&gt; None</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">set_result_restriction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_vars</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">set_result_restriction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_vars</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;setter&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">result_restriction</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">new_vars</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">new_vars</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
@@ -4401,12 +4404,12 @@ Also check variable columns are all present (columns to copy and outcome allowed
 
         
             <span class="def">def</span>
-            <span class="name">merge_params</span><span class="signature">(self, p)</span>:
+            <span class="name">merge_params</span><span class="signature">(self, p: Optional[Dict[str, Any]]) -&gt; Dict[str, Any]</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">merge_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">merge_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;merge in use parameters&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base class called&quot;</span><span class="p">)</span>
 </pre></div>
