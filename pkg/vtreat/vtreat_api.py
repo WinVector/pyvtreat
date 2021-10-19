@@ -122,11 +122,25 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
             imputation_map=imputation_map,
         )
 
-    def merge_params(self, p):
+    def merge_params(self, p: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Merge user parameters, returns new parameters does not alter object.
+
+        :param p:
+        :return: merged parameters
+        """
+
         return vtreat_parameters(p)
 
     # noinspection PyPep8Naming
     def transform(self, X):
+        """
+        Apply transform to data.
+
+        :param X: data
+        :return: transformed data
+        """
+
         X, orig_type = vtreat_impl.ready_data_frame(X)
         self.check_column_names(X.columns)
         if self.last_fit_x_id_ is None:
@@ -157,6 +171,15 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
 
     # noinspection PyPep8Naming
     def fit_transform(self, X, y=None, **fit_params):
+        """
+        fit_transform data, this is the way to fit with cross methods.
+
+        :param X: explanatory values
+        :param y: dependent values
+        :param fit_params:
+        :return: transformed data
+        """
+
         X, orig_type = vtreat_impl.ready_data_frame(X)
         self.check_column_names(X.columns)
         if y is None:
@@ -292,10 +315,24 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         )
 
     def merge_params(self, p):
+        """
+        Merge user parameters, returns new parameters does not alter object.
+
+        :param p:
+        :return: merged parameters
+        """
+
         return vtreat_parameters(p)
 
     # noinspection PyPep8Naming
     def transform(self, X):
+        """
+        Apply transform to data.
+
+        :param X: data
+        :return: transformed data
+        """
+
         X, orig_type = vtreat_impl.ready_data_frame(X)
         self.check_column_names(X.columns)
         if self.last_fit_x_id_ is None:
@@ -326,6 +363,15 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
 
     # noinspection PyPep8Naming
     def fit_transform(self, X, y=None, **fit_params):
+        """
+        fit_transform data, this is the way to fit with cross methods.
+
+        :param X: explanatory values
+        :param y: dependent values
+        :param fit_params:
+        :return: transformed data
+        """
+
         X, orig_type = vtreat_impl.ready_data_frame(X)
         self.check_column_names(X.columns)
         if y is None:
@@ -461,10 +507,24 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         self.outcomes_ = None
 
     def merge_params(self, p):
+        """
+        Merge user parameters, returns new parameters does not alter object.
+
+        :param p:
+        :return: merged parameters
+        """
+
         return vtreat_parameters(p)
 
     # noinspection PyPep8Naming
     def transform(self, X):
+        """
+        Apply transform to data.
+
+        :param X: data
+        :return: transformed data
+        """
+
         X, orig_type = vtreat_impl.ready_data_frame(X)
         self.check_column_names(X.columns)
         if self.last_fit_x_id_ is None:
@@ -495,6 +555,15 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
 
     # noinspection PyPep8Naming
     def fit_transform(self, X, y=None, **fit_params):
+        """
+        fit_transform data, this is the way to fit with cross methods.
+
+        :param X: explanatory values
+        :param y: dependent values
+        :param fit_params:
+        :return: transformed data
+        """
+
         X, orig_type = vtreat_impl.ready_data_frame(X)
         self.check_column_names(X.columns)
         if y is None:
@@ -559,6 +628,7 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         # use cross_frame to compute variable effects
 
         def si(oi):
+            """score i-th outcome group"""
             sf = vtreat_impl.score_plan_variables(
                 cross_frame=cross_frame,
                 outcome=numpy.asarray(numpy.asarray(y) == oi, dtype=float),
@@ -625,10 +695,24 @@ class UnsupervisedTreatment(vtreat_impl.VariableTreatment):
         )
 
     def merge_params(self, p):
+        """
+        Merge user parameters, returns new parameters does not alter object.
+
+        :param p:
+        :return: merged parameters
+        """
+
         return unsupervised_parameters(p)
 
     # noinspection PyPep8Naming
     def transform(self, X):
+        """
+        Apply transform to data.
+
+        :param X: data
+        :return: transformed data
+        """
+
         X, orig_type = vtreat_impl.ready_data_frame(X)
         self.check_column_names(X.columns)
         if self.last_fit_x_id_ is None:
@@ -647,6 +731,15 @@ class UnsupervisedTreatment(vtreat_impl.VariableTreatment):
 
     # noinspection PyPep8Naming
     def fit_transform(self, X, y=None, **fit_params):
+        """
+        fit_transform data.
+
+        :param X: explanatory values
+        :param y: dependent values
+        :param fit_params:
+        :return: transformed data
+        """
+
         X, orig_type = vtreat_impl.ready_data_frame(X)
         self.check_column_names(X.columns)
         if y is not None:
