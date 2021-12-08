@@ -90,9 +90,18 @@ class VarTransform(ABC):
 
         raise NotImplementedError("base method called")
 
+    def description_matrix(self) -> pandas.DataFrame:
+        """
+        Return description of transform as a data frame.
+
+        :return: description of transform.
+        """
+        raise NotImplementedError("base method called")
+
 
 class MappedCodeTransform(VarTransform):
     """Class for transforms that are a dictionary mapping of values"""
+
     def __init__(
             self,
             incoming_column_name: str,
@@ -133,6 +142,23 @@ class MappedCodeTransform(VarTransform):
         res = res[[derived_column_name]].copy()
         res.loc[vtreat.util.is_bad(res[derived_column_name]), derived_column_name] = 0.0
         return res
+
+    def description_matrix(self) -> pandas.DataFrame:
+        """
+        Return description of transform as a data frame.
+
+        :return: description of transform.
+        """
+
+        description = pandas.DataFrame({
+            'treatment_class': 'MappedCodeTransform',
+            'treatment': self.treatment_,
+            'orig_var': self.incoming_column_name_,
+            'variable': self.derived_column_names_[0],
+            'value': self.code_book_[self.incoming_column_name_].copy(),
+            'replacement': self.code_book_[self.derived_column_names_[0]].copy(),
+        })
+        return description
 
 
 class YAwareMappedCodeTransform(MappedCodeTransform):
@@ -200,6 +226,23 @@ class CleanNumericTransform(VarTransform):
         res = pandas.DataFrame({self.derived_column_names_[0]: col})
         return res
 
+    def description_matrix(self) -> pandas.DataFrame:
+        """
+        Return description of transform as a data frame.
+
+        :return: description of transform.
+        """
+
+        description = pandas.DataFrame({
+            'treatment_class': ['CleanNumericTransform'],
+            'treatment': [self.treatment_],
+            'orig_var': [self.incoming_column_name_],
+            'variable': [self.derived_column_names_[0]],
+            'value': [None],
+            'replacement': [self.replacement_value_],
+        })
+        return description
+
 
 class IndicateMissingTransform(VarTransform):
     """Class for missing value indicator."""
@@ -226,6 +269,22 @@ class IndicateMissingTransform(VarTransform):
         col = vtreat.util.is_bad(data_frame[self.incoming_column_name_])
         res = pandas.DataFrame({self.derived_column_names_[0]: col + 0.0})
         return res
+
+    def description_matrix(self) -> pandas.DataFrame:
+        """
+        Return description of transform as a data frame.
+
+        :return: description of transform.
+        """
+        description = pandas.DataFrame({
+            'treatment_class': ['IndicateMissingTransform'],
+            'treatment': [self.treatment_],
+            'orig_var': [self.incoming_column_name_],
+            'variable': [self.derived_column_names_[0]],
+            'value': [None],
+            'replacement': [1.0],
+        })
+        return description
 
 
 def fit_clean_code(
@@ -445,6 +504,23 @@ class IndicatorCodeTransform(VarTransform):
             else:
                 res[self.derived_column_names_[ii]] = f(ii)
         return res
+
+    def description_matrix(self) -> pandas.DataFrame:
+        """
+        Return description of transform as a data frame.
+
+        :return: description of transform.
+        """
+
+        description = pandas.DataFrame({
+            'treatment_class': 'IndicatorCodeTransform',
+            'treatment': self.treatment_,
+            'orig_var': self.incoming_column_name_,
+            'variable': self.derived_column_names_.copy(),
+            'value': self.levels_.copy(),
+            'replacement': 1.0,
+        })
+        return description
 
 
 def fit_indicator_code(
@@ -1545,6 +1621,20 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
             ]
         new_vars = new_vars + self.cols_to_copy_
         return new_vars
+
+    def description_matrix(self):
+        """
+        Return description of transform as a data frame. Does not encode user steps. Not yet implemented for
+        multinomial dependent variables.
+
+        :return: description of transform.
+        """
+
+        plan = self.plan_
+        xform_steps = [xfi for xfi in plan["xforms"]]
+        frames = [xfi.description_matrix() for xfi in xform_steps]
+        res = pandas.concat(frames).reset_index(inplace=False, drop=True)
+        return res
 
 
 def perform_transform(

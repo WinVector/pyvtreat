@@ -506,6 +506,15 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
         )
         self.outcomes_ = None
 
+    def description_matrix(self):
+        """
+        Raises ValueError.
+
+        :return:
+        """
+
+        raise ValueError('description_matrix() not implemented for MultinomialOutcomeTreatment')
+
     def merge_params(self, p: Optional[Dict[str, Any]]) -> Dict[str, Any]:
         """
         Merge user parameters, returns new parameters does not alter object.

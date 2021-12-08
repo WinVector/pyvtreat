@@ -216,3 +216,8 @@ def test_diabetes_example():
 
     assert data_treated.shape[0] == data.shape[0]
     assert data_treated.shape[1] >= 10
+
+    transform_description = treatment.description_matrix()
+    assert isinstance(transform_description, pandas.DataFrame)
+    assert transform_description.shape[0] > 0
+    assert transform_description.shape[1] > 0

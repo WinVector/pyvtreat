@@ -45,6 +45,9 @@
                         <li>
                                 <a class="function" href="#VarTransform.transform">transform</a>
                         </li>
+                        <li>
+                                <a class="function" href="#VarTransform.description_matrix">description_matrix</a>
+                        </li>
                 </ul>
 
             </li>
@@ -56,6 +59,9 @@
                         </li>
                         <li>
                                 <a class="function" href="#MappedCodeTransform.transform">transform</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#MappedCodeTransform.description_matrix">description_matrix</a>
                         </li>
                 </ul>
 
@@ -78,6 +84,9 @@
                         <li>
                                 <a class="function" href="#CleanNumericTransform.transform">transform</a>
                         </li>
+                        <li>
+                                <a class="function" href="#CleanNumericTransform.description_matrix">description_matrix</a>
+                        </li>
                 </ul>
 
             </li>
@@ -89,6 +98,9 @@
                         </li>
                         <li>
                                 <a class="function" href="#IndicateMissingTransform.transform">transform</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#IndicateMissingTransform.description_matrix">description_matrix</a>
                         </li>
                 </ul>
 
@@ -113,6 +125,9 @@
                         </li>
                         <li>
                                 <a class="function" href="#IndicatorCodeTransform.transform">transform</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#IndicatorCodeTransform.description_matrix">description_matrix</a>
                         </li>
                 </ul>
 
@@ -197,6 +212,9 @@
                         </li>
                         <li>
                                 <a class="function" href="#VariableTreatment.get_feature_names">get_feature_names</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#VariableTreatment.description_matrix">description_matrix</a>
                         </li>
                 </ul>
 
@@ -320,9 +338,18 @@
 
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base method called&quot;</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">description_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return description of transform as a data frame.</span>
+
+<span class="sd">        :return: description of transform.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base method called&quot;</span><span class="p">)</span>
+
 
 <span class="k">class</span> <span class="nc">MappedCodeTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class for transforms that are a dictionary mapping of values&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -363,6 +390,23 @@
         <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="p">[[</span><span class="n">derived_column_name</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="n">derived_column_name</span><span class="p">]),</span> <span class="n">derived_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">def</span> <span class="nf">description_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return description of transform as a data frame.</span>
+
+<span class="sd">        :return: description of transform.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+            <span class="s1">&#39;treatment_class&#39;</span><span class="p">:</span> <span class="s1">&#39;MappedCodeTransform&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
+            <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
+            <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+            <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+        <span class="p">})</span>
+        <span class="k">return</span> <span class="n">description</span>
 
 
 <span class="k">class</span> <span class="nc">YAwareMappedCodeTransform</span><span class="p">(</span><span class="n">MappedCodeTransform</span><span class="p">):</span>
@@ -430,6 +474,23 @@
         <span class="n">res</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">col</span><span class="p">})</span>
         <span class="k">return</span> <span class="n">res</span>
 
+    <span class="k">def</span> <span class="nf">description_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return description of transform as a data frame.</span>
+
+<span class="sd">        :return: description of transform.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+            <span class="s1">&#39;treatment_class&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;CleanNumericTransform&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
+            <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
+            <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">],</span>
+            <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">replacement_value_</span><span class="p">],</span>
+        <span class="p">})</span>
+        <span class="k">return</span> <span class="n">description</span>
+
 
 <span class="k">class</span> <span class="nc">IndicateMissingTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class for missing value indicator.&quot;&quot;&quot;</span>
@@ -456,6 +517,22 @@
         <span class="n">col</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">data_frame</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">])</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">col</span> <span class="o">+</span> <span class="mf">0.0</span><span class="p">})</span>
         <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">def</span> <span class="nf">description_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return description of transform as a data frame.</span>
+
+<span class="sd">        :return: description of transform.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+            <span class="s1">&#39;treatment_class&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;IndicateMissingTransform&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
+            <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
+            <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">],</span>
+            <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span>
+        <span class="p">})</span>
+        <span class="k">return</span> <span class="n">description</span>
 
 
 <span class="k">def</span> <span class="nf">fit_clean_code</span><span class="p">(</span>
@@ -675,6 +752,23 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">res</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="n">ii</span><span class="p">]]</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">ii</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">def</span> <span class="nf">description_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return description of transform as a data frame.</span>
+
+<span class="sd">        :return: description of transform.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+            <span class="s1">&#39;treatment_class&#39;</span><span class="p">:</span> <span class="s1">&#39;IndicatorCodeTransform&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
+            <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
+            <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+            <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="p">})</span>
+        <span class="k">return</span> <span class="n">description</span>
 
 
 <span class="k">def</span> <span class="nf">fit_indicator_code</span><span class="p">(</span>
@@ -1776,6 +1870,20 @@
         <span class="n">new_vars</span> <span class="o">=</span> <span class="n">new_vars</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols_to_copy_</span>
         <span class="k">return</span> <span class="n">new_vars</span>
 
+    <span class="k">def</span> <span class="nf">description_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return description of transform as a data frame. Does not encode user steps. Not yet implemented for</span>
+<span class="sd">        multinomial dependent variables.</span>
+
+<span class="sd">        :return: description of transform.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">plan</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan_</span>
+        <span class="n">xform_steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">xfi</span> <span class="k">for</span> <span class="n">xfi</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;xforms&quot;</span><span class="p">]]</span>
+        <span class="n">frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">xfi</span><span class="o">.</span><span class="n">description_matrix</span><span class="p">()</span> <span class="k">for</span> <span class="n">xfi</span> <span class="ow">in</span> <span class="n">xform_steps</span><span class="p">]</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span>
+
 
 <span class="k">def</span> <span class="nf">perform_transform</span><span class="p">(</span>
         <span class="o">*</span><span class="p">,</span>
@@ -2003,6 +2111,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base method called&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">description_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return description of transform as a data frame.</span>
+
+<span class="sd">        :return: description of transform.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base method called&quot;</span><span class="p">)</span>
 </pre></div>
 
         </details>
@@ -2094,6 +2210,34 @@
 
 
                             </div>
+                            <div id="VarTransform.description_matrix" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#VarTransform.description_matrix">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">description_matrix</span><span class="signature">(self) -&gt; pandas.core.frame.DataFrame</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">description_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return description of transform as a data frame.</span>
+
+<span class="sd">        :return: description of transform.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base method called&quot;</span><span class="p">)</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Return description of transform as a data frame.</p>
+
+<p>:return: description of transform.</p>
+</div>
+
+
+                            </div>
                 </section>
                 <section id="MappedCodeTransform">
                                 <div class="attr class">
@@ -2108,6 +2252,7 @@
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">MappedCodeTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class for transforms that are a dictionary mapping of values&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -2148,6 +2293,23 @@
         <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="p">[[</span><span class="n">derived_column_name</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="n">derived_column_name</span><span class="p">]),</span> <span class="n">derived_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">def</span> <span class="nf">description_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return description of transform as a data frame.</span>
+
+<span class="sd">        :return: description of transform.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+            <span class="s1">&#39;treatment_class&#39;</span><span class="p">:</span> <span class="s1">&#39;MappedCodeTransform&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
+            <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
+            <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+            <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+        <span class="p">})</span>
+        <span class="k">return</span> <span class="n">description</span>
 </pre></div>
 
         </details>
@@ -2243,6 +2405,43 @@
 <p>:rtype: pandas.DataFrame
 :param data_frame: incoming values
 :return: transformed values</p>
+</div>
+
+
+                            </div>
+                            <div id="MappedCodeTransform.description_matrix" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#MappedCodeTransform.description_matrix">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">description_matrix</span><span class="signature">(self) -&gt; pandas.core.frame.DataFrame</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">description_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return description of transform as a data frame.</span>
+
+<span class="sd">        :return: description of transform.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+            <span class="s1">&#39;treatment_class&#39;</span><span class="p">:</span> <span class="s1">&#39;MappedCodeTransform&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
+            <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
+            <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+            <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+        <span class="p">})</span>
+        <span class="k">return</span> <span class="n">description</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Return description of transform as a data frame.</p>
+
+<p>:return: description of transform.</p>
 </div>
 
 
@@ -2370,6 +2569,7 @@
                                 <dl>
                                     <div><dt><a href="#MappedCodeTransform">MappedCodeTransform</a></dt>
                                 <dd id="YAwareMappedCodeTransform.transform" class="function"><a href="#MappedCodeTransform.transform">transform</a></dd>
+                <dd id="YAwareMappedCodeTransform.description_matrix" class="function"><a href="#MappedCodeTransform.description_matrix">description_matrix</a></dd>
 
             </div>
                                 </dl>
@@ -2414,6 +2614,23 @@
         <span class="n">col</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replacement_value_</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">col</span><span class="p">})</span>
         <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">def</span> <span class="nf">description_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return description of transform as a data frame.</span>
+
+<span class="sd">        :return: description of transform.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+            <span class="s1">&#39;treatment_class&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;CleanNumericTransform&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
+            <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
+            <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">],</span>
+            <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">replacement_value_</span><span class="p">],</span>
+        <span class="p">})</span>
+        <span class="k">return</span> <span class="n">description</span>
 </pre></div>
 
         </details>
@@ -2492,6 +2709,43 @@
 
 
                             </div>
+                            <div id="CleanNumericTransform.description_matrix" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#CleanNumericTransform.description_matrix">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">description_matrix</span><span class="signature">(self) -&gt; pandas.core.frame.DataFrame</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">description_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return description of transform as a data frame.</span>
+
+<span class="sd">        :return: description of transform.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+            <span class="s1">&#39;treatment_class&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;CleanNumericTransform&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
+            <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
+            <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">],</span>
+            <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">replacement_value_</span><span class="p">],</span>
+        <span class="p">})</span>
+        <span class="k">return</span> <span class="n">description</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Return description of transform as a data frame.</p>
+
+<p>:return: description of transform.</p>
+</div>
+
+
+                            </div>
                 </section>
                 <section id="IndicateMissingTransform">
                                 <div class="attr class">
@@ -2529,6 +2783,22 @@
         <span class="n">col</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">data_frame</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">])</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">col</span> <span class="o">+</span> <span class="mf">0.0</span><span class="p">})</span>
         <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">def</span> <span class="nf">description_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return description of transform as a data frame.</span>
+
+<span class="sd">        :return: description of transform.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+            <span class="s1">&#39;treatment_class&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;IndicateMissingTransform&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
+            <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
+            <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">],</span>
+            <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span>
+        <span class="p">})</span>
+        <span class="k">return</span> <span class="n">description</span>
 </pre></div>
 
         </details>
@@ -2600,6 +2870,42 @@
 <p>:rtype: pandas.DataFrame
 :param data_frame: incoming values
 :return: transformed values</p>
+</div>
+
+
+                            </div>
+                            <div id="IndicateMissingTransform.description_matrix" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#IndicateMissingTransform.description_matrix">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">description_matrix</span><span class="signature">(self) -&gt; pandas.core.frame.DataFrame</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">description_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return description of transform as a data frame.</span>
+
+<span class="sd">        :return: description of transform.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+            <span class="s1">&#39;treatment_class&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;IndicateMissingTransform&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
+            <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
+            <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">],</span>
+            <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span>
+        <span class="p">})</span>
+        <span class="k">return</span> <span class="n">description</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Return description of transform as a data frame.</p>
+
+<p>:return: description of transform.</p>
 </div>
 
 
@@ -2955,6 +3261,23 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">res</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="n">ii</span><span class="p">]]</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">ii</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">def</span> <span class="nf">description_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return description of transform as a data frame.</span>
+
+<span class="sd">        :return: description of transform.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+            <span class="s1">&#39;treatment_class&#39;</span><span class="p">:</span> <span class="s1">&#39;IndicatorCodeTransform&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
+            <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
+            <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+            <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="p">})</span>
+        <span class="k">return</span> <span class="n">description</span>
 </pre></div>
 
         </details>
@@ -3058,6 +3381,43 @@
 <p>:rtype: pandas.DataFrame
 :param data_frame: incoming values
 :return: transformed values</p>
+</div>
+
+
+                            </div>
+                            <div id="IndicatorCodeTransform.description_matrix" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#IndicatorCodeTransform.description_matrix">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">description_matrix</span><span class="signature">(self) -&gt; pandas.core.frame.DataFrame</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">description_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return description of transform as a data frame.</span>
+
+<span class="sd">        :return: description of transform.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+            <span class="s1">&#39;treatment_class&#39;</span><span class="p">:</span> <span class="s1">&#39;IndicatorCodeTransform&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
+            <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
+            <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+            <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="p">})</span>
+        <span class="k">return</span> <span class="n">description</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Return description of transform as a data frame.</p>
+
+<p>:return: description of transform.</p>
 </div>
 
 
@@ -4432,6 +4792,20 @@ Assumes each y-aware variable produces one derived column.</p>
             <span class="p">]</span>
         <span class="n">new_vars</span> <span class="o">=</span> <span class="n">new_vars</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols_to_copy_</span>
         <span class="k">return</span> <span class="n">new_vars</span>
+
+    <span class="k">def</span> <span class="nf">description_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return description of transform as a data frame. Does not encode user steps. Not yet implemented for</span>
+<span class="sd">        multinomial dependent variables.</span>
+
+<span class="sd">        :return: description of transform.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">plan</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan_</span>
+        <span class="n">xform_steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">xfi</span> <span class="k">for</span> <span class="n">xfi</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;xforms&quot;</span><span class="p">]]</span>
+        <span class="n">frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">xfi</span><span class="o">.</span><span class="n">description_matrix</span><span class="p">()</span> <span class="k">for</span> <span class="n">xfi</span> <span class="ow">in</span> <span class="n">xform_steps</span><span class="p">]</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span>
 </pre></div>
 
         </details>
@@ -4989,6 +5363,41 @@ by specifying the tunable_params list in object construction parameters</p>
 
 <p>:param input_features: Optional, restrict to these features
 :return:</p>
+</div>
+
+
+                            </div>
+                            <div id="VariableTreatment.description_matrix" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#VariableTreatment.description_matrix">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">description_matrix</span><span class="signature">(self)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">description_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return description of transform as a data frame. Does not encode user steps. Not yet implemented for</span>
+<span class="sd">        multinomial dependent variables.</span>
+
+<span class="sd">        :return: description of transform.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">plan</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan_</span>
+        <span class="n">xform_steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">xfi</span> <span class="k">for</span> <span class="n">xfi</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;xforms&quot;</span><span class="p">]]</span>
+        <span class="n">frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">xfi</span><span class="o">.</span><span class="n">description_matrix</span><span class="p">()</span> <span class="k">for</span> <span class="n">xfi</span> <span class="ow">in</span> <span class="n">xform_steps</span><span class="p">]</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Return description of transform as a data frame. Does not encode user steps. Not yet implemented for
+multinomial dependent variables.</p>
+
+<p>:return: description of transform.</p>
 </div>
 
 
