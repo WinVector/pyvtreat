@@ -79,9 +79,6 @@
                                 <a class="function" href="#MultinomialOutcomeTreatment.__init__">MultinomialOutcomeTreatment</a>
                         </li>
                         <li>
-                                <a class="function" href="#MultinomialOutcomeTreatment.description_matrix">description_matrix</a>
-                        </li>
-                        <li>
                                 <a class="function" href="#MultinomialOutcomeTreatment.merge_params">merge_params</a>
                         </li>
                         <li>
@@ -638,15 +635,6 @@
             <span class="n">imputation_map</span><span class="o">=</span><span class="n">imputation_map</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outcomes_</span> <span class="o">=</span> <span class="kc">None</span>
-
-    <span class="k">def</span> <span class="nf">description_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Raises ValueError.</span>
-
-<span class="sd">        :return:</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;description_matrix() not implemented for MultinomialOutcomeTreatment&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">merge_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -2107,15 +2095,6 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outcomes_</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">description_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Raises ValueError.</span>
-
-<span class="sd">        :return:</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;description_matrix() not implemented for MultinomialOutcomeTreatment&#39;</span><span class="p">)</span>
-
     <span class="k">def</span> <span class="nf">merge_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Merge user parameters, returns new parameters does not alter object.</span>
@@ -2340,35 +2319,6 @@
 :param cols_to_copy: list or tuple of column names
 :param params: <a href="../vtreat.html#vtreat_parameters">vtreat.vtreat_parameters()</a>
 :param imputation_map: map of column names to custom missing imputation values or functions</p>
-</div>
-
-
-                            </div>
-                            <div id="MultinomialOutcomeTreatment.description_matrix" class="classattr">
-                                        <div class="attr function"><a class="headerlink" href="#MultinomialOutcomeTreatment.description_matrix">#&nbsp;&nbsp</a>
-
-        
-            <span class="def">def</span>
-            <span class="name">description_matrix</span><span class="signature">(self)</span>:
-    </div>
-
-                <details>
-            <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">description_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Raises ValueError.</span>
-
-<span class="sd">        :return:</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;description_matrix() not implemented for MultinomialOutcomeTreatment&#39;</span><span class="p">)</span>
-</pre></div>
-
-        </details>
-
-            <div class="docstring"><p>Raises ValueError.</p>
-
-<p>:return:</p>
 </div>
 
 
@@ -2615,6 +2565,7 @@
                 <dd id="MultinomialOutcomeTreatment.predict" class="function"><a href="vtreat_impl.html#VariableTreatment.predict">predict</a></dd>
                 <dd id="MultinomialOutcomeTreatment.predict_proba" class="function"><a href="vtreat_impl.html#VariableTreatment.predict_proba">predict_proba</a></dd>
                 <dd id="MultinomialOutcomeTreatment.get_feature_names" class="function"><a href="vtreat_impl.html#VariableTreatment.get_feature_names">get_feature_names</a></dd>
+                <dd id="MultinomialOutcomeTreatment.description_matrix" class="function"><a href="vtreat_impl.html#VariableTreatment.description_matrix">description_matrix</a></dd>
 
             </div>
                                 </dl>

@@ -55,3 +55,8 @@ def test_multinomial():
 
     with pytest.warns(Warning):
         t_f = treatment.transform(d)
+
+    transform_description = treatment.description_matrix()
+    assert isinstance(transform_description, pandas.DataFrame)
+    assert transform_description.shape[0] > 0
+    assert transform_description.shape[1] > 0
