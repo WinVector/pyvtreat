@@ -7,7 +7,8 @@ import vtreat
 
 def test_homes_example():
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    d = pandas.read_pickle(os.path.join(dir_path, "homes_76.pkl"))
+    d = pandas.read_csv(os.path.join(dir_path, "homes_76.csv"))
+    d['Lot'] = d['Lot'].astype(str)
     assert d.shape[0] == 38
     assert d.shape[1] == 8
 
@@ -55,7 +56,7 @@ def test_homes_example():
 
 def test_diabetes_example():
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    data = pandas.read_pickle(os.path.join(dir_path, "diabetes_head.pkl"))
+    data = pandas.read_csv(os.path.join(dir_path, "diabetes_head.csv"))
     assert data.shape[0] == 1000
 
     # from AI200: day_04/ZZ_homework/soln_dont_peek/diabetes_soln.ipynb
