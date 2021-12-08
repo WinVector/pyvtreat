@@ -31,6 +31,9 @@
                     <h2>API Documentation</h2>
                         <ul class="memberlist">
             <li>
+                    <a class="function" href="#replace_bad_with_sentinel">replace_bad_with_sentinel</a>
+            </li>
+            <li>
                     <a class="function" href="#ready_data_frame">ready_data_frame</a>
             </li>
             <li>
@@ -265,6 +268,22 @@
 <span class="kn">import</span> <span class="nn">sklearn.base</span>
 
 
+<span class="n">bad_sentinel</span> <span class="o">=</span> <span class="s1">&#39;_NA_&#39;</span>
+
+
+<span class="k">def</span> <span class="nf">replace_bad_with_sentinel</span><span class="p">(</span><span class="n">ar</span><span class="p">:</span> <span class="n">List</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Replace None/NaN entries in iterable with &#39;_NA_&#39;</span>
+<span class="sd">    :param ar: iterable</span>
+<span class="sd">    :return: one dimensional numpy array</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ar</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ar</span><span class="p">)</span>
+    <span class="n">bads</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">ar</span><span class="p">)</span>
+    <span class="n">ar</span><span class="p">[</span><span class="n">bads</span><span class="p">]</span> <span class="o">=</span> <span class="n">bad_sentinel</span>
+    <span class="k">return</span> <span class="n">ar</span>
+
+
 <span class="k">def</span> <span class="nf">ready_data_frame</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="nb">type</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert an array-like object to a data frame for processing.</span>
@@ -382,7 +401,7 @@
         <span class="n">derived_column_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">sf</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">incoming_column_name</span><span class="p">:</span> <span class="n">data_frame</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">]})</span>
         <span class="n">bad_posns</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">sf</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">])</span>
-        <span class="n">sf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;_NA_&quot;</span>
+        <span class="n">sf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">bad_sentinel</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
             <span class="n">sf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>  <span class="c1"># ordered by left table rows</span>
@@ -403,7 +422,7 @@
             <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
             <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
             <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">replace_bad_with_sentinel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">]),</span>
             <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
         <span class="p">})</span>
         <span class="k">return</span> <span class="n">description</span>
@@ -486,7 +505,7 @@
             <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
             <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
             <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
-            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">],</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">bad_sentinel</span><span class="p">],</span>
             <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">replacement_value_</span><span class="p">],</span>
         <span class="p">})</span>
         <span class="k">return</span> <span class="n">description</span>
@@ -529,7 +548,7 @@
             <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
             <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
             <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
-            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">],</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">bad_sentinel</span><span class="p">],</span>
             <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span>
         <span class="p">})</span>
         <span class="k">return</span> <span class="n">description</span>
@@ -735,7 +754,7 @@
         <span class="n">incoming_column_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span>
         <span class="n">sf</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">incoming_column_name</span><span class="p">:</span> <span class="n">data_frame</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">]})</span>
         <span class="n">bad_posns</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">sf</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">])</span>
-        <span class="n">sf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;_NA_&quot;</span>
+        <span class="n">sf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">bad_sentinel</span>
         <span class="n">col</span> <span class="o">=</span> <span class="n">sf</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">]</span>
 
         <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
@@ -765,7 +784,7 @@
             <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
             <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
             <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
-            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">replace_bad_with_sentinel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="p">),</span>
             <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="p">})</span>
         <span class="k">return</span> <span class="n">description</span>
@@ -786,7 +805,7 @@
 
     <span class="n">sf</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">incoming_column_name</span><span class="p">:</span> <span class="n">x</span><span class="p">})</span>
     <span class="n">bad_posns</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">sf</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">])</span>
-    <span class="n">sf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;_NA_&quot;</span>
+    <span class="n">sf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">bad_sentinel</span>
     <span class="n">counts</span> <span class="o">=</span> <span class="n">sf</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">counts</span> <span class="o">=</span> <span class="n">counts</span><span class="p">[</span><span class="n">counts</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
@@ -813,7 +832,7 @@
 
     <span class="n">sf</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">})</span>
     <span class="n">bad_posns</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">sf</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">])</span>
-    <span class="n">sf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;_NA_&quot;</span>
+    <span class="n">sf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bad_sentinel</span>
     <span class="n">sf</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">sf</span><span class="p">[</span><span class="s2">&quot;_ni&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
@@ -1984,6 +2003,38 @@
         </details>
 
             </section>
+                <section id="replace_bad_with_sentinel">
+                            <div class="attr function"><a class="headerlink" href="#replace_bad_with_sentinel">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">replace_bad_with_sentinel</span><span class="signature">(ar: List) -&gt; numpy.ndarray</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">replace_bad_with_sentinel</span><span class="p">(</span><span class="n">ar</span><span class="p">:</span> <span class="n">List</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Replace None/NaN entries in iterable with &#39;_NA_&#39;</span>
+<span class="sd">    :param ar: iterable</span>
+<span class="sd">    :return: one dimensional numpy array</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ar</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ar</span><span class="p">)</span>
+    <span class="n">bads</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">ar</span><span class="p">)</span>
+    <span class="n">ar</span><span class="p">[</span><span class="n">bads</span><span class="p">]</span> <span class="o">=</span> <span class="n">bad_sentinel</span>
+    <span class="k">return</span> <span class="n">ar</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Replace None/NaN entries in iterable with '_NA_'
+:param ar: iterable
+:return: one dimensional numpy array</p>
+</div>
+
+
+                </section>
                 <section id="ready_data_frame">
                             <div class="attr function"><a class="headerlink" href="#ready_data_frame">#&nbsp;&nbsp</a>
 
@@ -2285,7 +2336,7 @@
         <span class="n">derived_column_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">sf</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">incoming_column_name</span><span class="p">:</span> <span class="n">data_frame</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">]})</span>
         <span class="n">bad_posns</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">sf</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">])</span>
-        <span class="n">sf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;_NA_&quot;</span>
+        <span class="n">sf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">bad_sentinel</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
             <span class="n">sf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>  <span class="c1"># ordered by left table rows</span>
@@ -2306,7 +2357,7 @@
             <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
             <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
             <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">replace_bad_with_sentinel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">]),</span>
             <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
         <span class="p">})</span>
         <span class="k">return</span> <span class="n">description</span>
@@ -2388,7 +2439,7 @@
         <span class="n">derived_column_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">sf</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">incoming_column_name</span><span class="p">:</span> <span class="n">data_frame</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">]})</span>
         <span class="n">bad_posns</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">sf</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">])</span>
-        <span class="n">sf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;_NA_&quot;</span>
+        <span class="n">sf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">bad_sentinel</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
             <span class="n">sf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>  <span class="c1"># ordered by left table rows</span>
@@ -2431,7 +2482,7 @@
             <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
             <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
             <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">replace_bad_with_sentinel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">]),</span>
             <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
         <span class="p">})</span>
         <span class="k">return</span> <span class="n">description</span>
@@ -2627,7 +2678,7 @@
             <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
             <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
             <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
-            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">],</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">bad_sentinel</span><span class="p">],</span>
             <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">replacement_value_</span><span class="p">],</span>
         <span class="p">})</span>
         <span class="k">return</span> <span class="n">description</span>
@@ -2731,7 +2782,7 @@
             <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
             <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
             <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
-            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">],</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">bad_sentinel</span><span class="p">],</span>
             <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">replacement_value_</span><span class="p">],</span>
         <span class="p">})</span>
         <span class="k">return</span> <span class="n">description</span>
@@ -2795,7 +2846,7 @@
             <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
             <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
             <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
-            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">],</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">bad_sentinel</span><span class="p">],</span>
             <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span>
         <span class="p">})</span>
         <span class="k">return</span> <span class="n">description</span>
@@ -2895,7 +2946,7 @@
             <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
             <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
             <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
-            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">],</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">bad_sentinel</span><span class="p">],</span>
             <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span>
         <span class="p">})</span>
         <span class="k">return</span> <span class="n">description</span>
@@ -3244,7 +3295,7 @@
         <span class="n">incoming_column_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span>
         <span class="n">sf</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">incoming_column_name</span><span class="p">:</span> <span class="n">data_frame</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">]})</span>
         <span class="n">bad_posns</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">sf</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">])</span>
-        <span class="n">sf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;_NA_&quot;</span>
+        <span class="n">sf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">bad_sentinel</span>
         <span class="n">col</span> <span class="o">=</span> <span class="n">sf</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">]</span>
 
         <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
@@ -3274,7 +3325,7 @@
             <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
             <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
             <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
-            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">replace_bad_with_sentinel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="p">),</span>
             <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="p">})</span>
         <span class="k">return</span> <span class="n">description</span>
@@ -3355,7 +3406,7 @@
         <span class="n">incoming_column_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span>
         <span class="n">sf</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">incoming_column_name</span><span class="p">:</span> <span class="n">data_frame</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">]})</span>
         <span class="n">bad_posns</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">sf</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">])</span>
-        <span class="n">sf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;_NA_&quot;</span>
+        <span class="n">sf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">bad_sentinel</span>
         <span class="n">col</span> <span class="o">=</span> <span class="n">sf</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">]</span>
 
         <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
@@ -3407,7 +3458,7 @@
             <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
             <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
             <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
-            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">replace_bad_with_sentinel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="p">),</span>
             <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
         <span class="p">})</span>
         <span class="k">return</span> <span class="n">description</span>
@@ -3454,7 +3505,7 @@
 
     <span class="n">sf</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">incoming_column_name</span><span class="p">:</span> <span class="n">x</span><span class="p">})</span>
     <span class="n">bad_posns</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">sf</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">])</span>
-    <span class="n">sf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;_NA_&quot;</span>
+    <span class="n">sf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">bad_sentinel</span>
     <span class="n">counts</span> <span class="o">=</span> <span class="n">sf</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">counts</span> <span class="o">=</span> <span class="n">counts</span><span class="p">[</span><span class="n">counts</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
@@ -3507,7 +3558,7 @@
 
     <span class="n">sf</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">})</span>
     <span class="n">bad_posns</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">sf</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">])</span>
-    <span class="n">sf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;_NA_&quot;</span>
+    <span class="n">sf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bad_posns</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bad_sentinel</span>
     <span class="n">sf</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">sf</span><span class="p">[</span><span class="s2">&quot;_ni&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>

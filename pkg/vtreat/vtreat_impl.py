@@ -17,6 +17,22 @@ import vtreat.transform
 import sklearn.base
 
 
+bad_sentinel = '_NA_'
+
+
+def replace_bad_with_sentinel(ar: List) -> numpy.ndarray:
+    """
+    Replace None/NaN entries in iterable with '_NA_'
+    :param ar: iterable
+    :return: one dimensional numpy array
+    """
+
+    ar = numpy.array(ar)
+    bads = pandas.isnull(ar)
+    ar[bads] = bad_sentinel
+    return ar
+
+
 def ready_data_frame(d) -> Tuple[pandas.DataFrame, type]:
     """
     Convert an array-like object to a data frame for processing.
@@ -134,7 +150,7 @@ class MappedCodeTransform(VarTransform):
         derived_column_name = self.derived_column_names_[0]
         sf = pandas.DataFrame({incoming_column_name: data_frame[incoming_column_name]})
         bad_posns = vtreat.util.is_bad(sf[incoming_column_name])
-        sf.loc[bad_posns, incoming_column_name] = "_NA_"
+        sf.loc[bad_posns, incoming_column_name] = bad_sentinel
         res = pandas.merge(
             sf, self.code_book_, on=[self.incoming_column_name_], how="left", sort=False
         )  # ordered by left table rows
@@ -155,7 +171,7 @@ class MappedCodeTransform(VarTransform):
             'treatment': self.treatment_,
             'orig_var': self.incoming_column_name_,
             'variable': self.derived_column_names_[0],
-            'value': self.code_book_[self.incoming_column_name_].copy(),
+            'value': replace_bad_with_sentinel(self.code_book_[self.incoming_column_name_]),
             'replacement': self.code_book_[self.derived_column_names_[0]].copy(),
         })
         return description
@@ -238,7 +254,7 @@ class CleanNumericTransform(VarTransform):
             'treatment': [self.treatment_],
             'orig_var': [self.incoming_column_name_],
             'variable': [self.derived_column_names_[0]],
-            'value': [None],
+            'value': [bad_sentinel],
             'replacement': [self.replacement_value_],
         })
         return description
@@ -281,7 +297,7 @@ class IndicateMissingTransform(VarTransform):
             'treatment': [self.treatment_],
             'orig_var': [self.incoming_column_name_],
             'variable': [self.derived_column_names_[0]],
-            'value': [None],
+            'value': [bad_sentinel],
             'replacement': [1.0],
         })
         return description
@@ -487,7 +503,7 @@ class IndicatorCodeTransform(VarTransform):
         incoming_column_name = self.incoming_column_name_
         sf = pandas.DataFrame({incoming_column_name: data_frame[incoming_column_name]})
         bad_posns = vtreat.util.is_bad(sf[incoming_column_name])
-        sf.loc[bad_posns, incoming_column_name] = "_NA_"
+        sf.loc[bad_posns, incoming_column_name] = bad_sentinel
         col = sf[self.incoming_column_name_]
 
         def f(i: int):
@@ -517,7 +533,7 @@ class IndicatorCodeTransform(VarTransform):
             'treatment': self.treatment_,
             'orig_var': self.incoming_column_name_,
             'variable': self.derived_column_names_.copy(),
-            'value': self.levels_.copy(),
+            'value': replace_bad_with_sentinel(self.levels_),
             'replacement': 1.0,
         })
         return description
@@ -538,7 +554,7 @@ def fit_indicator_code(
 
     sf = pandas.DataFrame({incoming_column_name: x})
     bad_posns = vtreat.util.is_bad(sf[incoming_column_name])
-    sf.loc[bad_posns, incoming_column_name] = "_NA_"
+    sf.loc[bad_posns, incoming_column_name] = bad_sentinel
     counts = sf[incoming_column_name].value_counts()
     n = sf.shape[0]
     counts = counts[counts > 0]
@@ -565,7 +581,7 @@ def fit_prevalence_code(incoming_column_name: str, x) -> Optional[VarTransform]:
 
     sf = pandas.DataFrame({"x": x})
     bad_posns = vtreat.util.is_bad(sf["x"])
-    sf.loc[bad_posns, "x"] = "_NA_"
+    sf.loc[bad_posns, "x"] = bad_sentinel
     sf.reset_index(inplace=True, drop=True)
     n = sf.shape[0]
     sf["_ni"] = 1.0
