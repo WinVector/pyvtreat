@@ -1,6 +1,8 @@
 
 
 import os
+import numpy as np
+import pandas
 import pandas as pd
 
 from data_algebra.data_ops import *
@@ -106,3 +108,40 @@ def test_db_adapter_1():
 
     db_handle.close()
 
+
+def test_db_adapter_monster():
+    n_rows = 100
+    n_vars = 100
+    step = 1/np.sqrt(n_vars)
+    cols = dict()
+    y = np.random.normal(size=n_rows)
+    for i in range(n_vars):
+        vname = f'v_{i}'
+        v = np.random.choice(['a', 'b'], replace=True, size=n_rows)
+        y = y + np.where(v == 'a', step, -step)
+        cols[vname] = v
+    vars = list(cols.keys())
+    vars.sort()
+    cols['y'] = y
+    d = pd.DataFrame(cols)
+
+    outcome_name = "y"
+    cols_to_copy = [outcome_name]
+    columns = vars + cols_to_copy
+
+    treatment = vtreat.NumericOutcomeTreatment(
+        cols_to_copy=cols_to_copy,
+        outcome_name=outcome_name,
+        params=vtreat.vtreat_parameters(
+            {"sparse_indicators": False, "filter_to_recommended": False,}
+        ),
+    )
+    d_train_treated = treatment.fit_transform(d)
+
+    transform_as_data = treatment.description_matrix()
+
+    ops = as_data_algebra_pipeline(
+        source=descr(d_app=d),
+        vtreat_descr=transform_as_data,
+        treatment_table_name='transform_as_data',
+    )
