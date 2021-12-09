@@ -2,3 +2,4 @@ numpy
 pandas
 scipy
 sklearn
+data_algebra>=0.9.1
