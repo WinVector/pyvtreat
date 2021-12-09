@@ -3,7 +3,7 @@
 Convert the description of a vtreat variable treatment into a data algebra pipeline.
 """
 
-
+import numpy
 import pandas
 
 from vtreat.vtreat_impl import bad_sentinel, replace_bad_with_sentinel
@@ -25,30 +25,42 @@ def as_data_algebra_pipeline(
 
     :param source: input data.
     :param vtreat_descr: .description_matrix() description of transform.
+                         Expected invariant: CleanNumericTransform doesn't change variable names,
+                         all other operations produce new names.
     :param treatment_table_name: name to use for the vtreat_descr table.
     :return: data algebra pipeline implementing specified vtreat treatment
     """
 
+    # belt and suspenders replace missing with sentinel
     vtreat_descr = vtreat_descr.copy()
     vtreat_descr['value'] = replace_bad_with_sentinel(vtreat_descr['value'])
+    # check our expected invariants
     assert isinstance(source, ViewRepresentation)
     assert isinstance(vtreat_descr, pandas.DataFrame)
+    assert isinstance(treatment_table_name, str)
+    # clean copies don't change variable names
+    cn_rows = vtreat_descr.loc[vtreat_descr['treatment_class'] == 'CleanNumericTransform', :].reset_index(
+        inplace=False, drop=True)
+    assert numpy.all(cn_rows['variable'] == cn_rows['orig_var'])
+    # operations other than clean copy produce new variable names
+    ot_rows = vtreat_descr.loc[vtreat_descr['treatment_class'] != 'CleanNumericTransform', :].reset_index(
+        inplace=False, drop=True)
+    assert len(set(ot_rows['variable']).intersection(vtreat_descr['orig_var'])) == 0
+    # start building up operator pipeline
     ops = source
     step_1_ops = dict()
     # add in is_bad indicators
     im_rows = vtreat_descr.loc[vtreat_descr['treatment_class'] == 'IndicateMissingTransform', :].reset_index(
         inplace=False, drop=True)
     for i in range(im_rows.shape[0]):
-        step_1_ops[im_rows['variable'][i]] =\
-            f"{im_rows['orig_var'][i]}.is_bad().if_else(1.0, 0.0)"
+        step_1_ops[im_rows['variable'][i]] = f"{im_rows['orig_var'][i]}.is_bad().if_else(1.0, 0.0)"
     # add in general value indicators or dummies
     ic_rows = vtreat_descr.loc[vtreat_descr['treatment_class'] == 'IndicatorCodeTransform', :].reset_index(
         inplace=False, drop=True)
     for i in range(ic_rows.shape[0]):
         ov = ic_rows['orig_var'].values[i]
         vi = ic_rows['value'].values[i]
-        step_1_ops[ic_rows['variable'][i]] =\
-            f"({ov}.coalesce('{bad_sentinel}') == '{vi}').if_else(1.0, 0.0)"
+        step_1_ops[ic_rows['variable'][i]] = f"({ov}.coalesce('{bad_sentinel}') == '{vi}').if_else(1.0, 0.0)"
     if len(step_1_ops) > 0:
         ops = ops.extend(step_1_ops)
     # add in any value mapped columns (these should all be string valued)
@@ -85,8 +97,6 @@ def as_data_algebra_pipeline(
                         )
             )
     # add in any clean numeric copies, inputs are numeric- so disjoint of categorical processing
-    cn_rows = vtreat_descr.loc[vtreat_descr['treatment_class'] == 'CleanNumericTransform', :].reset_index(
-        inplace=False, drop=True)
     if cn_rows.shape[0] > 0:
         step_3_ops = dict()
         for i in range(cn_rows.shape[0]):
