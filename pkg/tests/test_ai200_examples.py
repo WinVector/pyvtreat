@@ -60,6 +60,7 @@ def test_diabetes_example():
     assert data.shape[0] == 1000
 
     # from AI200: day_04/ZZ_homework/soln_dont_peek/diabetes_soln.ipynb
+    # https://archive.ics.uci.edu/ml/datasets/Diabetes+130-US+hospitals+for+years+1999-2008
 
     # sklearn.preprocessing.OneHotEncoder could
     # also perform this task well.

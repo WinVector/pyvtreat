@@ -43,31 +43,38 @@ def as_data_algebra_pipeline(
     ic_rows = vtreat_descr.loc[vtreat_descr['treatment_class'] == 'IndicatorCodeTransform', :].reset_index(
         inplace=False, drop=True)
     for i in range(ic_rows.shape[0]):
+        ov = ic_rows['orig_var'].values[i]
+        vi = ic_rows['value'].values[i]
         step_1_ops[ic_rows['variable'][i]] =\
-            f"{ic_rows['orig_var'][i]}.is_bad('{bad_sentinel}', {ic_rows['orig_var'][i]}) == {ic_rows['value'][i]}"
+            f"({ov}.coalesce('{bad_sentinel}') == '{vi}').if_else(1.0, 0.0)"
     if len(step_1_ops) > 0:
         ops = ops.extend(step_1_ops)
     # add in any value mapped columns (these should all be string valued)
-    mp_rows = vtreat_descr.loc[vtreat_descr['treatment_class'] == 'MappedCodeTransform', :].reset_index(
-        inplace=False, drop=True)
+    mp_rows = (
+        data(vtreat_descr=vtreat_descr)
+            .select_rows("treatment_class == 'MappedCodeTransform'")
+            .project({}, group_by=['orig_var', 'variable'])
+        ).ex()
     to_del = set()
     if mp_rows.shape[0] > 0:
         jt = describe_table(vtreat_descr, table_name=treatment_table_name)
         join_key_name = 'vtreat_join_key'
         for i in range(mp_rows.shape[0]):
-            to_del.add(mp_rows['orig_var'][i])
+            ov = mp_rows['orig_var'].values[i]
+            vi = mp_rows['variable'].values[i]
+            to_del.add(ov)
             ops = (
                 ops
-                    .extend({join_key_name: f"{mp_rows['orig_var'][i]}.is_bad('{bad_sentinel}', {mp_rows['orig_var'][i]})"})
+                    .extend({join_key_name: f"{ov}.coalesce('{bad_sentinel}')"})
                     .natural_join(
                         b=(
                             jt
-                                .select_rows(f"(treatment_class == 'MappedCodeTransform') & (orig_var == {mp_rows['orig_var'][i]})")
+                                .select_rows(f"(treatment_class == 'MappedCodeTransform') & (orig_var == '{ov}') & (variable == '{vi}')")
                                 .extend({
-                                    join_key_name: mp_rows['orig_var'][i],
-                                    mp_rows['orig_var'][i]: 'replacement',
+                                    join_key_name: 'variable',
+                                    vi: 'replacement',
                                     })
-                                .select_columns([join_key_name, mp_rows['orig_var'][i]])
+                                .select_columns([join_key_name, vi])
                             ),
                         by=[join_key_name],
                         jointype='left',
@@ -81,7 +88,7 @@ def as_data_algebra_pipeline(
         step_3_ops = dict()
         for i in range(cn_rows.shape[0]):
             step_3_ops[cn_rows['variable'][i]] =\
-                f"{cn_rows['orig_var'][i]}.is_bad().if_else({cn_rows['replacement'][i]}, {cn_rows['orig_var'][i]})"
+                f"{cn_rows['orig_var'][i]}.coalesce({cn_rows['replacement'][i]})"
         ops = ops.extend(step_3_ops)
     # remove any re-mapped variables, as they are not numeric
     if len(to_del) > 0:
