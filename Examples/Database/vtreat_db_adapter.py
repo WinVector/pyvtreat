@@ -38,6 +38,22 @@ def as_data_algebra_pipeline(
     assert isinstance(source, ViewRepresentation)
     assert isinstance(vtreat_descr, pandas.DataFrame)
     assert isinstance(treatment_table_name, str)
+    # variable produced is function of orig_var and treatment only
+    check_fn_reln = (
+        data(vtreat_descr=vtreat_descr)
+            .project({}, group_by=['treatment', 'orig_var', 'variable'])
+            .extend({'one': 1})
+            .project({'count': 'one.sum()'}, group_by=['treatment', 'orig_var'])
+    ).ex()
+    assert numpy.all(check_fn_reln['count'] == 1)
+    # variable consumed is function of orig_var and treatment only
+    check_fn_reln2 = (
+        data(vtreat_descr=vtreat_descr)
+            .project({}, group_by=['treatment', 'orig_var', 'variable'])
+            .extend({'one': 1})
+            .project({'count': 'one.sum()'}, group_by=['treatment', 'variable'])
+    ).ex()
+    assert numpy.all(check_fn_reln2['count'] == 1)
     # clean copies don't change variable names
     cn_rows = vtreat_descr.loc[vtreat_descr['treatment_class'] == 'CleanNumericTransform', :].reset_index(
         inplace=False, drop=True)
@@ -46,6 +62,14 @@ def as_data_algebra_pipeline(
     ot_rows = vtreat_descr.loc[vtreat_descr['treatment_class'] != 'CleanNumericTransform', :].reset_index(
         inplace=False, drop=True)
     assert len(set(ot_rows['variable']).intersection(vtreat_descr['orig_var'])) == 0
+    # clean copy and re-mapping take disjoint inputs (one alters input as a prep-step, so they would interfere)
+    mp_rows = (
+        data(vtreat_descr=vtreat_descr)
+            .select_rows("treatment_class == 'MappedCodeTransform'")
+            .project({}, group_by=['orig_var', 'variable'])
+            .order_rows(['orig_var', 'variable'])
+        ).ex()
+    assert len(set(mp_rows['orig_var']).intersection(cn_rows['orig_var'])) == 0
     # start building up operator pipeline
     ops = source
     step_1_ops = dict()
@@ -64,28 +88,25 @@ def as_data_algebra_pipeline(
     if len(step_1_ops) > 0:
         ops = ops.extend(step_1_ops)
     # add in any value mapped columns (these should all be string valued)
-    mp_rows = (
-        data(vtreat_descr=vtreat_descr)
-            .select_rows("treatment_class == 'MappedCodeTransform'")
-            .project({}, group_by=['orig_var', 'variable'])
-            .order_rows(['orig_var', 'variable'])
-        ).ex()
     if mp_rows.shape[0] > 0:
-        # prepare incoming variables to use sentinel for missing
-        mapping_inputs = list(set([mp_rows['orig_var'].values[i]]))
+        # prepare incoming variables to use sentinel for missing, this is after other steps using these values
+        mapping_inputs = list(set([v for v in mp_rows['orig_var'].values]))
         mapping_inputs.sort()
+        mapping_outputs = list(set([v for v in mp_rows['variable'].values]))
+        mapping_outputs.sort()
         ops = ops.extend({v : f"{v}.coalesce('{bad_sentinel}')" for v in mapping_inputs})
-        # do the re-mapping joins
+        # do the re-mapping joins, these don't depend on each other
         jt = describe_table(vtreat_descr, table_name=treatment_table_name)
         for i in range(mp_rows.shape[0]):
             ov = mp_rows['orig_var'].values[i]
             vi = mp_rows['variable'].values[i]
+            match_q = f"(treatment_class == 'MappedCodeTransform') & (orig_var == '{ov}') & (variable == '{vi}')"
             ops = (
                 ops
                     .natural_join(
                         b=(
                             jt
-                                .select_rows(f"(treatment_class == 'MappedCodeTransform') & (orig_var == '{ov}') & (variable == '{vi}')")
+                                .select_rows(match_q)
                                 .extend({
                                     ov: 'value',
                                     vi: 'replacement',
@@ -96,12 +117,13 @@ def as_data_algebra_pipeline(
                         jointype='left',
                         )
             )
+        # handle any novel values
+        ops = ops.extend({v: f'{v}.coalesce(0.0)' for v in mapping_outputs})
     # add in any clean numeric copies, inputs are numeric- so disjoint of categorical processing
     if cn_rows.shape[0] > 0:
         step_3_ops = dict()
         for i in range(cn_rows.shape[0]):
-            step_3_ops[cn_rows['variable'][i]] =\
-                f"{cn_rows['orig_var'][i]}.coalesce({cn_rows['replacement'][i]})"
+            step_3_ops[cn_rows['variable'][i]] = f"{cn_rows['orig_var'][i]}.coalesce({cn_rows['replacement'][i]})"
         ops = ops.extend(step_3_ops)
     # remove any input variables that are not the same name as variables we produced
     # this prevents non-numerics from leaking forward
