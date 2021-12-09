@@ -71,7 +71,7 @@ def as_data_algebra_pipeline(
                             jt
                                 .select_rows(f"(treatment_class == 'MappedCodeTransform') & (orig_var == '{ov}') & (variable == '{vi}')")
                                 .extend({
-                                    join_key_name: 'variable',
+                                    join_key_name: 'value',
                                     vi: 'replacement',
                                     })
                                 .select_columns([join_key_name, vi])
