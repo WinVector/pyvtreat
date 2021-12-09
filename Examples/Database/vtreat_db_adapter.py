@@ -20,6 +20,8 @@ def as_data_algebra_pipeline(
     into a data algebra pipeline.
     See: https://github.com/WinVector/data_algebra and https://github.com/WinVector/pyvtreat .
     Missing and nan are treated as synonums for '_NA_'.
+    Another way to use this methodology would be to port this code as a stored procedure
+    in a target database of choice, meaning only the vtreat_descr table would be needed on such systems.
 
     :param source: input data.
     :param vtreat_descr: .description_matrix() description of transform.
@@ -57,10 +59,10 @@ def as_data_algebra_pipeline(
             .order_rows(['orig_var', 'variable'])
         ).ex()
     if mp_rows.shape[0] > 0:
-        # prepare incoming variables and schedule for drop
-        to_del = list(set([mp_rows['orig_var'].values[i]]))
-        to_del.sort()
-        ops = ops.extend({v : f"{v}.coalesce('{bad_sentinel}')" for v in to_del})
+        # prepare incoming variables to use sentinel for missing
+        mapping_inputs = list(set([mp_rows['orig_var'].values[i]]))
+        mapping_inputs.sort()
+        ops = ops.extend({v : f"{v}.coalesce('{bad_sentinel}')" for v in mapping_inputs})
         # do the re-mapping joins
         jt = describe_table(vtreat_descr, table_name=treatment_table_name)
         for i in range(mp_rows.shape[0]):
@@ -82,8 +84,6 @@ def as_data_algebra_pipeline(
                         jointype='left',
                         )
             )
-        # remove any re-mapped variables, as they are not numeric
-        ops = ops.drop_columns(to_del)
     # add in any clean numeric copies, inputs are numeric- so disjoint of categorical processing
     cn_rows = vtreat_descr.loc[vtreat_descr['treatment_class'] == 'CleanNumericTransform', :].reset_index(
         inplace=False, drop=True)
@@ -93,4 +93,10 @@ def as_data_algebra_pipeline(
             step_3_ops[cn_rows['variable'][i]] =\
                 f"{cn_rows['orig_var'][i]}.coalesce({cn_rows['replacement'][i]})"
         ops = ops.extend(step_3_ops)
+    # remove any input variables that are not the same name as variables we produced
+    # this prevents non-numerics from leaking forward
+    to_del = list(set(vtreat_descr['orig_var']) - set(vtreat_descr['variable']))
+    if len(to_del) > 0:
+        to_del.sort()
+        ops = ops.drop_columns(to_del)
     return ops
