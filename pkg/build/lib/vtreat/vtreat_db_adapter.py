@@ -38,15 +38,7 @@ def as_data_algebra_pipeline(
     assert isinstance(source, ViewRepresentation)
     assert isinstance(vtreat_descr, pandas.DataFrame)
     assert isinstance(treatment_table_name, str)
-    # variable produced is function of orig_var and treatment only
-    check_fn_reln = (
-        data(vtreat_descr=vtreat_descr)
-            .project({}, group_by=['treatment', 'orig_var', 'variable'])
-            .extend({'one': 1})
-            .project({'count': 'one.sum()'}, group_by=['treatment', 'orig_var'])
-    ).ex()
-    assert numpy.all(check_fn_reln['count'] == 1)
-    # variable consumed is function of orig_var and treatment only
+    # variable consumed is function of variable produced and treatment only
     check_fn_reln2 = (
         data(vtreat_descr=vtreat_descr)
             .project({}, group_by=['treatment', 'orig_var', 'variable'])

@@ -93,15 +93,7 @@
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">ViewRepresentation</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vtreat_descr</span><span class="p">,</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">treatment_table_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
-    <span class="c1"># variable produced is function of orig_var and treatment only</span>
-    <span class="n">check_fn_reln</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">data</span><span class="p">(</span><span class="n">vtreat_descr</span><span class="o">=</span><span class="n">vtreat_descr</span><span class="p">)</span>
-            <span class="o">.</span><span class="n">project</span><span class="p">({},</span> <span class="n">group_by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;treatment&#39;</span><span class="p">,</span> <span class="s1">&#39;orig_var&#39;</span><span class="p">,</span> <span class="s1">&#39;variable&#39;</span><span class="p">])</span>
-            <span class="o">.</span><span class="n">extend</span><span class="p">({</span><span class="s1">&#39;one&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
-            <span class="o">.</span><span class="n">project</span><span class="p">({</span><span class="s1">&#39;count&#39;</span><span class="p">:</span> <span class="s1">&#39;one.sum()&#39;</span><span class="p">},</span> <span class="n">group_by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;treatment&#39;</span><span class="p">,</span> <span class="s1">&#39;orig_var&#39;</span><span class="p">])</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">ex</span><span class="p">()</span>
-    <span class="k">assert</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">check_fn_reln</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="c1"># variable consumed is function of orig_var and treatment only</span>
+    <span class="c1"># variable consumed is function of variable produced and treatment only</span>
     <span class="n">check_fn_reln2</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">data</span><span class="p">(</span><span class="n">vtreat_descr</span><span class="o">=</span><span class="n">vtreat_descr</span><span class="p">)</span>
             <span class="o">.</span><span class="n">project</span><span class="p">({},</span> <span class="n">group_by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;treatment&#39;</span><span class="p">,</span> <span class="s1">&#39;orig_var&#39;</span><span class="p">,</span> <span class="s1">&#39;variable&#39;</span><span class="p">])</span>
@@ -235,15 +227,7 @@
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">ViewRepresentation</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vtreat_descr</span><span class="p">,</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">treatment_table_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
-    <span class="c1"># variable produced is function of orig_var and treatment only</span>
-    <span class="n">check_fn_reln</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">data</span><span class="p">(</span><span class="n">vtreat_descr</span><span class="o">=</span><span class="n">vtreat_descr</span><span class="p">)</span>
-            <span class="o">.</span><span class="n">project</span><span class="p">({},</span> <span class="n">group_by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;treatment&#39;</span><span class="p">,</span> <span class="s1">&#39;orig_var&#39;</span><span class="p">,</span> <span class="s1">&#39;variable&#39;</span><span class="p">])</span>
-            <span class="o">.</span><span class="n">extend</span><span class="p">({</span><span class="s1">&#39;one&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
-            <span class="o">.</span><span class="n">project</span><span class="p">({</span><span class="s1">&#39;count&#39;</span><span class="p">:</span> <span class="s1">&#39;one.sum()&#39;</span><span class="p">},</span> <span class="n">group_by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;treatment&#39;</span><span class="p">,</span> <span class="s1">&#39;orig_var&#39;</span><span class="p">])</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">ex</span><span class="p">()</span>
-    <span class="k">assert</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">check_fn_reln</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="c1"># variable consumed is function of orig_var and treatment only</span>
+    <span class="c1"># variable consumed is function of variable produced and treatment only</span>
     <span class="n">check_fn_reln2</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">data</span><span class="p">(</span><span class="n">vtreat_descr</span><span class="o">=</span><span class="n">vtreat_descr</span><span class="p">)</span>
             <span class="o">.</span><span class="n">project</span><span class="p">({},</span> <span class="n">group_by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;treatment&#39;</span><span class="p">,</span> <span class="s1">&#39;orig_var&#39;</span><span class="p">,</span> <span class="s1">&#39;variable&#39;</span><span class="p">])</span>

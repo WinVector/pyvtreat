@@ -111,7 +111,7 @@ def test_db_adapter_1():
 
 def test_db_adapter_monster():
     n_rows = 100
-    n_vars = 100
+    n_vars = 50
     step = 1/np.sqrt(n_vars)
     cols = dict()
     y = np.random.normal(size=n_rows)
@@ -145,3 +145,7 @@ def test_db_adapter_monster():
         vtreat_descr=transform_as_data,
         treatment_table_name='transform_as_data',
     )
+
+    ops_source = str(ops)
+    assert isinstance(ops_source, str)
+
