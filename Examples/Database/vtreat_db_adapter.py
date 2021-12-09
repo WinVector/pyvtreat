@@ -39,7 +39,7 @@ def as_data_algebra_pipeline(
     for i in range(im_rows.shape[0]):
         step_1_ops[im_rows['variable'][i]] =\
             f"{im_rows['orig_var'][i]}.is_bad().if_else(1.0, 0.0)"
-    # add in value indicators or dummies
+    # add in general value indicators or dummies
     ic_rows = vtreat_descr.loc[vtreat_descr['treatment_class'] == 'IndicatorCodeTransform', :].reset_index(
         inplace=False, drop=True)
     for i in range(ic_rows.shape[0]):
@@ -54,34 +54,37 @@ def as_data_algebra_pipeline(
         data(vtreat_descr=vtreat_descr)
             .select_rows("treatment_class == 'MappedCodeTransform'")
             .project({}, group_by=['orig_var', 'variable'])
+            .order_rows(['orig_var', 'variable'])
         ).ex()
-    to_del = set()
     if mp_rows.shape[0] > 0:
+        # prepare incoming variables and schedule for drop
+        to_del = list(set([mp_rows['orig_var'].values[i]]))
+        to_del.sort()
+        ops = ops.extend({v : f"{v}.coalesce('{bad_sentinel}')" for v in to_del})
+        # do the re-mapping joins
         jt = describe_table(vtreat_descr, table_name=treatment_table_name)
-        join_key_name = 'vtreat_join_key'
         for i in range(mp_rows.shape[0]):
             ov = mp_rows['orig_var'].values[i]
             vi = mp_rows['variable'].values[i]
-            to_del.add(ov)
             ops = (
                 ops
-                    .extend({join_key_name: f"{ov}.coalesce('{bad_sentinel}')"})
                     .natural_join(
                         b=(
                             jt
                                 .select_rows(f"(treatment_class == 'MappedCodeTransform') & (orig_var == '{ov}') & (variable == '{vi}')")
                                 .extend({
-                                    join_key_name: 'value',
+                                    ov: 'value',
                                     vi: 'replacement',
                                     })
-                                .select_columns([join_key_name, vi])
+                                .select_columns([ov, vi])
                             ),
-                        by=[join_key_name],
+                        by=[ov],
                         jointype='left',
                         )
-                    .drop_columns([join_key_name])
             )
-    # add in any clean numeric copies
+        # remove any re-mapped variables, as they are not numeric
+        ops = ops.drop_columns(to_del)
+    # add in any clean numeric copies, inputs are numeric- so disjoint of categorical processing
     cn_rows = vtreat_descr.loc[vtreat_descr['treatment_class'] == 'CleanNumericTransform', :].reset_index(
         inplace=False, drop=True)
     if cn_rows.shape[0] > 0:
@@ -90,9 +93,4 @@ def as_data_algebra_pipeline(
             step_3_ops[cn_rows['variable'][i]] =\
                 f"{cn_rows['orig_var'][i]}.coalesce({cn_rows['replacement'][i]})"
         ops = ops.extend(step_3_ops)
-    # remove any re-mapped variables, as they are not numeric
-    if len(to_del) > 0:
-        to_del = list(to_del)
-        to_del.sort()
-        ops = ops.drop_columns(to_del)
     return ops
