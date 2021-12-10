@@ -111,7 +111,7 @@ def test_db_adapter_1():
 
 def test_db_adapter_monster():
     n_rows = 100
-    n_vars = 50
+    n_vars = 50  # stress goal: 5000, normal test 50
     step = 1/np.sqrt(n_vars)
     cols = dict()
     y = np.random.normal(size=n_rows)
