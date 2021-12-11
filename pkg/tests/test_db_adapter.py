@@ -137,8 +137,10 @@ def test_db_adapter_monster():
         ),
     )
     d_train_treated = treatment.fit_transform(d)
+    assert isinstance(d_train_treated, pd.DataFrame)
 
     transform_as_data = treatment.description_matrix()
+    # transform_as_data.to_csv('example_transform.csv', index=False)
 
     ops = as_data_algebra_pipeline(
         source=descr(d_app=d),
