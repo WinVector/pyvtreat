@@ -91,7 +91,7 @@ def as_data_algebra_pipeline(
         # do the re-mapping joins, these don't depend on each other
         jt = describe_table(vtreat_descr, table_name=treatment_table_name)
         for i in range(mp_rows.shape[0]):
-            # print(f'map({i}) {datetime.datetime.now()}')
+            # print(f'map({i}/{mp_rows.shape[0]}) {datetime.datetime.now()}')
             ov = mp_rows['orig_var'].values[i]
             vi = mp_rows['variable'].values[i]
             match_q = f"(treatment_class == 'MappedCodeTransform') & (orig_var == '{ov}') & (variable == '{vi}')"
