@@ -1638,7 +1638,7 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         new_vars = new_vars + self.cols_to_copy_
         return new_vars
 
-    def description_matrix(self):
+    def description_matrix(self) -> pandas.DataFrame:
         """
         Return description of transform as a data frame. Does not encode user steps. Not yet implemented for
         multinomial dependent variables.
