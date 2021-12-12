@@ -1650,6 +1650,10 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         xform_steps = [xfi for xfi in plan["xforms"]]
         frames = [xfi.description_matrix() for xfi in xform_steps]
         res = pandas.concat(frames).reset_index(inplace=False, drop=True)
+        # restrict down to non-constant variables
+        vars = set(self.score_frame_['variable'][self.score_frame_['has_range']])
+        usable = [v in vars for v in res['variable']]
+        res = res.loc[usable, :].reset_index(inplace=False, drop=True)
         return res
 
 

@@ -109,22 +109,26 @@ def test_db_adapter_1():
 
 
 def test_db_adapter_monster():
-    n_rows = 100
-    n_vars = 50  # stress goal: 5000, normal test 50
-    step = 1/np.sqrt(n_vars)
-    cols = dict()
-    y = np.random.normal(size=n_rows)
-    for i in range(n_vars):
-        vname = f'v_{i}'
-        v = np.random.choice(['a', 'b'], replace=True, size=n_rows)
-        y = y + np.where(v == 'a', step, -step)
-        cols[vname] = v
-    vars = list(cols.keys())
-    vars.sort()
-    cols['y'] = y
-    d = pd.DataFrame(cols)
-
     outcome_name = "y"
+    n_vars = 5
+
+    def mk_data(n_rows:int = 100):
+        step = 1/np.sqrt(n_vars)
+        cols = dict()
+        y = np.random.normal(size=n_rows)
+        for i in range(n_vars):
+            vname = f'v_{i}'
+            v = np.random.choice(['a', 'b'], replace=True, size=n_rows)
+            y = y + np.where(v == 'a', step, -step)
+            cols[vname] = v
+        vars = list(cols.keys())
+        vars.sort()
+        cols[outcome_name] = y
+        d = pd.DataFrame(cols)
+        return d, vars
+
+    d, vars = mk_data(100)
+    d_app, _ = mk_data(10)
     cols_to_copy = [outcome_name]
     columns = vars + cols_to_copy
 
@@ -137,6 +141,7 @@ def test_db_adapter_monster():
     )
     d_train_treated = treatment.fit_transform(d)
     assert isinstance(d_train_treated, pd.DataFrame)
+    d_app_treated = treatment.transform(d_app)
 
     transform_as_data = treatment.description_matrix()
     # transform_as_data.to_csv('example_transform.csv', index=False)
@@ -150,3 +155,5 @@ def test_db_adapter_monster():
     ops_source = str(ops)
     assert isinstance(ops_source, str)
 
+    d_app_res = ops.eval({'d_app': d_app, 'transform_as_data': transform_as_data})
+    assert data_algebra.test_util.equivalent_frames(d_app_treated, d_app_res)

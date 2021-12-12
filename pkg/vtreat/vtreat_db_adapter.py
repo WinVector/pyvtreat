@@ -4,6 +4,7 @@ Convert the description of a vtreat variable treatment into a data algebra pipel
 """
 import datetime
 
+from typing import List, Tuple
 import numpy
 import pandas
 
@@ -50,14 +51,16 @@ def check_treatment_table(vtreat_descr: pandas.DataFrame):
     assert len(set(mp_rows['orig_var']).intersection(cn_rows['orig_var'])) == 0
 
 
-def as_data_algebra_pipeline(
+def _build_data_pipelines_stages(
         *,
         source: ViewRepresentation,
         vtreat_descr: pandas.DataFrame,
-        treatment_table_name: str) -> ViewRepresentation:
+        treatment_table_name: str,
+        stage_3_name: str,
+) -> Tuple[ViewRepresentation, List, ViewRepresentation]:
     """
     Convert the description of a vtreat transform (gotten via .description_matrix())
-    into a data algebra pipeline.
+    into data algebra pipeline components.
     See: https://github.com/WinVector/data_algebra and https://github.com/WinVector/pyvtreat .
     Missing and nan are treated as synonums for '_NA_'.
     Another way to use this methodology would be to port this code as a stored procedure
@@ -68,18 +71,20 @@ def as_data_algebra_pipeline(
                          Expected invariant: CleanNumericTransform doesn't change variable names,
                          all other operations produce new names.
     :param treatment_table_name: name to use for the vtreat_descr table.
-    :return: data algebra pipeline implementing specified vtreat treatment
+    :param stage_3_name: name for stage 3 operators
+    :return: phase1 pipeline, map stages, phase3 pipeline
     """
 
     assert isinstance(source, ViewRepresentation)
     assert isinstance(vtreat_descr, pandas.DataFrame)
     assert isinstance(treatment_table_name, str)
+    assert isinstance(stage_3_name, str)
     check_treatment_table(vtreat_descr)
     # belt and suspenders replace missing with sentinel
     vtreat_descr = vtreat_descr.copy()
     vtreat_descr['value'] = replace_bad_with_sentinel(vtreat_descr['value'])
     # start building up operator pipeline
-    ops = source
+    stage_1_ops = source
     step_1_ops = dict()
     # add in is_bad indicators
     im_rows = vtreat_descr.loc[vtreat_descr['treatment_class'] == 'IndicateMissingTransform', :].reset_index(
@@ -94,7 +99,7 @@ def as_data_algebra_pipeline(
         vi = ic_rows['value'].values[i]
         step_1_ops[ic_rows['variable'][i]] = f"({ov}.coalesce('{bad_sentinel}') == '{vi}').if_else(1.0, 0.0)"
     if len(step_1_ops) > 0:
-        ops = ops.extend(step_1_ops)
+        stage_1_ops = stage_1_ops.extend(step_1_ops)
     # add in any value mapped columns (these should all be string valued)
     mp_rows = (
         data(vtreat_descr=vtreat_descr)
@@ -102,13 +107,18 @@ def as_data_algebra_pipeline(
             .project({}, group_by=['orig_var', 'variable'])
             .order_rows(['orig_var', 'variable'])
         ).ex()
+    stage_3_cols = stage_1_ops.column_names.copy()
+    stage_3_ops = TableDescription(table_name=stage_3_name, column_names=stage_3_cols)
+    mapping_steps = []
     if mp_rows.shape[0] > 0:
         # prepare incoming variables to use sentinel for missing, this is after other steps using these values
         mapping_inputs = list(set([v for v in mp_rows['orig_var'].values]))
         mapping_inputs.sort()
         mapping_outputs = list(set([v for v in mp_rows['variable'].values]))
         mapping_outputs.sort()
-        ops = ops.extend({v : f"{v}.coalesce('{bad_sentinel}')" for v in mapping_inputs})
+        stage_3_cols = stage_3_cols + mapping_outputs
+        stage_3_ops = TableDescription(table_name=stage_3_name, column_names=stage_3_cols)
+        stage_1_ops = stage_1_ops.extend({v : f"{v}.coalesce('{bad_sentinel}')" for v in mapping_inputs})
         # do the re-mapping joins, these don't depend on each other
         jt = describe_table(vtreat_descr, table_name=treatment_table_name)
         for i in range(mp_rows.shape[0]):
@@ -125,28 +135,63 @@ def as_data_algebra_pipeline(
                             })
                         .select_columns([ov, vi])
                     )
-            ops = (
-                ops
-                    .natural_join(
-                        b=bi,
-                        by=[ov],
-                        jointype='left',
-                        )
-            )
+            mapping_steps.append({'bi': bi, 'ov': ov})
         # handle any novel values
-        ops = ops.extend({v: f'{v}.coalesce(0.0)' for v in mapping_outputs})
+        stage_3_ops = stage_3_ops.extend({v: f'{v}.coalesce(0.0)' for v in mapping_outputs})
     # add in any clean numeric copies, inputs are numeric- so disjoint of categorical processing
     cn_rows = vtreat_descr.loc[vtreat_descr['treatment_class'] == 'CleanNumericTransform', :].reset_index(
         inplace=False, drop=True)
     if cn_rows.shape[0] > 0:
-        step_3_ops = dict()
+        step_3_exprs = dict()
         for i in range(cn_rows.shape[0]):
-            step_3_ops[cn_rows['variable'][i]] = f"{cn_rows['orig_var'][i]}.coalesce({cn_rows['replacement'][i]})"
-        ops = ops.extend(step_3_ops)
+            step_3_exprs[cn_rows['variable'][i]] = f"{cn_rows['orig_var'][i]}.coalesce({cn_rows['replacement'][i]})"
+        stage_3_ops = stage_3_ops.extend(step_3_exprs)
     # remove any input variables that are not the same name as variables we produced
     # this prevents non-numerics from leaking forward
     to_del = list(set(vtreat_descr['orig_var']) - set(vtreat_descr['variable']))
     if len(to_del) > 0:
         to_del.sort()
-        ops = ops.drop_columns(to_del)
-    return ops
+        stage_3_ops = stage_3_ops.drop_columns(to_del)
+    return stage_1_ops, mapping_steps, stage_3_ops
+
+
+def as_data_algebra_pipeline(
+        *,
+        source: ViewRepresentation,
+        vtreat_descr: pandas.DataFrame,
+        treatment_table_name: str) -> ViewRepresentation:
+    """
+    Convert the description of a vtreat transform (gotten via .description_matrix())
+    into a data algebra pipeline.
+    See: https://github.com/WinVector/data_algebra and https://github.com/WinVector/pyvtreat .
+    Missing and nan are treated as synonyms for '_NA_'.
+    Assembling the entire pipeline can be expensive. If one is willing to instantiate tables
+    it can be better to sequence operations instead of composing them.
+    Another way to use this methodology would be to port this code as a stored procedure
+    in a target database of choice, meaning only the vtreat_descr table would be needed on such systems.
+
+    :param source: input data.
+    :param vtreat_descr: .description_matrix() description of transform.
+                         Expected invariant: CleanNumericTransform doesn't change variable names,
+                         all other operations produce new names.
+    :param treatment_table_name: name to use for the vtreat_descr table.
+    :return: data algebra pipeline implementing specified vtreat treatment
+    """
+
+    assert isinstance(source, ViewRepresentation)
+    assert isinstance(vtreat_descr, pandas.DataFrame)
+    assert isinstance(treatment_table_name, str)
+    ops, mapping_steps, stage_3_ops = _build_data_pipelines_stages(
+        source=source,
+        vtreat_descr=vtreat_descr,
+        treatment_table_name=treatment_table_name,
+        stage_3_name='vtreat_temp_stage_3',
+    )
+    for map_step in mapping_steps:
+        ops = ops.natural_join(
+            b=map_step['bi'],
+            by=[map_step['ov']],
+            jointype='left',
+        )
+    composed_ops = ops >> stage_3_ops
+    return composed_ops
