@@ -67,7 +67,14 @@
 <span class="kn">import</span> <span class="nn">pandas</span>
 
 <span class="kn">from</span> <span class="nn">vtreat.vtreat_impl</span> <span class="kn">import</span> <span class="n">bad_sentinel</span><span class="p">,</span> <span class="n">replace_bad_with_sentinel</span>
-<span class="kn">from</span> <span class="nn">data_algebra.data_ops</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<span class="n">have_data_algebra</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">data_algebra.data_ops</span> <span class="kn">import</span> <span class="o">*</span>
+    <span class="n">have_data_algebra</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+    <span class="k">pass</span>
 
 
 <span class="k">def</span> <span class="nf">check_treatment_table</span><span class="p">(</span><span class="n">vtreat_descr</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
@@ -78,6 +85,8 @@
 <span class="sd">    :return: no return, assert on failure</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="k">global</span> <span class="n">have_data_algebra</span>
+    <span class="k">assert</span> <span class="n">have_data_algebra</span>
     <span class="c1"># belt and suspenders replace missing with sentinel</span>
     <span class="n">vtreat_descr</span> <span class="o">=</span> <span class="n">vtreat_descr</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="n">vtreat_descr</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">replace_bad_with_sentinel</span><span class="p">(</span><span class="n">vtreat_descr</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
@@ -120,7 +129,7 @@
 <span class="sd">    Convert the description of a vtreat transform (gotten via .description_matrix())</span>
 <span class="sd">    into data algebra pipeline components.</span>
 <span class="sd">    See: https://github.com/WinVector/data_algebra and https://github.com/WinVector/pyvtreat .</span>
-<span class="sd">    Missing and nan are treated as synonums for &#39;_NA_&#39;.</span>
+<span class="sd">    Missing and nan are treated as synonyms for &#39;_NA_&#39;.</span>
 <span class="sd">    Another way to use this methodology would be to port this code as a stored procedure</span>
 <span class="sd">    in a target database of choice, meaning only the vtreat_descr table would be needed on such systems.</span>
 
@@ -133,6 +142,8 @@
 <span class="sd">    :return: phase1 pipeline, map stages, phase3 pipeline</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="k">global</span> <span class="n">have_data_algebra</span>
+    <span class="k">assert</span> <span class="n">have_data_algebra</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">ViewRepresentation</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vtreat_descr</span><span class="p">,</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">treatment_table_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
@@ -236,6 +247,8 @@
 <span class="sd">    :return: data algebra pipeline implementing specified vtreat treatment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="k">global</span> <span class="n">have_data_algebra</span>
+    <span class="k">assert</span> <span class="n">have_data_algebra</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">ViewRepresentation</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vtreat_descr</span><span class="p">,</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">treatment_table_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
@@ -276,6 +289,8 @@
 <span class="sd">    :return: no return, assert on failure</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="k">global</span> <span class="n">have_data_algebra</span>
+    <span class="k">assert</span> <span class="n">have_data_algebra</span>
     <span class="c1"># belt and suspenders replace missing with sentinel</span>
     <span class="n">vtreat_descr</span> <span class="o">=</span> <span class="n">vtreat_descr</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="n">vtreat_descr</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">replace_bad_with_sentinel</span><span class="p">(</span><span class="n">vtreat_descr</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
@@ -355,6 +370,8 @@
 <span class="sd">    :return: data algebra pipeline implementing specified vtreat treatment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="k">global</span> <span class="n">have_data_algebra</span>
+    <span class="k">assert</span> <span class="n">have_data_algebra</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">ViewRepresentation</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vtreat_descr</span><span class="p">,</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">treatment_table_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>

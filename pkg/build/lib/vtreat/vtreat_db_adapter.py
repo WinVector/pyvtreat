@@ -9,7 +9,14 @@ import numpy
 import pandas
 
 from vtreat.vtreat_impl import bad_sentinel, replace_bad_with_sentinel
-from data_algebra.data_ops import *
+
+
+have_data_algebra = False
+try:
+    from data_algebra.data_ops import *
+    have_data_algebra = True
+except FileNotFoundError:
+    pass
 
 
 def check_treatment_table(vtreat_descr: pandas.DataFrame):
@@ -20,6 +27,8 @@ def check_treatment_table(vtreat_descr: pandas.DataFrame):
     :return: no return, assert on failure
     """
 
+    global have_data_algebra
+    assert have_data_algebra
     # belt and suspenders replace missing with sentinel
     vtreat_descr = vtreat_descr.copy()
     vtreat_descr['value'] = replace_bad_with_sentinel(vtreat_descr['value'])
@@ -62,7 +71,7 @@ def _build_data_pipelines_stages(
     Convert the description of a vtreat transform (gotten via .description_matrix())
     into data algebra pipeline components.
     See: https://github.com/WinVector/data_algebra and https://github.com/WinVector/pyvtreat .
-    Missing and nan are treated as synonums for '_NA_'.
+    Missing and nan are treated as synonyms for '_NA_'.
     Another way to use this methodology would be to port this code as a stored procedure
     in a target database of choice, meaning only the vtreat_descr table would be needed on such systems.
 
@@ -75,6 +84,8 @@ def _build_data_pipelines_stages(
     :return: phase1 pipeline, map stages, phase3 pipeline
     """
 
+    global have_data_algebra
+    assert have_data_algebra
     assert isinstance(source, ViewRepresentation)
     assert isinstance(vtreat_descr, pandas.DataFrame)
     assert isinstance(treatment_table_name, str)
@@ -178,6 +189,8 @@ def as_data_algebra_pipeline(
     :return: data algebra pipeline implementing specified vtreat treatment
     """
 
+    global have_data_algebra
+    assert have_data_algebra
     assert isinstance(source, ViewRepresentation)
     assert isinstance(vtreat_descr, pandas.DataFrame)
     assert isinstance(treatment_table_name, str)

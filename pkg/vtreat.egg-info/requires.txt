@@ -2,4 +2,9 @@ numpy
 pandas
 scipy
 sklearn
+
+[all]
+data_algebra>=0.9.1
+
+[db]
 data_algebra>=0.9.1
