@@ -4,7 +4,7 @@ Convert the description of a vtreat variable treatment into a data algebra pipel
 """
 import datetime
 
-from typing import List, Tuple
+from typing import Dict, List, Tuple
 import numpy
 import pandas
 
@@ -66,7 +66,7 @@ def _build_data_pipelines_stages(
         vtreat_descr: pandas.DataFrame,
         treatment_table_name: str,
         stage_3_name: str,
-) -> Tuple[ViewRepresentation, List, ViewRepresentation]:
+) -> Tuple[ViewRepresentation, List[str], List[Dict], ViewRepresentation]:
     """
     Convert the description of a vtreat transform (gotten via .description_matrix())
     into data algebra pipeline components.
@@ -81,7 +81,7 @@ def _build_data_pipelines_stages(
                          all other operations produce new names.
     :param treatment_table_name: name to use for the vtreat_descr table.
     :param stage_3_name: name for stage 3 operators
-    :return: phase1 pipeline, map stages, phase3 pipeline
+    :return: phase1 pipeline,  map result names, map stages, phase3 pipeline
     """
 
     global have_data_algebra
@@ -120,6 +120,7 @@ def _build_data_pipelines_stages(
         ).ex()
     stage_3_cols = stage_1_ops.column_names.copy()
     stage_3_ops = TableDescription(table_name=stage_3_name, column_names=stage_3_cols)
+    map_vars =[]
     mapping_steps = []
     if mp_rows.shape[0] > 0:
         # prepare incoming variables to use sentinel for missing, this is after other steps using these values
@@ -146,7 +147,8 @@ def _build_data_pipelines_stages(
                             })
                         .select_columns([ov, vi])
                     )
-            mapping_steps.append({'bi': bi, 'ov': ov})
+            map_vars.append(vi)
+            mapping_steps.append({'bi': bi, 'ov': ov, 'vi': vi})
         # handle any novel values
         stage_3_ops = stage_3_ops.extend({v: f'{v}.coalesce(0.0)' for v in mapping_outputs})
     # add in any clean numeric copies, inputs are numeric- so disjoint of categorical processing
@@ -163,7 +165,7 @@ def _build_data_pipelines_stages(
     if len(to_del) > 0:
         to_del.sort()
         stage_3_ops = stage_3_ops.drop_columns(to_del)
-    return stage_1_ops, mapping_steps, stage_3_ops
+    return stage_1_ops, map_vars, mapping_steps, stage_3_ops
 
 
 def as_data_algebra_pipeline(
@@ -194,7 +196,7 @@ def as_data_algebra_pipeline(
     assert isinstance(source, ViewRepresentation)
     assert isinstance(vtreat_descr, pandas.DataFrame)
     assert isinstance(treatment_table_name, str)
-    ops, mapping_steps, stage_3_ops = _build_data_pipelines_stages(
+    ops, map_vars, mapping_steps, stage_3_ops = _build_data_pipelines_stages(
         source=source,
         vtreat_descr=vtreat_descr,
         treatment_table_name=treatment_table_name,
