@@ -168,6 +168,31 @@ def test_db_adapter_general():
     d_app_res = ops.eval({'d_app': d_app, 'transform_as_data': transform_as_data})
     assert data_algebra.test_util.equivalent_frames(d_app_treated, d_app_res)
 
+    source_descr = TableDescription(
+        table_name='d_app',
+        column_names=columns,
+    )
+    db_model = data_algebra.SQLite.SQLiteModel()
+    treatment_table_name = 'transform_as_data'
+    stage_3_name = 'vtreat_stage_3_table'
+    result_name = 'data_treated'
+    sql_sequence = vtreat.vtreat_db_adapter.as_sql_update_sequence(
+        db_model=db_model,
+        source=source_descr,
+        vtreat_descr=transform_as_data,
+        treatment_table_name=treatment_table_name,
+        stage_3_name=stage_3_name,
+        result_name=result_name)
+    db_handle = data_algebra.SQLite.example_handle()
+    _ = db_handle.insert_table(d_app, table_name=source_descr.table_name)
+    db_handle.insert_table(transform_as_data, table_name=treatment_table_name)
+    for sql in sql_sequence:
+        db_handle.execute(sql)
+    db_res = db_handle.read_query(
+        f'SELECT * FROM {db_model.quote_identifier(result_name)}')
+    assert data_algebra.test_util.equivalent_frames(d_app_treated, db_res)
+    db_handle.close()
+
 
 def test_db_adapter_monster():
     outcome_name = "y"
