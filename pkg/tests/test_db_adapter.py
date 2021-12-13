@@ -135,11 +135,12 @@ def test_db_adapter_general():
         vars.sort()
         cols[outcome_name] = y
         d = pd.DataFrame(cols)
+        d['orig_index'] = range(d.shape[0])
         return d, outcome_name, vars
 
     d, outcome_name, vars = mk_data(100)
     d_app, _, _ = mk_data(50, add_unknowns=True)
-    cols_to_copy = [outcome_name]
+    cols_to_copy = [outcome_name, 'orig_index']
     columns = vars + cols_to_copy
 
     treatment = vtreat.NumericOutcomeTreatment(
@@ -154,17 +155,13 @@ def test_db_adapter_general():
     d_app_treated = treatment.transform(d_app)
 
     transform_as_data = treatment.description_matrix()
-    # transform_as_data.to_csv('example_transform.csv', index=False)
-
     ops = as_data_algebra_pipeline(
         source=descr(d_app=d),
         vtreat_descr=transform_as_data,
         treatment_table_name='transform_as_data',
     )
-
     ops_source = str(ops)
     assert isinstance(ops_source, str)
-
     d_app_res = ops.eval({'d_app': d_app, 'transform_as_data': transform_as_data})
     assert data_algebra.test_util.equivalent_frames(d_app_treated, d_app_res)
 
@@ -172,6 +169,14 @@ def test_db_adapter_general():
         table_name='d_app',
         column_names=columns,
     )
+    db_handle = data_algebra.SQLite.example_handle()
+    db_handle.insert_table(d_app.loc[:, columns], table_name='d_app')
+    db_handle.insert_table(transform_as_data, table_name='transform_as_data')
+    db_handle.execute('CREATE TABLE res AS ' + db_handle.to_sql(ops))
+    res_db = db_handle.read_query('SELECT * FROM res ORDER BY orig_index')
+    assert data_algebra.test_util.equivalent_frames(res_db, d_app_treated)
+    db_handle.close()
+
     db_model = data_algebra.SQLite.SQLiteModel()
     treatment_table_name = 'transform_as_data'
     stage_3_name = 'vtreat_stage_3_table'
@@ -189,7 +194,7 @@ def test_db_adapter_general():
     for sql in sql_sequence:
         db_handle.execute(sql)
     db_res = db_handle.read_query(
-        f'SELECT * FROM {db_model.quote_identifier(result_name)}')
+        f'SELECT * FROM {db_model.quote_identifier(result_name)} ORDER by orig_index')
     assert data_algebra.test_util.equivalent_frames(d_app_treated, db_res)
     db_handle.close()
 
