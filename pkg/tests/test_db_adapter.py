@@ -132,6 +132,13 @@ def test_db_adapter_general():
             y = y + np.array([level_values[vi] for vi in v])
             v = np.array([vi if vi != 'none' else None for vi in v])
             cols[vname] = v
+        for i in range(n_num_vars):
+            vname = f'vn_{i}'
+            v = np.random.normal(size=n_rows)
+            y = y + step * v
+            v[np.random.uniform(size=n_rows) < 0.24] = None
+            cols[vname] = v
+
         vars = list(cols.keys())
         vars.sort()
         cols[outcome_name] = y
