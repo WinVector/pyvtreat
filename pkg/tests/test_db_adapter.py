@@ -110,7 +110,7 @@ def test_db_adapter_1():
 
 
 def test_db_adapter_general():
-    
+
     # set up example data
     def mk_data(
             n_rows:int = 100,

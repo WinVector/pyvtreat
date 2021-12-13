@@ -7,7 +7,7 @@ collected 32 items
 pkg/tests/test_ai200_examples.py ..                                      [  6%]
 pkg/tests/test_classification.py ...                                     [ 15%]
 pkg/tests/test_col_name_issues.py ...                                    [ 25%]
-pkg/tests/test_db_adapter.py .F.                                         [ 34%]
+pkg/tests/test_db_adapter.py ...                                         [ 34%]
 pkg/tests/test_dup.py .                                                  [ 37%]
 pkg/tests/test_id_column_check.py .                                      [ 40%]
 pkg/tests/test_imputation_controls.py .                                  [ 43%]
@@ -26,98 +26,6 @@ pkg/tests/test_unsupervised.py .                                         [ 90%]
 pkg/tests/test_user_coders.py .                                          [ 93%]
 pkg/tests/test_util.py ..                                                [100%]
 
-=================================== FAILURES ===================================
-___________________________ test_db_adapter_general ____________________________
-
-    def test_db_adapter_general():
-    
-        def mk_data(
-                n_rows:int = 100,
-                *,
-                outcome_name:str = "y",
-                n_cat_vars:int = 5,
-                n_num_vars:int = 5,
-                add_unknowns: bool = False):
-            step = 1/np.sqrt(n_cat_vars + n_num_vars)
-            cols = dict()
-            y = np.random.normal(size=n_rows)
-            for i in range(n_cat_vars):
-                vname = f'vc_{i}'
-                levels = ['a', 'b', 'c', 'none']
-                if add_unknowns:
-                    levels = levels + ['d']
-                level_values = {v: step * np.random.normal(size=1)[0] for v in levels}
-                v = np.random.choice(levels, replace=True, size=n_rows)
-                y = y + np.array([level_values[vi] for vi in v])
-                v = np.array([vi if vi != 'none' else None for vi in v])
-                cols[vname] = v
-            vars = list(cols.keys())
-            vars.sort()
-            cols[outcome_name] = y
-            d = pd.DataFrame(cols)
-            return d, outcome_name, vars
-    
-        d, outcome_name, vars = mk_data(100)
-        d_app, _, _ = mk_data(50, add_unknowns=True)
-        cols_to_copy = [outcome_name]
-        columns = vars + cols_to_copy
-    
-        treatment = vtreat.NumericOutcomeTreatment(
-            cols_to_copy=cols_to_copy,
-            outcome_name=outcome_name,
-            params=vtreat.vtreat_parameters(
-                {"sparse_indicators": False, "filter_to_recommended": False,}
-            ),
-        )
-        d_train_treated = treatment.fit_transform(d)
-        assert isinstance(d_train_treated, pd.DataFrame)
-        d_app_treated = treatment.transform(d_app)
-    
-        transform_as_data = treatment.description_matrix()
-        # transform_as_data.to_csv('example_transform.csv', index=False)
-    
-        ops = as_data_algebra_pipeline(
-            source=descr(d_app=d),
-            vtreat_descr=transform_as_data,
-            treatment_table_name='transform_as_data',
-        )
-    
-        ops_source = str(ops)
-        assert isinstance(ops_source, str)
-    
-        d_app_res = ops.eval({'d_app': d_app, 'transform_as_data': transform_as_data})
-        assert data_algebra.test_util.equivalent_frames(d_app_treated, d_app_res)
-    
-        source_descr = TableDescription(
-            table_name='d_app',
-            column_names=columns,
-        )
-        db_model = data_algebra.SQLite.SQLiteModel()
-        treatment_table_name = 'transform_as_data'
-        stage_3_name = 'vtreat_stage_3_table'
-        result_name = 'data_treated'
-        sql_sequence = vtreat.vtreat_db_adapter.as_sql_update_sequence(
-            db_model=db_model,
-            source=source_descr,
-            vtreat_descr=transform_as_data,
-            treatment_table_name=treatment_table_name,
-            stage_3_name=stage_3_name,
-            result_name=result_name)
-        db_handle = data_algebra.SQLite.example_handle()
-        _ = db_handle.insert_table(d_app, table_name=source_descr.table_name)
-        db_handle.insert_table(transform_as_data, table_name=treatment_table_name)
-        for sql in sql_sequence:
-            db_handle.execute(sql)
-        db_res = db_handle.read_query(
-            f'SELECT * FROM {db_model.quote_identifier(result_name)}')
->       assert data_algebra.test_util.equivalent_frames(d_app_treated, db_res)
-E       AssertionError: assert False
-E        +  where False = <function equivalent_frames at 0x7ff648afcca0>(           y  vc_3_is_bad  vc_0_is_bad  ...  vc_4_lev_c  vc_4_lev_b  vc_4_lev__NA_\n0  -0.818806          1.0          ...         0.0\n49 -1.214420          0.0          1.0  ...         0.0         0.0            0.0\n\n[50 rows x 41 columns],     vc_1_lev__NA_  vc_4_lev__NA_  ...  vc_4_impact_code  vc_4_prevalence_code\n0             0.0            0.0  ...   ...             1.00\n49            0.0            0.0  ...          0.123606                  0.30\n\n[50 rows x 41 columns])
-E        +    where <function equivalent_frames at 0x7ff648afcca0> = <module 'data_algebra.test_util' from '/Users/johnmount/opt/anaconda3/envs/ai_academy_3_9/lib/python3.9/site-packages/data_algebra/test_util.py'>.equivalent_frames
-E        +      where <module 'data_algebra.test_util' from '/Users/johnmount/opt/anaconda3/envs/ai_academy_3_9/lib/python3.9/site-packages/data_algebra/test_util.py'> = data_algebra.test_util
-
-pkg/tests/test_db_adapter.py:193: AssertionError
-
 ---------- coverage: platform darwin, python 3.9.7-final-0 -----------
 Name                              Stmts   Miss  Cover
 -----------------------------------------------------
@@ -132,6 +40,5 @@ pkg/vtreat/vtreat_impl.py           653     74    89%
 -----------------------------------------------------
 TOTAL                              1352    150    89%
 
-=========================== short test summary info ============================
-FAILED pkg/tests/test_db_adapter.py::test_db_adapter_general - AssertionError...
-======================== 1 failed, 31 passed in 20.69s =========================
+
+============================= 32 passed in 21.17s ==============================

@@ -250,7 +250,7 @@ def as_sql_update_sequence(
     )
     # give variables pre-update values
     ops = ops.extend({
-        v: '1.0' for v in map_vars
+        v: '0.0' for v in map_vars
     })
 
     def update_code(i):
