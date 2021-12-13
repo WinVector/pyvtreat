@@ -72,8 +72,8 @@ setuptools.setup(
         'sklearn',
     ],
     extras_require={
-        'db': ['data_algebra>=0.9.1'],
-        'all': ['data_algebra>=0.9.1'],
+        'db': ['data_algebra>=1.0.0'],
+        'all': ['data_algebra>=1.0.0'],
     },
     platforms=['any'],
     license='License :: OSI Approved :: BSD 3-clause License',

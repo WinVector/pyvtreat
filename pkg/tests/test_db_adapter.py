@@ -2,6 +2,7 @@
 
 import os
 import numpy as np
+import numpy.random
 import pandas as pd
 
 from data_algebra.data_ops import *
@@ -106,6 +107,66 @@ def test_db_adapter_1():
     #%%
 
     db_handle.close()
+
+
+def test_db_adapter_general():
+
+    def mk_data(
+            n_rows:int = 100,
+            *,
+            outcome_name:str = "y",
+            n_cat_vars:int = 5,
+            n_num_vars:int = 5,
+            add_unknowns: bool = False):
+        step = 1/np.sqrt(n_cat_vars + n_num_vars)
+        cols = dict()
+        y = np.random.normal(size=n_rows)
+        for i in range(n_cat_vars):
+            vname = f'vc_{i}'
+            levels = ['a', 'b', 'c', 'none']
+            if add_unknowns:
+                levels = levels + ['d']
+            level_values = {v: step * np.random.normal(size=1)[0] for v in levels}
+            v = np.random.choice(levels, replace=True, size=n_rows)
+            y = y + np.array([level_values[vi] for vi in v])
+            v = np.array([vi if vi != 'none' else None for vi in v])
+            cols[vname] = v
+        vars = list(cols.keys())
+        vars.sort()
+        cols[outcome_name] = y
+        d = pd.DataFrame(cols)
+        return d, outcome_name, vars
+
+    d, outcome_name, vars = mk_data(100)
+    d_app, _, _ = mk_data(50, add_unknowns=True)
+    cols_to_copy = [outcome_name]
+    columns = vars + cols_to_copy
+
+    treatment = vtreat.NumericOutcomeTreatment(
+        cols_to_copy=cols_to_copy,
+        outcome_name=outcome_name,
+        params=vtreat.vtreat_parameters(
+            {"sparse_indicators": False, "filter_to_recommended": False,}
+        ),
+    )
+    d_train_treated = treatment.fit_transform(d)
+    assert isinstance(d_train_treated, pd.DataFrame)
+    d_app_treated = treatment.transform(d_app)
+
+    transform_as_data = treatment.description_matrix()
+    # transform_as_data.to_csv('example_transform.csv', index=False)
+
+    ops = as_data_algebra_pipeline(
+        source=descr(d_app=d),
+        vtreat_descr=transform_as_data,
+        treatment_table_name='transform_as_data',
+    )
+
+    ops_source = str(ops)
+    assert isinstance(ops_source, str)
+
+    d_app_res = ops.eval({'d_app': d_app, 'transform_as_data': transform_as_data})
+    assert data_algebra.test_util.equivalent_frames(d_app_treated, d_app_res)
 
 
 def test_db_adapter_monster():
