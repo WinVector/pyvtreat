@@ -36,6 +36,9 @@
             <li>
                     <a class="function" href="#as_data_algebra_pipeline">as_data_algebra_pipeline</a>
             </li>
+            <li>
+                    <a class="function" href="#as_sql_update_sequence">as_sql_update_sequence</a>
+            </li>
     </ul>
 
 
@@ -268,6 +271,90 @@
         <span class="p">)</span>
     <span class="n">composed_ops</span> <span class="o">=</span> <span class="n">ops</span> <span class="o">&gt;&gt;</span> <span class="n">stage_3_ops</span>
     <span class="k">return</span> <span class="n">composed_ops</span>
+
+
+<span class="k">def</span> <span class="nf">as_sql_update_sequence</span><span class="p">(</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">db_model</span><span class="p">,</span>
+        <span class="n">source</span><span class="p">:</span> <span class="n">TableDescription</span><span class="p">,</span>
+        <span class="n">vtreat_descr</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">treatment_table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">stage_3_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">result_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert the description of a vtreat transform (gotten via .description_matrix())</span>
+<span class="sd">    into a SQL update sequence.</span>
+<span class="sd">    See: https://github.com/WinVector/data_algebra and https://github.com/WinVector/pyvtreat .</span>
+<span class="sd">    Missing and nan are treated as synonyms for &#39;_NA_&#39;.</span>
+<span class="sd">    Assembling the entire pipeline can be expensive. If one is willing to instantiate tables</span>
+<span class="sd">    it can be better to sequence operations instead of composing them.</span>
+<span class="sd">    Another way to use this methodology would be to port this code as a stored procedure</span>
+<span class="sd">    in a target database of choice, meaning only the vtreat_descr table would be needed on such systems.</span>
+
+<span class="sd">    :param db_model: data algebra database model or handle for SQL translation</span>
+<span class="sd">    :param source: input data.</span>
+<span class="sd">    :param vtreat_descr: .description_matrix() description of transform.</span>
+<span class="sd">                         Expected invariant: CleanNumericTransform doesn&#39;t change variable names,</span>
+<span class="sd">                         all other operations produce new names.</span>
+<span class="sd">    :param treatment_table_name: name to use for the vtreat_descr table.</span>
+<span class="sd">    :param stage_3_name: name for one of the temp tables.</span>
+<span class="sd">    :param result_name: name for result table.</span>
+<span class="sd">    :return: list of SQL statements</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># translate the transform</span>
+    <span class="n">ops</span><span class="p">,</span> <span class="n">map_vars</span><span class="p">,</span> <span class="n">mapping_steps</span><span class="p">,</span> <span class="n">stage_3_ops</span> <span class="o">=</span> <span class="n">_build_data_pipelines_stages</span><span class="p">(</span>
+        <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span>
+        <span class="n">vtreat_descr</span><span class="o">=</span><span class="n">vtreat_descr</span><span class="p">,</span>
+        <span class="n">treatment_table_name</span><span class="o">=</span><span class="n">treatment_table_name</span><span class="p">,</span>
+        <span class="n">stage_3_name</span><span class="o">=</span><span class="n">stage_3_name</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="c1"># give variables pre-update values</span>
+    <span class="n">ops</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">extend</span><span class="p">({</span>
+        <span class="n">v</span><span class="p">:</span> <span class="s1">&#39;1.0&#39;</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">map_vars</span>
+    <span class="p">})</span>
+
+    <span class="k">def</span> <span class="nf">update_code</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+        <span class="n">step_i</span> <span class="o">=</span> <span class="n">mapping_steps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">ov</span> <span class="o">=</span> <span class="n">step_i</span><span class="p">[</span><span class="s1">&#39;ov&#39;</span><span class="p">]</span>
+        <span class="n">vi</span> <span class="o">=</span> <span class="n">step_i</span><span class="p">[</span><span class="s1">&#39;vi&#39;</span><span class="p">]</span>
+        <span class="n">update_stmt</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    WITH tmp_update AS (</span>
+<span class="s2">      SELECT</span>
+<span class="s2">        value AS </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">ov</span><span class="p">)</span><span class="si">}</span><span class="s2">,</span>
+<span class="s2">        replacement AS </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">vi</span><span class="p">)</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">      FROM</span>
+<span class="s2">        </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">treatment_table_name</span><span class="p">)</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">      WHERE</span>
+<span class="s2">        (treatment_class = </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_string</span><span class="p">(</span><span class="s1">&#39;MappedCodeTransform&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">)</span>
+<span class="s2">        AND (orig_var = </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_string</span><span class="p">(</span><span class="n">ov</span><span class="p">)</span><span class="si">}</span><span class="s2">)</span>
+<span class="s2">        AND (variable == </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_string</span><span class="p">(</span><span class="n">vi</span><span class="p">)</span><span class="si">}</span><span class="s2">)</span>
+<span class="s2">    )</span>
+<span class="s2">    UPDATE</span>
+<span class="s2">      </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">stage_3_name</span><span class="p">)</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">    SET </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">vi</span><span class="p">)</span><span class="si">}</span><span class="s2"> = tmp_update.</span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">vi</span><span class="p">)</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">    FROM</span>
+<span class="s2">      tmp_update</span>
+<span class="s2">    WHERE</span>
+<span class="s2">       </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">stage_3_name</span><span class="p">)</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">ov</span><span class="p">)</span><span class="si">}</span><span class="s2"> = tmp_update.</span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">ov</span><span class="p">)</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">update_stmt</span>
+
+    <span class="n">sql_sequence</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">[</span> <span class="sa">f</span><span class="s1">&#39;DROP TABLE IF EXISTS </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">stage_3_name</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="p">[</span> <span class="sa">f</span><span class="s1">&#39;DROP TABLE IF EXISTS </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">result_name</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="p">[</span>
+            <span class="sa">f</span><span class="s1">&#39;CREATE TABLE </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">stage_3_name</span><span class="p">)</span><span class="si">}</span><span class="s1"> AS </span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="o">+</span> <span class="n">db_model</span><span class="o">.</span><span class="n">to_sql</span><span class="p">(</span><span class="n">ops</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="o">+</span> <span class="p">[</span><span class="n">update_code</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mapping_steps</span><span class="p">))]</span>
+        <span class="o">+</span> <span class="p">[</span>
+            <span class="sa">f</span><span class="s1">&#39;CREATE TABLE </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">result_name</span><span class="p">)</span><span class="si">}</span><span class="s1"> AS </span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="o">+</span> <span class="n">db_model</span><span class="o">.</span><span class="n">to_sql</span><span class="p">(</span><span class="n">stage_3_ops</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="o">+</span> <span class="p">[</span> <span class="sa">f</span><span class="s1">&#39;DROP TABLE </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">stage_3_name</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">sql_sequence</span>
 </pre></div>
 
         </details>
@@ -410,6 +497,132 @@ in a target database of choice, meaning only the vtreat_descr table would be nee
                      all other operations produce new names.
 :param treatment_table_name: name to use for the vtreat_descr table.
 :return: data algebra pipeline implementing specified vtreat treatment</p>
+</div>
+
+
+                </section>
+                <section id="as_sql_update_sequence">
+                            <div class="attr function"><a class="headerlink" href="#as_sql_update_sequence">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">as_sql_update_sequence</span><span class="signature">(
+    *,
+    db_model,
+    source: data_algebra.data_ops.TableDescription,
+    vtreat_descr: pandas.core.frame.DataFrame,
+    treatment_table_name: str,
+    stage_3_name: str,
+    result_name: str
+) -&gt; List[str]</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">as_sql_update_sequence</span><span class="p">(</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">db_model</span><span class="p">,</span>
+        <span class="n">source</span><span class="p">:</span> <span class="n">TableDescription</span><span class="p">,</span>
+        <span class="n">vtreat_descr</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">treatment_table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">stage_3_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">result_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert the description of a vtreat transform (gotten via .description_matrix())</span>
+<span class="sd">    into a SQL update sequence.</span>
+<span class="sd">    See: https://github.com/WinVector/data_algebra and https://github.com/WinVector/pyvtreat .</span>
+<span class="sd">    Missing and nan are treated as synonyms for &#39;_NA_&#39;.</span>
+<span class="sd">    Assembling the entire pipeline can be expensive. If one is willing to instantiate tables</span>
+<span class="sd">    it can be better to sequence operations instead of composing them.</span>
+<span class="sd">    Another way to use this methodology would be to port this code as a stored procedure</span>
+<span class="sd">    in a target database of choice, meaning only the vtreat_descr table would be needed on such systems.</span>
+
+<span class="sd">    :param db_model: data algebra database model or handle for SQL translation</span>
+<span class="sd">    :param source: input data.</span>
+<span class="sd">    :param vtreat_descr: .description_matrix() description of transform.</span>
+<span class="sd">                         Expected invariant: CleanNumericTransform doesn&#39;t change variable names,</span>
+<span class="sd">                         all other operations produce new names.</span>
+<span class="sd">    :param treatment_table_name: name to use for the vtreat_descr table.</span>
+<span class="sd">    :param stage_3_name: name for one of the temp tables.</span>
+<span class="sd">    :param result_name: name for result table.</span>
+<span class="sd">    :return: list of SQL statements</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># translate the transform</span>
+    <span class="n">ops</span><span class="p">,</span> <span class="n">map_vars</span><span class="p">,</span> <span class="n">mapping_steps</span><span class="p">,</span> <span class="n">stage_3_ops</span> <span class="o">=</span> <span class="n">_build_data_pipelines_stages</span><span class="p">(</span>
+        <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span>
+        <span class="n">vtreat_descr</span><span class="o">=</span><span class="n">vtreat_descr</span><span class="p">,</span>
+        <span class="n">treatment_table_name</span><span class="o">=</span><span class="n">treatment_table_name</span><span class="p">,</span>
+        <span class="n">stage_3_name</span><span class="o">=</span><span class="n">stage_3_name</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="c1"># give variables pre-update values</span>
+    <span class="n">ops</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">extend</span><span class="p">({</span>
+        <span class="n">v</span><span class="p">:</span> <span class="s1">&#39;1.0&#39;</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">map_vars</span>
+    <span class="p">})</span>
+
+    <span class="k">def</span> <span class="nf">update_code</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+        <span class="n">step_i</span> <span class="o">=</span> <span class="n">mapping_steps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">ov</span> <span class="o">=</span> <span class="n">step_i</span><span class="p">[</span><span class="s1">&#39;ov&#39;</span><span class="p">]</span>
+        <span class="n">vi</span> <span class="o">=</span> <span class="n">step_i</span><span class="p">[</span><span class="s1">&#39;vi&#39;</span><span class="p">]</span>
+        <span class="n">update_stmt</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    WITH tmp_update AS (</span>
+<span class="s2">      SELECT</span>
+<span class="s2">        value AS </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">ov</span><span class="p">)</span><span class="si">}</span><span class="s2">,</span>
+<span class="s2">        replacement AS </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">vi</span><span class="p">)</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">      FROM</span>
+<span class="s2">        </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">treatment_table_name</span><span class="p">)</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">      WHERE</span>
+<span class="s2">        (treatment_class = </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_string</span><span class="p">(</span><span class="s1">&#39;MappedCodeTransform&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">)</span>
+<span class="s2">        AND (orig_var = </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_string</span><span class="p">(</span><span class="n">ov</span><span class="p">)</span><span class="si">}</span><span class="s2">)</span>
+<span class="s2">        AND (variable == </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_string</span><span class="p">(</span><span class="n">vi</span><span class="p">)</span><span class="si">}</span><span class="s2">)</span>
+<span class="s2">    )</span>
+<span class="s2">    UPDATE</span>
+<span class="s2">      </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">stage_3_name</span><span class="p">)</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">    SET </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">vi</span><span class="p">)</span><span class="si">}</span><span class="s2"> = tmp_update.</span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">vi</span><span class="p">)</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">    FROM</span>
+<span class="s2">      tmp_update</span>
+<span class="s2">    WHERE</span>
+<span class="s2">       </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">stage_3_name</span><span class="p">)</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">ov</span><span class="p">)</span><span class="si">}</span><span class="s2"> = tmp_update.</span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">ov</span><span class="p">)</span><span class="si">}</span><span class="s2"></span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">update_stmt</span>
+
+    <span class="n">sql_sequence</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">[</span> <span class="sa">f</span><span class="s1">&#39;DROP TABLE IF EXISTS </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">stage_3_name</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="p">[</span> <span class="sa">f</span><span class="s1">&#39;DROP TABLE IF EXISTS </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">result_name</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
+        <span class="o">+</span> <span class="p">[</span>
+            <span class="sa">f</span><span class="s1">&#39;CREATE TABLE </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">stage_3_name</span><span class="p">)</span><span class="si">}</span><span class="s1"> AS </span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="o">+</span> <span class="n">db_model</span><span class="o">.</span><span class="n">to_sql</span><span class="p">(</span><span class="n">ops</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="o">+</span> <span class="p">[</span><span class="n">update_code</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mapping_steps</span><span class="p">))]</span>
+        <span class="o">+</span> <span class="p">[</span>
+            <span class="sa">f</span><span class="s1">&#39;CREATE TABLE </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">result_name</span><span class="p">)</span><span class="si">}</span><span class="s1"> AS </span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="o">+</span> <span class="n">db_model</span><span class="o">.</span><span class="n">to_sql</span><span class="p">(</span><span class="n">stage_3_ops</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="o">+</span> <span class="p">[</span> <span class="sa">f</span><span class="s1">&#39;DROP TABLE </span><span class="si">{</span><span class="n">db_model</span><span class="o">.</span><span class="n">quote_identifier</span><span class="p">(</span><span class="n">stage_3_name</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">sql_sequence</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Convert the description of a vtreat transform (gotten via .description_matrix())
+into a SQL update sequence.
+See: https://github.com/WinVector/data_algebra and https://github.com/WinVector/pyvtreat .
+Missing and nan are treated as synonyms for '_NA_'.
+Assembling the entire pipeline can be expensive. If one is willing to instantiate tables
+it can be better to sequence operations instead of composing them.
+Another way to use this methodology would be to port this code as a stored procedure
+in a target database of choice, meaning only the vtreat_descr table would be needed on such systems.</p>
+
+<p>:param db_model: data algebra database model or handle for SQL translation
+:param source: input data.
+:param vtreat_descr: .description_matrix() description of transform.
+                     Expected invariant: CleanNumericTransform doesn't change variable names,
+                     all other operations produce new names.
+:param treatment_table_name: name to use for the vtreat_descr table.
+:param stage_3_name: name for one of the temp tables.
+:param result_name: name for result table.
+:return: list of SQL statements</p>
 </div>
 
 
