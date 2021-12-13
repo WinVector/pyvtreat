@@ -110,7 +110,8 @@ def test_db_adapter_1():
 
 
 def test_db_adapter_general():
-
+    
+    # set up example data
     def mk_data(
             n_rows:int = 100,
             *,
@@ -143,6 +144,7 @@ def test_db_adapter_general():
     cols_to_copy = [outcome_name, 'orig_index']
     columns = vars + cols_to_copy
 
+    # get reference result
     treatment = vtreat.NumericOutcomeTreatment(
         cols_to_copy=cols_to_copy,
         outcome_name=outcome_name,
@@ -154,6 +156,7 @@ def test_db_adapter_general():
     assert isinstance(d_train_treated, pd.DataFrame)
     d_app_treated = treatment.transform(d_app)
 
+    # test ops path
     transform_as_data = treatment.description_matrix()
     ops = as_data_algebra_pipeline(
         source=descr(d_app=d),
@@ -165,6 +168,7 @@ def test_db_adapter_general():
     d_app_res = ops.eval({'d_app': d_app, 'transform_as_data': transform_as_data})
     assert data_algebra.test_util.equivalent_frames(d_app_treated, d_app_res)
 
+    # test ops db path
     source_descr = TableDescription(
         table_name='d_app',
         column_names=columns,
@@ -177,6 +181,7 @@ def test_db_adapter_general():
     assert data_algebra.test_util.equivalent_frames(res_db, d_app_treated)
     db_handle.close()
 
+    # test update db path
     db_model = data_algebra.SQLite.SQLiteModel()
     treatment_table_name = 'transform_as_data'
     stage_3_name = 'vtreat_stage_3_table'
