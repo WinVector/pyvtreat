@@ -210,3 +210,87 @@ def as_data_algebra_pipeline(
         )
     composed_ops = ops >> stage_3_ops
     return composed_ops
+
+
+def as_sql_update_sequence(
+        *,
+        db_model,
+        source: TableDescription,
+        vtreat_descr: pandas.DataFrame,
+        treatment_table_name: str,
+        stage_3_name: str,
+        result_name: str) -> List[str]:
+    """
+    Convert the description of a vtreat transform (gotten via .description_matrix())
+    into a SQL update sequence.
+    See: https://github.com/WinVector/data_algebra and https://github.com/WinVector/pyvtreat .
+    Missing and nan are treated as synonyms for '_NA_'.
+    Assembling the entire pipeline can be expensive. If one is willing to instantiate tables
+    it can be better to sequence operations instead of composing them.
+    Another way to use this methodology would be to port this code as a stored procedure
+    in a target database of choice, meaning only the vtreat_descr table would be needed on such systems.
+
+    :param db_model: data algebra database model or handle for SQL translation
+    :param source: input data.
+    :param vtreat_descr: .description_matrix() description of transform.
+                         Expected invariant: CleanNumericTransform doesn't change variable names,
+                         all other operations produce new names.
+    :param treatment_table_name: name to use for the vtreat_descr table.
+    :param stage_3_name: name for one of the temp tables.
+    :param result_name: name for result table.
+    :return: list of SQL statements
+    """
+
+    # translate the transform
+    ops, map_vars, mapping_steps, stage_3_ops = _build_data_pipelines_stages(
+        source=source,
+        vtreat_descr=vtreat_descr,
+        treatment_table_name=treatment_table_name,
+        stage_3_name=stage_3_name,
+    )
+    # give variables pre-update values
+    ops = ops.extend({
+        v: '1.0' for v in map_vars
+    })
+
+    def update_code(i):
+        step_i = mapping_steps[i]
+        ov = step_i['ov']
+        vi = step_i['vi']
+        update_stmt = (f"""
+    WITH tmp_update AS (
+      SELECT
+        value AS {db_model.quote_identifier(ov)},
+        replacement AS {db_model.quote_identifier(vi)}
+      FROM
+        {db_model.quote_identifier(treatment_table_name)}
+      WHERE
+        (treatment_class = {db_model.quote_string('MappedCodeTransform')})
+        AND (orig_var = {db_model.quote_string(ov)})
+        AND (variable == {db_model.quote_string(vi)})
+    )
+    UPDATE
+      {db_model.quote_identifier(stage_3_name)}
+    SET {db_model.quote_identifier(vi)} = tmp_update.{db_model.quote_identifier(vi)}
+    FROM
+      tmp_update
+    WHERE
+       {db_model.quote_identifier(stage_3_name)}.{db_model.quote_identifier(ov)} = tmp_update.{db_model.quote_identifier(ov)}
+    """)
+        return update_stmt
+
+    sql_sequence = (
+        [ f'DROP TABLE IF EXISTS {db_model.quote_identifier(stage_3_name)}']
+        + [ f'DROP TABLE IF EXISTS {db_model.quote_identifier(result_name)}']
+        + [
+            f'CREATE TABLE {db_model.quote_identifier(stage_3_name)} AS \n'
+            + db_model.to_sql(ops)
+        ]
+        + [update_code(i) for i in range(len(mapping_steps))]
+        + [
+            f'CREATE TABLE {db_model.quote_identifier(result_name)} AS \n'
+            + db_model.to_sql(stage_3_ops)
+        ]
+        + [ f'DROP TABLE {db_model.quote_identifier(stage_3_name)}']
+    )
+    return sql_sequence
