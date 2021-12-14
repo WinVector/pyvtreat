@@ -4,7 +4,7 @@ scipy
 sklearn
 
 [all]
-data_algebra>=1.0.0
+data_algebra>=1.0.1
 
 [db]
-data_algebra>=1.0.0
+data_algebra>=1.0.1

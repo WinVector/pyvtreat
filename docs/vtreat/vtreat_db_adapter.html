@@ -208,8 +208,14 @@
                             <span class="p">})</span>
                         <span class="o">.</span><span class="n">select_columns</span><span class="p">([</span><span class="n">ov</span><span class="p">,</span> <span class="n">vi</span><span class="p">])</span>
                     <span class="p">)</span>
+            <span class="n">mi_table</span> <span class="o">=</span> <span class="n">vtreat_descr</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+                <span class="p">(</span><span class="n">vtreat_descr</span><span class="p">[</span><span class="s1">&#39;treatment_class&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;MappedCodeTransform&#39;</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">vtreat_descr</span><span class="p">[</span><span class="s1">&#39;orig_var&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">ov</span><span class="p">)</span>
+                <span class="o">&amp;</span> <span class="p">(</span><span class="n">vtreat_descr</span><span class="p">[</span><span class="s1">&#39;variable&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">vi</span><span class="p">),</span>
+                <span class="p">:]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">mi</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">mi_table</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">mi_table</span><span class="p">[</span><span class="s1">&#39;replacement&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)}</span>
             <span class="n">map_vars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vi</span><span class="p">)</span>
-            <span class="n">mapping_steps</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;bi&#39;</span><span class="p">:</span> <span class="n">bi</span><span class="p">,</span> <span class="s1">&#39;ov&#39;</span><span class="p">:</span> <span class="n">ov</span><span class="p">,</span> <span class="s1">&#39;vi&#39;</span><span class="p">:</span> <span class="n">vi</span><span class="p">})</span>
+            <span class="n">mapping_steps</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;bi&#39;</span><span class="p">:</span> <span class="n">bi</span><span class="p">,</span> <span class="s1">&#39;ov&#39;</span><span class="p">:</span> <span class="n">ov</span><span class="p">,</span> <span class="s1">&#39;vi&#39;</span><span class="p">:</span> <span class="n">vi</span><span class="p">,</span> <span class="s1">&#39;mi&#39;</span><span class="p">:</span> <span class="n">mi</span><span class="p">})</span>
         <span class="c1"># handle any novel values</span>
         <span class="n">stage_3_ops</span> <span class="o">=</span> <span class="n">stage_3_ops</span><span class="o">.</span><span class="n">extend</span><span class="p">({</span><span class="n">v</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">.coalesce(0.0)&#39;</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">mapping_outputs</span><span class="p">})</span>
     <span class="c1"># add in any clean numeric copies, inputs are numeric- so disjoint of categorical processing</span>
@@ -233,7 +239,8 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">source</span><span class="p">:</span> <span class="n">ViewRepresentation</span><span class="p">,</span>
         <span class="n">vtreat_descr</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">treatment_table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ViewRepresentation</span><span class="p">:</span>
+        <span class="n">treatment_table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">use_case_merges</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ViewRepresentation</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert the description of a vtreat transform (gotten via .description_matrix())</span>
 <span class="sd">    into a data algebra pipeline.</span>
@@ -249,6 +256,7 @@
 <span class="sd">                         Expected invariant: CleanNumericTransform doesn&#39;t change variable names,</span>
 <span class="sd">                         all other operations produce new names.</span>
 <span class="sd">    :param treatment_table_name: name to use for the vtreat_descr table.</span>
+<span class="sd">    :param use_case_merges: if True use CASE WHEN statements instead of JOINs to merge values.</span>
 <span class="sd">    :return: data algebra pipeline implementing specified vtreat treatment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -263,12 +271,19 @@
         <span class="n">treatment_table_name</span><span class="o">=</span><span class="n">treatment_table_name</span><span class="p">,</span>
         <span class="n">stage_3_name</span><span class="o">=</span><span class="s1">&#39;vtreat_temp_stage_3&#39;</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="k">for</span> <span class="n">map_step</span> <span class="ow">in</span> <span class="n">mapping_steps</span><span class="p">:</span>
-        <span class="n">ops</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">natural_join</span><span class="p">(</span>
-            <span class="n">b</span><span class="o">=</span><span class="n">map_step</span><span class="p">[</span><span class="s1">&#39;bi&#39;</span><span class="p">],</span>
-            <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="n">map_step</span><span class="p">[</span><span class="s1">&#39;ov&#39;</span><span class="p">]],</span>
-            <span class="n">jointype</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span>
-        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">use_case_merges</span><span class="p">:</span>
+        <span class="n">merge_statements</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">map_step</span><span class="p">[</span><span class="s1">&#39;vi&#39;</span><span class="p">]:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">map_step</span><span class="p">[</span><span class="s2">&quot;ov&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">.mapv(</span><span class="si">{</span><span class="n">map_step</span><span class="p">[</span><span class="s2">&quot;mi&quot;</span><span class="p">]</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span><span class="si">}</span><span class="s1">, 0.0)&#39;</span>
+            <span class="k">for</span> <span class="n">map_step</span> <span class="ow">in</span> <span class="n">mapping_steps</span>
+        <span class="p">}</span>
+        <span class="n">ops</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">merge_statements</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">map_step</span> <span class="ow">in</span> <span class="n">mapping_steps</span><span class="p">:</span>
+            <span class="n">ops</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">natural_join</span><span class="p">(</span>
+                <span class="n">b</span><span class="o">=</span><span class="n">map_step</span><span class="p">[</span><span class="s1">&#39;bi&#39;</span><span class="p">],</span>
+                <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="n">map_step</span><span class="p">[</span><span class="s1">&#39;ov&#39;</span><span class="p">]],</span>
+                <span class="n">jointype</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span>
+            <span class="p">)</span>
     <span class="n">composed_ops</span> <span class="o">=</span> <span class="n">ops</span> <span class="o">&gt;&gt;</span> <span class="n">stage_3_ops</span>
     <span class="k">return</span> <span class="n">composed_ops</span>
 
@@ -430,7 +445,8 @@
     *,
     source: data_algebra.data_ops.ViewRepresentation,
     vtreat_descr: pandas.core.frame.DataFrame,
-    treatment_table_name: str
+    treatment_table_name: str,
+    use_case_merges: bool = False
 ) -&gt; data_algebra.data_ops.ViewRepresentation</span>:
     </div>
 
@@ -440,7 +456,8 @@
         <span class="o">*</span><span class="p">,</span>
         <span class="n">source</span><span class="p">:</span> <span class="n">ViewRepresentation</span><span class="p">,</span>
         <span class="n">vtreat_descr</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">treatment_table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ViewRepresentation</span><span class="p">:</span>
+        <span class="n">treatment_table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">use_case_merges</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ViewRepresentation</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert the description of a vtreat transform (gotten via .description_matrix())</span>
 <span class="sd">    into a data algebra pipeline.</span>
@@ -456,6 +473,7 @@
 <span class="sd">                         Expected invariant: CleanNumericTransform doesn&#39;t change variable names,</span>
 <span class="sd">                         all other operations produce new names.</span>
 <span class="sd">    :param treatment_table_name: name to use for the vtreat_descr table.</span>
+<span class="sd">    :param use_case_merges: if True use CASE WHEN statements instead of JOINs to merge values.</span>
 <span class="sd">    :return: data algebra pipeline implementing specified vtreat treatment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -470,12 +488,19 @@
         <span class="n">treatment_table_name</span><span class="o">=</span><span class="n">treatment_table_name</span><span class="p">,</span>
         <span class="n">stage_3_name</span><span class="o">=</span><span class="s1">&#39;vtreat_temp_stage_3&#39;</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="k">for</span> <span class="n">map_step</span> <span class="ow">in</span> <span class="n">mapping_steps</span><span class="p">:</span>
-        <span class="n">ops</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">natural_join</span><span class="p">(</span>
-            <span class="n">b</span><span class="o">=</span><span class="n">map_step</span><span class="p">[</span><span class="s1">&#39;bi&#39;</span><span class="p">],</span>
-            <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="n">map_step</span><span class="p">[</span><span class="s1">&#39;ov&#39;</span><span class="p">]],</span>
-            <span class="n">jointype</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span>
-        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">use_case_merges</span><span class="p">:</span>
+        <span class="n">merge_statements</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">map_step</span><span class="p">[</span><span class="s1">&#39;vi&#39;</span><span class="p">]:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">map_step</span><span class="p">[</span><span class="s2">&quot;ov&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1">.mapv(</span><span class="si">{</span><span class="n">map_step</span><span class="p">[</span><span class="s2">&quot;mi&quot;</span><span class="p">]</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span><span class="si">}</span><span class="s1">, 0.0)&#39;</span>
+            <span class="k">for</span> <span class="n">map_step</span> <span class="ow">in</span> <span class="n">mapping_steps</span>
+        <span class="p">}</span>
+        <span class="n">ops</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">merge_statements</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">map_step</span> <span class="ow">in</span> <span class="n">mapping_steps</span><span class="p">:</span>
+            <span class="n">ops</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">natural_join</span><span class="p">(</span>
+                <span class="n">b</span><span class="o">=</span><span class="n">map_step</span><span class="p">[</span><span class="s1">&#39;bi&#39;</span><span class="p">],</span>
+                <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="n">map_step</span><span class="p">[</span><span class="s1">&#39;ov&#39;</span><span class="p">]],</span>
+                <span class="n">jointype</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span>
+            <span class="p">)</span>
     <span class="n">composed_ops</span> <span class="o">=</span> <span class="n">ops</span> <span class="o">&gt;&gt;</span> <span class="n">stage_3_ops</span>
     <span class="k">return</span> <span class="n">composed_ops</span>
 </pre></div>
@@ -496,6 +521,7 @@ in a target database of choice, meaning only the vtreat_descr table would be nee
                      Expected invariant: CleanNumericTransform doesn't change variable names,
                      all other operations produce new names.
 :param treatment_table_name: name to use for the vtreat_descr table.
+:param use_case_merges: if True use CASE WHEN statements instead of JOINs to merge values.
 :return: data algebra pipeline implementing specified vtreat treatment</p>
 </div>
 

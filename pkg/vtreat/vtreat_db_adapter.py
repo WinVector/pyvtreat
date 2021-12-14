@@ -147,8 +147,14 @@ def _build_data_pipelines_stages(
                             })
                         .select_columns([ov, vi])
                     )
+            mi_table = vtreat_descr.loc[
+                (vtreat_descr['treatment_class'] == 'MappedCodeTransform')
+                & (vtreat_descr['orig_var'] == ov)
+                & (vtreat_descr['variable'] == vi),
+                :].reset_index(inplace=False, drop=True)
+            mi = {k: v for k, v in zip(mi_table['value'].values, mi_table['replacement'].values)}
             map_vars.append(vi)
-            mapping_steps.append({'bi': bi, 'ov': ov, 'vi': vi})
+            mapping_steps.append({'bi': bi, 'ov': ov, 'vi': vi, 'mi': mi})
         # handle any novel values
         stage_3_ops = stage_3_ops.extend({v: f'{v}.coalesce(0.0)' for v in mapping_outputs})
     # add in any clean numeric copies, inputs are numeric- so disjoint of categorical processing
@@ -172,7 +178,8 @@ def as_data_algebra_pipeline(
         *,
         source: ViewRepresentation,
         vtreat_descr: pandas.DataFrame,
-        treatment_table_name: str) -> ViewRepresentation:
+        treatment_table_name: str,
+        use_case_merges: bool = False) -> ViewRepresentation:
     """
     Convert the description of a vtreat transform (gotten via .description_matrix())
     into a data algebra pipeline.
@@ -188,6 +195,7 @@ def as_data_algebra_pipeline(
                          Expected invariant: CleanNumericTransform doesn't change variable names,
                          all other operations produce new names.
     :param treatment_table_name: name to use for the vtreat_descr table.
+    :param use_case_merges: if True use CASE WHEN statements instead of JOINs to merge values.
     :return: data algebra pipeline implementing specified vtreat treatment
     """
 
@@ -202,12 +210,19 @@ def as_data_algebra_pipeline(
         treatment_table_name=treatment_table_name,
         stage_3_name='vtreat_temp_stage_3',
     )
-    for map_step in mapping_steps:
-        ops = ops.natural_join(
-            b=map_step['bi'],
-            by=[map_step['ov']],
-            jointype='left',
-        )
+    if use_case_merges:
+        merge_statements = {
+            map_step['vi']: f'{map_step["ov"]}.mapv({map_step["mi"].__repr__()}, 0.0)'
+            for map_step in mapping_steps
+        }
+        ops = ops.extend(merge_statements)
+    else:
+        for map_step in mapping_steps:
+            ops = ops.natural_join(
+                b=map_step['bi'],
+                by=[map_step['ov']],
+                jointype='left',
+            )
     composed_ops = ops >> stage_3_ops
     return composed_ops
 
