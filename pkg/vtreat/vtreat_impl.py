@@ -71,6 +71,13 @@ class VarTransform(ABC):
     """
     Base class for vtreat transforms
     """
+
+    incoming_column_name_: str
+    derived_column_names_: List[str]
+    need_cross_treatment_: bool
+    treatment_: str
+    refitter_: Any
+
     def __init__(
             self,
             incoming_column_name: str,
@@ -84,7 +91,7 @@ class VarTransform(ABC):
         """
 
         assert isinstance(incoming_column_name, str)
-        derived_column_names = [c for c in derived_column_names]
+        derived_column_names = list(derived_column_names)
         assert len(derived_column_names) > 0
         assert all([isinstance(dni, str) for dni in derived_column_names])
         assert treatment is not None

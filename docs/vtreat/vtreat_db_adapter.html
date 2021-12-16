@@ -179,7 +179,7 @@
             <span class="o">.</span><span class="n">project</span><span class="p">({},</span> <span class="n">group_by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;orig_var&#39;</span><span class="p">,</span> <span class="s1">&#39;variable&#39;</span><span class="p">])</span>
             <span class="o">.</span><span class="n">order_rows</span><span class="p">([</span><span class="s1">&#39;orig_var&#39;</span><span class="p">,</span> <span class="s1">&#39;variable&#39;</span><span class="p">])</span>
         <span class="p">)</span><span class="o">.</span><span class="n">ex</span><span class="p">()</span>
-    <span class="n">stage_3_cols</span> <span class="o">=</span> <span class="n">stage_1_ops</span><span class="o">.</span><span class="n">column_names</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">stage_3_cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">stage_1_ops</span><span class="o">.</span><span class="n">column_names</span><span class="p">)</span>
     <span class="n">stage_3_ops</span> <span class="o">=</span> <span class="n">TableDescription</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="n">stage_3_name</span><span class="p">,</span> <span class="n">column_names</span><span class="o">=</span><span class="n">stage_3_cols</span><span class="p">)</span>
     <span class="n">map_vars</span> <span class="o">=</span><span class="p">[]</span>
     <span class="n">mapping_steps</span> <span class="o">=</span> <span class="p">[]</span>

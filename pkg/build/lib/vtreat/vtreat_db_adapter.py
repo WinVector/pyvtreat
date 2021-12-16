@@ -118,7 +118,7 @@ def _build_data_pipelines_stages(
             .project({}, group_by=['orig_var', 'variable'])
             .order_rows(['orig_var', 'variable'])
         ).ex()
-    stage_3_cols = stage_1_ops.column_names.copy()
+    stage_3_cols = list(stage_1_ops.column_names)
     stage_3_ops = TableDescription(table_name=stage_3_name, column_names=stage_3_cols)
     map_vars =[]
     mapping_steps = []
