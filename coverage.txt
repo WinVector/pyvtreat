@@ -2,23 +2,24 @@
 platform darwin -- Python 3.9.7, pytest-6.2.4, py-1.10.0, pluggy-0.13.1
 rootdir: /Users/johnmount/Documents/work/pyvtreat/pkg
 plugins: cov-2.12.1, anyio-2.2.0, typeguard-2.13.0
-collected 32 items
+collected 33 items
 
 pkg/tests/test_ai200_examples.py ..                                      [  6%]
 pkg/tests/test_classification.py ...                                     [ 15%]
-pkg/tests/test_col_name_issues.py ...                                    [ 25%]
-pkg/tests/test_db_adapter.py ...                                         [ 34%]
-pkg/tests/test_dup.py .                                                  [ 37%]
-pkg/tests/test_id_column_check.py .                                      [ 40%]
-pkg/tests/test_imputation_controls.py .                                  [ 43%]
-pkg/tests/test_multinomial.py .                                          [ 46%]
-pkg/tests/test_nan_inf.py .                                              [ 50%]
-pkg/tests/test_outcome_name_required.py .                                [ 53%]
-pkg/tests/test_pipeparams.py .                                           [ 56%]
-pkg/tests/test_r1_issue.py .                                             [ 59%]
-pkg/tests/test_range.py .                                                [ 62%]
-pkg/tests/test_regression.py .                                           [ 65%]
-pkg/tests/test_result_restriction.py .                                   [ 68%]
+pkg/tests/test_col_name_issues.py ...                                    [ 24%]
+pkg/tests/test_db_adapter.py ...                                         [ 33%]
+pkg/tests/test_dup.py .                                                  [ 36%]
+pkg/tests/test_id_column_check.py .                                      [ 39%]
+pkg/tests/test_imputation_controls.py .                                  [ 42%]
+pkg/tests/test_max_levels.py .                                           [ 45%]
+pkg/tests/test_multinomial.py .                                          [ 48%]
+pkg/tests/test_nan_inf.py .                                              [ 51%]
+pkg/tests/test_outcome_name_required.py .                                [ 54%]
+pkg/tests/test_pipeparams.py .                                           [ 57%]
+pkg/tests/test_r1_issue.py .                                             [ 60%]
+pkg/tests/test_range.py .                                                [ 63%]
+pkg/tests/test_regression.py .                                           [ 66%]
+pkg/tests/test_result_restriction.py .                                   [ 69%]
 pkg/tests/test_stats.py ....                                             [ 81%]
 pkg/tests/test_unexepcted_nan.py .                                       [ 84%]
 pkg/tests/test_unsup_perf.py .                                           [ 87%]
@@ -36,9 +37,9 @@ pkg/vtreat/transform.py              17      4    76%
 pkg/vtreat/util.py                  153     21    86%
 pkg/vtreat/vtreat_api.py            287     35    88%
 pkg/vtreat/vtreat_db_adapter.py     105      2    98%
-pkg/vtreat/vtreat_impl.py           658     74    89%
+pkg/vtreat/vtreat_impl.py           663     74    89%
 -----------------------------------------------------
-TOTAL                              1362    150    89%
+TOTAL                              1367    150    89%
 
 
-============================= 32 passed in 22.08s ==============================
+============================= 33 passed in 22.53s ==============================

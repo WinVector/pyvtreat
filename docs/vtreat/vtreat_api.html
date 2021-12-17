@@ -205,10 +205,11 @@
             <span class="s2">&quot;prevalence_code&quot;</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="s2">&quot;indicator_min_fraction&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s2">&quot;indicator_max_levels&quot;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
         <span class="s2">&quot;user_transforms&quot;</span><span class="p">:</span> <span class="p">[],</span>
         <span class="s2">&quot;sparse_indicators&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;missingness_imputation&quot;</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span>
-        <span class="s2">&quot;tunable_params&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;indicator_min_fraction&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;tunable_params&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;indicator_min_fraction&quot;</span><span class="p">,</span> <span class="s2">&quot;indicator_max_levels&quot;</span><span class="p">],</span>
     <span class="p">}</span>
     <span class="n">pkeys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
     <span class="k">if</span> <span class="n">user_params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1009,10 +1010,11 @@
             <span class="s2">&quot;prevalence_code&quot;</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="s2">&quot;indicator_min_fraction&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s2">&quot;indicator_max_levels&quot;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
         <span class="s2">&quot;user_transforms&quot;</span><span class="p">:</span> <span class="p">[],</span>
         <span class="s2">&quot;sparse_indicators&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;missingness_imputation&quot;</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">,</span>
-        <span class="s2">&quot;tunable_params&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;indicator_min_fraction&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;tunable_params&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;indicator_min_fraction&quot;</span><span class="p">,</span> <span class="s2">&quot;indicator_max_levels&quot;</span><span class="p">],</span>
     <span class="p">}</span>
     <span class="n">pkeys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
     <span class="k">if</span> <span class="n">user_params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>

@@ -547,7 +547,12 @@ class IndicatorCodeTransform(VarTransform):
 
 
 def fit_indicator_code(
-    *, incoming_column_name: str, x, min_fraction: float, sparse_indicators: bool = False
+    *,
+    incoming_column_name: str,
+    x,
+    min_fraction: float = 0.0,
+    max_levels: Optional[int] = None,
+    sparse_indicators: bool = False
 ) -> Optional[VarTransform]:
     """
     Fit indicator codes
@@ -555,6 +560,7 @@ def fit_indicator_code(
     :param incoming_column_name:
     :param x: training explanatory variables
     :param min_fraction:
+    :param max_levels:
     :param sparse_indicators:
     :return:
     """
@@ -567,6 +573,19 @@ def fit_indicator_code(
     counts = counts[counts > 0]
     counts = counts[counts >= min_fraction * n]  # no more than 1/min_fraction symbols
     levels = [str(v) for v in counts.index]
+    if (max_levels is not None) and (len(levels) > max_levels):
+        level_frame = pandas.DataFrame({
+            'levels': levels,
+            'counts': counts,
+        })
+        level_frame.sort_values(
+            by=['counts', 'levels'],
+            ascending=[False, True],
+            inplace=True,
+            axis=0,
+            ignore_index=True)
+        value_vec = level_frame['levels'].values
+        levels = [value_vec[i] for i in range(max_levels)]
     if len(levels) < 1:
         return None
     return IndicatorCodeTransform(
@@ -981,6 +1000,7 @@ def fit_unsupervised_treatment(
                     incoming_column_name=vi,
                     x=numpy.asarray(X[vi]),
                     min_fraction=params["indicator_min_fraction"],
+                    max_levels=params["indicator_max_levels"],
                     sparse_indicators=params["sparse_indicators"],
                 )
             )

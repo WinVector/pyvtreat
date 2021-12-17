@@ -75,10 +75,11 @@ def unsupervised_parameters(user_params: Optional[Dict[str, Any]] = None) -> Dic
             "prevalence_code",
         },
         "indicator_min_fraction": 0.0,
+        "indicator_max_levels": 1000,
         "user_transforms": [],
         "sparse_indicators": False,
         "missingness_imputation": numpy.mean,
-        "tunable_params": ["indicator_min_fraction"],
+        "tunable_params": ["indicator_min_fraction", "indicator_max_levels"],
     }
     pkeys = set(params.keys())
     if user_params is not None:
