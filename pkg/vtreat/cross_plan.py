@@ -16,12 +16,13 @@ class CrossValidationPlan(ABC):
         pass
 
     def split_plan(
-            self,
-            *,
-            n_rows: Optional[int] = None,
-            k_folds: Optional[int] = None,
-            data=None,
-            y=None) -> List[Dict[str, List[int]]]:
+        self,
+        *,
+        n_rows: Optional[int] = None,
+        k_folds: Optional[int] = None,
+        data=None,
+        y=None,
+    ) -> List[Dict[str, List[int]]]:
         """
         Build a cross validation plan for the given parameters.
 
@@ -41,10 +42,8 @@ class CrossValidationPlan(ABC):
 
 
 def _k_way_cross_plan_y_stratified(
-        *,
-        n_rows: int,
-        k_folds: int,
-        y) -> List[Dict[str, List[int]]]:
+    *, n_rows: int, k_folds: int, y
+) -> List[Dict[str, List[int]]]:
     """
 
     :param n_rows: number of input rows
@@ -104,12 +103,13 @@ class KWayCrossPlanYStratified(CrossValidationPlan):
         CrossValidationPlan.__init__(self)
 
     def split_plan(
-            self,
-            *,
-            n_rows: Optional[int] = None,
-            k_folds: Optional[int] = None,
-            data=None,
-            y=None) -> List[Dict[str, List[int]]]:
+        self,
+        *,
+        n_rows: Optional[int] = None,
+        k_folds: Optional[int] = None,
+        data=None,
+        y=None,
+    ) -> List[Dict[str, List[int]]]:
         """
 
         :param n_rows: required, number of rows

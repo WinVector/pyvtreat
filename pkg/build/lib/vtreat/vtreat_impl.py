@@ -17,7 +17,7 @@ import vtreat.transform
 import sklearn.base
 
 
-bad_sentinel = '_NA_'
+bad_sentinel = "_NA_"
 
 
 def replace_bad_with_sentinel(ar: List) -> numpy.ndarray:
@@ -49,7 +49,9 @@ def ready_data_frame(d) -> Tuple[pandas.DataFrame, type]:
     return d, orig_type
 
 
-def back_to_orig_type_data_frame(d: pandas.DataFrame, orig_type: type) -> Tuple[Any, List[str]]:
+def back_to_orig_type_data_frame(
+    d: pandas.DataFrame, orig_type: type
+) -> Tuple[Any, List[str]]:
     """
     Convert data frame back to ndarray if that was the original type.
 
@@ -79,10 +81,11 @@ class VarTransform(ABC):
     refitter_: Any
 
     def __init__(
-            self,
-            incoming_column_name: str,
-            derived_column_names: Iterable[str],
-            treatment: str):
+        self,
+        incoming_column_name: str,
+        derived_column_names: Iterable[str],
+        treatment: str,
+    ):
         """
 
         :param incoming_column_name:
@@ -126,11 +129,12 @@ class MappedCodeTransform(VarTransform):
     """Class for transforms that are a dictionary mapping of values"""
 
     def __init__(
-            self,
-            incoming_column_name: str,
-            derived_column_name: str,
-            treatment: str,
-            code_book: pandas.DataFrame):
+        self,
+        incoming_column_name: str,
+        derived_column_name: str,
+        treatment: str,
+        code_book: pandas.DataFrame,
+    ):
         """
 
         :param incoming_column_name:
@@ -173,19 +177,24 @@ class MappedCodeTransform(VarTransform):
         :return: description of transform.
         """
 
-        description = pandas.DataFrame({
-            'treatment_class': 'MappedCodeTransform',
-            'treatment': self.treatment_,
-            'orig_var': self.incoming_column_name_,
-            'variable': self.derived_column_names_[0],
-            'value': replace_bad_with_sentinel(self.code_book_[self.incoming_column_name_]),
-            'replacement': self.code_book_[self.derived_column_names_[0]].copy(),
-        })
+        description = pandas.DataFrame(
+            {
+                "treatment_class": "MappedCodeTransform",
+                "treatment": self.treatment_,
+                "orig_var": self.incoming_column_name_,
+                "variable": self.derived_column_names_[0],
+                "value": replace_bad_with_sentinel(
+                    self.code_book_[self.incoming_column_name_]
+                ),
+                "replacement": self.code_book_[self.derived_column_names_[0]].copy(),
+            }
+        )
         return description
 
 
 class YAwareMappedCodeTransform(MappedCodeTransform):
     """Class for transforms that are a y-aware dictionary mapping of values"""
+
     def __init__(
         self,
         incoming_column_name: str,
@@ -222,6 +231,7 @@ class YAwareMappedCodeTransform(MappedCodeTransform):
 
 class CleanNumericTransform(VarTransform):
     """Class for numeric column cleaner."""
+
     def __init__(self, incoming_column_name: str, replacement_value: float):
         """
 
@@ -256,19 +266,22 @@ class CleanNumericTransform(VarTransform):
         :return: description of transform.
         """
 
-        description = pandas.DataFrame({
-            'treatment_class': ['CleanNumericTransform'],
-            'treatment': [self.treatment_],
-            'orig_var': [self.incoming_column_name_],
-            'variable': [self.derived_column_names_[0]],
-            'value': [bad_sentinel],
-            'replacement': [self.replacement_value_],
-        })
+        description = pandas.DataFrame(
+            {
+                "treatment_class": ["CleanNumericTransform"],
+                "treatment": [self.treatment_],
+                "orig_var": [self.incoming_column_name_],
+                "variable": [self.derived_column_names_[0]],
+                "value": [bad_sentinel],
+                "replacement": [self.replacement_value_],
+            }
+        )
         return description
 
 
 class IndicateMissingTransform(VarTransform):
     """Class for missing value indicator."""
+
     def __init__(self, incoming_column_name: str, derived_column_name: str):
         """
 
@@ -299,23 +312,26 @@ class IndicateMissingTransform(VarTransform):
 
         :return: description of transform.
         """
-        description = pandas.DataFrame({
-            'treatment_class': ['IndicateMissingTransform'],
-            'treatment': [self.treatment_],
-            'orig_var': [self.incoming_column_name_],
-            'variable': [self.derived_column_names_[0]],
-            'value': [bad_sentinel],
-            'replacement': [1.0],
-        })
+        description = pandas.DataFrame(
+            {
+                "treatment_class": ["IndicateMissingTransform"],
+                "treatment": [self.treatment_],
+                "orig_var": [self.incoming_column_name_],
+                "variable": [self.derived_column_names_[0]],
+                "value": [bad_sentinel],
+                "replacement": [1.0],
+            }
+        )
         return description
 
 
 def fit_clean_code(
-        *,
-        incoming_column_name: str,
-        x,
-        params: Dict[str, Any],
-        imputation_map: Dict[str, Any]) -> Optional[VarTransform]:
+    *,
+    incoming_column_name: str,
+    x,
+    params: Dict[str, Any],
+    imputation_map: Dict[str, Any],
+) -> Optional[VarTransform]:
     """
     Fit numeric clean column imputation transform
 
@@ -362,11 +378,13 @@ def fit_clean_code(
 
 
 def fit_regression_impact_code(
-        *,
-        incoming_column_name: str,
-        x, y,
-        extra_args: Optional[Dict[str, Any]],
-        params: Dict[str, Any]) -> Optional[VarTransform]:
+    *,
+    incoming_column_name: str,
+    x,
+    y,
+    extra_args: Optional[Dict[str, Any]],
+    params: Dict[str, Any],
+) -> Optional[VarTransform]:
     """
     Fit regression impact code transform
 
@@ -400,11 +418,13 @@ def fit_regression_impact_code(
 
 
 def fit_regression_deviation_code(
-        *,
-        incoming_column_name: str,
-        x, y,
-        extra_args: Optional[Dict[str, Any]],
-        params: Dict[str, Any]) -> Optional[VarTransform]:
+    *,
+    incoming_column_name: str,
+    x,
+    y,
+    extra_args: Optional[Dict[str, Any]],
+    params: Dict[str, Any],
+) -> Optional[VarTransform]:
     """
     Fit regression deviation code transform
 
@@ -435,11 +455,13 @@ def fit_regression_deviation_code(
 
 
 def fit_binomial_impact_code(
-        *,
-        incoming_column_name: str,
-        x, y,
-        extra_args: Dict[str, Any],
-        params: Dict[str, Any]) -> Optional[VarTransform]:
+    *,
+    incoming_column_name: str,
+    x,
+    y,
+    extra_args: Dict[str, Any],
+    params: Dict[str, Any],
+) -> Optional[VarTransform]:
     """
     Fit categorical impact code.
 
@@ -450,7 +472,9 @@ def fit_binomial_impact_code(
     :param params: control parameter dictionary
     :return:
     """
-    outcome_target = (extra_args["outcome_target"],)  # TODO: document why this is a tuple
+    outcome_target = (
+        extra_args["outcome_target"],
+    )  # TODO: document why this is a tuple
     var_suffix = extra_args["var_suffix"]
     y = numpy.asarray(numpy.asarray(y) == outcome_target, dtype=float)
     sf = vtreat.util.grouped_by_x_statistics(x, y)
@@ -477,6 +501,7 @@ def fit_binomial_impact_code(
 
 class IndicatorCodeTransform(VarTransform):
     """Class for indicator codes"""
+
     def __init__(
         self,
         incoming_column_name: str,
@@ -535,14 +560,16 @@ class IndicatorCodeTransform(VarTransform):
         :return: description of transform.
         """
 
-        description = pandas.DataFrame({
-            'treatment_class': 'IndicatorCodeTransform',
-            'treatment': self.treatment_,
-            'orig_var': self.incoming_column_name_,
-            'variable': self.derived_column_names_.copy(),
-            'value': replace_bad_with_sentinel(self.levels_),
-            'replacement': 1.0,
-        })
+        description = pandas.DataFrame(
+            {
+                "treatment_class": "IndicatorCodeTransform",
+                "treatment": self.treatment_,
+                "orig_var": self.incoming_column_name_,
+                "variable": self.derived_column_names_.copy(),
+                "value": replace_bad_with_sentinel(self.levels_),
+                "replacement": 1.0,
+            }
+        )
         return description
 
 
@@ -552,7 +579,7 @@ def fit_indicator_code(
     x,
     min_fraction: float = 0.0,
     max_levels: Optional[int] = None,
-    sparse_indicators: bool = False
+    sparse_indicators: bool = False,
 ) -> Optional[VarTransform]:
     """
     Fit indicator codes
@@ -574,17 +601,15 @@ def fit_indicator_code(
     counts = counts[counts >= min_fraction * n]  # no more than 1/min_fraction symbols
     levels = [str(v) for v in counts.index]
     if (max_levels is not None) and (len(levels) > max_levels):
-        level_frame = pandas.DataFrame({
-            'levels': levels,
-            'counts': counts,
-        })
+        level_frame = pandas.DataFrame({"levels": levels, "counts": counts,})
         level_frame.sort_values(
-            by=['counts', 'levels'],
+            by=["counts", "levels"],
             ascending=[False, True],
             inplace=True,
             axis=0,
-            ignore_index=True)
-        value_vec = level_frame['levels'].values
+            ignore_index=True,
+        )
+        value_vec = level_frame["levels"].values
         levels = [value_vec[i] for i in range(max_levels)]
     if len(levels) < 1:
         return None
@@ -626,10 +651,7 @@ def fit_prevalence_code(incoming_column_name: str, x) -> Optional[VarTransform]:
 
 # noinspection PyPep8Naming
 def _prepare_variable_lists(
-        *,
-        X,
-        cols_to_copy: Optional[Iterable[str]],
-        var_list: Optional[Iterable[str]],
+    *, X, cols_to_copy: Optional[Iterable[str]], var_list: Optional[Iterable[str]],
 ) -> Tuple[List[str], List[str], List[str], List[str], List[str]]:
     """
     Prepare lists of variables for variable treatment.
@@ -681,13 +703,14 @@ def _prepare_variable_lists(
 
 # noinspection PyPep8Naming
 def fit_numeric_outcome_treatment(
-        *,
-        X, y,
-        var_list: Optional[Iterable[str]],
-        outcome_name: str,
-        cols_to_copy: Optional[Iterable[str]],
-        params: Dict[str, Any],
-        imputation_map: Dict[str, Any],
+    *,
+    X,
+    y,
+    var_list: Optional[Iterable[str]],
+    outcome_name: str,
+    cols_to_copy: Optional[Iterable[str]],
+    params: Dict[str, Any],
+    imputation_map: Dict[str, Any],
 ):
     """
     Fit set of treatments in a regression situation.
@@ -702,14 +725,16 @@ def fit_numeric_outcome_treatment(
     :return: transform plan
     """
     cat_list, cols_to_copy, mis_list, num_list, var_list = _prepare_variable_lists(
-        X=X, cols_to_copy=cols_to_copy, var_list=var_list)
+        X=X, cols_to_copy=cols_to_copy, var_list=var_list
+    )
     xforms = []
     if "missing_indicator" in params["coders"]:
         for vi in mis_list:
             xforms.append(
                 IndicateMissingTransform(
                     incoming_column_name=vi, derived_column_name=vi + "_is_bad"
-                ))
+                )
+            )
     if "clean_copy" in params["coders"]:
         for vi in num_list:
             xform = fit_clean_code(
@@ -774,7 +799,8 @@ def fit_numeric_outcome_treatment(
 # noinspection PyPep8Naming
 def fit_binomial_outcome_treatment(
     *,
-    X, y,
+    X,
+    y,
     outcome_target,
     var_list: Optional[Iterable[str]],
     outcome_name: str,
@@ -795,14 +821,16 @@ def fit_binomial_outcome_treatment(
     :return: transform plan
     """
     cat_list, cols_to_copy, mis_list, num_list, var_list = _prepare_variable_lists(
-        X=X, cols_to_copy=cols_to_copy, var_list=var_list)
+        X=X, cols_to_copy=cols_to_copy, var_list=var_list
+    )
     xforms = []
     if "missing_indicator" in params["coders"]:
         for vi in mis_list:
             xforms.append(
                 IndicateMissingTransform(
                     incoming_column_name=vi, derived_column_name=vi + "_is_bad"
-                ))
+                )
+            )
     if "clean_copy" in params["coders"]:
         for vi in num_list:
             xform = fit_clean_code(
@@ -856,13 +884,14 @@ def fit_binomial_outcome_treatment(
 
 # noinspection PyPep8Naming
 def fit_multinomial_outcome_treatment(
-        *,
-        X, y,
-        var_list: Optional[Iterable[str]],
-        outcome_name: str,
-        cols_to_copy: Optional[Iterable[str]],
-        params: Dict[str, Any],
-        imputation_map: Dict[str, Any],
+    *,
+    X,
+    y,
+    var_list: Optional[Iterable[str]],
+    outcome_name: str,
+    cols_to_copy: Optional[Iterable[str]],
+    params: Dict[str, Any],
+    imputation_map: Dict[str, Any],
 ):
     """
     Fit a variable treatment for multinomial outcomes.
@@ -880,14 +909,16 @@ def fit_multinomial_outcome_treatment(
     outcomes = [oi for oi in set(y)]
     assert len(outcomes) > 1
     cat_list, cols_to_copy, mis_list, num_list, var_list = _prepare_variable_lists(
-        X=X, cols_to_copy=cols_to_copy, var_list=var_list)
+        X=X, cols_to_copy=cols_to_copy, var_list=var_list
+    )
     xforms = []
     if "missing_indicator" in params["coders"]:
         for vi in mis_list:
             xforms.append(
                 IndicateMissingTransform(
                     incoming_column_name=vi, derived_column_name=vi + "_is_bad"
-                ))
+                )
+            )
     if "clean_copy" in params["coders"]:
         for vi in num_list:
             xform = fit_clean_code(
@@ -947,13 +978,13 @@ def fit_multinomial_outcome_treatment(
 
 # noinspection PyPep8Naming
 def fit_unsupervised_treatment(
-        *,
-        X,
-        var_list: Optional[Iterable[str]],
-        outcome_name: str,
-        cols_to_copy: Optional[Iterable[str]],
-        params: Dict[str, Any],
-        imputation_map: Dict[str, Any],
+    *,
+    X,
+    var_list: Optional[Iterable[str]],
+    outcome_name: str,
+    cols_to_copy: Optional[Iterable[str]],
+    params: Dict[str, Any],
+    imputation_map: Dict[str, Any],
 ):
     """
     Fit a data treatment in the unsupervised case.
@@ -968,14 +999,16 @@ def fit_unsupervised_treatment(
     """
 
     cat_list, cols_to_copy, mis_list, num_list, var_list = _prepare_variable_lists(
-        X=X, cols_to_copy=cols_to_copy, var_list=var_list)
+        X=X, cols_to_copy=cols_to_copy, var_list=var_list
+    )
     xforms = []
     if "missing_indicator" in params["coders"]:
         for vi in mis_list:
             xforms.append(
                 IndicateMissingTransform(
                     incoming_column_name=vi, derived_column_name=vi + "_is_bad"
-                ))
+                )
+            )
     if "clean_copy" in params["coders"]:
         for vi in num_list:
             xform = fit_clean_code(
@@ -1017,11 +1050,12 @@ def fit_unsupervised_treatment(
 
 
 def pre_prep_frame(
-        x: pandas.DataFrame,
-        *,
-        col_list: Optional[Iterable[str]],
-        cols_to_copy: Optional[Iterable[str]],
-        cat_cols: Optional[Iterable[str]] = None) -> pandas.DataFrame:
+    x: pandas.DataFrame,
+    *,
+    col_list: Optional[Iterable[str]],
+    cols_to_copy: Optional[Iterable[str]],
+    cat_cols: Optional[Iterable[str]] = None,
+) -> pandas.DataFrame:
     """
     Create a copy of pandas.DataFrame x restricted to col_list union cols_to_copy with col_list - cols_to_copy
     converted to only string and numeric types.  New pandas.DataFrame has trivial indexing.  If col_list
@@ -1105,12 +1139,8 @@ def _mean_of_single_column_pandas_list(val_list: Iterable[pandas.DataFrame]) -> 
 
 
 def cross_patch_refit_y_aware_cols(
-        *,
-        x: pandas.DataFrame,
-        y,
-        res: pandas.DataFrame,
-        plan,
-        cross_plan) -> None:
+    *, x: pandas.DataFrame, y, res: pandas.DataFrame, plan, cross_plan
+) -> None:
     """
     Re fit the y-aware columns according to cross plan.
     Clears out refitter_ values to None.
@@ -1189,12 +1219,8 @@ def cross_patch_refit_y_aware_cols(
 
 
 def cross_patch_user_y_aware_cols(
-        *,
-        x: pandas.DataFrame,
-        y,
-        res: pandas.DataFrame,
-        params: Dict[str, Any],
-        cross_plan) -> None:
+    *, x: pandas.DataFrame, y, res: pandas.DataFrame, params: Dict[str, Any], cross_plan
+) -> None:
     """
     Re fit the user y-aware columns according to cross plan.
     Assumes each y-aware variable produces one derived column.
@@ -1248,12 +1274,12 @@ def cross_patch_user_y_aware_cols(
 
 
 def score_plan_variables(
-        cross_frame: pandas.DataFrame,
-        outcome,
-        plan,
-        params: Dict[str, Any],
-        *,
-        is_classification: bool = False
+    cross_frame: pandas.DataFrame,
+    outcome,
+    plan,
+    params: Dict[str, Any],
+    *,
+    is_classification: bool = False,
 ) -> pandas.DataFrame:
     """
     Quality score variables to build up score frame.
@@ -1329,10 +1355,8 @@ def score_plan_variables(
 
 
 def pseudo_score_plan_variables(
-        *,
-        cross_frame,
-        plan,
-        params: Dict[str, Any]) -> pandas.DataFrame:
+    *, cross_frame, plan, params: Dict[str, Any]
+) -> pandas.DataFrame:
     """
     Build a score frame look-alike for unsupervised case.
 
@@ -1387,6 +1411,7 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
     Class for variable treatments, implements much of the sklearn pipeline/transformer
     API. https://sklearn-template.readthedocs.io/en/latest/user_guide.html#transformer
     """
+
     def __init__(
         self,
         *,
@@ -1678,17 +1703,15 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         frames = [xfi.description_matrix() for xfi in xform_steps]
         res = pandas.concat(frames).reset_index(inplace=False, drop=True)
         # restrict down to non-constant variables
-        vars = set(self.score_frame_['variable'][self.score_frame_['has_range']])
-        usable = [v in vars for v in res['variable']]
+        vars = set(self.score_frame_["variable"][self.score_frame_["has_range"]])
+        usable = [v in vars for v in res["variable"]]
         res = res.loc[usable, :].reset_index(inplace=False, drop=True)
         return res
 
 
 def perform_transform(
-        *,
-        x: pandas.DataFrame,
-        transform: VariableTreatment,
-        params: Dict[str, Any]) -> pandas.DataFrame:
+    *, x: pandas.DataFrame, transform: VariableTreatment, params: Dict[str, Any]
+) -> pandas.DataFrame:
     """
     Transform a data frame.
 
@@ -1748,9 +1771,8 @@ def perform_transform(
 
 
 def limit_to_appropriate_columns(
-        *,
-        res: pandas.DataFrame,
-        transform: VariableTreatment) -> pandas.DataFrame:
+    *, res: pandas.DataFrame, transform: VariableTreatment
+) -> pandas.DataFrame:
     """
     Limit down to appropriate columns.
 

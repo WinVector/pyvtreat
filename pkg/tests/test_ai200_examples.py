@@ -8,7 +8,7 @@ import vtreat
 def test_homes_example():
     dir_path = os.path.dirname(os.path.realpath(__file__))
     d = pandas.read_csv(os.path.join(dir_path, "homes_76.csv"))
-    d['Lot'] = d['Lot'].astype(str)
+    d["Lot"] = d["Lot"].astype(str)
     assert d.shape[0] == 38
     assert d.shape[1] == 8
 

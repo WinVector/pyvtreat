@@ -1,4 +1,3 @@
-
 """
 Utility functions for vtreat
 """
@@ -290,7 +289,7 @@ def clean_string(s: str) -> str:
         " ": "_",
     }
     s = s.strip()
-    s = re.sub(r'\s+', ' ', s)
+    s = re.sub(r"\s+", " ", s)
     for (k, v) in mp.items():
         s = s.replace(k, v)
     return s

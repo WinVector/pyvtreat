@@ -1,5 +1,3 @@
-
-
 import os
 import numpy as np
 import numpy.random
@@ -22,19 +20,18 @@ def test_db_adapter_1():
     dir_path = os.path.dirname(os.path.realpath(__file__))
     data_all = pd.read_csv(os.path.join(dir_path, "diabetes_head.csv"))
     n = data_all.shape[0]
-    data_all['orig_index'] = range(n)
-    d_train = data_all.loc[range(n-5), :].reset_index(inplace=False, drop=True)
-    d_app = data_all.loc[range(n-5, n)].reset_index(inplace=False, drop=True)
+    data_all["orig_index"] = range(n)
+    d_train = data_all.loc[range(n - 5), :].reset_index(inplace=False, drop=True)
+    d_app = data_all.loc[range(n - 5, n)].reset_index(inplace=False, drop=True)
 
     #%%
 
     outcome_name = "readmitted"
     cols_to_copy = ["orig_index", "encounter_id", "patient_nbr"] + [outcome_name]
-    vars = ['time_in_hospital', 'weight']
+    vars = ["time_in_hospital", "weight"]
     columns = vars + cols_to_copy
 
     # d_train.loc[:, columns]
-
 
     #%%
 
@@ -63,21 +60,20 @@ def test_db_adapter_1():
     ops = as_data_algebra_pipeline(
         source=descr(d_app=d_app.loc[:, columns]),
         vtreat_descr=transform_as_data,
-        treatment_table_name='transform_as_data',
+        treatment_table_name="transform_as_data",
     )
 
     # print(ops)
 
     #%%
 
-    transformed = ops.eval({
-        'd_app': d_app.loc[:, columns],
-        'transform_as_data': transform_as_data})
+    transformed = ops.eval(
+        {"d_app": d_app.loc[:, columns], "transform_as_data": transform_as_data}
+    )
 
     # transformed
 
     #%%
-
 
     assert data_algebra.test_util.equivalent_frames(transformed, d_app_treated)
 
@@ -91,12 +87,12 @@ def test_db_adapter_1():
 
     #%%
 
-    db_handle.insert_table(d_app.loc[:, columns], table_name='d_app')
-    db_handle.insert_table(transform_as_data, table_name='transform_as_data')
+    db_handle.insert_table(d_app.loc[:, columns], table_name="d_app")
+    db_handle.insert_table(transform_as_data, table_name="transform_as_data")
 
-    db_handle.execute('CREATE TABLE res AS ' + sql)
+    db_handle.execute("CREATE TABLE res AS " + sql)
 
-    res_db = db_handle.read_query('SELECT * FROM res ORDER BY orig_index LIMIT 10')
+    res_db = db_handle.read_query("SELECT * FROM res ORDER BY orig_index LIMIT 10")
 
     # res_db
 
@@ -113,27 +109,28 @@ def test_db_adapter_general():
 
     # set up example data
     def mk_data(
-            n_rows:int = 100,
-            *,
-            outcome_name:str = "y",
-            n_cat_vars:int = 5,
-            n_num_vars:int = 5,
-            add_unknowns: bool = False):
-        step = 1/np.sqrt(n_cat_vars + n_num_vars)
+        n_rows: int = 100,
+        *,
+        outcome_name: str = "y",
+        n_cat_vars: int = 5,
+        n_num_vars: int = 5,
+        add_unknowns: bool = False,
+    ):
+        step = 1 / np.sqrt(n_cat_vars + n_num_vars)
         cols = dict()
         y = np.random.normal(size=n_rows)
         for i in range(n_cat_vars):
-            vname = f'vc_{i}'
-            levels = ['a', 'b', 'c', 'none']
+            vname = f"vc_{i}"
+            levels = ["a", "b", "c", "none"]
             if add_unknowns:
-                levels = levels + ['d']
+                levels = levels + ["d"]
             level_values = {v: step * np.random.normal(size=1)[0] for v in levels}
             v = np.random.choice(levels, replace=True, size=n_rows)
             y = y + np.array([level_values[vi] for vi in v])
-            v = np.array([vi if vi != 'none' else None for vi in v])
+            v = np.array([vi if vi != "none" else None for vi in v])
             cols[vname] = v
         for i in range(n_num_vars):
-            vname = f'vn_{i}'
+            vname = f"vn_{i}"
             v = np.random.normal(size=n_rows)
             y = y + step * v
             v[np.random.uniform(size=n_rows) < 0.24] = None
@@ -143,12 +140,12 @@ def test_db_adapter_general():
         vars.sort()
         cols[outcome_name] = y
         d = pd.DataFrame(cols)
-        d['orig_index'] = range(d.shape[0])
+        d["orig_index"] = range(d.shape[0])
         return d, outcome_name, vars
 
     d, outcome_name, vars = mk_data(100)
     d_app, _, _ = mk_data(50, add_unknowns=True)
-    cols_to_copy = [outcome_name, 'orig_index']
+    cols_to_copy = [outcome_name, "orig_index"]
     columns = vars + cols_to_copy
 
     # get reference result
@@ -169,46 +166,45 @@ def test_db_adapter_general():
         ops = as_data_algebra_pipeline(
             source=descr(d_app=d),
             vtreat_descr=transform_as_data,
-            treatment_table_name='transform_as_data',
+            treatment_table_name="transform_as_data",
             use_case_merges=use_case_merges,
         )
         ops_source = str(ops)
         assert isinstance(ops_source, str)
-        d_app_res = ops.eval({'d_app': d_app, 'transform_as_data': transform_as_data})
+        d_app_res = ops.eval({"d_app": d_app, "transform_as_data": transform_as_data})
         assert data_algebra.test_util.equivalent_frames(d_app_treated, d_app_res)
 
         # test ops db path
-        source_descr = TableDescription(
-            table_name='d_app',
-            column_names=columns,
-        )
+        source_descr = TableDescription(table_name="d_app", column_names=columns,)
         db_handle = data_algebra.SQLite.example_handle()
-        db_handle.insert_table(d_app.loc[:, columns], table_name='d_app')
-        db_handle.insert_table(transform_as_data, table_name='transform_as_data')
-        db_handle.execute('CREATE TABLE res AS ' + db_handle.to_sql(ops))
-        res_db = db_handle.read_query('SELECT * FROM res ORDER BY orig_index')
+        db_handle.insert_table(d_app.loc[:, columns], table_name="d_app")
+        db_handle.insert_table(transform_as_data, table_name="transform_as_data")
+        db_handle.execute("CREATE TABLE res AS " + db_handle.to_sql(ops))
+        res_db = db_handle.read_query("SELECT * FROM res ORDER BY orig_index")
         assert data_algebra.test_util.equivalent_frames(res_db, d_app_treated)
         db_handle.close()
 
         # test update db path
         db_model = data_algebra.SQLite.SQLiteModel()
-        treatment_table_name = 'transform_as_data'
-        stage_3_name = 'vtreat_stage_3_table'
-        result_name = 'data_treated'
+        treatment_table_name = "transform_as_data"
+        stage_3_name = "vtreat_stage_3_table"
+        result_name = "data_treated"
         sql_sequence = vtreat.vtreat_db_adapter.as_sql_update_sequence(
             db_model=db_model,
             source=source_descr,
             vtreat_descr=transform_as_data,
             treatment_table_name=treatment_table_name,
             stage_3_name=stage_3_name,
-            result_name=result_name)
+            result_name=result_name,
+        )
         db_handle = data_algebra.SQLite.example_handle()
         _ = db_handle.insert_table(d_app, table_name=source_descr.table_name)
         db_handle.insert_table(transform_as_data, table_name=treatment_table_name)
         for sql in sql_sequence:
             db_handle.execute(sql)
         db_res = db_handle.read_query(
-            f'SELECT * FROM {db_model.quote_identifier(result_name)} ORDER by orig_index')
+            f"SELECT * FROM {db_model.quote_identifier(result_name)} ORDER by orig_index"
+        )
         assert data_algebra.test_util.equivalent_frames(d_app_treated, db_res)
         db_handle.close()
 
@@ -217,14 +213,14 @@ def test_db_adapter_monster():
     outcome_name = "y"
     n_vars = 5
 
-    def mk_data(n_rows:int = 100):
-        step = 1/np.sqrt(n_vars)
+    def mk_data(n_rows: int = 100):
+        step = 1 / np.sqrt(n_vars)
         cols = dict()
         y = np.random.normal(size=n_rows)
         for i in range(n_vars):
-            vname = f'v_{i}'
-            v = np.random.choice(['a', 'b'], replace=True, size=n_rows)
-            y = y + np.where(v == 'a', step, -step)
+            vname = f"v_{i}"
+            v = np.random.choice(["a", "b"], replace=True, size=n_rows)
+            y = y + np.where(v == "a", step, -step)
             cols[vname] = v
         vars = list(cols.keys())
         vars.sort()
@@ -254,11 +250,11 @@ def test_db_adapter_monster():
     ops = as_data_algebra_pipeline(
         source=descr(d_app=d),
         vtreat_descr=transform_as_data,
-        treatment_table_name='transform_as_data',
+        treatment_table_name="transform_as_data",
     )
 
     ops_source = str(ops)
     assert isinstance(ops_source, str)
 
-    d_app_res = ops.eval({'d_app': d_app, 'transform_as_data': transform_as_data})
+    d_app_res = ops.eval({"d_app": d_app, "transform_as_data": transform_as_data})
     assert data_algebra.test_util.equivalent_frames(d_app_treated, d_app_res)

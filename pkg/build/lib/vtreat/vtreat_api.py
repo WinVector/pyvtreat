@@ -1,4 +1,3 @@
-
 """
 Define user visible vtreat API.
 """
@@ -59,7 +58,9 @@ def vtreat_parameters(user_params: Optional[Dict[str, Any]] = None) -> Dict[str,
     return params
 
 
-def unsupervised_parameters(user_params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+def unsupervised_parameters(
+    user_params: Optional[Dict[str, Any]] = None
+) -> Dict[str, Any]:
     """
     build a vtreat parameters dictionary for unsupervised tasks, adding in user choices
 
@@ -225,7 +226,9 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
             params=self.params_,
             imputation_map=self.imputation_map_,
         )
-        cross_frame = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
+        cross_frame = vtreat_impl.perform_transform(
+            x=X, transform=self, params=self.params_
+        )
         if (cross_plan is None) or (cross_rows != X.shape[0]):
             if cross_plan is not None:
                 warnings.warn(
@@ -243,7 +246,11 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
             x=X, y=y, res=cross_frame, plan=self.plan_, cross_plan=cross_plan
         )
         vtreat_impl.cross_patch_user_y_aware_cols(
-            x=cross_frame, y=y, res=cross_frame, params=self.params_, cross_plan=cross_plan,
+            x=cross_frame,
+            y=y,
+            res=cross_frame,
+            params=self.params_,
+            cross_plan=cross_plan,
         )
         # use cross_frame to compute variable effects
         self.score_frame_ = vtreat_impl.score_plan_variables(
@@ -416,7 +423,9 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
             params=self.params_,
             imputation_map=self.imputation_map_,
         )
-        cross_frame = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
+        cross_frame = vtreat_impl.perform_transform(
+            x=X, transform=self, params=self.params_
+        )
         if (cross_plan is None) or (cross_rows != X.shape[0]):
             if cross_plan is not None:
                 warnings.warn(
@@ -434,7 +443,11 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
             x=X, y=y, res=cross_frame, plan=self.plan_, cross_plan=cross_plan
         )
         vtreat_impl.cross_patch_user_y_aware_cols(
-            x=cross_frame, y=y, res=cross_frame, params=self.params_, cross_plan=cross_plan,
+            x=cross_frame,
+            y=y,
+            res=cross_frame,
+            params=self.params_,
+            cross_plan=cross_plan,
         )
         # use cross_frame to compute variable effects
         self.score_frame_ = vtreat_impl.score_plan_variables(
@@ -607,7 +620,9 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
             params=self.params_,
             imputation_map=self.imputation_map_,
         )
-        cross_frame = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
+        cross_frame = vtreat_impl.perform_transform(
+            x=X, transform=self, params=self.params_
+        )
         if (cross_plan is None) or (cross_rows != X.shape[0]):
             if cross_plan is not None:
                 warnings.warn(
@@ -624,7 +639,11 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
             x=X, y=y, res=cross_frame, plan=self.plan_, cross_plan=cross_plan
         )
         vtreat_impl.cross_patch_user_y_aware_cols(
-            x=cross_frame, y=y, res=cross_frame, params=self.params_, cross_plan=cross_plan,
+            x=cross_frame,
+            y=y,
+            res=cross_frame,
+            params=self.params_,
+            cross_plan=cross_plan,
         )
         # use cross_frame to compute variable effects
 
@@ -676,12 +695,12 @@ class UnsupervisedTreatment(vtreat_impl.VariableTreatment):
     """manage an unsupervised treatment plan"""
 
     def __init__(
-            self,
-            *,
-            var_list: Optional[Iterable[str]] = None,
-            cols_to_copy: Optional[Iterable[str]] = None,
-            params: Optional[Dict[str, Any]] = None,
-            imputation_map: Optional[Dict[str, Any]] = None,
+        self,
+        *,
+        var_list: Optional[Iterable[str]] = None,
+        cols_to_copy: Optional[Iterable[str]] = None,
+        params: Optional[Dict[str, Any]] = None,
+        imputation_map: Optional[Dict[str, Any]] = None,
     ):
         """
 

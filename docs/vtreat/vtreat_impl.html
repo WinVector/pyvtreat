@@ -268,7 +268,7 @@
 <span class="kn">import</span> <span class="nn">sklearn.base</span>
 
 
-<span class="n">bad_sentinel</span> <span class="o">=</span> <span class="s1">&#39;_NA_&#39;</span>
+<span class="n">bad_sentinel</span> <span class="o">=</span> <span class="s2">&quot;_NA_&quot;</span>
 
 
 <span class="k">def</span> <span class="nf">replace_bad_with_sentinel</span><span class="p">(</span><span class="n">ar</span><span class="p">:</span> <span class="n">List</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
@@ -300,7 +300,9 @@
     <span class="k">return</span> <span class="n">d</span><span class="p">,</span> <span class="n">orig_type</span>
 
 
-<span class="k">def</span> <span class="nf">back_to_orig_type_data_frame</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">orig_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="k">def</span> <span class="nf">back_to_orig_type_data_frame</span><span class="p">(</span>
+    <span class="n">d</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">orig_type</span><span class="p">:</span> <span class="nb">type</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert data frame back to ndarray if that was the original type.</span>
 
@@ -330,10 +332,11 @@
     <span class="n">refitter_</span><span class="p">:</span> <span class="n">Any</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-            <span class="n">derived_column_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-            <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">derived_column_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        :param incoming_column_name:</span>
@@ -377,11 +380,12 @@
     <span class="sd">&quot;&quot;&quot;Class for transforms that are a dictionary mapping of values&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-            <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-            <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-            <span class="n">code_book</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">code_book</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        :param incoming_column_name:</span>
@@ -424,19 +428,24 @@
 <span class="sd">        :return: description of transform.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-            <span class="s1">&#39;treatment_class&#39;</span><span class="p">:</span> <span class="s1">&#39;MappedCodeTransform&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
-            <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
-            <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">replace_bad_with_sentinel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">]),</span>
-            <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
-        <span class="p">})</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;treatment_class&quot;</span><span class="p">:</span> <span class="s2">&quot;MappedCodeTransform&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;treatment&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
+                <span class="s2">&quot;orig_var&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
+                <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">replace_bad_with_sentinel</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">]</span>
+                <span class="p">),</span>
+                <span class="s2">&quot;replacement&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">description</span>
 
 
 <span class="k">class</span> <span class="nc">YAwareMappedCodeTransform</span><span class="p">(</span><span class="n">MappedCodeTransform</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class for transforms that are a y-aware dictionary mapping of values&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -473,6 +482,7 @@
 
 <span class="k">class</span> <span class="nc">CleanNumericTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class for numeric column cleaner.&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">replacement_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
@@ -507,19 +517,22 @@
 <span class="sd">        :return: description of transform.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-            <span class="s1">&#39;treatment_class&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;CleanNumericTransform&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
-            <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
-            <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
-            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">bad_sentinel</span><span class="p">],</span>
-            <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">replacement_value_</span><span class="p">],</span>
-        <span class="p">})</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;treatment_class&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;CleanNumericTransform&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;treatment&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
+                <span class="s2">&quot;orig_var&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
+                <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+                <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">bad_sentinel</span><span class="p">],</span>
+                <span class="s2">&quot;replacement&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">replacement_value_</span><span class="p">],</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">description</span>
 
 
 <span class="k">class</span> <span class="nc">IndicateMissingTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class for missing value indicator.&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
@@ -550,23 +563,26 @@
 
 <span class="sd">        :return: description of transform.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-            <span class="s1">&#39;treatment_class&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;IndicateMissingTransform&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
-            <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
-            <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
-            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">bad_sentinel</span><span class="p">],</span>
-            <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span>
-        <span class="p">})</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;treatment_class&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;IndicateMissingTransform&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;treatment&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
+                <span class="s2">&quot;orig_var&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
+                <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+                <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">bad_sentinel</span><span class="p">],</span>
+                <span class="s2">&quot;replacement&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">description</span>
 
 
 <span class="k">def</span> <span class="nf">fit_clean_code</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">x</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-        <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">x</span><span class="p">,</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit numeric clean column imputation transform</span>
 
@@ -613,11 +629,13 @@
 
 
 <span class="k">def</span> <span class="nf">fit_regression_impact_code</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
-        <span class="n">extra_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">x</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">extra_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit regression impact code transform</span>
 
@@ -651,11 +669,13 @@
 
 
 <span class="k">def</span> <span class="nf">fit_regression_deviation_code</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
-        <span class="n">extra_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">x</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">extra_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit regression deviation code transform</span>
 
@@ -686,11 +706,13 @@
 
 
 <span class="k">def</span> <span class="nf">fit_binomial_impact_code</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
-        <span class="n">extra_args</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">x</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">extra_args</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit categorical impact code.</span>
 
@@ -701,7 +723,9 @@
 <span class="sd">    :param params: control parameter dictionary</span>
 <span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">outcome_target</span> <span class="o">=</span> <span class="p">(</span><span class="n">extra_args</span><span class="p">[</span><span class="s2">&quot;outcome_target&quot;</span><span class="p">],)</span>  <span class="c1"># TODO: document why this is a tuple</span>
+    <span class="n">outcome_target</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">extra_args</span><span class="p">[</span><span class="s2">&quot;outcome_target&quot;</span><span class="p">],</span>
+    <span class="p">)</span>  <span class="c1"># TODO: document why this is a tuple</span>
     <span class="n">var_suffix</span> <span class="o">=</span> <span class="n">extra_args</span><span class="p">[</span><span class="s2">&quot;var_suffix&quot;</span><span class="p">]</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="n">outcome_target</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="n">sf</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">grouped_by_x_statistics</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
@@ -728,6 +752,7 @@
 
 <span class="k">class</span> <span class="nc">IndicatorCodeTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class for indicator codes&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -786,14 +811,16 @@
 <span class="sd">        :return: description of transform.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-            <span class="s1">&#39;treatment_class&#39;</span><span class="p">:</span> <span class="s1">&#39;IndicatorCodeTransform&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
-            <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
-            <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
-            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">replace_bad_with_sentinel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="p">),</span>
-            <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-        <span class="p">})</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;treatment_class&quot;</span><span class="p">:</span> <span class="s2">&quot;IndicatorCodeTransform&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;treatment&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
+                <span class="s2">&quot;orig_var&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
+                <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+                <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">replace_bad_with_sentinel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="p">),</span>
+                <span class="s2">&quot;replacement&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">description</span>
 
 
@@ -803,7 +830,7 @@
     <span class="n">x</span><span class="p">,</span>
     <span class="n">min_fraction</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="n">max_levels</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">sparse_indicators</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">sparse_indicators</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit indicator codes</span>
@@ -825,17 +852,15 @@
     <span class="n">counts</span> <span class="o">=</span> <span class="n">counts</span><span class="p">[</span><span class="n">counts</span> <span class="o">&gt;=</span> <span class="n">min_fraction</span> <span class="o">*</span> <span class="n">n</span><span class="p">]</span>  <span class="c1"># no more than 1/min_fraction symbols</span>
     <span class="n">levels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">counts</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">max_levels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_levels</span><span class="p">):</span>
-        <span class="n">level_frame</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-            <span class="s1">&#39;levels&#39;</span><span class="p">:</span> <span class="n">levels</span><span class="p">,</span>
-            <span class="s1">&#39;counts&#39;</span><span class="p">:</span> <span class="n">counts</span><span class="p">,</span>
-        <span class="p">})</span>
+        <span class="n">level_frame</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;levels&quot;</span><span class="p">:</span> <span class="n">levels</span><span class="p">,</span> <span class="s2">&quot;counts&quot;</span><span class="p">:</span> <span class="n">counts</span><span class="p">,})</span>
         <span class="n">level_frame</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-            <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;counts&#39;</span><span class="p">,</span> <span class="s1">&#39;levels&#39;</span><span class="p">],</span>
+            <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">,</span> <span class="s2">&quot;levels&quot;</span><span class="p">],</span>
             <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
             <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">value_vec</span> <span class="o">=</span> <span class="n">level_frame</span><span class="p">[</span><span class="s1">&#39;levels&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">value_vec</span> <span class="o">=</span> <span class="n">level_frame</span><span class="p">[</span><span class="s2">&quot;levels&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
         <span class="n">levels</span> <span class="o">=</span> <span class="p">[</span><span class="n">value_vec</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_levels</span><span class="p">)]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
@@ -877,10 +902,7 @@
 
 <span class="c1"># noinspection PyPep8Naming</span>
 <span class="k">def</span> <span class="nf">_prepare_variable_lists</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">X</span><span class="p">,</span>
-        <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="o">*</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Prepare lists of variables for variable treatment.</span>
@@ -932,13 +954,14 @@
 
 <span class="c1"># noinspection PyPep8Naming</span>
 <span class="k">def</span> <span class="nf">fit_numeric_outcome_treatment</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
-        <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">outcome_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-        <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">X</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">outcome_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit set of treatments in a regression situation.</span>
@@ -953,14 +976,16 @@
 <span class="sd">    :return: transform plan</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
-        <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span><span class="p">)</span>
+        <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span>
+    <span class="p">)</span>
     <span class="n">xforms</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">IndicateMissingTransform</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
-                <span class="p">))</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;clean_copy&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">num_list</span><span class="p">:</span>
             <span class="n">xform</span> <span class="o">=</span> <span class="n">fit_clean_code</span><span class="p">(</span>
@@ -1025,7 +1050,8 @@
 <span class="c1"># noinspection PyPep8Naming</span>
 <span class="k">def</span> <span class="nf">fit_binomial_outcome_treatment</span><span class="p">(</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+    <span class="n">X</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">,</span>
     <span class="n">outcome_target</span><span class="p">,</span>
     <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="n">outcome_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -1046,14 +1072,16 @@
 <span class="sd">    :return: transform plan</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
-        <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span><span class="p">)</span>
+        <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span>
+    <span class="p">)</span>
     <span class="n">xforms</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">IndicateMissingTransform</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
-                <span class="p">))</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;clean_copy&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">num_list</span><span class="p">:</span>
             <span class="n">xform</span> <span class="o">=</span> <span class="n">fit_clean_code</span><span class="p">(</span>
@@ -1107,13 +1135,14 @@
 
 <span class="c1"># noinspection PyPep8Naming</span>
 <span class="k">def</span> <span class="nf">fit_multinomial_outcome_treatment</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
-        <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">outcome_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-        <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">X</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">outcome_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit a variable treatment for multinomial outcomes.</span>
@@ -1131,14 +1160,16 @@
     <span class="n">outcomes</span> <span class="o">=</span> <span class="p">[</span><span class="n">oi</span> <span class="k">for</span> <span class="n">oi</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">y</span><span class="p">)]</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">outcomes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
     <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
-        <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span><span class="p">)</span>
+        <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span>
+    <span class="p">)</span>
     <span class="n">xforms</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">IndicateMissingTransform</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
-                <span class="p">))</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;clean_copy&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">num_list</span><span class="p">:</span>
             <span class="n">xform</span> <span class="o">=</span> <span class="n">fit_clean_code</span><span class="p">(</span>
@@ -1198,13 +1229,13 @@
 
 <span class="c1"># noinspection PyPep8Naming</span>
 <span class="k">def</span> <span class="nf">fit_unsupervised_treatment</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">X</span><span class="p">,</span>
-        <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">outcome_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-        <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">X</span><span class="p">,</span>
+    <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">outcome_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit a data treatment in the unsupervised case.</span>
@@ -1219,14 +1250,16 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
-        <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span><span class="p">)</span>
+        <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span>
+    <span class="p">)</span>
     <span class="n">xforms</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">IndicateMissingTransform</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
-                <span class="p">))</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;clean_copy&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">num_list</span><span class="p">:</span>
             <span class="n">xform</span> <span class="o">=</span> <span class="n">fit_clean_code</span><span class="p">(</span>
@@ -1268,11 +1301,12 @@
 
 
 <span class="k">def</span> <span class="nf">pre_prep_frame</span><span class="p">(</span>
-        <span class="n">x</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">col_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">cat_cols</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">col_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">cat_cols</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create a copy of pandas.DataFrame x restricted to col_list union cols_to_copy with col_list - cols_to_copy</span>
 <span class="sd">    converted to only string and numeric types.  New pandas.DataFrame has trivial indexing.  If col_list</span>
@@ -1356,12 +1390,8 @@
 
 
 <span class="k">def</span> <span class="nf">cross_patch_refit_y_aware_cols</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">x</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">y</span><span class="p">,</span>
-        <span class="n">res</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">plan</span><span class="p">,</span>
-        <span class="n">cross_plan</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="o">*</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">plan</span><span class="p">,</span> <span class="n">cross_plan</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Re fit the y-aware columns according to cross plan.</span>
 <span class="sd">    Clears out refitter_ values to None.</span>
@@ -1440,12 +1470,8 @@
 
 
 <span class="k">def</span> <span class="nf">cross_patch_user_y_aware_cols</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">x</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">y</span><span class="p">,</span>
-        <span class="n">res</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-        <span class="n">cross_plan</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="o">*</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">cross_plan</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Re fit the user y-aware columns according to cross plan.</span>
 <span class="sd">    Assumes each y-aware variable produces one derived column.</span>
@@ -1499,12 +1525,12 @@
 
 
 <span class="k">def</span> <span class="nf">score_plan_variables</span><span class="p">(</span>
-        <span class="n">cross_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">outcome</span><span class="p">,</span>
-        <span class="n">plan</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">is_classification</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">cross_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">outcome</span><span class="p">,</span>
+    <span class="n">plan</span><span class="p">,</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">is_classification</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Quality score variables to build up score frame.</span>
@@ -1580,10 +1606,8 @@
 
 
 <span class="k">def</span> <span class="nf">pseudo_score_plan_variables</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">cross_frame</span><span class="p">,</span>
-        <span class="n">plan</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="o">*</span><span class="p">,</span> <span class="n">cross_frame</span><span class="p">,</span> <span class="n">plan</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build a score frame look-alike for unsupervised case.</span>
 
@@ -1638,6 +1662,7 @@
 <span class="sd">    Class for variable treatments, implements much of the sklearn pipeline/transformer</span>
 <span class="sd">    API. https://sklearn-template.readthedocs.io/en/latest/user_guide.html#transformer</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
@@ -1929,17 +1954,15 @@
         <span class="n">frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">xfi</span><span class="o">.</span><span class="n">description_matrix</span><span class="p">()</span> <span class="k">for</span> <span class="n">xfi</span> <span class="ow">in</span> <span class="n">xform_steps</span><span class="p">]</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="c1"># restrict down to non-constant variables</span>
-        <span class="nb">vars</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">score_frame_</span><span class="p">[</span><span class="s1">&#39;variable&#39;</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">score_frame_</span><span class="p">[</span><span class="s1">&#39;has_range&#39;</span><span class="p">]])</span>
-        <span class="n">usable</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="ow">in</span> <span class="nb">vars</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;variable&#39;</span><span class="p">]]</span>
+        <span class="nb">vars</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">score_frame_</span><span class="p">[</span><span class="s2">&quot;variable&quot;</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">score_frame_</span><span class="p">[</span><span class="s2">&quot;has_range&quot;</span><span class="p">]])</span>
+        <span class="n">usable</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="ow">in</span> <span class="nb">vars</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;variable&quot;</span><span class="p">]]</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">usable</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">res</span>
 
 
 <span class="k">def</span> <span class="nf">perform_transform</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">x</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">transform</span><span class="p">:</span> <span class="n">VariableTreatment</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="o">*</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">transform</span><span class="p">:</span> <span class="n">VariableTreatment</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Transform a data frame.</span>
 
@@ -1999,9 +2022,8 @@
 
 
 <span class="k">def</span> <span class="nf">limit_to_appropriate_columns</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">res</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">transform</span><span class="p">:</span> <span class="n">VariableTreatment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="o">*</span><span class="p">,</span> <span class="n">res</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">transform</span><span class="p">:</span> <span class="n">VariableTreatment</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Limit down to appropriate columns.</span>
 
@@ -2115,7 +2137,9 @@
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">back_to_orig_type_data_frame</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">orig_type</span><span class="p">:</span> <span class="nb">type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">back_to_orig_type_data_frame</span><span class="p">(</span>
+    <span class="n">d</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">orig_type</span><span class="p">:</span> <span class="nb">type</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert data frame back to ndarray if that was the original type.</span>
 
@@ -2167,10 +2191,11 @@
     <span class="n">refitter_</span><span class="p">:</span> <span class="n">Any</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-            <span class="n">derived_column_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-            <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">derived_column_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        :param incoming_column_name:</span>
@@ -2230,10 +2255,11 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-            <span class="n">derived_column_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-            <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">derived_column_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        :param incoming_column_name:</span>
@@ -2343,11 +2369,12 @@
     <span class="sd">&quot;&quot;&quot;Class for transforms that are a dictionary mapping of values&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-            <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-            <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-            <span class="n">code_book</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">code_book</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        :param incoming_column_name:</span>
@@ -2390,14 +2417,18 @@
 <span class="sd">        :return: description of transform.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-            <span class="s1">&#39;treatment_class&#39;</span><span class="p">:</span> <span class="s1">&#39;MappedCodeTransform&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
-            <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
-            <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">replace_bad_with_sentinel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">]),</span>
-            <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
-        <span class="p">})</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;treatment_class&quot;</span><span class="p">:</span> <span class="s2">&quot;MappedCodeTransform&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;treatment&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
+                <span class="s2">&quot;orig_var&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
+                <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">replace_bad_with_sentinel</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">]</span>
+                <span class="p">),</span>
+                <span class="s2">&quot;replacement&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">description</span>
 </pre></div>
 
@@ -2422,11 +2453,12 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-            <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-            <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-            <span class="n">code_book</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">code_book</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        :param incoming_column_name:</span>
@@ -2515,14 +2547,18 @@
 <span class="sd">        :return: description of transform.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-            <span class="s1">&#39;treatment_class&#39;</span><span class="p">:</span> <span class="s1">&#39;MappedCodeTransform&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
-            <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
-            <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">replace_bad_with_sentinel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">]),</span>
-            <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
-        <span class="p">})</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;treatment_class&quot;</span><span class="p">:</span> <span class="s2">&quot;MappedCodeTransform&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;treatment&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
+                <span class="s2">&quot;orig_var&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
+                <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">replace_bad_with_sentinel</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">]</span>
+                <span class="p">),</span>
+                <span class="s2">&quot;replacement&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">description</span>
 </pre></div>
 
@@ -2549,6 +2585,7 @@
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">YAwareMappedCodeTransform</span><span class="p">(</span><span class="n">MappedCodeTransform</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class for transforms that are a y-aware dictionary mapping of values&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -2677,6 +2714,7 @@
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">CleanNumericTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class for numeric column cleaner.&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">replacement_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
@@ -2711,14 +2749,16 @@
 <span class="sd">        :return: description of transform.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-            <span class="s1">&#39;treatment_class&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;CleanNumericTransform&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
-            <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
-            <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
-            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">bad_sentinel</span><span class="p">],</span>
-            <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">replacement_value_</span><span class="p">],</span>
-        <span class="p">})</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;treatment_class&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;CleanNumericTransform&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;treatment&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
+                <span class="s2">&quot;orig_var&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
+                <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+                <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">bad_sentinel</span><span class="p">],</span>
+                <span class="s2">&quot;replacement&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">replacement_value_</span><span class="p">],</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">description</span>
 </pre></div>
 
@@ -2815,14 +2855,16 @@
 <span class="sd">        :return: description of transform.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-            <span class="s1">&#39;treatment_class&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;CleanNumericTransform&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
-            <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
-            <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
-            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">bad_sentinel</span><span class="p">],</span>
-            <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">replacement_value_</span><span class="p">],</span>
-        <span class="p">})</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;treatment_class&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;CleanNumericTransform&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;treatment&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
+                <span class="s2">&quot;orig_var&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
+                <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+                <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">bad_sentinel</span><span class="p">],</span>
+                <span class="s2">&quot;replacement&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">replacement_value_</span><span class="p">],</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">description</span>
 </pre></div>
 
@@ -2849,6 +2891,7 @@
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">IndicateMissingTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class for missing value indicator.&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
@@ -2879,14 +2922,16 @@
 
 <span class="sd">        :return: description of transform.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-            <span class="s1">&#39;treatment_class&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;IndicateMissingTransform&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
-            <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
-            <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
-            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">bad_sentinel</span><span class="p">],</span>
-            <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span>
-        <span class="p">})</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;treatment_class&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;IndicateMissingTransform&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;treatment&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
+                <span class="s2">&quot;orig_var&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
+                <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+                <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">bad_sentinel</span><span class="p">],</span>
+                <span class="s2">&quot;replacement&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">description</span>
 </pre></div>
 
@@ -2979,14 +3024,16 @@
 
 <span class="sd">        :return: description of transform.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-            <span class="s1">&#39;treatment_class&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;IndicateMissingTransform&#39;</span><span class="p">],</span>
-            <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
-            <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
-            <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
-            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">bad_sentinel</span><span class="p">],</span>
-            <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span>
-        <span class="p">})</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;treatment_class&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;IndicateMissingTransform&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;treatment&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
+                <span class="s2">&quot;orig_var&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
+                <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+                <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">bad_sentinel</span><span class="p">],</span>
+                <span class="s2">&quot;replacement&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">description</span>
 </pre></div>
 
@@ -3017,11 +3064,12 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_clean_code</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">x</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-        <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">x</span><span class="p">,</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit numeric clean column imputation transform</span>
 
@@ -3098,11 +3146,13 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_regression_impact_code</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
-        <span class="n">extra_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">x</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">extra_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit regression impact code transform</span>
 
@@ -3167,11 +3217,13 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_regression_deviation_code</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
-        <span class="n">extra_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">x</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">extra_args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit regression deviation code transform</span>
 
@@ -3233,11 +3285,13 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_binomial_impact_code</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
-        <span class="n">extra_args</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">x</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">extra_args</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit categorical impact code.</span>
 
@@ -3248,7 +3302,9 @@
 <span class="sd">    :param params: control parameter dictionary</span>
 <span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">outcome_target</span> <span class="o">=</span> <span class="p">(</span><span class="n">extra_args</span><span class="p">[</span><span class="s2">&quot;outcome_target&quot;</span><span class="p">],)</span>  <span class="c1"># TODO: document why this is a tuple</span>
+    <span class="n">outcome_target</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">extra_args</span><span class="p">[</span><span class="s2">&quot;outcome_target&quot;</span><span class="p">],</span>
+    <span class="p">)</span>  <span class="c1"># TODO: document why this is a tuple</span>
     <span class="n">var_suffix</span> <span class="o">=</span> <span class="n">extra_args</span><span class="p">[</span><span class="s2">&quot;var_suffix&quot;</span><span class="p">]</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="n">outcome_target</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="n">sf</span> <span class="o">=</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">grouped_by_x_statistics</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
@@ -3300,6 +3356,7 @@
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">IndicatorCodeTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class for indicator codes&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -3358,14 +3415,16 @@
 <span class="sd">        :return: description of transform.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-            <span class="s1">&#39;treatment_class&#39;</span><span class="p">:</span> <span class="s1">&#39;IndicatorCodeTransform&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
-            <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
-            <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
-            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">replace_bad_with_sentinel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="p">),</span>
-            <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-        <span class="p">})</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;treatment_class&quot;</span><span class="p">:</span> <span class="s2">&quot;IndicatorCodeTransform&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;treatment&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
+                <span class="s2">&quot;orig_var&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
+                <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+                <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">replace_bad_with_sentinel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="p">),</span>
+                <span class="s2">&quot;replacement&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">description</span>
 </pre></div>
 
@@ -3491,14 +3550,16 @@
 <span class="sd">        :return: description of transform.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-            <span class="s1">&#39;treatment_class&#39;</span><span class="p">:</span> <span class="s1">&#39;IndicatorCodeTransform&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;treatment&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
-            <span class="s1">&#39;orig_var&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
-            <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
-            <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">replace_bad_with_sentinel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="p">),</span>
-            <span class="s1">&#39;replacement&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-        <span class="p">})</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;treatment_class&quot;</span><span class="p">:</span> <span class="s2">&quot;IndicatorCodeTransform&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;treatment&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
+                <span class="s2">&quot;orig_var&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
+                <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+                <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">replace_bad_with_sentinel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="p">),</span>
+                <span class="s2">&quot;replacement&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">description</span>
 </pre></div>
 
@@ -3535,7 +3596,7 @@
     <span class="n">x</span><span class="p">,</span>
     <span class="n">min_fraction</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="n">max_levels</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">sparse_indicators</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">sparse_indicators</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit indicator codes</span>
@@ -3557,17 +3618,15 @@
     <span class="n">counts</span> <span class="o">=</span> <span class="n">counts</span><span class="p">[</span><span class="n">counts</span> <span class="o">&gt;=</span> <span class="n">min_fraction</span> <span class="o">*</span> <span class="n">n</span><span class="p">]</span>  <span class="c1"># no more than 1/min_fraction symbols</span>
     <span class="n">levels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">counts</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">max_levels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_levels</span><span class="p">):</span>
-        <span class="n">level_frame</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-            <span class="s1">&#39;levels&#39;</span><span class="p">:</span> <span class="n">levels</span><span class="p">,</span>
-            <span class="s1">&#39;counts&#39;</span><span class="p">:</span> <span class="n">counts</span><span class="p">,</span>
-        <span class="p">})</span>
+        <span class="n">level_frame</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;levels&quot;</span><span class="p">:</span> <span class="n">levels</span><span class="p">,</span> <span class="s2">&quot;counts&quot;</span><span class="p">:</span> <span class="n">counts</span><span class="p">,})</span>
         <span class="n">level_frame</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
-            <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;counts&#39;</span><span class="p">,</span> <span class="s1">&#39;levels&#39;</span><span class="p">],</span>
+            <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">,</span> <span class="s2">&quot;levels&quot;</span><span class="p">],</span>
             <span class="n">ascending</span><span class="o">=</span><span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
             <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-            <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">value_vec</span> <span class="o">=</span> <span class="n">level_frame</span><span class="p">[</span><span class="s1">&#39;levels&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">value_vec</span> <span class="o">=</span> <span class="n">level_frame</span><span class="p">[</span><span class="s2">&quot;levels&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
         <span class="n">levels</span> <span class="o">=</span> <span class="p">[</span><span class="n">value_vec</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_levels</span><span class="p">)]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
@@ -3665,13 +3724,14 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_numeric_outcome_treatment</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
-        <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">outcome_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-        <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">X</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">outcome_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit set of treatments in a regression situation.</span>
@@ -3686,14 +3746,16 @@
 <span class="sd">    :return: transform plan</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
-        <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span><span class="p">)</span>
+        <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span>
+    <span class="p">)</span>
     <span class="n">xforms</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">IndicateMissingTransform</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
-                <span class="p">))</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;clean_copy&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">num_list</span><span class="p">:</span>
             <span class="n">xform</span> <span class="o">=</span> <span class="n">fit_clean_code</span><span class="p">(</span>
@@ -3793,7 +3855,8 @@
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_binomial_outcome_treatment</span><span class="p">(</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+    <span class="n">X</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">,</span>
     <span class="n">outcome_target</span><span class="p">,</span>
     <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="n">outcome_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -3814,14 +3877,16 @@
 <span class="sd">    :return: transform plan</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
-        <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span><span class="p">)</span>
+        <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span>
+    <span class="p">)</span>
     <span class="n">xforms</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">IndicateMissingTransform</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
-                <span class="p">))</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;clean_copy&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">num_list</span><span class="p">:</span>
             <span class="n">xform</span> <span class="o">=</span> <span class="n">fit_clean_code</span><span class="p">(</span>
@@ -3908,13 +3973,14 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_multinomial_outcome_treatment</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
-        <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">outcome_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-        <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">X</span><span class="p">,</span>
+    <span class="n">y</span><span class="p">,</span>
+    <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">outcome_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit a variable treatment for multinomial outcomes.</span>
@@ -3932,14 +3998,16 @@
     <span class="n">outcomes</span> <span class="o">=</span> <span class="p">[</span><span class="n">oi</span> <span class="k">for</span> <span class="n">oi</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">y</span><span class="p">)]</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">outcomes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
     <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
-        <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span><span class="p">)</span>
+        <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span>
+    <span class="p">)</span>
     <span class="n">xforms</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">IndicateMissingTransform</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
-                <span class="p">))</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;clean_copy&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">num_list</span><span class="p">:</span>
             <span class="n">xform</span> <span class="o">=</span> <span class="n">fit_clean_code</span><span class="p">(</span>
@@ -4032,13 +4100,13 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">fit_unsupervised_treatment</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">X</span><span class="p">,</span>
-        <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">outcome_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-        <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">X</span><span class="p">,</span>
+    <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">outcome_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit a data treatment in the unsupervised case.</span>
@@ -4053,14 +4121,16 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
-        <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span><span class="p">)</span>
+        <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span>
+    <span class="p">)</span>
     <span class="n">xforms</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">IndicateMissingTransform</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
-                <span class="p">))</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;clean_copy&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">num_list</span><span class="p">:</span>
             <span class="n">xform</span> <span class="o">=</span> <span class="n">fit_clean_code</span><span class="p">(</span>
@@ -4133,11 +4203,12 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">pre_prep_frame</span><span class="p">(</span>
-        <span class="n">x</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">col_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
-        <span class="n">cat_cols</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">col_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">cat_cols</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create a copy of pandas.DataFrame x restricted to col_list union cols_to_copy with col_list - cols_to_copy</span>
 <span class="sd">    converted to only string and numeric types.  New pandas.DataFrame has trivial indexing.  If col_list</span>
@@ -4227,12 +4298,8 @@ is empty it is interpreted as all columns.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">cross_patch_refit_y_aware_cols</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">x</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">y</span><span class="p">,</span>
-        <span class="n">res</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">plan</span><span class="p">,</span>
-        <span class="n">cross_plan</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="o">*</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">plan</span><span class="p">,</span> <span class="n">cross_plan</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Re fit the y-aware columns according to cross plan.</span>
 <span class="sd">    Clears out refitter_ values to None.</span>
@@ -4344,12 +4411,8 @@ Assumes each y-aware variable produces one derived column.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">cross_patch_user_y_aware_cols</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">x</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">y</span><span class="p">,</span>
-        <span class="n">res</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-        <span class="n">cross_plan</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="o">*</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">cross_plan</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Re fit the user y-aware columns according to cross plan.</span>
 <span class="sd">    Assumes each y-aware variable produces one derived column.</span>
@@ -4435,12 +4498,12 @@ Assumes each y-aware variable produces one derived column.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">score_plan_variables</span><span class="p">(</span>
-        <span class="n">cross_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">outcome</span><span class="p">,</span>
-        <span class="n">plan</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">is_classification</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">cross_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">outcome</span><span class="p">,</span>
+    <span class="n">plan</span><span class="p">,</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">is_classification</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Quality score variables to build up score frame.</span>
@@ -4545,10 +4608,8 @@ Assumes each y-aware variable produces one derived column.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">pseudo_score_plan_variables</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">cross_frame</span><span class="p">,</span>
-        <span class="n">plan</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="o">*</span><span class="p">,</span> <span class="n">cross_frame</span><span class="p">,</span> <span class="n">plan</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build a score frame look-alike for unsupervised case.</span>
 
@@ -4626,6 +4687,7 @@ Assumes each y-aware variable produces one derived column.</p>
 <span class="sd">    Class for variable treatments, implements much of the sklearn pipeline/transformer</span>
 <span class="sd">    API. https://sklearn-template.readthedocs.io/en/latest/user_guide.html#transformer</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
@@ -4917,8 +4979,8 @@ Assumes each y-aware variable produces one derived column.</p>
         <span class="n">frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">xfi</span><span class="o">.</span><span class="n">description_matrix</span><span class="p">()</span> <span class="k">for</span> <span class="n">xfi</span> <span class="ow">in</span> <span class="n">xform_steps</span><span class="p">]</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="c1"># restrict down to non-constant variables</span>
-        <span class="nb">vars</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">score_frame_</span><span class="p">[</span><span class="s1">&#39;variable&#39;</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">score_frame_</span><span class="p">[</span><span class="s1">&#39;has_range&#39;</span><span class="p">]])</span>
-        <span class="n">usable</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="ow">in</span> <span class="nb">vars</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;variable&#39;</span><span class="p">]]</span>
+        <span class="nb">vars</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">score_frame_</span><span class="p">[</span><span class="s2">&quot;variable&quot;</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">score_frame_</span><span class="p">[</span><span class="s2">&quot;has_range&quot;</span><span class="p">]])</span>
+        <span class="n">usable</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="ow">in</span> <span class="nb">vars</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;variable&quot;</span><span class="p">]]</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">usable</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">res</span>
 </pre></div>
@@ -5505,8 +5567,8 @@ by specifying the tunable_params list in object construction parameters</p>
         <span class="n">frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">xfi</span><span class="o">.</span><span class="n">description_matrix</span><span class="p">()</span> <span class="k">for</span> <span class="n">xfi</span> <span class="ow">in</span> <span class="n">xform_steps</span><span class="p">]</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="c1"># restrict down to non-constant variables</span>
-        <span class="nb">vars</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">score_frame_</span><span class="p">[</span><span class="s1">&#39;variable&#39;</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">score_frame_</span><span class="p">[</span><span class="s1">&#39;has_range&#39;</span><span class="p">]])</span>
-        <span class="n">usable</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="ow">in</span> <span class="nb">vars</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;variable&#39;</span><span class="p">]]</span>
+        <span class="nb">vars</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">score_frame_</span><span class="p">[</span><span class="s2">&quot;variable&quot;</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">score_frame_</span><span class="p">[</span><span class="s2">&quot;has_range&quot;</span><span class="p">]])</span>
+        <span class="n">usable</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="ow">in</span> <span class="nb">vars</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;variable&quot;</span><span class="p">]]</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">usable</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">res</span>
 </pre></div>
@@ -5538,10 +5600,8 @@ multinomial dependent variables.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">perform_transform</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">x</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">transform</span><span class="p">:</span> <span class="n">VariableTreatment</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="o">*</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">transform</span><span class="p">:</span> <span class="n">VariableTreatment</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Transform a data frame.</span>
 
@@ -5627,9 +5687,8 @@ multinomial dependent variables.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">limit_to_appropriate_columns</span><span class="p">(</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">res</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">transform</span><span class="p">:</span> <span class="n">VariableTreatment</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="o">*</span><span class="p">,</span> <span class="n">res</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">transform</span><span class="p">:</span> <span class="n">VariableTreatment</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Limit down to appropriate columns.</span>
 

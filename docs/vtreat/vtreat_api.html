@@ -189,7 +189,9 @@
     <span class="k">return</span> <span class="n">params</span>
 
 
-<span class="k">def</span> <span class="nf">unsupervised_parameters</span><span class="p">(</span><span class="n">user_params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">unsupervised_parameters</span><span class="p">(</span>
+    <span class="n">user_params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    build a vtreat parameters dictionary for unsupervised tasks, adding in user choices</span>
 
@@ -355,7 +357,9 @@
             <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">,</span>
             <span class="n">imputation_map</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">imputation_map_</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">cross_frame</span> <span class="o">=</span> <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">perform_transform</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">)</span>
+        <span class="n">cross_frame</span> <span class="o">=</span> <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">perform_transform</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">cross_plan</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">cross_rows</span> <span class="o">!=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
             <span class="k">if</span> <span class="n">cross_plan</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
@@ -373,7 +377,11 @@
             <span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">plan</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plan_</span><span class="p">,</span> <span class="n">cross_plan</span><span class="o">=</span><span class="n">cross_plan</span>
         <span class="p">)</span>
         <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">cross_patch_user_y_aware_cols</span><span class="p">(</span>
-            <span class="n">x</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">,</span> <span class="n">cross_plan</span><span class="o">=</span><span class="n">cross_plan</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+            <span class="n">res</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">,</span>
+            <span class="n">cross_plan</span><span class="o">=</span><span class="n">cross_plan</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="c1"># use cross_frame to compute variable effects</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">score_frame_</span> <span class="o">=</span> <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">score_plan_variables</span><span class="p">(</span>
@@ -546,7 +554,9 @@
             <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">,</span>
             <span class="n">imputation_map</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">imputation_map_</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">cross_frame</span> <span class="o">=</span> <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">perform_transform</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">)</span>
+        <span class="n">cross_frame</span> <span class="o">=</span> <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">perform_transform</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">cross_plan</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">cross_rows</span> <span class="o">!=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
             <span class="k">if</span> <span class="n">cross_plan</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
@@ -564,7 +574,11 @@
             <span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">plan</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plan_</span><span class="p">,</span> <span class="n">cross_plan</span><span class="o">=</span><span class="n">cross_plan</span>
         <span class="p">)</span>
         <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">cross_patch_user_y_aware_cols</span><span class="p">(</span>
-            <span class="n">x</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">,</span> <span class="n">cross_plan</span><span class="o">=</span><span class="n">cross_plan</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+            <span class="n">res</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">,</span>
+            <span class="n">cross_plan</span><span class="o">=</span><span class="n">cross_plan</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="c1"># use cross_frame to compute variable effects</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">score_frame_</span> <span class="o">=</span> <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">score_plan_variables</span><span class="p">(</span>
@@ -737,7 +751,9 @@
             <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">,</span>
             <span class="n">imputation_map</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">imputation_map_</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">cross_frame</span> <span class="o">=</span> <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">perform_transform</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">)</span>
+        <span class="n">cross_frame</span> <span class="o">=</span> <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">perform_transform</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">cross_plan</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">cross_rows</span> <span class="o">!=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
             <span class="k">if</span> <span class="n">cross_plan</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
@@ -754,7 +770,11 @@
             <span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">plan</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plan_</span><span class="p">,</span> <span class="n">cross_plan</span><span class="o">=</span><span class="n">cross_plan</span>
         <span class="p">)</span>
         <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">cross_patch_user_y_aware_cols</span><span class="p">(</span>
-            <span class="n">x</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">,</span> <span class="n">cross_plan</span><span class="o">=</span><span class="n">cross_plan</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+            <span class="n">res</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">,</span>
+            <span class="n">cross_plan</span><span class="o">=</span><span class="n">cross_plan</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="c1"># use cross_frame to compute variable effects</span>
 
@@ -806,12 +826,12 @@
     <span class="sd">&quot;&quot;&quot;manage an unsupervised treatment plan&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="o">*</span><span class="p">,</span>
-            <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
@@ -994,7 +1014,9 @@
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">unsupervised_parameters</span><span class="p">(</span><span class="n">user_params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">unsupervised_parameters</span><span class="p">(</span>
+    <span class="n">user_params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    build a vtreat parameters dictionary for unsupervised tasks, adding in user choices</span>
 
@@ -1181,7 +1203,9 @@
             <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">,</span>
             <span class="n">imputation_map</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">imputation_map_</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">cross_frame</span> <span class="o">=</span> <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">perform_transform</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">)</span>
+        <span class="n">cross_frame</span> <span class="o">=</span> <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">perform_transform</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">cross_plan</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">cross_rows</span> <span class="o">!=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
             <span class="k">if</span> <span class="n">cross_plan</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
@@ -1199,7 +1223,11 @@
             <span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">plan</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plan_</span><span class="p">,</span> <span class="n">cross_plan</span><span class="o">=</span><span class="n">cross_plan</span>
         <span class="p">)</span>
         <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">cross_patch_user_y_aware_cols</span><span class="p">(</span>
-            <span class="n">x</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">,</span> <span class="n">cross_plan</span><span class="o">=</span><span class="n">cross_plan</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+            <span class="n">res</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">,</span>
+            <span class="n">cross_plan</span><span class="o">=</span><span class="n">cross_plan</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="c1"># use cross_frame to compute variable effects</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">score_frame_</span> <span class="o">=</span> <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">score_plan_variables</span><span class="p">(</span>
@@ -1451,7 +1479,9 @@
             <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">,</span>
             <span class="n">imputation_map</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">imputation_map_</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">cross_frame</span> <span class="o">=</span> <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">perform_transform</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">)</span>
+        <span class="n">cross_frame</span> <span class="o">=</span> <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">perform_transform</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">cross_plan</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">cross_rows</span> <span class="o">!=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
             <span class="k">if</span> <span class="n">cross_plan</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
@@ -1469,7 +1499,11 @@
             <span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">plan</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plan_</span><span class="p">,</span> <span class="n">cross_plan</span><span class="o">=</span><span class="n">cross_plan</span>
         <span class="p">)</span>
         <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">cross_patch_user_y_aware_cols</span><span class="p">(</span>
-            <span class="n">x</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">,</span> <span class="n">cross_plan</span><span class="o">=</span><span class="n">cross_plan</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+            <span class="n">res</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">,</span>
+            <span class="n">cross_plan</span><span class="o">=</span><span class="n">cross_plan</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="c1"># use cross_frame to compute variable effects</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">score_frame_</span> <span class="o">=</span> <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">score_plan_variables</span><span class="p">(</span>
@@ -1686,7 +1720,9 @@
             <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">,</span>
             <span class="n">imputation_map</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">imputation_map_</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">cross_frame</span> <span class="o">=</span> <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">perform_transform</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">)</span>
+        <span class="n">cross_frame</span> <span class="o">=</span> <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">perform_transform</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">cross_plan</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">cross_rows</span> <span class="o">!=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
             <span class="k">if</span> <span class="n">cross_plan</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
@@ -1704,7 +1740,11 @@
             <span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">plan</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plan_</span><span class="p">,</span> <span class="n">cross_plan</span><span class="o">=</span><span class="n">cross_plan</span>
         <span class="p">)</span>
         <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">cross_patch_user_y_aware_cols</span><span class="p">(</span>
-            <span class="n">x</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">,</span> <span class="n">cross_plan</span><span class="o">=</span><span class="n">cross_plan</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+            <span class="n">res</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">,</span>
+            <span class="n">cross_plan</span><span class="o">=</span><span class="n">cross_plan</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="c1"># use cross_frame to compute variable effects</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">score_frame_</span> <span class="o">=</span> <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">score_plan_variables</span><span class="p">(</span>
@@ -1962,7 +2002,9 @@
             <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">,</span>
             <span class="n">imputation_map</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">imputation_map_</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">cross_frame</span> <span class="o">=</span> <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">perform_transform</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">)</span>
+        <span class="n">cross_frame</span> <span class="o">=</span> <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">perform_transform</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">cross_plan</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">cross_rows</span> <span class="o">!=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
             <span class="k">if</span> <span class="n">cross_plan</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
@@ -1980,7 +2022,11 @@
             <span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">plan</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plan_</span><span class="p">,</span> <span class="n">cross_plan</span><span class="o">=</span><span class="n">cross_plan</span>
         <span class="p">)</span>
         <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">cross_patch_user_y_aware_cols</span><span class="p">(</span>
-            <span class="n">x</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">,</span> <span class="n">cross_plan</span><span class="o">=</span><span class="n">cross_plan</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+            <span class="n">res</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">,</span>
+            <span class="n">cross_plan</span><span class="o">=</span><span class="n">cross_plan</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="c1"># use cross_frame to compute variable effects</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">score_frame_</span> <span class="o">=</span> <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">score_plan_variables</span><span class="p">(</span>
@@ -2197,7 +2243,9 @@
             <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">,</span>
             <span class="n">imputation_map</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">imputation_map_</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">cross_frame</span> <span class="o">=</span> <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">perform_transform</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">)</span>
+        <span class="n">cross_frame</span> <span class="o">=</span> <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">perform_transform</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">cross_plan</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">cross_rows</span> <span class="o">!=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
             <span class="k">if</span> <span class="n">cross_plan</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
@@ -2214,7 +2262,11 @@
             <span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">plan</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plan_</span><span class="p">,</span> <span class="n">cross_plan</span><span class="o">=</span><span class="n">cross_plan</span>
         <span class="p">)</span>
         <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">cross_patch_user_y_aware_cols</span><span class="p">(</span>
-            <span class="n">x</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">,</span> <span class="n">cross_plan</span><span class="o">=</span><span class="n">cross_plan</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+            <span class="n">res</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">,</span>
+            <span class="n">cross_plan</span><span class="o">=</span><span class="n">cross_plan</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="c1"># use cross_frame to compute variable effects</span>
 
@@ -2475,7 +2527,9 @@
             <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">,</span>
             <span class="n">imputation_map</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">imputation_map_</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">cross_frame</span> <span class="o">=</span> <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">perform_transform</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">)</span>
+        <span class="n">cross_frame</span> <span class="o">=</span> <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">perform_transform</span><span class="p">(</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">cross_plan</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">cross_rows</span> <span class="o">!=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
             <span class="k">if</span> <span class="n">cross_plan</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
@@ -2492,7 +2546,11 @@
             <span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">plan</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">plan_</span><span class="p">,</span> <span class="n">cross_plan</span><span class="o">=</span><span class="n">cross_plan</span>
         <span class="p">)</span>
         <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">cross_patch_user_y_aware_cols</span><span class="p">(</span>
-            <span class="n">x</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">,</span> <span class="n">cross_plan</span><span class="o">=</span><span class="n">cross_plan</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+            <span class="n">res</span><span class="o">=</span><span class="n">cross_frame</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params_</span><span class="p">,</span>
+            <span class="n">cross_plan</span><span class="o">=</span><span class="n">cross_plan</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="c1"># use cross_frame to compute variable effects</span>
 
@@ -2588,12 +2646,12 @@
     <span class="sd">&quot;&quot;&quot;manage an unsupervised treatment plan&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="o">*</span><span class="p">,</span>
-            <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
@@ -2720,12 +2778,12 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="o">*</span><span class="p">,</span>
-            <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
