@@ -1,7 +1,6 @@
 """
 Convert the description of a vtreat variable treatment into a data algebra pipeline.
 """
-import datetime
 
 from typing import Dict, List, Tuple
 import numpy
@@ -152,7 +151,7 @@ def _build_data_pipelines_stages(
             match_q = f"(treatment_class == 'MappedCodeTransform') & (orig_var == '{ov}') & (variable == '{vi}')"
             bi = (
                 jt.select_rows(match_q)
-                .extend({ov: "value", vi: "replacement",})
+                .extend({ov: "value", vi: "replacement"})
                 .select_columns([ov, vi])
             )
             mi_table = vtreat_descr.loc[
@@ -286,6 +285,12 @@ def as_sql_update_sequence(
     ops = ops.extend({v: "0.0" for v in map_vars})
 
     def update_code(i):
+        """
+        Build one update statement.
+
+        :param i:
+        :return:
+        """
         step_i = mapping_steps[i]
         ov = step_i["ov"]
         vi = step_i["vi"]

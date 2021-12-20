@@ -601,7 +601,7 @@ def fit_indicator_code(
     counts = counts[counts >= min_fraction * n]  # no more than 1/min_fraction symbols
     levels = [str(v) for v in counts.index]
     if (max_levels is not None) and (len(levels) > max_levels):
-        level_frame = pandas.DataFrame({"levels": levels, "counts": counts,})
+        level_frame = pandas.DataFrame({"levels": levels, "counts": counts})
         level_frame.sort_values(
             by=["counts", "levels"],
             ascending=[False, True],
@@ -1703,8 +1703,8 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         frames = [xfi.description_matrix() for xfi in xform_steps]
         res = pandas.concat(frames).reset_index(inplace=False, drop=True)
         # restrict down to non-constant variables
-        vars = set(self.score_frame_["variable"][self.score_frame_["has_range"]])
-        usable = [v in vars for v in res["variable"]]
+        scored_vars = set(self.score_frame_["variable"][self.score_frame_["has_range"]])
+        usable = [v in scored_vars for v in res["variable"]]
         res = res.loc[usable, :].reset_index(inplace=False, drop=True)
         return res
 
