@@ -651,7 +651,10 @@ def fit_prevalence_code(incoming_column_name: str, x) -> Optional[VarTransform]:
 
 # noinspection PyPep8Naming
 def _prepare_variable_lists(
-    *, X, cols_to_copy: Optional[Iterable[str]], var_list: Optional[Iterable[str]],
+    *,
+    X,
+    cols_to_copy: Optional[Iterable[str]],
+    var_list: Optional[Iterable[str]],
 ) -> Tuple[List[str], List[str], List[str], List[str], List[str]]:
     """
     Prepare lists of variables for variable treatment.
@@ -662,16 +665,16 @@ def _prepare_variable_lists(
     :return: cat_list, cols_to_copy, mis_list, num_list, var_list lists
     """
     if var_list is None:
-        var_list = [co for co in X.columns]
+        var_list = list(X.columns)
     else:
-        var_list = [co for co in var_list]
+        var_list = list(var_list)
     if len(var_list) < 1:
-        var_list = [co for co in X.columns]
+        var_list = list(X.columns)
     assert len(var_list) > 0
     if cols_to_copy is None:
         cols_to_copy = []
     else:
-        cols_to_copy = [c for c in cols_to_copy]
+        cols_to_copy = list(cols_to_copy)
     copy_set = set(cols_to_copy)
     var_list = [co for co in var_list if (not (co in copy_set))]
     v_counts = {v: vtreat.util.get_unique_value_count(X[v]) for v in var_list}
@@ -679,8 +682,8 @@ def _prepare_variable_lists(
     if len(var_list) <= 0:
         raise ValueError("no variables")
     n = X.shape[0]
-    all_bad = []
-    mis_list = []
+    all_bad: List[str] = []
+    mis_list: List[str] = []
     for vi in var_list:
         n_bad = numpy.sum(vtreat.util.is_bad(X[vi]))
         if n_bad >= n:
@@ -727,7 +730,7 @@ def fit_numeric_outcome_treatment(
     cat_list, cols_to_copy, mis_list, num_list, var_list = _prepare_variable_lists(
         X=X, cols_to_copy=cols_to_copy, var_list=var_list
     )
-    xforms = []
+    xforms: List[Optional[VarTransform]] = []
     if "missing_indicator" in params["coders"]:
         for vi in mis_list:
             xforms.append(
@@ -823,7 +826,7 @@ def fit_binomial_outcome_treatment(
     cat_list, cols_to_copy, mis_list, num_list, var_list = _prepare_variable_lists(
         X=X, cols_to_copy=cols_to_copy, var_list=var_list
     )
-    xforms = []
+    xforms: List[Optional[VarTransform]] = []
     if "missing_indicator" in params["coders"]:
         for vi in mis_list:
             xforms.append(
@@ -911,7 +914,7 @@ def fit_multinomial_outcome_treatment(
     cat_list, cols_to_copy, mis_list, num_list, var_list = _prepare_variable_lists(
         X=X, cols_to_copy=cols_to_copy, var_list=var_list
     )
-    xforms = []
+    xforms: List[Optional[VarTransform]] = []
     if "missing_indicator" in params["coders"]:
         for vi in mis_list:
             xforms.append(
@@ -1001,7 +1004,7 @@ def fit_unsupervised_treatment(
     cat_list, cols_to_copy, mis_list, num_list, var_list = _prepare_variable_lists(
         X=X, cols_to_copy=cols_to_copy, var_list=var_list
     )
-    xforms = []
+    xforms: List[Optional[VarTransform]] = []
     if "missing_indicator" in params["coders"]:
         for vi in mis_list:
             xforms.append(
@@ -1071,13 +1074,13 @@ def pre_prep_frame(
     if cols_to_copy is None:
         cols_to_copy = []
     else:
-        cols_to_copy = [c for c in cols_to_copy]
+        cols_to_copy = list(cols_to_copy)
     if col_list is None:
         col_list = []
-    if len(col_list) <= 0:
-        col_list = [co for co in x.columns]
     else:
-        col_list = [c for c in col_list]
+        col_list = list(col_list)
+    if len(col_list) <= 0:
+        col_list = list(x.columns)
     x_set = set(x.columns)
     col_set = set(col_list)
     for ci in cols_to_copy:
