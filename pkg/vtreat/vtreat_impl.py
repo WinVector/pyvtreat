@@ -6,7 +6,7 @@ from abc import ABC
 import math
 import pprint
 import warnings
-from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
+from typing import Any, Callable, Dict, Iterable, List, Optional, Set, Tuple
 
 import numpy
 import pandas
@@ -123,6 +123,55 @@ class VarTransform(ABC):
         :return: description of transform.
         """
         raise NotImplementedError("base method called")
+
+
+class TreatmentPlan:
+    """
+    Class to carry treatment plans.
+    """
+
+    outcome_name: Optional[str]
+    cols_to_copy: Tuple[str, ...]
+    num_list: Tuple[str, ...]
+    cat_list: Tuple[str, ...]
+    xforms: Tuple[VarTransform, ...]
+
+    def __init__(
+        self,
+        *,
+        outcome_name: Optional[str] = None,
+        cols_to_copy: Optional[Iterable[str]] = None,
+        num_list: Optional[Iterable[str]] = None,
+        cat_list: Optional[Iterable[str]] = None,
+        xforms: Iterable[Optional[VarTransform]]):
+        self.outcome_name = outcome_name
+        if cols_to_copy is None:
+            self.cols_to_copy = tuple()
+        else:
+            assert not isinstance(cols_to_copy, str)
+            self.cols_to_copy = tuple(cols_to_copy)
+        if num_list is None:
+            self.num_list = tuple()
+        else:
+            assert not isinstance(num_list, str)
+            self.num_list = tuple(num_list)
+        if cat_list is None:
+            self.cat_list = tuple()
+        else:
+            assert not isinstance(cat_list, str)
+            self.cat_list = tuple(cat_list)
+        non_empty_xforms: List[VarTransform] = [x for x in xforms if x is not None]
+        self.xforms = tuple(non_empty_xforms)
+        for c in self.cols_to_copy:
+            assert isinstance(c, str)
+        for c in self.num_list:
+            assert isinstance(c, str)
+        for c in self.cat_list:
+            assert isinstance(c, str)
+        if len(self.xforms) < 1:
+            raise ValueError("no treatments generated")
+        for x in self.xforms:
+            assert isinstance(x, VarTransform)
 
 
 class MappedCodeTransform(VarTransform):
@@ -714,7 +763,7 @@ def fit_numeric_outcome_treatment(
     cols_to_copy: Optional[Iterable[str]],
     params: Dict[str, Any],
     imputation_map: Dict[str, Any],
-):
+) -> TreatmentPlan:
     """
     Fit set of treatments in a regression situation.
 
@@ -787,16 +836,15 @@ def fit_numeric_outcome_treatment(
                     sparse_indicators=params["sparse_indicators"],
                 )
             )
-    xforms = [xf for xf in xforms if xf is not None]
     for stp in params["user_transforms"]:
         stp.fit(X=X[var_list], y=y)
-    return {
-        "outcome_name": outcome_name,
-        "cols_to_copy": cols_to_copy,
-        "num_list": num_list,
-        "cat_list": cat_list,
-        "xforms": xforms,
-    }
+    return TreatmentPlan(
+        outcome_name=outcome_name,
+        cols_to_copy=cols_to_copy,
+        num_list=num_list,
+        cat_list=cat_list,
+        xforms=xforms,
+    )
 
 
 # noinspection PyPep8Naming
@@ -810,7 +858,7 @@ def fit_binomial_outcome_treatment(
     cols_to_copy: Optional[Iterable[str]],
     params: Dict[str, Any],
     imputation_map: Dict[str, Any],
-):
+) -> TreatmentPlan:
     """
 
     :param X: training explanatory values
@@ -873,16 +921,15 @@ def fit_binomial_outcome_treatment(
                     sparse_indicators=params["sparse_indicators"],
                 )
             )
-    xforms = [xf for xf in xforms if xf is not None]
     for stp in params["user_transforms"]:
         stp.fit(X=X[var_list], y=y)
-    return {
-        "outcome_name": outcome_name,
-        "cols_to_copy": cols_to_copy,
-        "num_list": num_list,
-        "cat_list": cat_list,
-        "xforms": xforms,
-    }
+    return TreatmentPlan(
+        outcome_name=outcome_name,
+        cols_to_copy=cols_to_copy,
+        num_list=num_list,
+        cat_list=cat_list,
+        xforms=xforms,
+    )
 
 
 # noinspection PyPep8Naming
@@ -895,7 +942,7 @@ def fit_multinomial_outcome_treatment(
     cols_to_copy: Optional[Iterable[str]],
     params: Dict[str, Any],
     imputation_map: Dict[str, Any],
-):
+) -> TreatmentPlan:
     """
     Fit a variable treatment for multinomial outcomes.
 
@@ -965,18 +1012,15 @@ def fit_multinomial_outcome_treatment(
                     sparse_indicators=params["sparse_indicators"],
                 )
             )
-    xforms = [xf for xf in xforms if xf is not None]
-    if len(xforms) <= 0:
-        raise ValueError("no variables created")
     for stp in params["user_transforms"]:
         stp.fit(X=X[var_list], y=y)
-    return {
-        "outcome_name": outcome_name,
-        "cols_to_copy": cols_to_copy,
-        "num_list": num_list,
-        "cat_list": cat_list,
-        "xforms": xforms,
-    }
+    return TreatmentPlan(
+        outcome_name=outcome_name,
+        cols_to_copy=cols_to_copy,
+        num_list=num_list,
+        cat_list=cat_list,
+        xforms=xforms,
+    )
 
 
 # noinspection PyPep8Naming
@@ -988,7 +1032,7 @@ def fit_unsupervised_treatment(
     cols_to_copy: Optional[Iterable[str]],
     params: Dict[str, Any],
     imputation_map: Dict[str, Any],
-):
+) -> TreatmentPlan:
     """
     Fit a data treatment in the unsupervised case.
 
@@ -1040,16 +1084,15 @@ def fit_unsupervised_treatment(
                     sparse_indicators=params["sparse_indicators"],
                 )
             )
-    xforms = [xf for xf in xforms if xf is not None]
     for stp in params["user_transforms"]:
         stp.fit(X=X[var_list], y=None)
-    return {
-        "outcome_name": outcome_name,
-        "cols_to_copy": cols_to_copy,
-        "num_list": num_list,
-        "cat_list": cat_list,
-        "xforms": xforms,
-    }
+    return TreatmentPlan(
+        outcome_name=outcome_name,
+        cols_to_copy=cols_to_copy,
+        num_list=num_list,
+        cat_list=cat_list,
+        xforms=xforms,
+    )
 
 
 def pre_prep_frame(
@@ -1142,7 +1185,7 @@ def _mean_of_single_column_pandas_list(val_list: Iterable[pandas.DataFrame]) -> 
 
 
 def cross_patch_refit_y_aware_cols(
-    *, x: pandas.DataFrame, y, res: pandas.DataFrame, plan, cross_plan
+    *, x: pandas.DataFrame, y, res: pandas.DataFrame, plan: TreatmentPlan, cross_plan
 ) -> None:
     """
     Re fit the y-aware columns according to cross plan.
@@ -1158,12 +1201,12 @@ def cross_patch_refit_y_aware_cols(
     """
 
     if cross_plan is None or len(cross_plan) <= 1:
-        for xf in plan["xforms"]:
+        for xf in plan.xforms:
             xf.refitter_ = None
         return
     incoming_colset = set(x.columns)
     derived_colset = set(res.columns)
-    for xf in plan["xforms"]:
+    for xf in plan.xforms:
         if not xf.need_cross_treatment_:
             continue
         incoming_column_name = xf.incoming_column_name_
@@ -1217,7 +1260,7 @@ def cross_patch_refit_y_aware_cols(
                 pi[derived_column_name]
             ).reshape((len(pi),))
         res.loc[vtreat.util.is_bad(res[derived_column_name]), derived_column_name] = avg
-    for xf in plan["xforms"]:
+    for xf in plan.xforms:
         xf.refitter_ = None
 
 
@@ -1279,7 +1322,7 @@ def cross_patch_user_y_aware_cols(
 def score_plan_variables(
     cross_frame: pandas.DataFrame,
     outcome,
-    plan,
+    plan: TreatmentPlan,
     params: Dict[str, Any],
     *,
     is_classification: bool = False,
@@ -1289,7 +1332,7 @@ def score_plan_variables(
 
     :param cross_frame: cross transformed explanatory variables
     :param outcome: dependent variable
-    :param plan: treatment plan dictionary
+    :param plan: treatment plan
     :param params: control parameter dictionary
     :param is_classification: logical, if True classification if False regression
     :return: score frame
@@ -1313,7 +1356,7 @@ def score_plan_variables(
         return description
 
     var_table = pandas.concat(
-        [describe_xf(xf) for xf in plan["xforms"]]
+        [describe_xf(xf) for xf in plan.xforms]
         + [
             describe_ut(ut)
             for ut in params["user_transforms"]
@@ -1358,13 +1401,13 @@ def score_plan_variables(
 
 
 def pseudo_score_plan_variables(
-    *, cross_frame, plan, params: Dict[str, Any]
+    *, cross_frame, plan:TreatmentPlan, params: Dict[str, Any]
 ) -> pandas.DataFrame:
     """
     Build a score frame look-alike for unsupervised case.
 
     :param cross_frame: cross transformed explanatory variables
-    :param plan:
+    :param plan: treatment plan
     :param params: control parameter dictionary
     :return: score frame
     """
@@ -1387,7 +1430,7 @@ def pseudo_score_plan_variables(
         return description
 
     score_frame = pandas.concat(
-        [describe_xf(xf) for xf in plan["xforms"]]
+        [describe_xf(xf) for xf in plan.xforms]
         + [
             describe_ut(ut)
             for ut in params["user_transforms"]
@@ -1421,10 +1464,10 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
     var_list_: List[str]
     cols_to_copy_: List[str]
     params_: Dict[str, Any]
+    plan_: Optional[TreatmentPlan]
+    imputation_map_: Dict[str, Callable]
     # TODO: useful hints on more of the members
-    imputation_map_: Optional[Any]
-    plan_: Optional[Any]
-    score_frame_: Optional[Any]
+    score_frame_: Optional[pandas.DataFrame]
     cross_rows_: Optional[Any]
     cross_plan_: Optional[Any]
     last_fit_x_id_: Optional[Any]
@@ -1719,8 +1762,8 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         :return: description of transform.
         """
 
-        plan = self.plan_
-        xform_steps = [xfi for xfi in plan["xforms"]]
+        assert self.plan_ is not None  # type hint
+        xform_steps = [xfi for xfi in self.plan_.xforms]
         frames = [xfi.description_matrix() for xfi in xform_steps]
         res = pandas.concat(frames).reset_index(inplace=False, drop=True)
         # restrict down to non-constant variables
@@ -1741,8 +1784,8 @@ def perform_transform(
     :param params: control parameter dictionary
     :return: new data frame
     """
-    plan = transform.plan_
-    xform_steps = [xfi for xfi in plan["xforms"]]
+    assert transform.plan_ is not None  # type hint
+    xform_steps = [xfi for xfi in transform.plan_.xforms]
     user_steps = [stp for stp in params["user_transforms"]]
     # restrict down to to results we are going to use
     if (transform.result_restriction is not None) and (
@@ -1779,7 +1822,7 @@ def perform_transform(
     new_frames = [xfi.transform(x) for xfi in (xform_steps + user_steps)]
     new_frames = [frm for frm in new_frames if (frm is not None) and (frm.shape[1] > 0)]
     # see if we want to copy over any columns
-    copy_set = set(plan["cols_to_copy"])
+    copy_set = set(transform.plan_.cols_to_copy)
     to_copy = [ci for ci in x.columns if ci in copy_set]
     if len(to_copy) > 0:
         cp = x.loc[:, to_copy].copy()
@@ -1801,8 +1844,8 @@ def limit_to_appropriate_columns(
     :param transform:
     :return:
     """
-    plan = transform.plan_
-    to_copy = set(plan["cols_to_copy"])
+    assert transform.plan_ is not None  # type hint
+    to_copy = set(transform.plan_.cols_to_copy)
     to_take = set(
         [
             ci

@@ -161,9 +161,9 @@ class NumericOutcomeTreatment(vtreat_impl.VariableTreatment):
             )
         res = vtreat_impl.pre_prep_frame(
             X,
-            col_list=self.plan_["num_list"] + self.plan_["cat_list"],
+            col_list=self.plan_.num_list + self.plan_.cat_list,
             cols_to_copy=self.cols_to_copy_,
-            cat_cols=self.plan_["cat_list"],
+            cat_cols=self.plan_.cat_list,
         )
         res = vtreat_impl.perform_transform(x=res, transform=self, params=self.params_)
         res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
@@ -359,9 +359,9 @@ class BinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
             )
         X = vtreat_impl.pre_prep_frame(
             X,
-            col_list=self.plan_["num_list"] + self.plan_["cat_list"],
+            col_list=self.plan_.num_list + self.plan_.cat_list,
             cols_to_copy=self.cols_to_copy_,
-            cat_cols=self.plan_["cat_list"],
+            cat_cols=self.plan_.cat_list,
         )
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
@@ -557,9 +557,9 @@ class MultinomialOutcomeTreatment(vtreat_impl.VariableTreatment):
             )
         X = vtreat_impl.pre_prep_frame(
             X,
-            col_list=self.plan_["num_list"] + self.plan_["cat_list"],
+            col_list=self.plan_.num_list + self.plan_.cat_list,
             cols_to_copy=self.cols_to_copy_,
-            cat_cols=self.plan_["cat_list"],
+            cat_cols=self.plan_.cat_list,
         )
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
@@ -744,9 +744,9 @@ class UnsupervisedTreatment(vtreat_impl.VariableTreatment):
             raise ValueError("called transform on not yet fit treatment")
         X = vtreat_impl.pre_prep_frame(
             X,
-            col_list=self.plan_["num_list"] + self.plan_["cat_list"],
+            col_list=self.plan_.num_list + self.plan_.cat_list,
             cols_to_copy=self.cols_to_copy_,
-            cat_cols=self.plan_["cat_list"],
+            cat_cols=self.plan_.cat_list,
         )
         res = vtreat_impl.perform_transform(x=X, transform=self, params=self.params_)
         res = vtreat_impl.limit_to_appropriate_columns(res=res, transform=self)
