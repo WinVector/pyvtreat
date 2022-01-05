@@ -1465,13 +1465,12 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
     cols_to_copy_: List[str]
     params_: Dict[str, Any]
     plan_: Optional[TreatmentPlan]
-    imputation_map_: Dict[str, Callable]
-    # TODO: useful hints on more of the members
     score_frame_: Optional[pandas.DataFrame]
-    cross_rows_: Optional[Any]
-    cross_plan_: Optional[Any]
-    last_fit_x_id_: Optional[Any]
-    last_result_columns: Optional[Any]
+    imputation_map_: Dict[str, Callable]
+    last_fit_x_id_: Optional[str]
+    cross_plan_: Optional[List[Dict[str, List[int]]]]
+    cross_rows_: Optional[int]
+    last_result_columns: Optional[List[str]]
 
     def __init__(
         self,
@@ -1763,6 +1762,7 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         """
 
         assert self.plan_ is not None  # type hint
+        assert self.score_frame_ is not None  # type hint
         xform_steps = [xfi for xfi in self.plan_.xforms]
         frames = [xfi.description_matrix() for xfi in xform_steps]
         res = pandas.concat(frames).reset_index(inplace=False, drop=True)
@@ -1845,6 +1845,7 @@ def limit_to_appropriate_columns(
     :return:
     """
     assert transform.plan_ is not None  # type hint
+    assert transform.score_frame_ is not None  # type hint
     to_copy = set(transform.plan_.cols_to_copy)
     to_take = set(
         [
