@@ -6,7 +6,7 @@ from abc import ABC
 import math
 import pprint
 import warnings
-from typing import Any, Dict, Iterable, List, Optional, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
 
 import numpy
 import pandas
@@ -1415,14 +1415,29 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
     API. https://sklearn-template.readthedocs.io/en/latest/user_guide.html#transformer
     """
 
+    result_restriction: Optional[Set[str]]
+    outcome_name_: Optional[str]
+    outcome_target_: Optional[Any]
+    var_list_: List[str]
+    cols_to_copy_: List[str]
+    params_: Dict[str, Any]
+    # TODO: useful hints on more of the members
+    imputation_map_: Optional[Any]
+    plan_: Optional[Any]
+    score_frame_: Optional[Any]
+    cross_rows_: Optional[Any]
+    cross_plan_: Optional[Any]
+    last_fit_x_id_: Optional[Any]
+    last_result_columns: Optional[Any]
+
     def __init__(
         self,
         *,
         var_list: Optional[Iterable[str]] = None,
         outcome_name: Optional[str] = None,
-        outcome_target=None,
+        outcome_target: Optional[Any] = None,
         cols_to_copy: Optional[Iterable[str]] = None,
-        params: Dict[str, Any] = None,
+        params: Optional[Dict[str, Any]] = None,
         imputation_map: Optional[Dict[str, Any]] = None,
     ):
         """
@@ -1455,7 +1470,10 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         self.outcome_target_ = outcome_target
         self.var_list_ = [vi for vi in var_list if vi not in set(cols_to_copy)]
         self.cols_to_copy_ = cols_to_copy
-        self.params_ = params.copy()
+        if params is not None:
+            self.params_ = params.copy()
+        else:
+            self.params_ = dict()
         self.imputation_map_ = imputation_map.copy()
         self.plan_ = None
         self.score_frame_ = None
