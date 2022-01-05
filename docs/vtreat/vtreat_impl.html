@@ -55,6 +55,15 @@
 
             </li>
             <li>
+                    <a class="class" href="#TreatmentPlan">TreatmentPlan</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#TreatmentPlan.__init__">TreatmentPlan</a>
+                        </li>
+                </ul>
+
+            </li>
+            <li>
                     <a class="class" href="#MappedCodeTransform">MappedCodeTransform</a>
                             <ul class="memberlist">
                         <li>
@@ -257,7 +266,7 @@
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">pprint</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">pandas</span>
@@ -329,7 +338,9 @@
     <span class="n">derived_column_names_</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
     <span class="n">need_cross_treatment_</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="n">treatment_</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">refitter_</span><span class="p">:</span> <span class="n">Any</span>
+    <span class="n">refitter_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span>
+    <span class="n">extra_args_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span>
+    <span class="n">params_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -355,6 +366,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span> <span class="o">=</span> <span class="n">treatment</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">need_cross_treatment_</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">refitter_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extra_args_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params_</span> <span class="o">=</span> <span class="kc">None</span>
+
 
     <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -374,6 +388,55 @@
 <span class="sd">        :return: description of transform.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base method called&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">TreatmentPlan</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to carry treatment plans.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">outcome_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+    <span class="n">num_list</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+    <span class="n">cat_list</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+    <span class="n">xforms</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">outcome_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">num_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">cat_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">xforms</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outcome_name</span> <span class="o">=</span> <span class="n">outcome_name</span>
+        <span class="k">if</span> <span class="n">cols_to_copy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cols_to_copy</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cols_to_copy</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">num_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_list</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">num_list</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_list</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">num_list</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cat_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cat_list</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cat_list</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cat_list</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">cat_list</span><span class="p">)</span>
+        <span class="n">non_empty_xforms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xforms</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xforms</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">non_empty_xforms</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols_to_copy</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_list</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cat_list</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xforms</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;no treatments generated&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">xforms</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">VarTransform</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">MappedCodeTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
@@ -902,7 +965,10 @@
 
 <span class="c1"># noinspection PyPep8Naming</span>
 <span class="k">def</span> <span class="nf">_prepare_variable_lists</span><span class="p">(</span>
-    <span class="o">*</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">X</span><span class="p">,</span>
+    <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+    <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Prepare lists of variables for variable treatment.</span>
@@ -913,16 +979,16 @@
 <span class="sd">    :return: cat_list, cols_to_copy, mis_list, num_list, var_list lists</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">var_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+        <span class="n">var_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">]</span>
+        <span class="n">var_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+        <span class="n">var_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
     <span class="k">if</span> <span class="n">cols_to_copy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">cols_to_copy</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">cols_to_copy</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cols_to_copy</span><span class="p">]</span>
+        <span class="n">cols_to_copy</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">)</span>
     <span class="n">copy_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">)</span>
     <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">co</span> <span class="ow">in</span> <span class="n">copy_set</span><span class="p">))]</span>
     <span class="n">v_counts</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">get_unique_value_count</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">}</span>
@@ -930,8 +996,8 @@
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">var_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;no variables&quot;</span><span class="p">)</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">all_bad</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">mis_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">all_bad</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">mis_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">:</span>
         <span class="n">n_bad</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]))</span>
         <span class="k">if</span> <span class="n">n_bad</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">:</span>
@@ -962,7 +1028,7 @@
     <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-<span class="p">):</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TreatmentPlan</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit set of treatments in a regression situation.</span>
 
@@ -978,7 +1044,7 @@
     <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
         <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span>
     <span class="p">)</span>
-    <span class="n">xforms</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">xforms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -1035,16 +1101,15 @@
                     <span class="n">sparse_indicators</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;sparse_indicators&quot;</span><span class="p">],</span>
                 <span class="p">)</span>
             <span class="p">)</span>
-    <span class="n">xforms</span> <span class="o">=</span> <span class="p">[</span><span class="n">xf</span> <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">xforms</span> <span class="k">if</span> <span class="n">xf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">stp</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;user_transforms&quot;</span><span class="p">]:</span>
         <span class="n">stp</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">[</span><span class="n">var_list</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;outcome_name&quot;</span><span class="p">:</span> <span class="n">outcome_name</span><span class="p">,</span>
-        <span class="s2">&quot;cols_to_copy&quot;</span><span class="p">:</span> <span class="n">cols_to_copy</span><span class="p">,</span>
-        <span class="s2">&quot;num_list&quot;</span><span class="p">:</span> <span class="n">num_list</span><span class="p">,</span>
-        <span class="s2">&quot;cat_list&quot;</span><span class="p">:</span> <span class="n">cat_list</span><span class="p">,</span>
-        <span class="s2">&quot;xforms&quot;</span><span class="p">:</span> <span class="n">xforms</span><span class="p">,</span>
-    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">TreatmentPlan</span><span class="p">(</span>
+        <span class="n">outcome_name</span><span class="o">=</span><span class="n">outcome_name</span><span class="p">,</span>
+        <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span>
+        <span class="n">num_list</span><span class="o">=</span><span class="n">num_list</span><span class="p">,</span>
+        <span class="n">cat_list</span><span class="o">=</span><span class="n">cat_list</span><span class="p">,</span>
+        <span class="n">xforms</span><span class="o">=</span><span class="n">xforms</span><span class="p">,</span>
+    <span class="p">)</span>
 
 
 <span class="c1"># noinspection PyPep8Naming</span>
@@ -1058,7 +1123,7 @@
     <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-<span class="p">):</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TreatmentPlan</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    :param X: training explanatory values</span>
@@ -1074,7 +1139,7 @@
     <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
         <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span>
     <span class="p">)</span>
-    <span class="n">xforms</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">xforms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -1121,16 +1186,15 @@
                     <span class="n">sparse_indicators</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;sparse_indicators&quot;</span><span class="p">],</span>
                 <span class="p">)</span>
             <span class="p">)</span>
-    <span class="n">xforms</span> <span class="o">=</span> <span class="p">[</span><span class="n">xf</span> <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">xforms</span> <span class="k">if</span> <span class="n">xf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">stp</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;user_transforms&quot;</span><span class="p">]:</span>
         <span class="n">stp</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">[</span><span class="n">var_list</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;outcome_name&quot;</span><span class="p">:</span> <span class="n">outcome_name</span><span class="p">,</span>
-        <span class="s2">&quot;cols_to_copy&quot;</span><span class="p">:</span> <span class="n">cols_to_copy</span><span class="p">,</span>
-        <span class="s2">&quot;num_list&quot;</span><span class="p">:</span> <span class="n">num_list</span><span class="p">,</span>
-        <span class="s2">&quot;cat_list&quot;</span><span class="p">:</span> <span class="n">cat_list</span><span class="p">,</span>
-        <span class="s2">&quot;xforms&quot;</span><span class="p">:</span> <span class="n">xforms</span><span class="p">,</span>
-    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">TreatmentPlan</span><span class="p">(</span>
+        <span class="n">outcome_name</span><span class="o">=</span><span class="n">outcome_name</span><span class="p">,</span>
+        <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span>
+        <span class="n">num_list</span><span class="o">=</span><span class="n">num_list</span><span class="p">,</span>
+        <span class="n">cat_list</span><span class="o">=</span><span class="n">cat_list</span><span class="p">,</span>
+        <span class="n">xforms</span><span class="o">=</span><span class="n">xforms</span><span class="p">,</span>
+    <span class="p">)</span>
 
 
 <span class="c1"># noinspection PyPep8Naming</span>
@@ -1143,7 +1207,7 @@
     <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-<span class="p">):</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TreatmentPlan</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit a variable treatment for multinomial outcomes.</span>
 
@@ -1162,7 +1226,7 @@
     <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
         <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span>
     <span class="p">)</span>
-    <span class="n">xforms</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">xforms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -1213,18 +1277,15 @@
                     <span class="n">sparse_indicators</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;sparse_indicators&quot;</span><span class="p">],</span>
                 <span class="p">)</span>
             <span class="p">)</span>
-    <span class="n">xforms</span> <span class="o">=</span> <span class="p">[</span><span class="n">xf</span> <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">xforms</span> <span class="k">if</span> <span class="n">xf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">xforms</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;no variables created&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">stp</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;user_transforms&quot;</span><span class="p">]:</span>
         <span class="n">stp</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">[</span><span class="n">var_list</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;outcome_name&quot;</span><span class="p">:</span> <span class="n">outcome_name</span><span class="p">,</span>
-        <span class="s2">&quot;cols_to_copy&quot;</span><span class="p">:</span> <span class="n">cols_to_copy</span><span class="p">,</span>
-        <span class="s2">&quot;num_list&quot;</span><span class="p">:</span> <span class="n">num_list</span><span class="p">,</span>
-        <span class="s2">&quot;cat_list&quot;</span><span class="p">:</span> <span class="n">cat_list</span><span class="p">,</span>
-        <span class="s2">&quot;xforms&quot;</span><span class="p">:</span> <span class="n">xforms</span><span class="p">,</span>
-    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">TreatmentPlan</span><span class="p">(</span>
+        <span class="n">outcome_name</span><span class="o">=</span><span class="n">outcome_name</span><span class="p">,</span>
+        <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span>
+        <span class="n">num_list</span><span class="o">=</span><span class="n">num_list</span><span class="p">,</span>
+        <span class="n">cat_list</span><span class="o">=</span><span class="n">cat_list</span><span class="p">,</span>
+        <span class="n">xforms</span><span class="o">=</span><span class="n">xforms</span><span class="p">,</span>
+    <span class="p">)</span>
 
 
 <span class="c1"># noinspection PyPep8Naming</span>
@@ -1236,7 +1297,7 @@
     <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-<span class="p">):</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TreatmentPlan</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit a data treatment in the unsupervised case.</span>
 
@@ -1252,7 +1313,7 @@
     <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
         <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span>
     <span class="p">)</span>
-    <span class="n">xforms</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">xforms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -1288,16 +1349,15 @@
                     <span class="n">sparse_indicators</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;sparse_indicators&quot;</span><span class="p">],</span>
                 <span class="p">)</span>
             <span class="p">)</span>
-    <span class="n">xforms</span> <span class="o">=</span> <span class="p">[</span><span class="n">xf</span> <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">xforms</span> <span class="k">if</span> <span class="n">xf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">stp</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;user_transforms&quot;</span><span class="p">]:</span>
         <span class="n">stp</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">[</span><span class="n">var_list</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;outcome_name&quot;</span><span class="p">:</span> <span class="n">outcome_name</span><span class="p">,</span>
-        <span class="s2">&quot;cols_to_copy&quot;</span><span class="p">:</span> <span class="n">cols_to_copy</span><span class="p">,</span>
-        <span class="s2">&quot;num_list&quot;</span><span class="p">:</span> <span class="n">num_list</span><span class="p">,</span>
-        <span class="s2">&quot;cat_list&quot;</span><span class="p">:</span> <span class="n">cat_list</span><span class="p">,</span>
-        <span class="s2">&quot;xforms&quot;</span><span class="p">:</span> <span class="n">xforms</span><span class="p">,</span>
-    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">TreatmentPlan</span><span class="p">(</span>
+        <span class="n">outcome_name</span><span class="o">=</span><span class="n">outcome_name</span><span class="p">,</span>
+        <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span>
+        <span class="n">num_list</span><span class="o">=</span><span class="n">num_list</span><span class="p">,</span>
+        <span class="n">cat_list</span><span class="o">=</span><span class="n">cat_list</span><span class="p">,</span>
+        <span class="n">xforms</span><span class="o">=</span><span class="n">xforms</span><span class="p">,</span>
+    <span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">pre_prep_frame</span><span class="p">(</span>
@@ -1322,13 +1382,13 @@
     <span class="k">if</span> <span class="n">cols_to_copy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">cols_to_copy</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">cols_to_copy</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cols_to_copy</span><span class="p">]</span>
+        <span class="n">cols_to_copy</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">col_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">col_list</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">col_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">col_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">col_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">col_list</span><span class="p">]</span>
+        <span class="n">col_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">col_list</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">col_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">col_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
     <span class="n">x_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
     <span class="n">col_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">col_list</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">ci</span> <span class="ow">in</span> <span class="n">cols_to_copy</span><span class="p">:</span>
@@ -1390,7 +1450,7 @@
 
 
 <span class="k">def</span> <span class="nf">cross_patch_refit_y_aware_cols</span><span class="p">(</span>
-    <span class="o">*</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">plan</span><span class="p">,</span> <span class="n">cross_plan</span>
+    <span class="o">*</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">plan</span><span class="p">:</span> <span class="n">TreatmentPlan</span><span class="p">,</span> <span class="n">cross_plan</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Re fit the y-aware columns according to cross plan.</span>
@@ -1406,12 +1466,12 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">cross_plan</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">cross_plan</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;xforms&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">plan</span><span class="o">.</span><span class="n">xforms</span><span class="p">:</span>
             <span class="n">xf</span><span class="o">.</span><span class="n">refitter_</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">return</span>
     <span class="n">incoming_colset</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
     <span class="n">derived_colset</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;xforms&quot;</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">plan</span><span class="o">.</span><span class="n">xforms</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">xf</span><span class="o">.</span><span class="n">need_cross_treatment_</span><span class="p">:</span>
             <span class="k">continue</span>
         <span class="n">incoming_column_name</span> <span class="o">=</span> <span class="n">xf</span><span class="o">.</span><span class="n">incoming_column_name_</span>
@@ -1465,7 +1525,7 @@
                 <span class="n">pi</span><span class="p">[</span><span class="n">derived_column_name</span><span class="p">]</span>
             <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">pi</span><span class="p">),))</span>
         <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="n">derived_column_name</span><span class="p">]),</span> <span class="n">derived_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">avg</span>
-    <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;xforms&quot;</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">plan</span><span class="o">.</span><span class="n">xforms</span><span class="p">:</span>
         <span class="n">xf</span><span class="o">.</span><span class="n">refitter_</span> <span class="o">=</span> <span class="kc">None</span>
 
 
@@ -1527,7 +1587,7 @@
 <span class="k">def</span> <span class="nf">score_plan_variables</span><span class="p">(</span>
     <span class="n">cross_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">outcome</span><span class="p">,</span>
-    <span class="n">plan</span><span class="p">,</span>
+    <span class="n">plan</span><span class="p">:</span> <span class="n">TreatmentPlan</span><span class="p">,</span>
     <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">is_classification</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -1537,7 +1597,7 @@
 
 <span class="sd">    :param cross_frame: cross transformed explanatory variables</span>
 <span class="sd">    :param outcome: dependent variable</span>
-<span class="sd">    :param plan: treatment plan dictionary</span>
+<span class="sd">    :param plan: treatment plan</span>
 <span class="sd">    :param params: control parameter dictionary</span>
 <span class="sd">    :param is_classification: logical, if True classification if False regression</span>
 <span class="sd">    :return: score frame</span>
@@ -1561,7 +1621,7 @@
         <span class="k">return</span> <span class="n">description</span>
 
     <span class="n">var_table</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">describe_xf</span><span class="p">(</span><span class="n">xf</span><span class="p">)</span> <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;xforms&quot;</span><span class="p">]]</span>
+        <span class="p">[</span><span class="n">describe_xf</span><span class="p">(</span><span class="n">xf</span><span class="p">)</span> <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">plan</span><span class="o">.</span><span class="n">xforms</span><span class="p">]</span>
         <span class="o">+</span> <span class="p">[</span>
             <span class="n">describe_ut</span><span class="p">(</span><span class="n">ut</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">ut</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;user_transforms&quot;</span><span class="p">]</span>
@@ -1606,13 +1666,13 @@
 
 
 <span class="k">def</span> <span class="nf">pseudo_score_plan_variables</span><span class="p">(</span>
-    <span class="o">*</span><span class="p">,</span> <span class="n">cross_frame</span><span class="p">,</span> <span class="n">plan</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="o">*</span><span class="p">,</span> <span class="n">cross_frame</span><span class="p">,</span> <span class="n">plan</span><span class="p">:</span><span class="n">TreatmentPlan</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build a score frame look-alike for unsupervised case.</span>
 
 <span class="sd">    :param cross_frame: cross transformed explanatory variables</span>
-<span class="sd">    :param plan:</span>
+<span class="sd">    :param plan: treatment plan</span>
 <span class="sd">    :param params: control parameter dictionary</span>
 <span class="sd">    :return: score frame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1635,7 +1695,7 @@
         <span class="k">return</span> <span class="n">description</span>
 
     <span class="n">score_frame</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">describe_xf</span><span class="p">(</span><span class="n">xf</span><span class="p">)</span> <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;xforms&quot;</span><span class="p">]]</span>
+        <span class="p">[</span><span class="n">describe_xf</span><span class="p">(</span><span class="n">xf</span><span class="p">)</span> <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">plan</span><span class="o">.</span><span class="n">xforms</span><span class="p">]</span>
         <span class="o">+</span> <span class="p">[</span>
             <span class="n">describe_ut</span><span class="p">(</span><span class="n">ut</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">ut</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;user_transforms&quot;</span><span class="p">]</span>
@@ -1663,14 +1723,28 @@
 <span class="sd">    API. https://sklearn-template.readthedocs.io/en/latest/user_guide.html#transformer</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">result_restriction</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+    <span class="n">outcome_name_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">outcome_target_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span>
+    <span class="n">var_list_</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">cols_to_copy_</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">params_</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="n">plan_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TreatmentPlan</span><span class="p">]</span>
+    <span class="n">score_frame_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span>
+    <span class="n">imputation_map_</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span>
+    <span class="n">last_fit_x_id_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">cross_plan_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]]]</span>
+    <span class="n">cross_rows_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="n">last_result_columns</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">outcome_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">outcome_target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">outcome_target</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1703,7 +1777,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">outcome_target_</span> <span class="o">=</span> <span class="n">outcome_target</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">var_list_</span> <span class="o">=</span> <span class="p">[</span><span class="n">vi</span> <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">vi</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">)]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cols_to_copy_</span> <span class="o">=</span> <span class="n">cols_to_copy</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">params_</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params_</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params_</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">imputation_map_</span> <span class="o">=</span> <span class="n">imputation_map</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">plan_</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">score_frame_</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1949,8 +2026,9 @@
 <span class="sd">        :return: description of transform.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">plan</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan_</span>
-        <span class="n">xform_steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">xfi</span> <span class="k">for</span> <span class="n">xfi</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;xforms&quot;</span><span class="p">]]</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># type hint</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">score_frame_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># type hint</span>
+        <span class="n">xform_steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">xfi</span> <span class="k">for</span> <span class="n">xfi</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan_</span><span class="o">.</span><span class="n">xforms</span><span class="p">]</span>
         <span class="n">frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">xfi</span><span class="o">.</span><span class="n">description_matrix</span><span class="p">()</span> <span class="k">for</span> <span class="n">xfi</span> <span class="ow">in</span> <span class="n">xform_steps</span><span class="p">]</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="c1"># restrict down to non-constant variables</span>
@@ -1971,8 +2049,8 @@
 <span class="sd">    :param params: control parameter dictionary</span>
 <span class="sd">    :return: new data frame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">plan</span> <span class="o">=</span> <span class="n">transform</span><span class="o">.</span><span class="n">plan_</span>
-    <span class="n">xform_steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">xfi</span> <span class="k">for</span> <span class="n">xfi</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;xforms&quot;</span><span class="p">]]</span>
+    <span class="k">assert</span> <span class="n">transform</span><span class="o">.</span><span class="n">plan_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># type hint</span>
+    <span class="n">xform_steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">xfi</span> <span class="k">for</span> <span class="n">xfi</span> <span class="ow">in</span> <span class="n">transform</span><span class="o">.</span><span class="n">plan_</span><span class="o">.</span><span class="n">xforms</span><span class="p">]</span>
     <span class="n">user_steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">stp</span> <span class="k">for</span> <span class="n">stp</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;user_transforms&quot;</span><span class="p">]]</span>
     <span class="c1"># restrict down to to results we are going to use</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">transform</span><span class="o">.</span><span class="n">result_restriction</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
@@ -2009,7 +2087,7 @@
     <span class="n">new_frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">xfi</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">xfi</span> <span class="ow">in</span> <span class="p">(</span><span class="n">xform_steps</span> <span class="o">+</span> <span class="n">user_steps</span><span class="p">)]</span>
     <span class="n">new_frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">frm</span> <span class="k">for</span> <span class="n">frm</span> <span class="ow">in</span> <span class="n">new_frames</span> <span class="k">if</span> <span class="p">(</span><span class="n">frm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">frm</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)]</span>
     <span class="c1"># see if we want to copy over any columns</span>
-    <span class="n">copy_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">plan</span><span class="p">[</span><span class="s2">&quot;cols_to_copy&quot;</span><span class="p">])</span>
+    <span class="n">copy_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">transform</span><span class="o">.</span><span class="n">plan_</span><span class="o">.</span><span class="n">cols_to_copy</span><span class="p">)</span>
     <span class="n">to_copy</span> <span class="o">=</span> <span class="p">[</span><span class="n">ci</span> <span class="k">for</span> <span class="n">ci</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">ci</span> <span class="ow">in</span> <span class="n">copy_set</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_copy</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">cp</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">to_copy</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -2031,8 +2109,9 @@
 <span class="sd">    :param transform:</span>
 <span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">plan</span> <span class="o">=</span> <span class="n">transform</span><span class="o">.</span><span class="n">plan_</span>
-    <span class="n">to_copy</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">plan</span><span class="p">[</span><span class="s2">&quot;cols_to_copy&quot;</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">transform</span><span class="o">.</span><span class="n">plan_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># type hint</span>
+    <span class="k">assert</span> <span class="n">transform</span><span class="o">.</span><span class="n">score_frame_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># type hint</span>
+    <span class="n">to_copy</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">transform</span><span class="o">.</span><span class="n">plan_</span><span class="o">.</span><span class="n">cols_to_copy</span><span class="p">)</span>
     <span class="n">to_take</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
         <span class="p">[</span>
             <span class="n">ci</span>
@@ -2188,7 +2267,9 @@
     <span class="n">derived_column_names_</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
     <span class="n">need_cross_treatment_</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="n">treatment_</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">refitter_</span><span class="p">:</span> <span class="n">Any</span>
+    <span class="n">refitter_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span>
+    <span class="n">extra_args_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span>
+    <span class="n">params_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -2214,6 +2295,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span> <span class="o">=</span> <span class="n">treatment</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">need_cross_treatment_</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">refitter_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extra_args_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params_</span> <span class="o">=</span> <span class="kc">None</span>
+
 
     <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -2278,6 +2362,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span> <span class="o">=</span> <span class="n">treatment</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">need_cross_treatment_</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">refitter_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extra_args_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params_</span> <span class="o">=</span> <span class="kc">None</span>
 </pre></div>
 
         </details>
@@ -2351,6 +2437,132 @@
 <p>:return: description of transform.</p>
 </div>
 
+
+                            </div>
+                </section>
+                <section id="TreatmentPlan">
+                                <div class="attr class">
+        <a class="headerlink" href="#TreatmentPlan">#&nbsp;&nbsp</a>
+
+        
+        <span class="def">class</span>
+        <span class="name">TreatmentPlan</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">TreatmentPlan</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to carry treatment plans.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">outcome_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+    <span class="n">num_list</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+    <span class="n">cat_list</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+    <span class="n">xforms</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">outcome_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">num_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">cat_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">xforms</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outcome_name</span> <span class="o">=</span> <span class="n">outcome_name</span>
+        <span class="k">if</span> <span class="n">cols_to_copy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cols_to_copy</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cols_to_copy</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">num_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_list</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">num_list</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_list</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">num_list</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cat_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cat_list</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cat_list</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cat_list</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">cat_list</span><span class="p">)</span>
+        <span class="n">non_empty_xforms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xforms</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xforms</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">non_empty_xforms</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols_to_copy</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_list</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cat_list</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xforms</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;no treatments generated&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">xforms</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">VarTransform</span><span class="p">)</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Class to carry treatment plans.</p>
+</div>
+
+
+                            <div id="TreatmentPlan.__init__" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#TreatmentPlan.__init__">#&nbsp;&nbsp</a>
+
+        
+            <span class="name">TreatmentPlan</span><span class="signature">(
+    *,
+    outcome_name: Optional[str] = None,
+    cols_to_copy: Optional[Iterable[str]] = None,
+    num_list: Optional[Iterable[str]] = None,
+    cat_list: Optional[Iterable[str]] = None,
+    xforms: Iterable[Optional[<a href="#VarTransform">vtreat.vtreat_impl.VarTransform</a>]]
+)</span>
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">outcome_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">num_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">cat_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">xforms</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outcome_name</span> <span class="o">=</span> <span class="n">outcome_name</span>
+        <span class="k">if</span> <span class="n">cols_to_copy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cols_to_copy</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cols_to_copy</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">num_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_list</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">num_list</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_list</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">num_list</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cat_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cat_list</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cat_list</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cat_list</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">cat_list</span><span class="p">)</span>
+        <span class="n">non_empty_xforms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xforms</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xforms</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">non_empty_xforms</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols_to_copy</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_list</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cat_list</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xforms</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;no treatments generated&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">xforms</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">VarTransform</span><span class="p">)</span>
+</pre></div>
+
+        </details>
+
+    
 
                             </div>
                 </section>
@@ -3718,7 +3930,7 @@
     cols_to_copy: Optional[Iterable[str]],
     params: Dict[str, Any],
     imputation_map: Dict[str, Any]
-)</span>:
+) -&gt; <a href="#TreatmentPlan">vtreat.vtreat_impl.TreatmentPlan</a></span>:
     </div>
 
                 <details>
@@ -3732,7 +3944,7 @@
     <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-<span class="p">):</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TreatmentPlan</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit set of treatments in a regression situation.</span>
 
@@ -3748,7 +3960,7 @@
     <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
         <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span>
     <span class="p">)</span>
-    <span class="n">xforms</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">xforms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -3805,16 +4017,15 @@
                     <span class="n">sparse_indicators</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;sparse_indicators&quot;</span><span class="p">],</span>
                 <span class="p">)</span>
             <span class="p">)</span>
-    <span class="n">xforms</span> <span class="o">=</span> <span class="p">[</span><span class="n">xf</span> <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">xforms</span> <span class="k">if</span> <span class="n">xf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">stp</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;user_transforms&quot;</span><span class="p">]:</span>
         <span class="n">stp</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">[</span><span class="n">var_list</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;outcome_name&quot;</span><span class="p">:</span> <span class="n">outcome_name</span><span class="p">,</span>
-        <span class="s2">&quot;cols_to_copy&quot;</span><span class="p">:</span> <span class="n">cols_to_copy</span><span class="p">,</span>
-        <span class="s2">&quot;num_list&quot;</span><span class="p">:</span> <span class="n">num_list</span><span class="p">,</span>
-        <span class="s2">&quot;cat_list&quot;</span><span class="p">:</span> <span class="n">cat_list</span><span class="p">,</span>
-        <span class="s2">&quot;xforms&quot;</span><span class="p">:</span> <span class="n">xforms</span><span class="p">,</span>
-    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">TreatmentPlan</span><span class="p">(</span>
+        <span class="n">outcome_name</span><span class="o">=</span><span class="n">outcome_name</span><span class="p">,</span>
+        <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span>
+        <span class="n">num_list</span><span class="o">=</span><span class="n">num_list</span><span class="p">,</span>
+        <span class="n">cat_list</span><span class="o">=</span><span class="n">cat_list</span><span class="p">,</span>
+        <span class="n">xforms</span><span class="o">=</span><span class="n">xforms</span><span class="p">,</span>
+    <span class="p">)</span>
 </pre></div>
 
         </details>
@@ -3848,7 +4059,7 @@
     cols_to_copy: Optional[Iterable[str]],
     params: Dict[str, Any],
     imputation_map: Dict[str, Any]
-)</span>:
+) -&gt; <a href="#TreatmentPlan">vtreat.vtreat_impl.TreatmentPlan</a></span>:
     </div>
 
                 <details>
@@ -3863,7 +4074,7 @@
     <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-<span class="p">):</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TreatmentPlan</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    :param X: training explanatory values</span>
@@ -3879,7 +4090,7 @@
     <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
         <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span>
     <span class="p">)</span>
-    <span class="n">xforms</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">xforms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -3926,16 +4137,15 @@
                     <span class="n">sparse_indicators</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;sparse_indicators&quot;</span><span class="p">],</span>
                 <span class="p">)</span>
             <span class="p">)</span>
-    <span class="n">xforms</span> <span class="o">=</span> <span class="p">[</span><span class="n">xf</span> <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">xforms</span> <span class="k">if</span> <span class="n">xf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">stp</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;user_transforms&quot;</span><span class="p">]:</span>
         <span class="n">stp</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">[</span><span class="n">var_list</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;outcome_name&quot;</span><span class="p">:</span> <span class="n">outcome_name</span><span class="p">,</span>
-        <span class="s2">&quot;cols_to_copy&quot;</span><span class="p">:</span> <span class="n">cols_to_copy</span><span class="p">,</span>
-        <span class="s2">&quot;num_list&quot;</span><span class="p">:</span> <span class="n">num_list</span><span class="p">,</span>
-        <span class="s2">&quot;cat_list&quot;</span><span class="p">:</span> <span class="n">cat_list</span><span class="p">,</span>
-        <span class="s2">&quot;xforms&quot;</span><span class="p">:</span> <span class="n">xforms</span><span class="p">,</span>
-    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">TreatmentPlan</span><span class="p">(</span>
+        <span class="n">outcome_name</span><span class="o">=</span><span class="n">outcome_name</span><span class="p">,</span>
+        <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span>
+        <span class="n">num_list</span><span class="o">=</span><span class="n">num_list</span><span class="p">,</span>
+        <span class="n">cat_list</span><span class="o">=</span><span class="n">cat_list</span><span class="p">,</span>
+        <span class="n">xforms</span><span class="o">=</span><span class="n">xforms</span><span class="p">,</span>
+    <span class="p">)</span>
 </pre></div>
 
         </details>
@@ -3967,7 +4177,7 @@
     cols_to_copy: Optional[Iterable[str]],
     params: Dict[str, Any],
     imputation_map: Dict[str, Any]
-)</span>:
+) -&gt; <a href="#TreatmentPlan">vtreat.vtreat_impl.TreatmentPlan</a></span>:
     </div>
 
                 <details>
@@ -3981,7 +4191,7 @@
     <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-<span class="p">):</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TreatmentPlan</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit a variable treatment for multinomial outcomes.</span>
 
@@ -4000,7 +4210,7 @@
     <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
         <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span>
     <span class="p">)</span>
-    <span class="n">xforms</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">xforms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -4051,18 +4261,15 @@
                     <span class="n">sparse_indicators</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;sparse_indicators&quot;</span><span class="p">],</span>
                 <span class="p">)</span>
             <span class="p">)</span>
-    <span class="n">xforms</span> <span class="o">=</span> <span class="p">[</span><span class="n">xf</span> <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">xforms</span> <span class="k">if</span> <span class="n">xf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">xforms</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;no variables created&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">stp</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;user_transforms&quot;</span><span class="p">]:</span>
         <span class="n">stp</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">[</span><span class="n">var_list</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;outcome_name&quot;</span><span class="p">:</span> <span class="n">outcome_name</span><span class="p">,</span>
-        <span class="s2">&quot;cols_to_copy&quot;</span><span class="p">:</span> <span class="n">cols_to_copy</span><span class="p">,</span>
-        <span class="s2">&quot;num_list&quot;</span><span class="p">:</span> <span class="n">num_list</span><span class="p">,</span>
-        <span class="s2">&quot;cat_list&quot;</span><span class="p">:</span> <span class="n">cat_list</span><span class="p">,</span>
-        <span class="s2">&quot;xforms&quot;</span><span class="p">:</span> <span class="n">xforms</span><span class="p">,</span>
-    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">TreatmentPlan</span><span class="p">(</span>
+        <span class="n">outcome_name</span><span class="o">=</span><span class="n">outcome_name</span><span class="p">,</span>
+        <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span>
+        <span class="n">num_list</span><span class="o">=</span><span class="n">num_list</span><span class="p">,</span>
+        <span class="n">cat_list</span><span class="o">=</span><span class="n">cat_list</span><span class="p">,</span>
+        <span class="n">xforms</span><span class="o">=</span><span class="n">xforms</span><span class="p">,</span>
+    <span class="p">)</span>
 </pre></div>
 
         </details>
@@ -4094,7 +4301,7 @@
     cols_to_copy: Optional[Iterable[str]],
     params: Dict[str, Any],
     imputation_map: Dict[str, Any]
-)</span>:
+) -&gt; <a href="#TreatmentPlan">vtreat.vtreat_impl.TreatmentPlan</a></span>:
     </div>
 
                 <details>
@@ -4107,7 +4314,7 @@
     <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-<span class="p">):</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TreatmentPlan</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fit a data treatment in the unsupervised case.</span>
 
@@ -4123,7 +4330,7 @@
     <span class="n">cat_list</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">mis_list</span><span class="p">,</span> <span class="n">num_list</span><span class="p">,</span> <span class="n">var_list</span> <span class="o">=</span> <span class="n">_prepare_variable_lists</span><span class="p">(</span>
         <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">var_list</span>
     <span class="p">)</span>
-    <span class="n">xforms</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">xforms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -4159,16 +4366,15 @@
                     <span class="n">sparse_indicators</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;sparse_indicators&quot;</span><span class="p">],</span>
                 <span class="p">)</span>
             <span class="p">)</span>
-    <span class="n">xforms</span> <span class="o">=</span> <span class="p">[</span><span class="n">xf</span> <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">xforms</span> <span class="k">if</span> <span class="n">xf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">stp</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;user_transforms&quot;</span><span class="p">]:</span>
         <span class="n">stp</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">[</span><span class="n">var_list</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;outcome_name&quot;</span><span class="p">:</span> <span class="n">outcome_name</span><span class="p">,</span>
-        <span class="s2">&quot;cols_to_copy&quot;</span><span class="p">:</span> <span class="n">cols_to_copy</span><span class="p">,</span>
-        <span class="s2">&quot;num_list&quot;</span><span class="p">:</span> <span class="n">num_list</span><span class="p">,</span>
-        <span class="s2">&quot;cat_list&quot;</span><span class="p">:</span> <span class="n">cat_list</span><span class="p">,</span>
-        <span class="s2">&quot;xforms&quot;</span><span class="p">:</span> <span class="n">xforms</span><span class="p">,</span>
-    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">TreatmentPlan</span><span class="p">(</span>
+        <span class="n">outcome_name</span><span class="o">=</span><span class="n">outcome_name</span><span class="p">,</span>
+        <span class="n">cols_to_copy</span><span class="o">=</span><span class="n">cols_to_copy</span><span class="p">,</span>
+        <span class="n">num_list</span><span class="o">=</span><span class="n">num_list</span><span class="p">,</span>
+        <span class="n">cat_list</span><span class="o">=</span><span class="n">cat_list</span><span class="p">,</span>
+        <span class="n">xforms</span><span class="o">=</span><span class="n">xforms</span><span class="p">,</span>
+    <span class="p">)</span>
 </pre></div>
 
         </details>
@@ -4224,13 +4430,13 @@
     <span class="k">if</span> <span class="n">cols_to_copy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">cols_to_copy</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">cols_to_copy</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cols_to_copy</span><span class="p">]</span>
+        <span class="n">cols_to_copy</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">col_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">col_list</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">col_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">col_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">col_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">col_list</span><span class="p">]</span>
+        <span class="n">col_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">col_list</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">col_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">col_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
     <span class="n">x_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
     <span class="n">col_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">col_list</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">ci</span> <span class="ow">in</span> <span class="n">cols_to_copy</span><span class="p">:</span>
@@ -4290,7 +4496,7 @@ is empty it is interpreted as all columns.</p>
     x: pandas.core.frame.DataFrame,
     y,
     res: pandas.core.frame.DataFrame,
-    plan,
+    plan: <a href="#TreatmentPlan">vtreat.vtreat_impl.TreatmentPlan</a>,
     cross_plan
 ) -&gt; None</span>:
     </div>
@@ -4298,7 +4504,7 @@ is empty it is interpreted as all columns.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">cross_patch_refit_y_aware_cols</span><span class="p">(</span>
-    <span class="o">*</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">plan</span><span class="p">,</span> <span class="n">cross_plan</span>
+    <span class="o">*</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">res</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">plan</span><span class="p">:</span> <span class="n">TreatmentPlan</span><span class="p">,</span> <span class="n">cross_plan</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Re fit the y-aware columns according to cross plan.</span>
@@ -4314,12 +4520,12 @@ is empty it is interpreted as all columns.</p>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">cross_plan</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">cross_plan</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;xforms&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">plan</span><span class="o">.</span><span class="n">xforms</span><span class="p">:</span>
             <span class="n">xf</span><span class="o">.</span><span class="n">refitter_</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">return</span>
     <span class="n">incoming_colset</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
     <span class="n">derived_colset</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;xforms&quot;</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">plan</span><span class="o">.</span><span class="n">xforms</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">xf</span><span class="o">.</span><span class="n">need_cross_treatment_</span><span class="p">:</span>
             <span class="k">continue</span>
         <span class="n">incoming_column_name</span> <span class="o">=</span> <span class="n">xf</span><span class="o">.</span><span class="n">incoming_column_name_</span>
@@ -4373,7 +4579,7 @@ is empty it is interpreted as all columns.</p>
                 <span class="n">pi</span><span class="p">[</span><span class="n">derived_column_name</span><span class="p">]</span>
             <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">pi</span><span class="p">),))</span>
         <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="n">derived_column_name</span><span class="p">]),</span> <span class="n">derived_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">avg</span>
-    <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;xforms&quot;</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">plan</span><span class="o">.</span><span class="n">xforms</span><span class="p">:</span>
         <span class="n">xf</span><span class="o">.</span><span class="n">refitter_</span> <span class="o">=</span> <span class="kc">None</span>
 </pre></div>
 
@@ -4488,7 +4694,7 @@ Assumes each y-aware variable produces one derived column.</p>
             <span class="name">score_plan_variables</span><span class="signature">(
     cross_frame: pandas.core.frame.DataFrame,
     outcome,
-    plan,
+    plan: <a href="#TreatmentPlan">vtreat.vtreat_impl.TreatmentPlan</a>,
     params: Dict[str, Any],
     *,
     is_classification: bool = False
@@ -4500,7 +4706,7 @@ Assumes each y-aware variable produces one derived column.</p>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">score_plan_variables</span><span class="p">(</span>
     <span class="n">cross_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">outcome</span><span class="p">,</span>
-    <span class="n">plan</span><span class="p">,</span>
+    <span class="n">plan</span><span class="p">:</span> <span class="n">TreatmentPlan</span><span class="p">,</span>
     <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">is_classification</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -4510,7 +4716,7 @@ Assumes each y-aware variable produces one derived column.</p>
 
 <span class="sd">    :param cross_frame: cross transformed explanatory variables</span>
 <span class="sd">    :param outcome: dependent variable</span>
-<span class="sd">    :param plan: treatment plan dictionary</span>
+<span class="sd">    :param plan: treatment plan</span>
 <span class="sd">    :param params: control parameter dictionary</span>
 <span class="sd">    :param is_classification: logical, if True classification if False regression</span>
 <span class="sd">    :return: score frame</span>
@@ -4534,7 +4740,7 @@ Assumes each y-aware variable produces one derived column.</p>
         <span class="k">return</span> <span class="n">description</span>
 
     <span class="n">var_table</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">describe_xf</span><span class="p">(</span><span class="n">xf</span><span class="p">)</span> <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;xforms&quot;</span><span class="p">]]</span>
+        <span class="p">[</span><span class="n">describe_xf</span><span class="p">(</span><span class="n">xf</span><span class="p">)</span> <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">plan</span><span class="o">.</span><span class="n">xforms</span><span class="p">]</span>
         <span class="o">+</span> <span class="p">[</span>
             <span class="n">describe_ut</span><span class="p">(</span><span class="n">ut</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">ut</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;user_transforms&quot;</span><span class="p">]</span>
@@ -4584,7 +4790,7 @@ Assumes each y-aware variable produces one derived column.</p>
 
 <p>:param cross_frame: cross transformed explanatory variables
 :param outcome: dependent variable
-:param plan: treatment plan dictionary
+:param plan: treatment plan
 :param params: control parameter dictionary
 :param is_classification: logical, if True classification if False regression
 :return: score frame</p>
@@ -4600,7 +4806,7 @@ Assumes each y-aware variable produces one derived column.</p>
             <span class="name">pseudo_score_plan_variables</span><span class="signature">(
     *,
     cross_frame,
-    plan,
+    plan: <a href="#TreatmentPlan">vtreat.vtreat_impl.TreatmentPlan</a>,
     params: Dict[str, Any]
 ) -&gt; pandas.core.frame.DataFrame</span>:
     </div>
@@ -4608,13 +4814,13 @@ Assumes each y-aware variable produces one derived column.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">pseudo_score_plan_variables</span><span class="p">(</span>
-    <span class="o">*</span><span class="p">,</span> <span class="n">cross_frame</span><span class="p">,</span> <span class="n">plan</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="o">*</span><span class="p">,</span> <span class="n">cross_frame</span><span class="p">,</span> <span class="n">plan</span><span class="p">:</span><span class="n">TreatmentPlan</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build a score frame look-alike for unsupervised case.</span>
 
 <span class="sd">    :param cross_frame: cross transformed explanatory variables</span>
-<span class="sd">    :param plan:</span>
+<span class="sd">    :param plan: treatment plan</span>
 <span class="sd">    :param params: control parameter dictionary</span>
 <span class="sd">    :return: score frame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -4637,7 +4843,7 @@ Assumes each y-aware variable produces one derived column.</p>
         <span class="k">return</span> <span class="n">description</span>
 
     <span class="n">score_frame</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">describe_xf</span><span class="p">(</span><span class="n">xf</span><span class="p">)</span> <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;xforms&quot;</span><span class="p">]]</span>
+        <span class="p">[</span><span class="n">describe_xf</span><span class="p">(</span><span class="n">xf</span><span class="p">)</span> <span class="k">for</span> <span class="n">xf</span> <span class="ow">in</span> <span class="n">plan</span><span class="o">.</span><span class="n">xforms</span><span class="p">]</span>
         <span class="o">+</span> <span class="p">[</span>
             <span class="n">describe_ut</span><span class="p">(</span><span class="n">ut</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">ut</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;user_transforms&quot;</span><span class="p">]</span>
@@ -4664,7 +4870,7 @@ Assumes each y-aware variable produces one derived column.</p>
             <div class="docstring"><p>Build a score frame look-alike for unsupervised case.</p>
 
 <p>:param cross_frame: cross transformed explanatory variables
-:param plan:
+:param plan: treatment plan
 :param params: control parameter dictionary
 :return: score frame</p>
 </div>
@@ -4688,14 +4894,28 @@ Assumes each y-aware variable produces one derived column.</p>
 <span class="sd">    API. https://sklearn-template.readthedocs.io/en/latest/user_guide.html#transformer</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">result_restriction</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+    <span class="n">outcome_name_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">outcome_target_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span>
+    <span class="n">var_list_</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">cols_to_copy_</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">params_</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="n">plan_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">TreatmentPlan</span><span class="p">]</span>
+    <span class="n">score_frame_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span>
+    <span class="n">imputation_map_</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span>
+    <span class="n">last_fit_x_id_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">cross_plan_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]]]</span>
+    <span class="n">cross_rows_</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="n">last_result_columns</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">outcome_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">outcome_target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">outcome_target</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -4728,7 +4948,10 @@ Assumes each y-aware variable produces one derived column.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">outcome_target_</span> <span class="o">=</span> <span class="n">outcome_target</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">var_list_</span> <span class="o">=</span> <span class="p">[</span><span class="n">vi</span> <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">vi</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">)]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cols_to_copy_</span> <span class="o">=</span> <span class="n">cols_to_copy</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">params_</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params_</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params_</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">imputation_map_</span> <span class="o">=</span> <span class="n">imputation_map</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">plan_</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">score_frame_</span> <span class="o">=</span> <span class="kc">None</span>
@@ -4974,8 +5197,9 @@ Assumes each y-aware variable produces one derived column.</p>
 <span class="sd">        :return: description of transform.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">plan</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan_</span>
-        <span class="n">xform_steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">xfi</span> <span class="k">for</span> <span class="n">xfi</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;xforms&quot;</span><span class="p">]]</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># type hint</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">score_frame_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># type hint</span>
+        <span class="n">xform_steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">xfi</span> <span class="k">for</span> <span class="n">xfi</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan_</span><span class="o">.</span><span class="n">xforms</span><span class="p">]</span>
         <span class="n">frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">xfi</span><span class="o">.</span><span class="n">description_matrix</span><span class="p">()</span> <span class="k">for</span> <span class="n">xfi</span> <span class="ow">in</span> <span class="n">xform_steps</span><span class="p">]</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="c1"># restrict down to non-constant variables</span>
@@ -5000,9 +5224,9 @@ API. https://sklearn-template.readthedocs.io/en/latest/user_guide.html#transform
     *,
     var_list: Optional[Iterable[str]] = None,
     outcome_name: Optional[str] = None,
-    outcome_target=None,
+    outcome_target: Optional[Any] = None,
     cols_to_copy: Optional[Iterable[str]] = None,
-    params: Dict[str, Any] = None,
+    params: Optional[Dict[str, Any]] = None,
     imputation_map: Optional[Dict[str, Any]] = None
 )</span>
     </div>
@@ -5014,9 +5238,9 @@ API. https://sklearn-template.readthedocs.io/en/latest/user_guide.html#transform
         <span class="o">*</span><span class="p">,</span>
         <span class="n">var_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">outcome_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">outcome_target</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">outcome_target</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">imputation_map</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -5049,7 +5273,10 @@ API. https://sklearn-template.readthedocs.io/en/latest/user_guide.html#transform
         <span class="bp">self</span><span class="o">.</span><span class="n">outcome_target_</span> <span class="o">=</span> <span class="n">outcome_target</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">var_list_</span> <span class="o">=</span> <span class="p">[</span><span class="n">vi</span> <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="n">vi</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">cols_to_copy</span><span class="p">)]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cols_to_copy_</span> <span class="o">=</span> <span class="n">cols_to_copy</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">params_</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params_</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params_</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">imputation_map_</span> <span class="o">=</span> <span class="n">imputation_map</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">plan_</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">score_frame_</span> <span class="o">=</span> <span class="kc">None</span>
@@ -5562,8 +5789,9 @@ by specifying the tunable_params list in object construction parameters</p>
 <span class="sd">        :return: description of transform.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">plan</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan_</span>
-        <span class="n">xform_steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">xfi</span> <span class="k">for</span> <span class="n">xfi</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;xforms&quot;</span><span class="p">]]</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># type hint</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">score_frame_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># type hint</span>
+        <span class="n">xform_steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">xfi</span> <span class="k">for</span> <span class="n">xfi</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan_</span><span class="o">.</span><span class="n">xforms</span><span class="p">]</span>
         <span class="n">frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">xfi</span><span class="o">.</span><span class="n">description_matrix</span><span class="p">()</span> <span class="k">for</span> <span class="n">xfi</span> <span class="ow">in</span> <span class="n">xform_steps</span><span class="p">]</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="c1"># restrict down to non-constant variables</span>
@@ -5610,8 +5838,8 @@ multinomial dependent variables.</p>
 <span class="sd">    :param params: control parameter dictionary</span>
 <span class="sd">    :return: new data frame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">plan</span> <span class="o">=</span> <span class="n">transform</span><span class="o">.</span><span class="n">plan_</span>
-    <span class="n">xform_steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">xfi</span> <span class="k">for</span> <span class="n">xfi</span> <span class="ow">in</span> <span class="n">plan</span><span class="p">[</span><span class="s2">&quot;xforms&quot;</span><span class="p">]]</span>
+    <span class="k">assert</span> <span class="n">transform</span><span class="o">.</span><span class="n">plan_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># type hint</span>
+    <span class="n">xform_steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">xfi</span> <span class="k">for</span> <span class="n">xfi</span> <span class="ow">in</span> <span class="n">transform</span><span class="o">.</span><span class="n">plan_</span><span class="o">.</span><span class="n">xforms</span><span class="p">]</span>
     <span class="n">user_steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">stp</span> <span class="k">for</span> <span class="n">stp</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;user_transforms&quot;</span><span class="p">]]</span>
     <span class="c1"># restrict down to to results we are going to use</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">transform</span><span class="o">.</span><span class="n">result_restriction</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
@@ -5648,7 +5876,7 @@ multinomial dependent variables.</p>
     <span class="n">new_frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">xfi</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">xfi</span> <span class="ow">in</span> <span class="p">(</span><span class="n">xform_steps</span> <span class="o">+</span> <span class="n">user_steps</span><span class="p">)]</span>
     <span class="n">new_frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">frm</span> <span class="k">for</span> <span class="n">frm</span> <span class="ow">in</span> <span class="n">new_frames</span> <span class="k">if</span> <span class="p">(</span><span class="n">frm</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">frm</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)]</span>
     <span class="c1"># see if we want to copy over any columns</span>
-    <span class="n">copy_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">plan</span><span class="p">[</span><span class="s2">&quot;cols_to_copy&quot;</span><span class="p">])</span>
+    <span class="n">copy_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">transform</span><span class="o">.</span><span class="n">plan_</span><span class="o">.</span><span class="n">cols_to_copy</span><span class="p">)</span>
     <span class="n">to_copy</span> <span class="o">=</span> <span class="p">[</span><span class="n">ci</span> <span class="k">for</span> <span class="n">ci</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">ci</span> <span class="ow">in</span> <span class="n">copy_set</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_copy</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">cp</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">to_copy</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -5696,8 +5924,9 @@ multinomial dependent variables.</p>
 <span class="sd">    :param transform:</span>
 <span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">plan</span> <span class="o">=</span> <span class="n">transform</span><span class="o">.</span><span class="n">plan_</span>
-    <span class="n">to_copy</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">plan</span><span class="p">[</span><span class="s2">&quot;cols_to_copy&quot;</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">transform</span><span class="o">.</span><span class="n">plan_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># type hint</span>
+    <span class="k">assert</span> <span class="n">transform</span><span class="o">.</span><span class="n">score_frame_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># type hint</span>
+    <span class="n">to_copy</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">transform</span><span class="o">.</span><span class="n">plan_</span><span class="o">.</span><span class="n">cols_to_copy</span><span class="p">)</span>
     <span class="n">to_take</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
         <span class="p">[</span>
             <span class="n">ci</span>

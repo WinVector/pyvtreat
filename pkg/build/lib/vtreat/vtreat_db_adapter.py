@@ -11,7 +11,7 @@ from vtreat.vtreat_impl import bad_sentinel, replace_bad_with_sentinel
 
 have_data_algebra = False
 try:
-    from data_algebra.data_ops import *
+    from data_algebra.data_ops import data, describe_table, TableDescription, ViewRepresentation
 
     have_data_algebra = True
 except FileNotFoundError:
@@ -36,9 +36,9 @@ def check_treatment_table(vtreat_descr: pandas.DataFrame):
     # variable consumed is function of variable produced and treatment only
     check_fn_reln2 = (
         data(vtreat_descr=vtreat_descr)
-        .project({}, group_by=["treatment", "orig_var", "variable"])
-        .extend({"one": 1})
-        .project({"count": "one.sum()"}, group_by=["treatment", "variable"])
+            .project({}, group_by=["treatment", "orig_var", "variable"])
+            .extend({"one": 1})
+            .project({"count": "one.sum()"}, group_by=["treatment", "variable"])
     ).ex()
     assert numpy.all(check_fn_reln2["count"] == 1)
     # clean copies don't change variable names

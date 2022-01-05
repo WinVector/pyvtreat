@@ -78,7 +78,9 @@ class VarTransform(ABC):
     derived_column_names_: List[str]
     need_cross_treatment_: bool
     treatment_: str
-    refitter_: Any
+    refitter_: Optional[Callable]
+    extra_args_: Optional[Dict[str, Any]]
+    params_: Optional[Dict[str, Any]]
 
     def __init__(
         self,
@@ -104,6 +106,9 @@ class VarTransform(ABC):
         self.treatment_ = treatment
         self.need_cross_treatment_ = False
         self.refitter_ = None
+        self.extra_args_ = None
+        self.params_ = None
+
 
     def transform(self, data_frame: pandas.DataFrame) -> pandas.DataFrame:
         """
