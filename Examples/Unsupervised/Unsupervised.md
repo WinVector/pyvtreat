@@ -51,7 +51,19 @@ d.head()
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -181,7 +193,19 @@ transform.score_frame_
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -357,7 +381,19 @@ d_prepared.head()
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -488,7 +524,9 @@ plt.show()
 ```
 
 
-![png](output_19_0.png)
+    
+![png](Unsupervised_files/Unsupervised_19_0.png)
+    
 
 
 ### Supervised modeling with non-y-aware variables
@@ -510,23 +548,23 @@ print(fitter.intercept_)
 {model_vars[i]: fitter.coef_[i] for i in range(len(model_vars))}
 ```
 
-    0.2663584367410494
+    0.2663584367410492
 
 
 
 
 
-    {'xc_is_bad': -0.5725948709331847,
-     'x': 0.0012979680156703069,
-     'x2': 0.0003944391214530679,
-     'xc_prevalence_code': -0.004434334546243255,
-     'xc_lev_level_1_0': 0.717131899754422,
-     'xc_lev_level_-0_5': -0.8133266363407938,
-     'xc_lev_level_0_5': 0.21813583211202345,
-     'xc_lev_level_0_0': -0.1831739973957961,
-     'xc_lev_level_-0_0': -0.4133594109584157,
-     'xc_lev__NA_': -0.5725948709331844,
-     'xc_lev_level_1_5': 1.0471871837617448}
+    {'xc_is_bad': -0.572594870933189,
+     'x': 0.0012979680156703158,
+     'x2': 0.0003944391214526676,
+     'xc_prevalence_code': -0.00443433454624302,
+     'xc_lev_level_1_0': 0.7171318997544217,
+     'xc_lev_level_-0_5': -0.8133266363407927,
+     'xc_lev_level_0_5': 0.21813583211202284,
+     'xc_lev_level_0_0': -0.18317399739579526,
+     'xc_lev_level_-0_0': -0.4133594109584141,
+     'xc_lev__NA_': -0.5725948709331848,
+     'xc_lev_level_1_5': 1.047187183761745}
 
 
 
@@ -548,7 +586,9 @@ plt.show()
 ```
 
 
-![png](output_22_0.png)
+    
+![png](Unsupervised_files/Unsupervised_22_0.png)
+    
 
 
 Now apply the model to new data.
@@ -577,7 +617,9 @@ plt.show()
 ```
 
 
-![png](output_24_0.png)
+    
+![png](Unsupervised_files/Unsupervised_24_0.png)
+    
 
 
 ## Parameters for `UnsupervisedTreatment`
@@ -598,23 +640,43 @@ vtreat.unsupervised_parameters()
       'missing_indicator',
       'prevalence_code'},
      'indicator_min_fraction': 0.0,
+     'indicator_max_levels': 1000,
      'user_transforms': [],
-     'sparse_indicators': True,
-     'missingness_imputation': <function numpy.mean(a, axis=None, dtype=None, out=None, keepdims=<no value>)>}
+     'sparse_indicators': False,
+     'missingness_imputation': <function numpy.mean(a, axis=None, dtype=None, out=None, keepdims=<no value>, *, where=<no value>)>,
+     'tunable_params': ['indicator_min_fraction', 'indicator_max_levels']}
 
 
 
 **coders**: The types of synthetic variables that `vtreat` will (potentially) produce. See *Types of prepared variables* below.
 
-**indicator_min_fraction**: By default, `UnsupervisedTreatment` creates indicators for all possible levels (`indicator_min_fraction=0`). If `indicator_min_fraction` > 0, then indicator variables (type `indicator_code`) are only produced for levels that are present at least `indicator_min_fraction` of the time. A consequence of this is that 1/`indicator_min_fraction` is the maximum number of indicators that will be produced for a given categorical variable. See the Example below.
+**indicator_max_levels**: The maximum nuber of indicator variables that `UnsupervisedTreatment` will produce.
+Indicator variables are sorted by decreasing prevalence and then level name before the cutoff is applied.
+The default is 1000. See the Example below.
 
-**user_transforms**: For passing in user-defined transforms for custom data preparation. Won't be needed in most situations, but see [here](https://github.com/WinVector/pyvtreat/blob/master/Examples/UserCoders/UserCoders.ipynb) for an example of applying a GAM transform to input variables.
+**indicator_min_fraction**: A value between 0 and 1. By default, `UnsupervisedTreatment` creates indicators
+for all possible levels up to `indicator_max_levels` (`indicator_min_fraction=0`). If `indicator_min_fraction` > 0, then
+indicator variables (type `indicator_code`) are only produced for levels that are present at
+least `indicator_min_fraction` of the time. See the Example below.
 
-**sparse_indicators**: When True, use a (Pandas) sparse representation for indicator variables. This representation is compatible with `sklearn`; however, it may not be compatible with other modeling packages. When False, use a dense representation.
+**user_transforms**: For passing in user-defined transforms for custom data preparation.
+Won't be needed in most situations, but see [here](https://github.com/WinVector/pyvtreat/blob/master/Examples/UserCoders/UserCoders.ipynb)
+for an example of applying a GAM transform to input variables.
 
-**missingness_imputation** The function or value that `vtreat` uses to impute or "fill in" missing numerical values. The default is `numpy.mean()`. To change the imputation function or use different functions/values for different columns, see the [Imputation example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Imputation/Imputation.ipynb).
+**sparse_indicators**: When True, use a (Pandas) sparse representation for indicator variables.
+This representation is compatible with `sklearn`; however, it may not be compatible with other modeling packages.
+When False, use a dense representation.
+
+**missingness_imputation** The function or value that `vtreat` uses to impute or "fill in" missing numerical values.
+The default is `numpy.mean()`. To change the imputation function or use different functions/values for different columns,
+see the [Imputation example](https://github.com/WinVector/pyvtreat/blob/master/Examples/Imputation/Imputation.ipynb).
 
 ### Example: Restrict the number of indicator variables
+
+In unsupervised situations, it's generally most desirable to create indicators for all possible levels. However,
+in some situations this may result in an unworkably large number of variables. (for example, when using ZIP code as a variable).
+The `indicator_max_levels` and `indicator_min_fraction` parameters allow the data scientist to restrict the number of
+levels to be considered, either by count or by a prevalence limit.
 
 
 ```python
@@ -636,12 +698,14 @@ d['xc'].value_counts(dropna=False)/d.shape[0]
 
 
 
+**Restrict to exactly the four most prevalent levels**
+
 
 ```python
 transform_common = vtreat.UnsupervisedTreatment(
     cols_to_copy = ['y'],          # columns to "carry along" but not treat as input variables
     params = vtreat.unsupervised_parameters({
-        'indicator_min_fraction': 0.2 # only make indicators for levels that show up more than 20% of the time
+        'indicator_max_levels': 4 # only make indicators for the four most prevalent levels
     })
 )  
 
@@ -653,7 +717,169 @@ transform_common.score_frame_     # examine the score frame
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>variable</th>
+      <th>orig_variable</th>
+      <th>treatment</th>
+      <th>y_aware</th>
+      <th>has_range</th>
+      <th>PearsonR</th>
+      <th>significance</th>
+      <th>recommended</th>
+      <th>vcount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>xc_is_bad</td>
+      <td>xc</td>
+      <td>missing_indicator</td>
+      <td>False</td>
+      <td>True</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>x</td>
+      <td>x</td>
+      <td>clean_copy</td>
+      <td>False</td>
+      <td>True</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>x2</td>
+      <td>x2</td>
+      <td>clean_copy</td>
+      <td>False</td>
+      <td>True</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>xc_prevalence_code</td>
+      <td>xc</td>
+      <td>prevalence_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>xc_lev_level_1_0</td>
+      <td>xc</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>xc_lev_level_-0_5</td>
+      <td>xc</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>xc_lev_level_0_5</td>
+      <td>xc</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>4.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>xc_lev_level_0_0</td>
+      <td>xc</td>
+      <td>indicator_code</td>
+      <td>False</td>
+      <td>True</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>True</td>
+      <td>4.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+**Restrict levels by prevalence threshold**
+
+
+```python
+transform_common = vtreat.UnsupervisedTreatment(
+    cols_to_copy = ['y'],          # columns to "carry along" but not treat as input variables
+    params = vtreat.unsupervised_parameters({
+        'indicator_min_fraction': 0.2 # only make indicators for levels that show up more than 20% of the time
+    })
+)
+
+transform_common.fit_transform(d) # fit the transform
+transform_common.score_frame_     # examine the score frame
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -748,9 +974,8 @@ transform_common.score_frame_     # examine the score frame
 
 
 
-In this case, the unsupervised treatment only created levels for the two most common levels, which are both present more than 20% of the time. 
-
-In unsupervised situations, this may only be desirable when there are an unworkably large number of possible levels (for example, when using ZIP code as a variable). It is more useful in conjunction with the y-aware variables produced by `NumericOutputTreatment`, `BinomialOutcomeTreatment`, or `MultinomialOutcomeTreatment`.
+In this case, the unsupervised treatment only created levels for the two most common levels,
+which are both present more than 20% of the time.
 
 ## Types of prepared variables
 
@@ -788,7 +1013,19 @@ transform_thin.score_frame_
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -954,3 +1191,6 @@ These current revisions of the examples are designed to be small, yet complete. 
 
 
 
+```python
+
+```
