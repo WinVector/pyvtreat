@@ -369,7 +369,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">extra_args_</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">params_</span> <span class="o">=</span> <span class="kc">None</span>
 
-
     <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        return a transformed data frame</span>
@@ -402,13 +401,13 @@
     <span class="n">xforms</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">outcome_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">num_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">cat_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">xforms</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]]):</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="o">*</span><span class="p">,</span>
+            <span class="n">outcome_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">num_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">cat_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">xforms</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]]):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outcome_name</span> <span class="o">=</span> <span class="n">outcome_name</span>
         <span class="k">if</span> <span class="n">cols_to_copy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cols_to_copy</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">()</span>
@@ -1061,11 +1060,9 @@
                 <span class="n">imputation_map</span><span class="o">=</span><span class="n">imputation_map</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">xform</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="c1"># noinspection PyTypeChecker</span>
                 <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xform</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">cat_list</span><span class="p">:</span>
         <span class="k">if</span> <span class="s2">&quot;impact_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-            <span class="c1"># noinspection PyTypeChecker</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_regression_impact_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
@@ -1076,7 +1073,6 @@
                 <span class="p">)</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;deviation_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-            <span class="c1"># noinspection PyTypeChecker</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_regression_deviation_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
@@ -1087,12 +1083,10 @@
                 <span class="p">)</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;prevalence_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-            <span class="c1"># noinspection PyTypeChecker</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_prevalence_code</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]))</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;indicator_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-            <span class="c1"># noinspection PyTypeChecker</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_indicator_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
@@ -1156,12 +1150,10 @@
                 <span class="n">imputation_map</span><span class="o">=</span><span class="n">imputation_map</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">xform</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="c1"># noinspection PyTypeChecker</span>
                 <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xform</span><span class="p">)</span>
     <span class="n">extra_args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;outcome_target&quot;</span><span class="p">:</span> <span class="n">outcome_target</span><span class="p">,</span> <span class="s2">&quot;var_suffix&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span>
     <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">cat_list</span><span class="p">:</span>
         <span class="k">if</span> <span class="s2">&quot;logit_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-            <span class="c1"># noinspection PyTypeChecker</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_binomial_impact_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
@@ -1172,12 +1164,10 @@
                 <span class="p">)</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;prevalence_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-            <span class="c1"># noinspection PyTypeChecker</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_prevalence_code</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]))</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;indicator_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-            <span class="c1"># noinspection PyTypeChecker</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_indicator_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
@@ -1243,7 +1233,6 @@
                 <span class="n">imputation_map</span><span class="o">=</span><span class="n">imputation_map</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">xform</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="c1"># noinspection PyTypeChecker</span>
                 <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xform</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">cat_list</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">outcome</span> <span class="ow">in</span> <span class="n">outcomes</span><span class="p">:</span>
@@ -1252,7 +1241,6 @@
                     <span class="s2">&quot;outcome_target&quot;</span><span class="p">:</span> <span class="n">outcome</span><span class="p">,</span>
                     <span class="s2">&quot;var_suffix&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">outcome</span><span class="p">)),</span>
                 <span class="p">}</span>
-                <span class="c1"># noinspection PyTypeChecker</span>
                 <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                     <span class="n">fit_binomial_impact_code</span><span class="p">(</span>
                         <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
@@ -1263,12 +1251,10 @@
                     <span class="p">)</span>
                 <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;prevalence_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-            <span class="c1"># noinspection PyTypeChecker</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_prevalence_code</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]))</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;indicator_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-            <span class="c1"># noinspection PyTypeChecker</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_indicator_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
@@ -1330,16 +1316,13 @@
                 <span class="n">imputation_map</span><span class="o">=</span><span class="n">imputation_map</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">xform</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="c1"># noinspection PyTypeChecker</span>
                 <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xform</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">cat_list</span><span class="p">:</span>
         <span class="k">if</span> <span class="s2">&quot;prevalence_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-            <span class="c1"># noinspection PyTypeChecker</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_prevalence_code</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]))</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;indicator_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-            <span class="c1"># noinspection PyTypeChecker</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_indicator_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
@@ -1666,7 +1649,7 @@
 
 
 <span class="k">def</span> <span class="nf">pseudo_score_plan_variables</span><span class="p">(</span>
-    <span class="o">*</span><span class="p">,</span> <span class="n">cross_frame</span><span class="p">,</span> <span class="n">plan</span><span class="p">:</span><span class="n">TreatmentPlan</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="o">*</span><span class="p">,</span> <span class="n">cross_frame</span><span class="p">,</span> <span class="n">plan</span><span class="p">:</span> <span class="n">TreatmentPlan</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build a score frame look-alike for unsupervised case.</span>
@@ -2298,7 +2281,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">extra_args_</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">params_</span> <span class="o">=</span> <span class="kc">None</span>
 
-
     <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        return a transformed data frame</span>
@@ -2463,13 +2445,13 @@
     <span class="n">xforms</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">outcome_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">num_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">cat_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">xforms</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]]):</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="o">*</span><span class="p">,</span>
+            <span class="n">outcome_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">num_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">cat_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">xforms</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]]):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outcome_name</span> <span class="o">=</span> <span class="n">outcome_name</span>
         <span class="k">if</span> <span class="n">cols_to_copy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cols_to_copy</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">()</span>
@@ -2523,13 +2505,13 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">outcome_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">num_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">cat_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">xforms</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]]):</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="o">*</span><span class="p">,</span>
+            <span class="n">outcome_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">cols_to_copy</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">num_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">cat_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">xforms</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]]):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outcome_name</span> <span class="o">=</span> <span class="n">outcome_name</span>
         <span class="k">if</span> <span class="n">cols_to_copy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cols_to_copy</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">()</span>
@@ -3977,11 +3959,9 @@
                 <span class="n">imputation_map</span><span class="o">=</span><span class="n">imputation_map</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">xform</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="c1"># noinspection PyTypeChecker</span>
                 <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xform</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">cat_list</span><span class="p">:</span>
         <span class="k">if</span> <span class="s2">&quot;impact_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-            <span class="c1"># noinspection PyTypeChecker</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_regression_impact_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
@@ -3992,7 +3972,6 @@
                 <span class="p">)</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;deviation_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-            <span class="c1"># noinspection PyTypeChecker</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_regression_deviation_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
@@ -4003,12 +3982,10 @@
                 <span class="p">)</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;prevalence_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-            <span class="c1"># noinspection PyTypeChecker</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_prevalence_code</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]))</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;indicator_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-            <span class="c1"># noinspection PyTypeChecker</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_indicator_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
@@ -4107,12 +4084,10 @@
                 <span class="n">imputation_map</span><span class="o">=</span><span class="n">imputation_map</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">xform</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="c1"># noinspection PyTypeChecker</span>
                 <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xform</span><span class="p">)</span>
     <span class="n">extra_args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;outcome_target&quot;</span><span class="p">:</span> <span class="n">outcome_target</span><span class="p">,</span> <span class="s2">&quot;var_suffix&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span>
     <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">cat_list</span><span class="p">:</span>
         <span class="k">if</span> <span class="s2">&quot;logit_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-            <span class="c1"># noinspection PyTypeChecker</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_binomial_impact_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
@@ -4123,12 +4098,10 @@
                 <span class="p">)</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;prevalence_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-            <span class="c1"># noinspection PyTypeChecker</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_prevalence_code</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]))</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;indicator_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-            <span class="c1"># noinspection PyTypeChecker</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_indicator_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
@@ -4227,7 +4200,6 @@
                 <span class="n">imputation_map</span><span class="o">=</span><span class="n">imputation_map</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">xform</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="c1"># noinspection PyTypeChecker</span>
                 <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xform</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">cat_list</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">outcome</span> <span class="ow">in</span> <span class="n">outcomes</span><span class="p">:</span>
@@ -4236,7 +4208,6 @@
                     <span class="s2">&quot;outcome_target&quot;</span><span class="p">:</span> <span class="n">outcome</span><span class="p">,</span>
                     <span class="s2">&quot;var_suffix&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">outcome</span><span class="p">)),</span>
                 <span class="p">}</span>
-                <span class="c1"># noinspection PyTypeChecker</span>
                 <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                     <span class="n">fit_binomial_impact_code</span><span class="p">(</span>
                         <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
@@ -4247,12 +4218,10 @@
                     <span class="p">)</span>
                 <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;prevalence_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-            <span class="c1"># noinspection PyTypeChecker</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_prevalence_code</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]))</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;indicator_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-            <span class="c1"># noinspection PyTypeChecker</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_indicator_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
@@ -4347,16 +4316,13 @@
                 <span class="n">imputation_map</span><span class="o">=</span><span class="n">imputation_map</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">xform</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="c1"># noinspection PyTypeChecker</span>
                 <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xform</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">cat_list</span><span class="p">:</span>
         <span class="k">if</span> <span class="s2">&quot;prevalence_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-            <span class="c1"># noinspection PyTypeChecker</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_prevalence_code</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]))</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;indicator_code&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
-            <span class="c1"># noinspection PyTypeChecker</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">fit_indicator_code</span><span class="p">(</span>
                     <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
@@ -4814,7 +4780,7 @@ Assumes each y-aware variable produces one derived column.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">pseudo_score_plan_variables</span><span class="p">(</span>
-    <span class="o">*</span><span class="p">,</span> <span class="n">cross_frame</span><span class="p">,</span> <span class="n">plan</span><span class="p">:</span><span class="n">TreatmentPlan</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="o">*</span><span class="p">,</span> <span class="n">cross_frame</span><span class="p">,</span> <span class="n">plan</span><span class="p">:</span> <span class="n">TreatmentPlan</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build a score frame look-alike for unsupervised case.</span>

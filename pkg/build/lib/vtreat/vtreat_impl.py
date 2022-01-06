@@ -109,7 +109,6 @@ class VarTransform(ABC):
         self.extra_args_ = None
         self.params_ = None
 
-
     def transform(self, data_frame: pandas.DataFrame) -> pandas.DataFrame:
         """
         return a transformed data frame
@@ -142,13 +141,13 @@ class TreatmentPlan:
     xforms: Tuple[VarTransform, ...]
 
     def __init__(
-        self,
-        *,
-        outcome_name: Optional[str] = None,
-        cols_to_copy: Optional[Iterable[str]] = None,
-        num_list: Optional[Iterable[str]] = None,
-        cat_list: Optional[Iterable[str]] = None,
-        xforms: Iterable[Optional[VarTransform]]):
+            self,
+            *,
+            outcome_name: Optional[str] = None,
+            cols_to_copy: Optional[Iterable[str]] = None,
+            num_list: Optional[Iterable[str]] = None,
+            cat_list: Optional[Iterable[str]] = None,
+            xforms: Iterable[Optional[VarTransform]]):
         self.outcome_name = outcome_name
         if cols_to_copy is None:
             self.cols_to_copy = tuple()
@@ -801,11 +800,9 @@ def fit_numeric_outcome_treatment(
                 imputation_map=imputation_map,
             )
             if xform is not None:
-                # noinspection PyTypeChecker
                 xforms.append(xform)
     for vi in cat_list:
         if "impact_code" in params["coders"]:
-            # noinspection PyTypeChecker
             xforms.append(
                 fit_regression_impact_code(
                     incoming_column_name=vi,
@@ -816,7 +813,6 @@ def fit_numeric_outcome_treatment(
                 )
             )
         if "deviation_code" in params["coders"]:
-            # noinspection PyTypeChecker
             xforms.append(
                 fit_regression_deviation_code(
                     incoming_column_name=vi,
@@ -827,12 +823,10 @@ def fit_numeric_outcome_treatment(
                 )
             )
         if "prevalence_code" in params["coders"]:
-            # noinspection PyTypeChecker
             xforms.append(
                 fit_prevalence_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
             )
         if "indicator_code" in params["coders"]:
-            # noinspection PyTypeChecker
             xforms.append(
                 fit_indicator_code(
                     incoming_column_name=vi,
@@ -896,12 +890,10 @@ def fit_binomial_outcome_treatment(
                 imputation_map=imputation_map,
             )
             if xform is not None:
-                # noinspection PyTypeChecker
                 xforms.append(xform)
     extra_args = {"outcome_target": outcome_target, "var_suffix": ""}
     for vi in cat_list:
         if "logit_code" in params["coders"]:
-            # noinspection PyTypeChecker
             xforms.append(
                 fit_binomial_impact_code(
                     incoming_column_name=vi,
@@ -912,12 +904,10 @@ def fit_binomial_outcome_treatment(
                 )
             )
         if "prevalence_code" in params["coders"]:
-            # noinspection PyTypeChecker
             xforms.append(
                 fit_prevalence_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
             )
         if "indicator_code" in params["coders"]:
-            # noinspection PyTypeChecker
             xforms.append(
                 fit_indicator_code(
                     incoming_column_name=vi,
@@ -983,7 +973,6 @@ def fit_multinomial_outcome_treatment(
                 imputation_map=imputation_map,
             )
             if xform is not None:
-                # noinspection PyTypeChecker
                 xforms.append(xform)
     for vi in cat_list:
         for outcome in outcomes:
@@ -992,7 +981,6 @@ def fit_multinomial_outcome_treatment(
                     "outcome_target": outcome,
                     "var_suffix": ("_" + str(outcome)),
                 }
-                # noinspection PyTypeChecker
                 xforms.append(
                     fit_binomial_impact_code(
                         incoming_column_name=vi,
@@ -1003,12 +991,10 @@ def fit_multinomial_outcome_treatment(
                     )
                 )
         if "prevalence_code" in params["coders"]:
-            # noinspection PyTypeChecker
             xforms.append(
                 fit_prevalence_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
             )
         if "indicator_code" in params["coders"]:
-            # noinspection PyTypeChecker
             xforms.append(
                 fit_indicator_code(
                     incoming_column_name=vi,
@@ -1070,16 +1056,13 @@ def fit_unsupervised_treatment(
                 imputation_map=imputation_map,
             )
             if xform is not None:
-                # noinspection PyTypeChecker
                 xforms.append(xform)
     for vi in cat_list:
         if "prevalence_code" in params["coders"]:
-            # noinspection PyTypeChecker
             xforms.append(
                 fit_prevalence_code(incoming_column_name=vi, x=numpy.asarray(X[vi]))
             )
         if "indicator_code" in params["coders"]:
-            # noinspection PyTypeChecker
             xforms.append(
                 fit_indicator_code(
                     incoming_column_name=vi,
@@ -1406,7 +1389,7 @@ def score_plan_variables(
 
 
 def pseudo_score_plan_variables(
-    *, cross_frame, plan:TreatmentPlan, params: Dict[str, Any]
+    *, cross_frame, plan: TreatmentPlan, params: Dict[str, Any]
 ) -> pandas.DataFrame:
     """
     Build a score frame look-alike for unsupervised case.
