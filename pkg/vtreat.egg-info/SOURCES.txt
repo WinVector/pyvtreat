@@ -1,0 +1,16 @@
+LICENSE
+README.md
+setup.py
+vtreat/__init__.py
+vtreat/cross_plan.py
+vtreat/stats_utils.py
+vtreat/transform.py
+vtreat/util.py
+vtreat/vtreat_api.py
+vtreat/vtreat_db_adapter.py
+vtreat/vtreat_impl.py
+vtreat.egg-info/PKG-INFO
+vtreat.egg-info/SOURCES.txt
+vtreat.egg-info/dependency_links.txt
+vtreat.egg-info/requires.txt
+vtreat.egg-info/top_level.txt
