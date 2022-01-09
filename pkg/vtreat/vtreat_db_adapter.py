@@ -95,7 +95,7 @@ def as_data_algebra_pipeline(
     vtreat_descr = vtreat_descr.copy()
     vtreat_descr["value"] = replace_bad_with_sentinel(vtreat_descr["value"])
     # start building up operator pipeline
-    stage_1_ops = source
+    ops = source
     step_1_ops = dict()
     # add in is_bad indicators
     im_rows = vtreat_descr.loc[
@@ -116,41 +116,37 @@ def as_data_algebra_pipeline(
             ic_rows["variable"][i]
         ] = f"({ov}.coalesce('{bad_sentinel}') == '{vi}').if_else(1.0, 0.0)"
     if len(step_1_ops) > 0:
-        stage_1_ops = stage_1_ops.extend(step_1_ops)
-    # add in any value mapped columns (these should all be string valued)
-    mp_rows = (
-        data(vtreat_descr=vtreat_descr)
-            .select_rows("treatment_class == 'MappedCodeTransform'")
-            .project({}, group_by=["orig_var", "variable"])
-            .order_rows(["orig_var", "variable"])
-    ).ex()
-    stage_3_cols = list(stage_1_ops.column_names)
-    stage_3_ops = TableDescription(table_name=stage_3_name, column_names=stage_3_cols)
-    map_vars = []
-    if mp_rows.shape[0] > 0:
-        # prepare incoming variables to use sentinel for missing, this is after other steps using these values
-        mapping_inputs = list(set([v for v in mp_rows["orig_var"].values]))
-        mapping_inputs.sort()
-        mapping_outputs = list(set([v for v in mp_rows["variable"].values]))
-        mapping_outputs.sort()
-        stage_3_cols = stage_3_cols + mapping_outputs
-        stage_3_ops = TableDescription(
-            table_name=stage_3_name, column_names=stage_3_cols
-        )
-        stage_1_ops = stage_1_ops.extend(
-            {v: f"{v}.coalesce('{bad_sentinel}')" for v in mapping_inputs}
-        )
-        # do the re-mapping joins, these don't depend on each other
-        jt = describe_table(vtreat_descr, table_name=treatment_table_name)
-        for i in range(mp_rows.shape[0]):
-            # print(f'map({i}/{mp_rows.shape[0]}) {datetime.datetime.now()}')
-            ov = mp_rows["orig_var"].values[i]
-            vi = mp_rows["variable"].values[i]
-            map_vars.append(vi)
-        # handle any novel values
-        stage_3_ops = stage_3_ops.extend(
-            {v: f"{v}.coalesce(0.0)" for v in mapping_outputs}
-        )
+        ops = ops.extend(step_1_ops)
+    # mapped columns
+    mapping_table = (
+        describe_table(vtreat_descr, table_name=treatment_table_name)
+            .select_rows('treatment_class == "MappedCodeTransform"')
+            .select_columns(['orig_var', 'value', 'replacement', 'treatment']))
+    mapping_rows = mapping_table.transform(vtreat_descr)
+    if mapping_rows.shape[0] > 0:
+        groups = list(set(mapping_rows['treatment']))
+        mapping_rows = mapping_rows.groupby('treatment')
+        for group_name in groups:
+            mg = mapping_rows.get_group(group_name)
+            if mg.shape[0] > 0:
+                cols_to_map = list(set(mg['orig_var']))
+                cols_to_map_back = [f'{c}_{group_name}' for c in cols_to_map]
+                ops_g = def_multi_column_map(
+                    source.extend({v: f"{v}.coalesce('{bad_sentinel}')" for v in cols_to_map}),
+                    mapping_table=mapping_table.select_rows(f'treatment == "{group_name}"'),
+                    row_keys=row_keys,
+                    cols_to_map=cols_to_map,
+                    cols_to_map_back=cols_to_map_back,
+                    coalesce_value=0.0,
+                    col_name_key='orig_var',
+                    col_value_key='value',
+                    mapped_value_key='replacement',
+                )
+                ops = ops.natural_join(
+                    b=ops_g,
+                    by=row_keys,
+                    jointype='left',
+                )
     # add in any clean numeric copies, inputs are numeric- so disjoint of categorical processing
     cn_rows = vtreat_descr.loc[
         vtreat_descr["treatment_class"] == "CleanNumericTransform", :
@@ -161,42 +157,11 @@ def as_data_algebra_pipeline(
             step_3_exprs[
                 cn_rows["variable"][i]
             ] = f"{cn_rows['orig_var'][i]}.coalesce({cn_rows['replacement'][i]})"
-        stage_3_ops = stage_3_ops.extend(step_3_exprs)
+        ops = ops.extend(step_3_exprs)
     # remove any input variables that are not the same name as variables we produced
     # this prevents non-numerics from leaking forward
     to_del = list(set(vtreat_descr["orig_var"]) - set(vtreat_descr["variable"]))
     if len(to_del) > 0:
         to_del.sort()
-        stage_3_ops = stage_3_ops.drop_columns(to_del)
-
-    mapping_table = (
-        describe_table(vtreat_descr, table_name=treatment_table_name)
-            .select_rows('treatment_class == "MappedCodeTransform"')
-            .select_columns(['orig_var', 'value', 'replacement', 'treatment']))
-    mapping_rows = mapping_table.transform(vtreat_descr)
-    groups = list(set(mapping_rows['treatment']))
-    mapping_rows = mapping_rows.groupby('treatment')
-    ops = stage_1_ops
-    for group_name in groups:
-        mg = mapping_rows.get_group(group_name)
-        if mg.shape[0] > 0:
-            cols_to_map = list(set(mg['orig_var']))
-            cols_to_map_back = [f'{c}_{group_name}' for c in cols_to_map]
-            ops_g = def_multi_column_map(
-                source.extend({v: f"{v}.coalesce('{bad_sentinel}')" for v in cols_to_map}),
-                mapping_table=mapping_table.select_rows(f'treatment == "{group_name}"'),
-                row_keys=row_keys,
-                cols_to_map=cols_to_map,
-                cols_to_map_back=cols_to_map_back,
-                coalesce_value=0.0,
-                col_name_key='orig_var',
-                col_value_key='value',
-                mapped_value_key='replacement',
-            )
-            ops = ops.natural_join(
-                b=ops_g,
-                by=row_keys,
-                jointype='left',
-            )
-    composed_ops = ops >> stage_3_ops
-    return composed_ops
+        ops = ops.drop_columns(to_del)
+    return ops

@@ -237,3 +237,4 @@ def test_db_adapter_monster():
 
     d_app_res = ops.eval({"d_app": d_app, "transform_as_data": transform_as_data})
     assert data_algebra.test_util.equivalent_frames(d_app_treated, d_app_res)
+    assert numpy.all([c in d_app_res.columns for c in cols_to_copy])
