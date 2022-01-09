@@ -2,20 +2,15 @@
 Convert the description of a vtreat variable treatment into a data algebra pipeline.
 """
 
-from typing import Dict, List, Tuple
+from typing import Dict, Iterable, List, Optional, Tuple
 import numpy
 import pandas
 
 from vtreat.vtreat_impl import bad_sentinel, replace_bad_with_sentinel
 
 
-have_data_algebra = False
-try:
-    from data_algebra.data_ops import data, describe_table, TableDescription, ViewRepresentation
-
-    have_data_algebra = True
-except FileNotFoundError:
-    pass
+from data_algebra.data_ops import data, descr, describe_table, TableDescription, ViewRepresentation
+from data_algebra.solutions import def_multi_column_map
 
 
 def check_treatment_table(vtreat_descr: pandas.DataFrame):
@@ -26,8 +21,6 @@ def check_treatment_table(vtreat_descr: pandas.DataFrame):
     :return: no return, assert on failure
     """
 
-    global have_data_algebra
-    assert have_data_algebra
     # belt and suspenders replace missing with sentinel
     vtreat_descr = vtreat_descr.copy()
     vtreat_descr["value"] = replace_bad_with_sentinel(vtreat_descr["value"])
@@ -85,8 +78,6 @@ def _build_data_pipelines_stages(
     :return: phase1 pipeline,  map result names, map stages, phase3 pipeline
     """
 
-    global have_data_algebra
-    assert have_data_algebra
     assert isinstance(source, ViewRepresentation)
     assert isinstance(vtreat_descr, pandas.DataFrame)
     assert isinstance(treatment_table_name, str)
@@ -198,6 +189,8 @@ def as_data_algebra_pipeline(
     vtreat_descr: pandas.DataFrame,
     treatment_table_name: str,
     use_case_merges: bool = False,
+    use_cdata_merges: bool = False,
+    row_keys: Optional[Iterable[str]] = None,
 ) -> ViewRepresentation:
     """
     Convert the description of a vtreat transform (gotten via .description_matrix())
@@ -215,14 +208,21 @@ def as_data_algebra_pipeline(
                          all other operations produce new names.
     :param treatment_table_name: name to use for the vtreat_descr table.
     :param use_case_merges: if True use CASE WHEN statements instead of JOINs to merge values.
+    :param use_cdata_merges: if True use cdata reshaping merges (if use_case_merges is False, must have row_keys)
+    :param row_keys: if not None list of columns uniquely keying rows
     :return: data algebra pipeline implementing specified vtreat treatment
     """
 
-    global have_data_algebra
-    assert have_data_algebra
     assert isinstance(source, ViewRepresentation)
     assert isinstance(vtreat_descr, pandas.DataFrame)
     assert isinstance(treatment_table_name, str)
+    if row_keys is not None:
+        assert not isinstance(row_keys, str)
+        row_keys = list(row_keys)
+        assert len(row_keys) > 0
+        assert numpy.all([isinstance(v, str) for v in row_keys])
+    if use_cdata_merges:
+        assert row_keys is not None
     ops, map_vars, mapping_steps, stage_3_ops = _build_data_pipelines_stages(
         source=source,
         vtreat_descr=vtreat_descr,
@@ -236,10 +236,40 @@ def as_data_algebra_pipeline(
         }
         ops = ops.extend(merge_statements)
     else:
-        for map_step in mapping_steps:
-            ops = ops.natural_join(
-                b=map_step["bi"], by=[map_step["ov"]], jointype="left",
-            )
+        if use_cdata_merges:
+            mapping_table = (
+                describe_table(vtreat_descr, table_name=treatment_table_name)
+                    .select_rows('treatment_class == "MappedCodeTransform"')
+                    .select_columns(['orig_var', 'value', 'replacement', 'treatment']))
+            mapping_rows = mapping_table.transform(vtreat_descr)
+            groups = list(set(mapping_rows['treatment']))
+            mapping_rows = mapping_rows.groupby('treatment')
+            ops_start = ops
+            for group_name in groups:
+                mg = mapping_rows.get_group(group_name)
+                cols_to_map = list(set(mg['orig_var']))
+                cols_to_map_back = [f'{c}_{group_name}' for c in cols_to_map]
+                ops_g = def_multi_column_map(
+                    ops_start,
+                    mapping_table=mapping_table.select_rows(f'treatment == "{group_name}"'),
+                    row_keys=row_keys,
+                    cols_to_map=cols_to_map,
+                    cols_to_map_back=cols_to_map_back,
+                    coalesce_value=0.0,
+                    col_name_key='orig_var',
+                    col_value_key='value',
+                    mapped_value_key='replacement',
+                )
+                ops = ops.natural_join(
+                    b=ops_g,
+                    by=row_keys,
+                    jointype='left',
+                )
+        else:
+            for map_step in mapping_steps:
+                ops = ops.natural_join(
+                    b=map_step["bi"], by=[map_step["ov"]], jointype="left",
+                )
     composed_ops = ops >> stage_3_ops
     return composed_ops
 

@@ -2,29 +2,29 @@
 platform darwin -- Python 3.9.7, pytest-6.2.4, py-1.10.0, pluggy-0.13.1
 rootdir: /Users/johnmount/Documents/work/pyvtreat/pkg
 plugins: cov-2.12.1, anyio-2.2.0, typeguard-2.13.0
-collected 33 items
+collected 34 items
 
-pkg/tests/test_ai200_examples.py ..                                      [  6%]
-pkg/tests/test_classification.py ...                                     [ 15%]
-pkg/tests/test_col_name_issues.py ...                                    [ 24%]
-pkg/tests/test_db_adapter.py ...                                         [ 33%]
-pkg/tests/test_dup.py .                                                  [ 36%]
-pkg/tests/test_id_column_check.py .                                      [ 39%]
-pkg/tests/test_imputation_controls.py .                                  [ 42%]
-pkg/tests/test_max_levels.py .                                           [ 45%]
-pkg/tests/test_multinomial.py .                                          [ 48%]
-pkg/tests/test_nan_inf.py .                                              [ 51%]
-pkg/tests/test_outcome_name_required.py .                                [ 54%]
-pkg/tests/test_pipeparams.py .                                           [ 57%]
-pkg/tests/test_r1_issue.py .                                             [ 60%]
-pkg/tests/test_range.py .                                                [ 63%]
-pkg/tests/test_regression.py .                                           [ 66%]
-pkg/tests/test_result_restriction.py .                                   [ 69%]
-pkg/tests/test_stats.py ....                                             [ 81%]
-pkg/tests/test_unexepcted_nan.py .                                       [ 84%]
-pkg/tests/test_unsup_perf.py .                                           [ 87%]
-pkg/tests/test_unsupervised.py .                                         [ 90%]
-pkg/tests/test_user_coders.py .                                          [ 93%]
+pkg/tests/test_ai200_examples.py ..                                      [  5%]
+pkg/tests/test_classification.py ...                                     [ 14%]
+pkg/tests/test_col_name_issues.py ...                                    [ 23%]
+pkg/tests/test_db_adapter.py ....                                        [ 35%]
+pkg/tests/test_dup.py .                                                  [ 38%]
+pkg/tests/test_id_column_check.py .                                      [ 41%]
+pkg/tests/test_imputation_controls.py .                                  [ 44%]
+pkg/tests/test_max_levels.py .                                           [ 47%]
+pkg/tests/test_multinomial.py .                                          [ 50%]
+pkg/tests/test_nan_inf.py .                                              [ 52%]
+pkg/tests/test_outcome_name_required.py .                                [ 55%]
+pkg/tests/test_pipeparams.py .                                           [ 58%]
+pkg/tests/test_r1_issue.py .                                             [ 61%]
+pkg/tests/test_range.py .                                                [ 64%]
+pkg/tests/test_regression.py .                                           [ 67%]
+pkg/tests/test_result_restriction.py .                                   [ 70%]
+pkg/tests/test_stats.py ....                                             [ 82%]
+pkg/tests/test_unexepcted_nan.py .                                       [ 85%]
+pkg/tests/test_unsup_perf.py .                                           [ 88%]
+pkg/tests/test_unsupervised.py .                                         [ 91%]
+pkg/tests/test_user_coders.py .                                          [ 94%]
 pkg/tests/test_util.py ..                                                [100%]
 
 ---------- coverage: platform darwin, python 3.9.7-final-0 -----------
@@ -33,13 +33,14 @@ Name                              Stmts   Miss  Cover
 pkg/vtreat/__init__.py                6      0   100%
 pkg/vtreat/cross_plan.py             53     11    79%
 pkg/vtreat/stats_utils.py            83      3    96%
+pkg/vtreat/test_find.py              25     25     0%
 pkg/vtreat/transform.py              17      4    76%
 pkg/vtreat/util.py                  152     21    86%
 pkg/vtreat/vtreat_api.py            286     35    88%
-pkg/vtreat/vtreat_db_adapter.py     103      2    98%
+pkg/vtreat/vtreat_db_adapter.py     115      0   100%
 pkg/vtreat/vtreat_impl.py           710     78    89%
 -----------------------------------------------------
-TOTAL                              1410    154    89%
+TOTAL                              1447    177    88%
 
 
-============================= 33 passed in 22.59s ==============================
+============================= 34 passed in 21.85s ==============================

@@ -18,8 +18,6 @@ Classifier: Programming Language :: Python :: 3.9
 Classifier: License :: OSI Approved :: BSD License
 Requires-Python: >=3.5.3
 Description-Content-Type: text/markdown
-Provides-Extra: db
-Provides-Extra: all
 License-File: LICENSE
 
 
