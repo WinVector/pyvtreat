@@ -175,7 +175,6 @@
     <span class="n">stage_3_cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">stage_1_ops</span><span class="o">.</span><span class="n">column_names</span><span class="p">)</span>
     <span class="n">stage_3_ops</span> <span class="o">=</span> <span class="n">TableDescription</span><span class="p">(</span><span class="n">table_name</span><span class="o">=</span><span class="n">stage_3_name</span><span class="p">,</span> <span class="n">column_names</span><span class="o">=</span><span class="n">stage_3_cols</span><span class="p">)</span>
     <span class="n">map_vars</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">mapping_steps</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="n">mp_rows</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="c1"># prepare incoming variables to use sentinel for missing, this is after other steps using these values</span>
         <span class="n">mapping_inputs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">mp_rows</span><span class="p">[</span><span class="s2">&quot;orig_var&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">]))</span>
@@ -195,26 +194,7 @@
             <span class="c1"># print(f&#39;map({i}/{mp_rows.shape[0]}) {datetime.datetime.now()}&#39;)</span>
             <span class="n">ov</span> <span class="o">=</span> <span class="n">mp_rows</span><span class="p">[</span><span class="s2">&quot;orig_var&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
             <span class="n">vi</span> <span class="o">=</span> <span class="n">mp_rows</span><span class="p">[</span><span class="s2">&quot;variable&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="n">match_q</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;(treatment_class == &#39;MappedCodeTransform&#39;) &amp; (orig_var == &#39;</span><span class="si">{</span><span class="n">ov</span><span class="si">}</span><span class="s2">&#39;) &amp; (variable == &#39;</span><span class="si">{</span><span class="n">vi</span><span class="si">}</span><span class="s2">&#39;)&quot;</span>
-            <span class="n">bi</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">jt</span><span class="o">.</span><span class="n">select_rows</span><span class="p">(</span><span class="n">match_q</span><span class="p">)</span>
-                <span class="o">.</span><span class="n">extend</span><span class="p">({</span><span class="n">ov</span><span class="p">:</span> <span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="n">vi</span><span class="p">:</span> <span class="s2">&quot;replacement&quot;</span><span class="p">})</span>
-                <span class="o">.</span><span class="n">select_columns</span><span class="p">([</span><span class="n">ov</span><span class="p">,</span> <span class="n">vi</span><span class="p">])</span>
-            <span class="p">)</span>
-            <span class="n">mi_table</span> <span class="o">=</span> <span class="n">vtreat_descr</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
-                <span class="p">(</span><span class="n">vtreat_descr</span><span class="p">[</span><span class="s2">&quot;treatment_class&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;MappedCodeTransform&quot;</span><span class="p">)</span>
-                <span class="o">&amp;</span> <span class="p">(</span><span class="n">vtreat_descr</span><span class="p">[</span><span class="s2">&quot;orig_var&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">ov</span><span class="p">)</span>
-                <span class="o">&amp;</span> <span class="p">(</span><span class="n">vtreat_descr</span><span class="p">[</span><span class="s2">&quot;variable&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">vi</span><span class="p">),</span>
-                <span class="p">:,</span>
-            <span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">mi</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="n">k</span><span class="p">:</span> <span class="n">v</span>
-                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
-                    <span class="n">mi_table</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">mi_table</span><span class="p">[</span><span class="s2">&quot;replacement&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-                <span class="p">)</span>
-            <span class="p">}</span>
             <span class="n">map_vars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vi</span><span class="p">)</span>
-            <span class="n">mapping_steps</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;bi&quot;</span><span class="p">:</span> <span class="n">bi</span><span class="p">,</span> <span class="s2">&quot;ov&quot;</span><span class="p">:</span> <span class="n">ov</span><span class="p">,</span> <span class="s2">&quot;vi&quot;</span><span class="p">:</span> <span class="n">vi</span><span class="p">,</span> <span class="s2">&quot;mi&quot;</span><span class="p">:</span> <span class="n">mi</span><span class="p">})</span>
         <span class="c1"># handle any novel values</span>
         <span class="n">stage_3_ops</span> <span class="o">=</span> <span class="n">stage_3_ops</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
             <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">.coalesce(0.0)&quot;</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">mapping_outputs</span><span class="p">}</span>
@@ -236,7 +216,7 @@
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_del</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">to_del</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
         <span class="n">stage_3_ops</span> <span class="o">=</span> <span class="n">stage_3_ops</span><span class="o">.</span><span class="n">drop_columns</span><span class="p">(</span><span class="n">to_del</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">stage_1_ops</span><span class="p">,</span> <span class="n">map_vars</span><span class="p">,</span> <span class="n">mapping_steps</span><span class="p">,</span> <span class="n">stage_3_ops</span>
+    <span class="k">return</span> <span class="n">stage_1_ops</span><span class="p">,</span> <span class="n">map_vars</span><span class="p">,</span> <span class="n">stage_3_ops</span>
 
 
 <span class="k">def</span> <span class="nf">as_data_algebra_pipeline</span><span class="p">(</span>
@@ -273,7 +253,7 @@
     <span class="n">row_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">row_keys</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">row_keys</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
     <span class="k">assert</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">row_keys</span><span class="p">])</span>
-    <span class="n">ops</span><span class="p">,</span> <span class="n">map_vars</span><span class="p">,</span> <span class="n">mapping_steps</span><span class="p">,</span> <span class="n">stage_3_ops</span> <span class="o">=</span> <span class="n">_build_data_pipelines_stages</span><span class="p">(</span>
+    <span class="n">ops</span><span class="p">,</span> <span class="n">map_vars</span><span class="p">,</span> <span class="n">stage_3_ops</span> <span class="o">=</span> <span class="n">_build_data_pipelines_stages</span><span class="p">(</span>
         <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span>
         <span class="n">vtreat_descr</span><span class="o">=</span><span class="n">vtreat_descr</span><span class="p">,</span>
         <span class="n">treatment_table_name</span><span class="o">=</span><span class="n">treatment_table_name</span><span class="p">,</span>
@@ -364,7 +344,7 @@
     <span class="n">row_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">row_keys</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">row_keys</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
     <span class="k">assert</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">row_keys</span><span class="p">])</span>
-    <span class="n">ops</span><span class="p">,</span> <span class="n">map_vars</span><span class="p">,</span> <span class="n">mapping_steps</span><span class="p">,</span> <span class="n">stage_3_ops</span> <span class="o">=</span> <span class="n">_build_data_pipelines_stages</span><span class="p">(</span>
+    <span class="n">ops</span><span class="p">,</span> <span class="n">map_vars</span><span class="p">,</span> <span class="n">stage_3_ops</span> <span class="o">=</span> <span class="n">_build_data_pipelines_stages</span><span class="p">(</span>
         <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span>
         <span class="n">vtreat_descr</span><span class="o">=</span><span class="n">vtreat_descr</span><span class="p">,</span>
         <span class="n">treatment_table_name</span><span class="o">=</span><span class="n">treatment_table_name</span><span class="p">,</span>

@@ -119,7 +119,6 @@ def _build_data_pipelines_stages(
     stage_3_cols = list(stage_1_ops.column_names)
     stage_3_ops = TableDescription(table_name=stage_3_name, column_names=stage_3_cols)
     map_vars = []
-    mapping_steps = []
     if mp_rows.shape[0] > 0:
         # prepare incoming variables to use sentinel for missing, this is after other steps using these values
         mapping_inputs = list(set([v for v in mp_rows["orig_var"].values]))
@@ -139,26 +138,7 @@ def _build_data_pipelines_stages(
             # print(f'map({i}/{mp_rows.shape[0]}) {datetime.datetime.now()}')
             ov = mp_rows["orig_var"].values[i]
             vi = mp_rows["variable"].values[i]
-            match_q = f"(treatment_class == 'MappedCodeTransform') & (orig_var == '{ov}') & (variable == '{vi}')"
-            bi = (
-                jt.select_rows(match_q)
-                .extend({ov: "value", vi: "replacement"})
-                .select_columns([ov, vi])
-            )
-            mi_table = vtreat_descr.loc[
-                (vtreat_descr["treatment_class"] == "MappedCodeTransform")
-                & (vtreat_descr["orig_var"] == ov)
-                & (vtreat_descr["variable"] == vi),
-                :,
-            ].reset_index(inplace=False, drop=True)
-            mi = {
-                k: v
-                for k, v in zip(
-                    mi_table["value"].values, mi_table["replacement"].values
-                )
-            }
             map_vars.append(vi)
-            mapping_steps.append({"bi": bi, "ov": ov, "vi": vi, "mi": mi})
         # handle any novel values
         stage_3_ops = stage_3_ops.extend(
             {v: f"{v}.coalesce(0.0)" for v in mapping_outputs}
@@ -180,7 +160,7 @@ def _build_data_pipelines_stages(
     if len(to_del) > 0:
         to_del.sort()
         stage_3_ops = stage_3_ops.drop_columns(to_del)
-    return stage_1_ops, map_vars, mapping_steps, stage_3_ops
+    return stage_1_ops, map_vars, stage_3_ops
 
 
 def as_data_algebra_pipeline(
@@ -217,7 +197,7 @@ def as_data_algebra_pipeline(
     row_keys = list(row_keys)
     assert len(row_keys) > 0
     assert numpy.all([isinstance(v, str) for v in row_keys])
-    ops, map_vars, mapping_steps, stage_3_ops = _build_data_pipelines_stages(
+    ops, map_vars, stage_3_ops = _build_data_pipelines_stages(
         source=source,
         vtreat_descr=vtreat_descr,
         treatment_table_name=treatment_table_name,
