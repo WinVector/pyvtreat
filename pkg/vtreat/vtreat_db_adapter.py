@@ -120,9 +120,9 @@ def as_data_algebra_pipeline(
     # add in any value mapped columns (these should all be string valued)
     mp_rows = (
         data(vtreat_descr=vtreat_descr)
-        .select_rows("treatment_class == 'MappedCodeTransform'")
-        .project({}, group_by=["orig_var", "variable"])
-        .order_rows(["orig_var", "variable"])
+            .select_rows("treatment_class == 'MappedCodeTransform'")
+            .project({}, group_by=["orig_var", "variable"])
+            .order_rows(["orig_var", "variable"])
     ).ex()
     stage_3_cols = list(stage_1_ops.column_names)
     stage_3_ops = TableDescription(table_name=stage_3_name, column_names=stage_3_cols)
@@ -177,26 +177,26 @@ def as_data_algebra_pipeline(
     groups = list(set(mapping_rows['treatment']))
     mapping_rows = mapping_rows.groupby('treatment')
     ops = stage_1_ops
-    ops_start = ops
     for group_name in groups:
         mg = mapping_rows.get_group(group_name)
-        cols_to_map = list(set(mg['orig_var']))
-        cols_to_map_back = [f'{c}_{group_name}' for c in cols_to_map]
-        ops_g = def_multi_column_map(
-            ops_start,
-            mapping_table=mapping_table.select_rows(f'treatment == "{group_name}"'),
-            row_keys=row_keys,
-            cols_to_map=cols_to_map,
-            cols_to_map_back=cols_to_map_back,
-            coalesce_value=0.0,
-            col_name_key='orig_var',
-            col_value_key='value',
-            mapped_value_key='replacement',
-        )
-        ops = ops.natural_join(
-            b=ops_g,
-            by=row_keys,
-            jointype='left',
-        )
+        if mg.shape[0] > 0:
+            cols_to_map = list(set(mg['orig_var']))
+            cols_to_map_back = [f'{c}_{group_name}' for c in cols_to_map]
+            ops_g = def_multi_column_map(
+                source.extend({v: f"{v}.coalesce('{bad_sentinel}')" for v in cols_to_map}),
+                mapping_table=mapping_table.select_rows(f'treatment == "{group_name}"'),
+                row_keys=row_keys,
+                cols_to_map=cols_to_map,
+                cols_to_map_back=cols_to_map_back,
+                coalesce_value=0.0,
+                col_name_key='orig_var',
+                col_value_key='value',
+                mapped_value_key='replacement',
+            )
+            ops = ops.natural_join(
+                b=ops_g,
+                by=row_keys,
+                jointype='left',
+            )
     composed_ops = ops >> stage_3_ops
     return composed_ops
