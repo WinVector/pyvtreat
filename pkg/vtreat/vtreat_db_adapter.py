@@ -88,7 +88,6 @@ def as_data_algebra_pipeline(
     row_keys = list(row_keys)
     assert len(row_keys) > 0
     assert numpy.all([isinstance(v, str) for v in row_keys])
-    stage_3_name = "vtreat_temp_stage_3"
 
     _check_treatment_table(vtreat_descr)
     # belt and suspenders replace missing with sentinel
