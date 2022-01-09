@@ -13,7 +13,7 @@ from data_algebra.data_ops import data, descr, describe_table, TableDescription,
 from data_algebra.solutions import def_multi_column_map
 
 
-def check_treatment_table(vtreat_descr: pandas.DataFrame):
+def _check_treatment_table(vtreat_descr: pandas.DataFrame):
     """
     Assert if expected invariants don't hold for vtreat_descr.
 
@@ -56,7 +56,7 @@ def check_treatment_table(vtreat_descr: pandas.DataFrame):
 
 def _build_data_pipelines_stages(
     *,
-    source: ViewRepresentation,
+    source: TableDescription,
     vtreat_descr: pandas.DataFrame,
     treatment_table_name: str,
     stage_3_name: str,
@@ -78,11 +78,11 @@ def _build_data_pipelines_stages(
     :return: phase1 pipeline,  map result names, map stages, phase3 pipeline
     """
 
-    assert isinstance(source, ViewRepresentation)
+    assert isinstance(source, TableDescription)
     assert isinstance(vtreat_descr, pandas.DataFrame)
     assert isinstance(treatment_table_name, str)
     assert isinstance(stage_3_name, str)
-    check_treatment_table(vtreat_descr)
+    _check_treatment_table(vtreat_descr)
     # belt and suspenders replace missing with sentinel
     vtreat_descr = vtreat_descr.copy()
     vtreat_descr["value"] = replace_bad_with_sentinel(vtreat_descr["value"])
@@ -185,12 +185,10 @@ def _build_data_pipelines_stages(
 
 def as_data_algebra_pipeline(
     *,
-    source: ViewRepresentation,
+    source: TableDescription,
     vtreat_descr: pandas.DataFrame,
     treatment_table_name: str,
-    use_case_merges: bool = False,
-    use_cdata_merges: bool = False,
-    row_keys: Optional[Iterable[str]] = None,
+    row_keys: Iterable[str],
 ) -> ViewRepresentation:
     """
     Convert the description of a vtreat transform (gotten via .description_matrix())
@@ -207,157 +205,51 @@ def as_data_algebra_pipeline(
                          Expected invariant: CleanNumericTransform doesn't change variable names,
                          all other operations produce new names.
     :param treatment_table_name: name to use for the vtreat_descr table.
-    :param use_case_merges: if True use CASE WHEN statements instead of JOINs to merge values.
-    :param use_cdata_merges: if True use cdata reshaping merges (if use_case_merges is False, must have row_keys)
-    :param row_keys: if not None list of columns uniquely keying rows
+    :param row_keys: list of columns uniquely keying rows
     :return: data algebra pipeline implementing specified vtreat treatment
     """
 
-    assert isinstance(source, ViewRepresentation)
+    assert isinstance(source, TableDescription)
     assert isinstance(vtreat_descr, pandas.DataFrame)
     assert isinstance(treatment_table_name, str)
-    if row_keys is not None:
-        assert not isinstance(row_keys, str)
-        row_keys = list(row_keys)
-        assert len(row_keys) > 0
-        assert numpy.all([isinstance(v, str) for v in row_keys])
-    if use_cdata_merges:
-        assert row_keys is not None
+    assert row_keys is not None
+    assert not isinstance(row_keys, str)
+    row_keys = list(row_keys)
+    assert len(row_keys) > 0
+    assert numpy.all([isinstance(v, str) for v in row_keys])
     ops, map_vars, mapping_steps, stage_3_ops = _build_data_pipelines_stages(
         source=source,
         vtreat_descr=vtreat_descr,
         treatment_table_name=treatment_table_name,
         stage_3_name="vtreat_temp_stage_3",
     )
-    if use_case_merges:
-        merge_statements = {
-            map_step["vi"]: f'{map_step["ov"]}.mapv({map_step["mi"].__repr__()}, 0.0)'
-            for map_step in mapping_steps
-        }
-        ops = ops.extend(merge_statements)
-    else:
-        if use_cdata_merges:
-            mapping_table = (
-                describe_table(vtreat_descr, table_name=treatment_table_name)
-                    .select_rows('treatment_class == "MappedCodeTransform"')
-                    .select_columns(['orig_var', 'value', 'replacement', 'treatment']))
-            mapping_rows = mapping_table.transform(vtreat_descr)
-            groups = list(set(mapping_rows['treatment']))
-            mapping_rows = mapping_rows.groupby('treatment')
-            ops_start = ops
-            for group_name in groups:
-                mg = mapping_rows.get_group(group_name)
-                cols_to_map = list(set(mg['orig_var']))
-                cols_to_map_back = [f'{c}_{group_name}' for c in cols_to_map]
-                ops_g = def_multi_column_map(
-                    ops_start,
-                    mapping_table=mapping_table.select_rows(f'treatment == "{group_name}"'),
-                    row_keys=row_keys,
-                    cols_to_map=cols_to_map,
-                    cols_to_map_back=cols_to_map_back,
-                    coalesce_value=0.0,
-                    col_name_key='orig_var',
-                    col_value_key='value',
-                    mapped_value_key='replacement',
-                )
-                ops = ops.natural_join(
-                    b=ops_g,
-                    by=row_keys,
-                    jointype='left',
-                )
-        else:
-            for map_step in mapping_steps:
-                ops = ops.natural_join(
-                    b=map_step["bi"], by=[map_step["ov"]], jointype="left",
-                )
+    mapping_table = (
+        describe_table(vtreat_descr, table_name=treatment_table_name)
+            .select_rows('treatment_class == "MappedCodeTransform"')
+            .select_columns(['orig_var', 'value', 'replacement', 'treatment']))
+    mapping_rows = mapping_table.transform(vtreat_descr)
+    groups = list(set(mapping_rows['treatment']))
+    mapping_rows = mapping_rows.groupby('treatment')
+    ops_start = ops
+    for group_name in groups:
+        mg = mapping_rows.get_group(group_name)
+        cols_to_map = list(set(mg['orig_var']))
+        cols_to_map_back = [f'{c}_{group_name}' for c in cols_to_map]
+        ops_g = def_multi_column_map(
+            ops_start,
+            mapping_table=mapping_table.select_rows(f'treatment == "{group_name}"'),
+            row_keys=row_keys,
+            cols_to_map=cols_to_map,
+            cols_to_map_back=cols_to_map_back,
+            coalesce_value=0.0,
+            col_name_key='orig_var',
+            col_value_key='value',
+            mapped_value_key='replacement',
+        )
+        ops = ops.natural_join(
+            b=ops_g,
+            by=row_keys,
+            jointype='left',
+        )
     composed_ops = ops >> stage_3_ops
     return composed_ops
-
-
-def as_sql_update_sequence(
-    *,
-    db_model,
-    source: TableDescription,
-    vtreat_descr: pandas.DataFrame,
-    treatment_table_name: str,
-    stage_3_name: str,
-    result_name: str,
-) -> List[str]:
-    """
-    Convert the description of a vtreat transform (gotten via .description_matrix())
-    into a SQL update sequence.
-    See: https://github.com/WinVector/data_algebra and https://github.com/WinVector/pyvtreat .
-    Missing and nan are treated as synonyms for '_NA_'.
-    Assembling the entire pipeline can be expensive. If one is willing to instantiate tables
-    it can be better to sequence operations instead of composing them.
-    Another way to use this methodology would be to port this code as a stored procedure
-    in a target database of choice, meaning only the vtreat_descr table would be needed on such systems.
-
-    :param db_model: data algebra database model or handle for SQL translation
-    :param source: input data.
-    :param vtreat_descr: .description_matrix() description of transform.
-                         Expected invariant: CleanNumericTransform doesn't change variable names,
-                         all other operations produce new names.
-    :param treatment_table_name: name to use for the vtreat_descr table.
-    :param stage_3_name: name for one of the temp tables.
-    :param result_name: name for result table.
-    :return: list of SQL statements
-    """
-
-    # translate the transform
-    ops, map_vars, mapping_steps, stage_3_ops = _build_data_pipelines_stages(
-        source=source,
-        vtreat_descr=vtreat_descr,
-        treatment_table_name=treatment_table_name,
-        stage_3_name=stage_3_name,
-    )
-    # give variables pre-update values
-    ops = ops.extend({v: "0.0" for v in map_vars})
-
-    def update_code(i):
-        """
-        Build one update statement.
-
-        :param i:
-        :return:
-        """
-        step_i = mapping_steps[i]
-        ov = step_i["ov"]
-        vi = step_i["vi"]
-        update_stmt = f"""
-    WITH tmp_update AS (
-      SELECT
-        value AS {db_model.quote_identifier(ov)},
-        replacement AS {db_model.quote_identifier(vi)}
-      FROM
-        {db_model.quote_identifier(treatment_table_name)}
-      WHERE
-        (treatment_class = {db_model.quote_string('MappedCodeTransform')})
-        AND (orig_var = {db_model.quote_string(ov)})
-        AND (variable == {db_model.quote_string(vi)})
-    )
-    UPDATE
-      {db_model.quote_identifier(stage_3_name)}
-    SET {db_model.quote_identifier(vi)} = tmp_update.{db_model.quote_identifier(vi)}
-    FROM
-      tmp_update
-    WHERE
-       {db_model.quote_identifier(stage_3_name)}.{db_model.quote_identifier(ov)} = tmp_update.{db_model.quote_identifier(ov)}
-    """
-        return update_stmt
-
-    sql_sequence = (
-        [f"DROP TABLE IF EXISTS {db_model.quote_identifier(stage_3_name)}"]
-        + [f"DROP TABLE IF EXISTS {db_model.quote_identifier(result_name)}"]
-        + [
-            f"CREATE TABLE {db_model.quote_identifier(stage_3_name)} AS \n"
-            + db_model.to_sql(ops)
-        ]
-        + [update_code(i) for i in range(len(mapping_steps))]
-        + [
-            f"CREATE TABLE {db_model.quote_identifier(result_name)} AS \n"
-            + db_model.to_sql(stage_3_ops)
-        ]
-        + [f"DROP TABLE {db_model.quote_identifier(stage_3_name)}"]
-    )
-    return sql_sequence
