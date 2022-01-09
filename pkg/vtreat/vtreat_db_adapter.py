@@ -54,18 +54,20 @@ def _check_treatment_table(vtreat_descr: pandas.DataFrame):
     assert len(set(mp_rows["orig_var"]).intersection(cn_rows["orig_var"])) == 0
 
 
-def _build_data_pipelines_stages(
+def as_data_algebra_pipeline(
     *,
     source: TableDescription,
     vtreat_descr: pandas.DataFrame,
     treatment_table_name: str,
-    stage_3_name: str,
-) -> Tuple[ViewRepresentation, List[str], List[Dict], ViewRepresentation]:
+    row_keys: Iterable[str],
+) -> ViewRepresentation:
     """
     Convert the description of a vtreat transform (gotten via .description_matrix())
-    into data algebra pipeline components.
+    into a data algebra pipeline.
     See: https://github.com/WinVector/data_algebra and https://github.com/WinVector/pyvtreat .
     Missing and nan are treated as synonyms for '_NA_'.
+    Assembling the entire pipeline can be expensive. If one is willing to instantiate tables
+    it can be better to sequence operations instead of composing them.
     Another way to use this methodology would be to port this code as a stored procedure
     in a target database of choice, meaning only the vtreat_descr table would be needed on such systems.
 
@@ -74,14 +76,20 @@ def _build_data_pipelines_stages(
                          Expected invariant: CleanNumericTransform doesn't change variable names,
                          all other operations produce new names.
     :param treatment_table_name: name to use for the vtreat_descr table.
-    :param stage_3_name: name for stage 3 operators
-    :return: phase1 pipeline,  map result names, map stages, phase3 pipeline
+    :param row_keys: list of columns uniquely keying rows
+    :return: data algebra pipeline implementing specified vtreat treatment
     """
 
     assert isinstance(source, TableDescription)
     assert isinstance(vtreat_descr, pandas.DataFrame)
     assert isinstance(treatment_table_name, str)
-    assert isinstance(stage_3_name, str)
+    assert row_keys is not None
+    assert not isinstance(row_keys, str)
+    row_keys = list(row_keys)
+    assert len(row_keys) > 0
+    assert numpy.all([isinstance(v, str) for v in row_keys])
+    stage_3_name = "vtreat_temp_stage_3"
+
     _check_treatment_table(vtreat_descr)
     # belt and suspenders replace missing with sentinel
     vtreat_descr = vtreat_descr.copy()
@@ -160,49 +168,7 @@ def _build_data_pipelines_stages(
     if len(to_del) > 0:
         to_del.sort()
         stage_3_ops = stage_3_ops.drop_columns(to_del)
-    return stage_1_ops, map_vars, stage_3_ops
 
-
-def as_data_algebra_pipeline(
-    *,
-    source: TableDescription,
-    vtreat_descr: pandas.DataFrame,
-    treatment_table_name: str,
-    row_keys: Iterable[str],
-) -> ViewRepresentation:
-    """
-    Convert the description of a vtreat transform (gotten via .description_matrix())
-    into a data algebra pipeline.
-    See: https://github.com/WinVector/data_algebra and https://github.com/WinVector/pyvtreat .
-    Missing and nan are treated as synonyms for '_NA_'.
-    Assembling the entire pipeline can be expensive. If one is willing to instantiate tables
-    it can be better to sequence operations instead of composing them.
-    Another way to use this methodology would be to port this code as a stored procedure
-    in a target database of choice, meaning only the vtreat_descr table would be needed on such systems.
-
-    :param source: input data.
-    :param vtreat_descr: .description_matrix() description of transform.
-                         Expected invariant: CleanNumericTransform doesn't change variable names,
-                         all other operations produce new names.
-    :param treatment_table_name: name to use for the vtreat_descr table.
-    :param row_keys: list of columns uniquely keying rows
-    :return: data algebra pipeline implementing specified vtreat treatment
-    """
-
-    assert isinstance(source, TableDescription)
-    assert isinstance(vtreat_descr, pandas.DataFrame)
-    assert isinstance(treatment_table_name, str)
-    assert row_keys is not None
-    assert not isinstance(row_keys, str)
-    row_keys = list(row_keys)
-    assert len(row_keys) > 0
-    assert numpy.all([isinstance(v, str) for v in row_keys])
-    ops, map_vars, stage_3_ops = _build_data_pipelines_stages(
-        source=source,
-        vtreat_descr=vtreat_descr,
-        treatment_table_name=treatment_table_name,
-        stage_3_name="vtreat_temp_stage_3",
-    )
     mapping_table = (
         describe_table(vtreat_descr, table_name=treatment_table_name)
             .select_rows('treatment_class == "MappedCodeTransform"')
@@ -210,6 +176,7 @@ def as_data_algebra_pipeline(
     mapping_rows = mapping_table.transform(vtreat_descr)
     groups = list(set(mapping_rows['treatment']))
     mapping_rows = mapping_rows.groupby('treatment')
+    ops = stage_1_ops
     ops_start = ops
     for group_name in groups:
         mg = mapping_rows.get_group(group_name)
