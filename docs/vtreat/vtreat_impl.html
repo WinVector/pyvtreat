@@ -335,6 +335,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">incoming_column_name_</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">incoming_column_is_numeric_</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="n">derived_column_names_</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
     <span class="n">need_cross_treatment_</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="n">treatment_</span><span class="p">:</span> <span class="nb">str</span>
@@ -344,24 +345,29 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
         <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">incoming_column_is_numeric</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
         <span class="n">derived_column_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        :param incoming_column_name:</span>
+<span class="sd">        :param incoming_column_is_numeric:</span>
 <span class="sd">        :param derived_column_names:</span>
 <span class="sd">        :param treatment:</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">incoming_column_is_numeric</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">derived_column_names</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
         <span class="n">derived_column_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">derived_column_names</span><span class="p">)</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">derived_column_names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
-        <span class="k">assert</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dni</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">dni</span> <span class="ow">in</span> <span class="n">derived_column_names</span><span class="p">])</span>
-        <span class="k">assert</span> <span class="n">treatment</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dni</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">dni</span> <span class="ow">in</span> <span class="n">derived_column_names</span><span class="p">])</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">treatment</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span> <span class="o">=</span> <span class="n">incoming_column_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_is_numeric_</span> <span class="o">=</span> <span class="n">incoming_column_is_numeric</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span> <span class="o">=</span> <span class="n">derived_column_names</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span> <span class="o">=</span> <span class="n">treatment</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">need_cross_treatment_</span> <span class="o">=</span> <span class="kc">False</span>
@@ -439,10 +445,11 @@
 
 
 <span class="k">class</span> <span class="nc">MappedCodeTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Class for transforms that are a dictionary mapping of values&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Class for transforms that are a dictionary mapping of strings to numeric values&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
         <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -457,7 +464,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">derived_column_name</span><span class="p">],</span> <span class="n">treatment</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">incoming_column_name</span><span class="p">,</span>
+            <span class="n">incoming_column_is_numeric</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">derived_column_names</span><span class="o">=</span><span class="p">[</span><span class="n">derived_column_name</span><span class="p">],</span>
+            <span class="n">treatment</span><span class="o">=</span><span class="n">treatment</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span> <span class="o">=</span> <span class="n">code_book</span>
 
@@ -495,6 +506,7 @@
                 <span class="s2">&quot;treatment_class&quot;</span><span class="p">:</span> <span class="s2">&quot;MappedCodeTransform&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;treatment&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
                 <span class="s2">&quot;orig_var&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
+                <span class="s2">&quot;orig_was_numeric&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_is_numeric_</span><span class="p">,</span>
                 <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                 <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">replace_bad_with_sentinel</span><span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">]</span>
@@ -545,7 +557,10 @@
 <span class="k">class</span> <span class="nc">CleanNumericTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class for numeric column cleaner.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">replacement_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="o">*</span><span class="p">,</span>
+                 <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">replacement_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        :param incoming_column_name:</span>
@@ -553,7 +568,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">incoming_column_name</span><span class="p">],</span> <span class="s2">&quot;clean_copy&quot;</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">incoming_column_name</span><span class="p">,</span>
+            <span class="n">incoming_column_is_numeric</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">derived_column_names</span><span class="o">=</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">],</span>
+            <span class="n">treatment</span><span class="o">=</span><span class="s2">&quot;clean_copy&quot;</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">replacement_value_</span> <span class="o">=</span> <span class="n">replacement_value</span>
 
@@ -584,6 +603,7 @@
                 <span class="s2">&quot;treatment_class&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;CleanNumericTransform&quot;</span><span class="p">],</span>
                 <span class="s2">&quot;treatment&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
                 <span class="s2">&quot;orig_var&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
+                <span class="s2">&quot;orig_was_numeric&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_is_numeric_</span><span class="p">],</span>
                 <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
                 <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">bad_sentinel</span><span class="p">],</span>
                 <span class="s2">&quot;replacement&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">replacement_value_</span><span class="p">],</span>
@@ -595,7 +615,11 @@
 <span class="k">class</span> <span class="nc">IndicateMissingTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class for missing value indicator.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="o">*</span><span class="p">,</span>
+                 <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">incoming_column_is_numeric</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+                 <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        :param incoming_column_name:</span>
@@ -603,7 +627,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">derived_column_name</span><span class="p">],</span> <span class="s2">&quot;missing_indicator&quot;</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">incoming_column_name</span><span class="p">,</span>
+            <span class="n">incoming_column_is_numeric</span><span class="o">=</span><span class="n">incoming_column_is_numeric</span><span class="p">,</span>
+            <span class="n">derived_column_names</span><span class="o">=</span><span class="p">[</span><span class="n">derived_column_name</span><span class="p">],</span>
+            <span class="n">treatment</span><span class="o">=</span><span class="s2">&quot;missing_indicator&quot;</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
@@ -630,6 +658,7 @@
                 <span class="s2">&quot;treatment_class&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;IndicateMissingTransform&quot;</span><span class="p">],</span>
                 <span class="s2">&quot;treatment&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
                 <span class="s2">&quot;orig_var&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
+                <span class="s2">&quot;orig_was_numeric&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_is_numeric_</span><span class="p">],</span>
                 <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
                 <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">bad_sentinel</span><span class="p">],</span>
                 <span class="s2">&quot;replacement&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span>
@@ -817,10 +846,10 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
         <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">derived_column_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="n">levels</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span>
-        <span class="o">*</span><span class="p">,</span>
         <span class="n">sparse_indicators</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -831,7 +860,11 @@
 <span class="sd">        :param sparse_indicators: if True use sparse data structure</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">derived_column_names</span><span class="p">,</span> <span class="s2">&quot;indicator_code&quot;</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">incoming_column_name</span><span class="p">,</span>
+            <span class="n">incoming_column_is_numeric</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">derived_column_names</span><span class="o">=</span><span class="n">derived_column_names</span><span class="p">,</span>
+            <span class="n">treatment</span><span class="o">=</span><span class="s2">&quot;indicator_code&quot;</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">levels_</span> <span class="o">=</span> <span class="n">levels</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sparse_indicators_</span> <span class="o">=</span> <span class="n">sparse_indicators</span>
@@ -878,6 +911,7 @@
                 <span class="s2">&quot;treatment_class&quot;</span><span class="p">:</span> <span class="s2">&quot;IndicatorCodeTransform&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;treatment&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
                 <span class="s2">&quot;orig_var&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
+                <span class="s2">&quot;orig_was_numeric&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_is_numeric_</span><span class="p">,</span>
                 <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
                 <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">replace_bad_with_sentinel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="p">),</span>
                 <span class="s2">&quot;replacement&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
@@ -927,8 +961,8 @@
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">IndicatorCodeTransform</span><span class="p">(</span>
-        <span class="n">incoming_column_name</span><span class="p">,</span>
-        <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">build_level_codes</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">levels</span><span class="p">),</span>
+        <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">incoming_column_name</span><span class="p">,</span>
+        <span class="n">derived_column_names</span><span class="o">=</span><span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">build_level_codes</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">levels</span><span class="p">),</span>
         <span class="n">levels</span><span class="o">=</span><span class="n">levels</span><span class="p">,</span>
         <span class="n">sparse_indicators</span><span class="o">=</span><span class="n">sparse_indicators</span><span class="p">,</span>
     <span class="p">)</span>
@@ -958,7 +992,10 @@
     <span class="n">sf</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">sf</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
     <span class="n">sf</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">MappedCodeTransform</span><span class="p">(</span>
-        <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">newcol</span><span class="p">,</span> <span class="n">treatment</span><span class="o">=</span><span class="s2">&quot;prevalence_code&quot;</span><span class="p">,</span> <span class="n">code_book</span><span class="o">=</span><span class="n">sf</span>
+        <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">incoming_column_name</span><span class="p">,</span>
+        <span class="n">derived_column_name</span><span class="o">=</span><span class="n">newcol</span><span class="p">,</span>
+        <span class="n">treatment</span><span class="o">=</span><span class="s2">&quot;prevalence_code&quot;</span><span class="p">,</span>
+        <span class="n">code_book</span><span class="o">=</span><span class="n">sf</span>
     <span class="p">)</span>
 
 
@@ -1045,10 +1082,13 @@
     <span class="p">)</span>
     <span class="n">xforms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
+        <span class="n">num_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">num_list</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">IndicateMissingTransform</span><span class="p">(</span>
-                    <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
+                    <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
+                    <span class="n">incoming_column_is_numeric</span><span class="o">=</span><span class="n">vi</span> <span class="ow">in</span> <span class="n">num_set</span><span class="p">,</span>
+                    <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
                 <span class="p">)</span>
             <span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;clean_copy&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
@@ -1135,10 +1175,13 @@
     <span class="p">)</span>
     <span class="n">xforms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
+        <span class="n">num_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">num_list</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">IndicateMissingTransform</span><span class="p">(</span>
-                    <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
+                    <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
+                    <span class="n">incoming_column_is_numeric</span><span class="o">=</span><span class="n">vi</span> <span class="ow">in</span> <span class="n">num_set</span><span class="p">,</span>
+                    <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
                 <span class="p">)</span>
             <span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;clean_copy&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
@@ -1218,10 +1261,13 @@
     <span class="p">)</span>
     <span class="n">xforms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
+        <span class="n">num_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">num_list</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">IndicateMissingTransform</span><span class="p">(</span>
-                    <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
+                    <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
+                    <span class="n">incoming_column_is_numeric</span><span class="o">=</span><span class="n">vi</span> <span class="ow">in</span> <span class="n">num_set</span><span class="p">,</span>
+                    <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
                 <span class="p">)</span>
             <span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;clean_copy&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
@@ -1301,10 +1347,13 @@
     <span class="p">)</span>
     <span class="n">xforms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
+        <span class="n">num_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">num_list</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">IndicateMissingTransform</span><span class="p">(</span>
-                    <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
+                    <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
+                    <span class="n">incoming_column_is_numeric</span><span class="o">=</span><span class="n">vi</span> <span class="ow">in</span> <span class="n">num_set</span><span class="p">,</span>
+                    <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
                 <span class="p">)</span>
             <span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;clean_copy&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
@@ -2247,6 +2296,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">incoming_column_name_</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">incoming_column_is_numeric_</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="n">derived_column_names_</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
     <span class="n">need_cross_treatment_</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="n">treatment_</span><span class="p">:</span> <span class="nb">str</span>
@@ -2256,24 +2306,29 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
         <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">incoming_column_is_numeric</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
         <span class="n">derived_column_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        :param incoming_column_name:</span>
+<span class="sd">        :param incoming_column_is_numeric:</span>
 <span class="sd">        :param derived_column_names:</span>
 <span class="sd">        :param treatment:</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">incoming_column_is_numeric</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">derived_column_names</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
         <span class="n">derived_column_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">derived_column_names</span><span class="p">)</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">derived_column_names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
-        <span class="k">assert</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dni</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">dni</span> <span class="ow">in</span> <span class="n">derived_column_names</span><span class="p">])</span>
-        <span class="k">assert</span> <span class="n">treatment</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dni</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">dni</span> <span class="ow">in</span> <span class="n">derived_column_names</span><span class="p">])</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">treatment</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span> <span class="o">=</span> <span class="n">incoming_column_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_is_numeric_</span> <span class="o">=</span> <span class="n">incoming_column_is_numeric</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span> <span class="o">=</span> <span class="n">derived_column_names</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span> <span class="o">=</span> <span class="n">treatment</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">need_cross_treatment_</span> <span class="o">=</span> <span class="kc">False</span>
@@ -2312,7 +2367,9 @@
 
         
             <span class="name">VarTransform</span><span class="signature">(
+    *,
     incoming_column_name: str,
+    incoming_column_is_numeric: bool,
     derived_column_names: Iterable[str],
     treatment: str
 )</span>
@@ -2322,24 +2379,29 @@
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
         <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">incoming_column_is_numeric</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
         <span class="n">derived_column_names</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        :param incoming_column_name:</span>
+<span class="sd">        :param incoming_column_is_numeric:</span>
 <span class="sd">        :param derived_column_names:</span>
 <span class="sd">        :param treatment:</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">incoming_column_is_numeric</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">derived_column_names</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
         <span class="n">derived_column_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">derived_column_names</span><span class="p">)</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">derived_column_names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
-        <span class="k">assert</span> <span class="nb">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dni</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">dni</span> <span class="ow">in</span> <span class="n">derived_column_names</span><span class="p">])</span>
-        <span class="k">assert</span> <span class="n">treatment</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dni</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">dni</span> <span class="ow">in</span> <span class="n">derived_column_names</span><span class="p">])</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">treatment</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span> <span class="o">=</span> <span class="n">incoming_column_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_is_numeric_</span> <span class="o">=</span> <span class="n">incoming_column_is_numeric</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span> <span class="o">=</span> <span class="n">derived_column_names</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span> <span class="o">=</span> <span class="n">treatment</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">need_cross_treatment_</span> <span class="o">=</span> <span class="kc">False</span>
@@ -2351,6 +2413,7 @@
         </details>
 
             <div class="docstring"><p>:param incoming_column_name:
+:param incoming_column_is_numeric:
 :param derived_column_names:
 :param treatment:</p>
 </div>
@@ -2560,10 +2623,11 @@
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">MappedCodeTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Class for transforms that are a dictionary mapping of values&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Class for transforms that are a dictionary mapping of strings to numeric values&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
         <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -2578,7 +2642,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">derived_column_name</span><span class="p">],</span> <span class="n">treatment</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">incoming_column_name</span><span class="p">,</span>
+            <span class="n">incoming_column_is_numeric</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">derived_column_names</span><span class="o">=</span><span class="p">[</span><span class="n">derived_column_name</span><span class="p">],</span>
+            <span class="n">treatment</span><span class="o">=</span><span class="n">treatment</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span> <span class="o">=</span> <span class="n">code_book</span>
 
@@ -2616,6 +2684,7 @@
                 <span class="s2">&quot;treatment_class&quot;</span><span class="p">:</span> <span class="s2">&quot;MappedCodeTransform&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;treatment&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
                 <span class="s2">&quot;orig_var&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
+                <span class="s2">&quot;orig_was_numeric&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_is_numeric_</span><span class="p">,</span>
                 <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                 <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">replace_bad_with_sentinel</span><span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">]</span>
@@ -2628,7 +2697,7 @@
 
         </details>
 
-            <div class="docstring"><p>Class for transforms that are a dictionary mapping of values</p>
+            <div class="docstring"><p>Class for transforms that are a dictionary mapping of strings to numeric values</p>
 </div>
 
 
@@ -2637,6 +2706,7 @@
 
         
             <span class="name">MappedCodeTransform</span><span class="signature">(
+    *,
     incoming_column_name: str,
     derived_column_name: str,
     treatment: str,
@@ -2648,6 +2718,7 @@
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
         <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">treatment</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -2662,7 +2733,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">derived_column_name</span><span class="p">],</span> <span class="n">treatment</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">incoming_column_name</span><span class="p">,</span>
+            <span class="n">incoming_column_is_numeric</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">derived_column_names</span><span class="o">=</span><span class="p">[</span><span class="n">derived_column_name</span><span class="p">],</span>
+            <span class="n">treatment</span><span class="o">=</span><span class="n">treatment</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span> <span class="o">=</span> <span class="n">code_book</span>
 </pre></div>
@@ -2746,6 +2821,7 @@
                 <span class="s2">&quot;treatment_class&quot;</span><span class="p">:</span> <span class="s2">&quot;MappedCodeTransform&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;treatment&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
                 <span class="s2">&quot;orig_var&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
+                <span class="s2">&quot;orig_was_numeric&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_is_numeric_</span><span class="p">,</span>
                 <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                 <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">replace_bad_with_sentinel</span><span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">code_book_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">]</span>
@@ -2909,7 +2985,10 @@
             <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">CleanNumericTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class for numeric column cleaner.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">replacement_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="o">*</span><span class="p">,</span>
+                 <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">replacement_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        :param incoming_column_name:</span>
@@ -2917,7 +2996,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">incoming_column_name</span><span class="p">],</span> <span class="s2">&quot;clean_copy&quot;</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">incoming_column_name</span><span class="p">,</span>
+            <span class="n">incoming_column_is_numeric</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">derived_column_names</span><span class="o">=</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">],</span>
+            <span class="n">treatment</span><span class="o">=</span><span class="s2">&quot;clean_copy&quot;</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">replacement_value_</span> <span class="o">=</span> <span class="n">replacement_value</span>
 
@@ -2948,6 +3031,7 @@
                 <span class="s2">&quot;treatment_class&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;CleanNumericTransform&quot;</span><span class="p">],</span>
                 <span class="s2">&quot;treatment&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
                 <span class="s2">&quot;orig_var&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
+                <span class="s2">&quot;orig_was_numeric&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_is_numeric_</span><span class="p">],</span>
                 <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
                 <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">bad_sentinel</span><span class="p">],</span>
                 <span class="s2">&quot;replacement&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">replacement_value_</span><span class="p">],</span>
@@ -2966,12 +3050,15 @@
                                         <div class="attr function"><a class="headerlink" href="#CleanNumericTransform.__init__">#&nbsp;&nbsp</a>
 
         
-            <span class="name">CleanNumericTransform</span><span class="signature">(incoming_column_name: str, replacement_value: float)</span>
+            <span class="name">CleanNumericTransform</span><span class="signature">(*, incoming_column_name: str, replacement_value: float)</span>
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">replacement_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="o">*</span><span class="p">,</span>
+                 <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">replacement_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        :param incoming_column_name:</span>
@@ -2979,7 +3066,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">incoming_column_name</span><span class="p">],</span> <span class="s2">&quot;clean_copy&quot;</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">incoming_column_name</span><span class="p">,</span>
+            <span class="n">incoming_column_is_numeric</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">derived_column_names</span><span class="o">=</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">],</span>
+            <span class="n">treatment</span><span class="o">=</span><span class="s2">&quot;clean_copy&quot;</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">replacement_value_</span> <span class="o">=</span> <span class="n">replacement_value</span>
 </pre></div>
@@ -3054,6 +3145,7 @@
                 <span class="s2">&quot;treatment_class&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;CleanNumericTransform&quot;</span><span class="p">],</span>
                 <span class="s2">&quot;treatment&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
                 <span class="s2">&quot;orig_var&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
+                <span class="s2">&quot;orig_was_numeric&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_is_numeric_</span><span class="p">],</span>
                 <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
                 <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">bad_sentinel</span><span class="p">],</span>
                 <span class="s2">&quot;replacement&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">replacement_value_</span><span class="p">],</span>
@@ -3086,7 +3178,11 @@
             <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">IndicateMissingTransform</span><span class="p">(</span><span class="n">VarTransform</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Class for missing value indicator.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="o">*</span><span class="p">,</span>
+                 <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">incoming_column_is_numeric</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+                 <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        :param incoming_column_name:</span>
@@ -3094,7 +3190,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">derived_column_name</span><span class="p">],</span> <span class="s2">&quot;missing_indicator&quot;</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">incoming_column_name</span><span class="p">,</span>
+            <span class="n">incoming_column_is_numeric</span><span class="o">=</span><span class="n">incoming_column_is_numeric</span><span class="p">,</span>
+            <span class="n">derived_column_names</span><span class="o">=</span><span class="p">[</span><span class="n">derived_column_name</span><span class="p">],</span>
+            <span class="n">treatment</span><span class="o">=</span><span class="s2">&quot;missing_indicator&quot;</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
@@ -3121,6 +3221,7 @@
                 <span class="s2">&quot;treatment_class&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;IndicateMissingTransform&quot;</span><span class="p">],</span>
                 <span class="s2">&quot;treatment&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
                 <span class="s2">&quot;orig_var&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
+                <span class="s2">&quot;orig_was_numeric&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_is_numeric_</span><span class="p">],</span>
                 <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
                 <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">bad_sentinel</span><span class="p">],</span>
                 <span class="s2">&quot;replacement&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span>
@@ -3139,12 +3240,21 @@
                                         <div class="attr function"><a class="headerlink" href="#IndicateMissingTransform.__init__">#&nbsp;&nbsp</a>
 
         
-            <span class="name">IndicateMissingTransform</span><span class="signature">(incoming_column_name: str, derived_column_name: str)</span>
+            <span class="name">IndicateMissingTransform</span><span class="signature">(
+    *,
+    incoming_column_name: str,
+    incoming_column_is_numeric: bool,
+    derived_column_name: str
+)</span>
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="o">*</span><span class="p">,</span>
+                 <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">incoming_column_is_numeric</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+                 <span class="n">derived_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        :param incoming_column_name:</span>
@@ -3152,7 +3262,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="p">[</span><span class="n">derived_column_name</span><span class="p">],</span> <span class="s2">&quot;missing_indicator&quot;</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">incoming_column_name</span><span class="p">,</span>
+            <span class="n">incoming_column_is_numeric</span><span class="o">=</span><span class="n">incoming_column_is_numeric</span><span class="p">,</span>
+            <span class="n">derived_column_names</span><span class="o">=</span><span class="p">[</span><span class="n">derived_column_name</span><span class="p">],</span>
+            <span class="n">treatment</span><span class="o">=</span><span class="s2">&quot;missing_indicator&quot;</span><span class="p">,</span>
         <span class="p">)</span>
 </pre></div>
 
@@ -3223,6 +3337,7 @@
                 <span class="s2">&quot;treatment_class&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;IndicateMissingTransform&quot;</span><span class="p">],</span>
                 <span class="s2">&quot;treatment&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">],</span>
                 <span class="s2">&quot;orig_var&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">],</span>
+                <span class="s2">&quot;orig_was_numeric&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_is_numeric_</span><span class="p">],</span>
                 <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
                 <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">bad_sentinel</span><span class="p">],</span>
                 <span class="s2">&quot;replacement&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">],</span>
@@ -3553,10 +3668,10 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
         <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">derived_column_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="n">levels</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span>
-        <span class="o">*</span><span class="p">,</span>
         <span class="n">sparse_indicators</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -3567,7 +3682,11 @@
 <span class="sd">        :param sparse_indicators: if True use sparse data structure</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">derived_column_names</span><span class="p">,</span> <span class="s2">&quot;indicator_code&quot;</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">incoming_column_name</span><span class="p">,</span>
+            <span class="n">incoming_column_is_numeric</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">derived_column_names</span><span class="o">=</span><span class="n">derived_column_names</span><span class="p">,</span>
+            <span class="n">treatment</span><span class="o">=</span><span class="s2">&quot;indicator_code&quot;</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">levels_</span> <span class="o">=</span> <span class="n">levels</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sparse_indicators_</span> <span class="o">=</span> <span class="n">sparse_indicators</span>
@@ -3614,6 +3733,7 @@
                 <span class="s2">&quot;treatment_class&quot;</span><span class="p">:</span> <span class="s2">&quot;IndicatorCodeTransform&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;treatment&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
                 <span class="s2">&quot;orig_var&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
+                <span class="s2">&quot;orig_was_numeric&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_is_numeric_</span><span class="p">,</span>
                 <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
                 <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">replace_bad_with_sentinel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="p">),</span>
                 <span class="s2">&quot;replacement&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
@@ -3633,10 +3753,10 @@
 
         
             <span class="name">IndicatorCodeTransform</span><span class="signature">(
+    *,
     incoming_column_name: str,
     derived_column_names: List[str],
     levels: List,
-    *,
     sparse_indicators: bool = False
 )</span>
     </div>
@@ -3645,10 +3765,10 @@
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
         <span class="n">incoming_column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">derived_column_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="n">levels</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span>
-        <span class="o">*</span><span class="p">,</span>
         <span class="n">sparse_indicators</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -3659,7 +3779,11 @@
 <span class="sd">        :param sparse_indicators: if True use sparse data structure</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">VarTransform</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span> <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">derived_column_names</span><span class="p">,</span> <span class="s2">&quot;indicator_code&quot;</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">incoming_column_name</span><span class="p">,</span>
+            <span class="n">incoming_column_is_numeric</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">derived_column_names</span><span class="o">=</span><span class="n">derived_column_names</span><span class="p">,</span>
+            <span class="n">treatment</span><span class="o">=</span><span class="s2">&quot;indicator_code&quot;</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">levels_</span> <span class="o">=</span> <span class="n">levels</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sparse_indicators_</span> <span class="o">=</span> <span class="n">sparse_indicators</span>
@@ -3749,6 +3873,7 @@
                 <span class="s2">&quot;treatment_class&quot;</span><span class="p">:</span> <span class="s2">&quot;IndicatorCodeTransform&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;treatment&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">,</span>
                 <span class="s2">&quot;orig_var&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_name_</span><span class="p">,</span>
+                <span class="s2">&quot;orig_was_numeric&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">incoming_column_is_numeric_</span><span class="p">,</span>
                 <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">derived_column_names_</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
                 <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">replace_bad_with_sentinel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">levels_</span><span class="p">),</span>
                 <span class="s2">&quot;replacement&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
@@ -3825,8 +3950,8 @@
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">IndicatorCodeTransform</span><span class="p">(</span>
-        <span class="n">incoming_column_name</span><span class="p">,</span>
-        <span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">build_level_codes</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">levels</span><span class="p">),</span>
+        <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">incoming_column_name</span><span class="p">,</span>
+        <span class="n">derived_column_names</span><span class="o">=</span><span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">build_level_codes</span><span class="p">(</span><span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">levels</span><span class="p">),</span>
         <span class="n">levels</span><span class="o">=</span><span class="n">levels</span><span class="p">,</span>
         <span class="n">sparse_indicators</span><span class="o">=</span><span class="n">sparse_indicators</span><span class="p">,</span>
     <span class="p">)</span>
@@ -3883,7 +4008,10 @@
     <span class="n">sf</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">sf</span><span class="p">[</span><span class="n">incoming_column_name</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
     <span class="n">sf</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">MappedCodeTransform</span><span class="p">(</span>
-        <span class="n">incoming_column_name</span><span class="p">,</span> <span class="n">newcol</span><span class="p">,</span> <span class="n">treatment</span><span class="o">=</span><span class="s2">&quot;prevalence_code&quot;</span><span class="p">,</span> <span class="n">code_book</span><span class="o">=</span><span class="n">sf</span>
+        <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">incoming_column_name</span><span class="p">,</span>
+        <span class="n">derived_column_name</span><span class="o">=</span><span class="n">newcol</span><span class="p">,</span>
+        <span class="n">treatment</span><span class="o">=</span><span class="s2">&quot;prevalence_code&quot;</span><span class="p">,</span>
+        <span class="n">code_book</span><span class="o">=</span><span class="n">sf</span>
     <span class="p">)</span>
 </pre></div>
 
@@ -3944,10 +4072,13 @@
     <span class="p">)</span>
     <span class="n">xforms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
+        <span class="n">num_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">num_list</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">IndicateMissingTransform</span><span class="p">(</span>
-                    <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
+                    <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
+                    <span class="n">incoming_column_is_numeric</span><span class="o">=</span><span class="n">vi</span> <span class="ow">in</span> <span class="n">num_set</span><span class="p">,</span>
+                    <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
                 <span class="p">)</span>
             <span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;clean_copy&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
@@ -4069,10 +4200,13 @@
     <span class="p">)</span>
     <span class="n">xforms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
+        <span class="n">num_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">num_list</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">IndicateMissingTransform</span><span class="p">(</span>
-                    <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
+                    <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
+                    <span class="n">incoming_column_is_numeric</span><span class="o">=</span><span class="n">vi</span> <span class="ow">in</span> <span class="n">num_set</span><span class="p">,</span>
+                    <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
                 <span class="p">)</span>
             <span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;clean_copy&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
@@ -4185,10 +4319,13 @@
     <span class="p">)</span>
     <span class="n">xforms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
+        <span class="n">num_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">num_list</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">IndicateMissingTransform</span><span class="p">(</span>
-                    <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
+                    <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
+                    <span class="n">incoming_column_is_numeric</span><span class="o">=</span><span class="n">vi</span> <span class="ow">in</span> <span class="n">num_set</span><span class="p">,</span>
+                    <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
                 <span class="p">)</span>
             <span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;clean_copy&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
@@ -4301,10 +4438,13 @@
     <span class="p">)</span>
     <span class="n">xforms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">VarTransform</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="s2">&quot;missing_indicator&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>
+        <span class="n">num_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">num_list</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">mis_list</span><span class="p">:</span>
             <span class="n">xforms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">IndicateMissingTransform</span><span class="p">(</span>
-                    <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span> <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
+                    <span class="n">incoming_column_name</span><span class="o">=</span><span class="n">vi</span><span class="p">,</span>
+                    <span class="n">incoming_column_is_numeric</span><span class="o">=</span><span class="n">vi</span> <span class="ow">in</span> <span class="n">num_set</span><span class="p">,</span>
+                    <span class="n">derived_column_name</span><span class="o">=</span><span class="n">vi</span> <span class="o">+</span> <span class="s2">&quot;_is_bad&quot;</span>
                 <span class="p">)</span>
             <span class="p">)</span>
     <span class="k">if</span> <span class="s2">&quot;clean_copy&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;coders&quot;</span><span class="p">]:</span>

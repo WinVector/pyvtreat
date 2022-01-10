@@ -75,6 +75,7 @@ class VarTransform(ABC):
     """
 
     incoming_column_name_: str
+    incoming_column_is_numeric_: bool
     derived_column_names_: List[str]
     need_cross_treatment_: bool
     treatment_: str
@@ -84,24 +85,29 @@ class VarTransform(ABC):
 
     def __init__(
         self,
+        *,
         incoming_column_name: str,
+        incoming_column_is_numeric: bool,
         derived_column_names: Iterable[str],
         treatment: str,
     ):
         """
 
         :param incoming_column_name:
+        :param incoming_column_is_numeric:
         :param derived_column_names:
         :param treatment:
         """
 
         assert isinstance(incoming_column_name, str)
+        assert isinstance(incoming_column_is_numeric, bool)
+        assert not isinstance(derived_column_names, str)
         derived_column_names = list(derived_column_names)
         assert len(derived_column_names) > 0
-        assert all([isinstance(dni, str) for dni in derived_column_names])
-        assert treatment is not None
+        assert numpy.all([isinstance(dni, str) for dni in derived_column_names])
         assert isinstance(treatment, str)
         self.incoming_column_name_ = incoming_column_name
+        self.incoming_column_is_numeric_ = incoming_column_is_numeric
         self.derived_column_names_ = derived_column_names
         self.treatment_ = treatment
         self.need_cross_treatment_ = False
@@ -179,10 +185,11 @@ class TreatmentPlan:
 
 
 class MappedCodeTransform(VarTransform):
-    """Class for transforms that are a dictionary mapping of values"""
+    """Class for transforms that are a dictionary mapping of strings to numeric values"""
 
     def __init__(
         self,
+        *,
         incoming_column_name: str,
         derived_column_name: str,
         treatment: str,
@@ -197,7 +204,11 @@ class MappedCodeTransform(VarTransform):
         """
 
         VarTransform.__init__(
-            self, incoming_column_name, [derived_column_name], treatment
+            self,
+            incoming_column_name=incoming_column_name,
+            incoming_column_is_numeric=False,
+            derived_column_names=[derived_column_name],
+            treatment=treatment,
         )
         self.code_book_ = code_book
 
@@ -235,6 +246,7 @@ class MappedCodeTransform(VarTransform):
                 "treatment_class": "MappedCodeTransform",
                 "treatment": self.treatment_,
                 "orig_var": self.incoming_column_name_,
+                "orig_was_numeric": self.incoming_column_is_numeric_,
                 "variable": self.derived_column_names_[0],
                 "value": replace_bad_with_sentinel(
                     self.code_book_[self.incoming_column_name_]
@@ -285,7 +297,10 @@ class YAwareMappedCodeTransform(MappedCodeTransform):
 class CleanNumericTransform(VarTransform):
     """Class for numeric column cleaner."""
 
-    def __init__(self, incoming_column_name: str, replacement_value: float):
+    def __init__(self,
+                 *,
+                 incoming_column_name: str,
+                 replacement_value: float):
         """
 
         :param incoming_column_name:
@@ -293,7 +308,11 @@ class CleanNumericTransform(VarTransform):
         """
 
         VarTransform.__init__(
-            self, incoming_column_name, [incoming_column_name], "clean_copy"
+            self,
+            incoming_column_name=incoming_column_name,
+            incoming_column_is_numeric=True,
+            derived_column_names=[incoming_column_name],
+            treatment="clean_copy",
         )
         self.replacement_value_ = replacement_value
 
@@ -324,6 +343,7 @@ class CleanNumericTransform(VarTransform):
                 "treatment_class": ["CleanNumericTransform"],
                 "treatment": [self.treatment_],
                 "orig_var": [self.incoming_column_name_],
+                "orig_was_numeric": [self.incoming_column_is_numeric_],
                 "variable": [self.derived_column_names_[0]],
                 "value": [bad_sentinel],
                 "replacement": [self.replacement_value_],
@@ -335,7 +355,11 @@ class CleanNumericTransform(VarTransform):
 class IndicateMissingTransform(VarTransform):
     """Class for missing value indicator."""
 
-    def __init__(self, incoming_column_name: str, derived_column_name: str):
+    def __init__(self,
+                 *,
+                 incoming_column_name: str,
+                 incoming_column_is_numeric: bool,
+                 derived_column_name: str):
         """
 
         :param incoming_column_name:
@@ -343,7 +367,11 @@ class IndicateMissingTransform(VarTransform):
         """
 
         VarTransform.__init__(
-            self, incoming_column_name, [derived_column_name], "missing_indicator"
+            self,
+            incoming_column_name=incoming_column_name,
+            incoming_column_is_numeric=incoming_column_is_numeric,
+            derived_column_names=[derived_column_name],
+            treatment="missing_indicator",
         )
 
     def transform(self, data_frame: pandas.DataFrame) -> pandas.DataFrame:
@@ -370,6 +398,7 @@ class IndicateMissingTransform(VarTransform):
                 "treatment_class": ["IndicateMissingTransform"],
                 "treatment": [self.treatment_],
                 "orig_var": [self.incoming_column_name_],
+                "orig_was_numeric": [self.incoming_column_is_numeric_],
                 "variable": [self.derived_column_names_[0]],
                 "value": [bad_sentinel],
                 "replacement": [1.0],
@@ -557,10 +586,10 @@ class IndicatorCodeTransform(VarTransform):
 
     def __init__(
         self,
+        *,
         incoming_column_name: str,
         derived_column_names: List[str],
         levels: List,
-        *,
         sparse_indicators: bool = False,
     ):
         """
@@ -571,7 +600,11 @@ class IndicatorCodeTransform(VarTransform):
         :param sparse_indicators: if True use sparse data structure
         """
         VarTransform.__init__(
-            self, incoming_column_name, derived_column_names, "indicator_code"
+            self,
+            incoming_column_name=incoming_column_name,
+            incoming_column_is_numeric=False,
+            derived_column_names=derived_column_names,
+            treatment="indicator_code",
         )
         self.levels_ = levels
         self.sparse_indicators_ = sparse_indicators
@@ -618,6 +651,7 @@ class IndicatorCodeTransform(VarTransform):
                 "treatment_class": "IndicatorCodeTransform",
                 "treatment": self.treatment_,
                 "orig_var": self.incoming_column_name_,
+                "orig_was_numeric": self.incoming_column_is_numeric_,
                 "variable": self.derived_column_names_.copy(),
                 "value": replace_bad_with_sentinel(self.levels_),
                 "replacement": 1.0,
@@ -667,8 +701,8 @@ def fit_indicator_code(
     if len(levels) < 1:
         return None
     return IndicatorCodeTransform(
-        incoming_column_name,
-        vtreat.util.build_level_codes(incoming_column_name, levels),
+        incoming_column_name=incoming_column_name,
+        derived_column_names=vtreat.util.build_level_codes(incoming_column_name, levels),
         levels=levels,
         sparse_indicators=sparse_indicators,
     )
@@ -698,7 +732,10 @@ def fit_prevalence_code(incoming_column_name: str, x) -> Optional[VarTransform]:
     sf[incoming_column_name] = sf[incoming_column_name].astype(str)
     sf.reset_index(inplace=True, drop=True)
     return MappedCodeTransform(
-        incoming_column_name, newcol, treatment="prevalence_code", code_book=sf
+        incoming_column_name=incoming_column_name,
+        derived_column_name=newcol,
+        treatment="prevalence_code",
+        code_book=sf
     )
 
 
@@ -785,10 +822,13 @@ def fit_numeric_outcome_treatment(
     )
     xforms: List[Optional[VarTransform]] = []
     if "missing_indicator" in params["coders"]:
+        num_set = set(num_list)
         for vi in mis_list:
             xforms.append(
                 IndicateMissingTransform(
-                    incoming_column_name=vi, derived_column_name=vi + "_is_bad"
+                    incoming_column_name=vi,
+                    incoming_column_is_numeric=vi in num_set,
+                    derived_column_name=vi + "_is_bad"
                 )
             )
     if "clean_copy" in params["coders"]:
@@ -875,10 +915,13 @@ def fit_binomial_outcome_treatment(
     )
     xforms: List[Optional[VarTransform]] = []
     if "missing_indicator" in params["coders"]:
+        num_set = set(num_list)
         for vi in mis_list:
             xforms.append(
                 IndicateMissingTransform(
-                    incoming_column_name=vi, derived_column_name=vi + "_is_bad"
+                    incoming_column_name=vi,
+                    incoming_column_is_numeric=vi in num_set,
+                    derived_column_name=vi + "_is_bad"
                 )
             )
     if "clean_copy" in params["coders"]:
@@ -958,10 +1001,13 @@ def fit_multinomial_outcome_treatment(
     )
     xforms: List[Optional[VarTransform]] = []
     if "missing_indicator" in params["coders"]:
+        num_set = set(num_list)
         for vi in mis_list:
             xforms.append(
                 IndicateMissingTransform(
-                    incoming_column_name=vi, derived_column_name=vi + "_is_bad"
+                    incoming_column_name=vi,
+                    incoming_column_is_numeric=vi in num_set,
+                    derived_column_name=vi + "_is_bad"
                 )
             )
     if "clean_copy" in params["coders"]:
@@ -1041,10 +1087,13 @@ def fit_unsupervised_treatment(
     )
     xforms: List[Optional[VarTransform]] = []
     if "missing_indicator" in params["coders"]:
+        num_set = set(num_list)
         for vi in mis_list:
             xforms.append(
                 IndicateMissingTransform(
-                    incoming_column_name=vi, derived_column_name=vi + "_is_bad"
+                    incoming_column_name=vi,
+                    incoming_column_is_numeric=vi in num_set,
+                    derived_column_name=vi + "_is_bad"
                 )
             )
     if "clean_copy" in params["coders"]:

@@ -109,10 +109,15 @@ def as_data_algebra_pipeline(
         vtreat_descr["treatment_class"] == "IndicateMissingTransform", :
     ].reset_index(inplace=False, drop=True)
     for i in range(im_rows.shape[0]):
-        step_1_ops[
-            im_rows["variable"][i]
-        ] = f"{im_rows['orig_var'][i]}.is_bad().if_else(1.0, 0.0)"
-    # add in general value indicators or dummies
+        if im_rows['orig_was_numeric'][i]:
+            step_1_ops[
+                im_rows["variable"][i]
+            ] = f"{im_rows['orig_var'][i]}.is_bad().if_else(1.0, 0.0)"
+        else:
+            step_1_ops[
+                im_rows["variable"][i]
+            ] = f"({im_rows['orig_var'][i]}.coalesce('{bad_sentinel}') == '{bad_sentinel}').if_else(1.0, 0.0)"
+    # add in general value indicators or dummies, all indicators are non-numeric (string)
     ic_rows = vtreat_descr.loc[
         vtreat_descr["treatment_class"] == "IndicatorCodeTransform", :
     ].reset_index(inplace=False, drop=True)

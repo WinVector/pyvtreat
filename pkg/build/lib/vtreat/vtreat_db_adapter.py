@@ -26,6 +26,14 @@ def _check_treatment_table(vtreat_descr: pandas.DataFrame):
     vtreat_descr["value"] = replace_bad_with_sentinel(vtreat_descr["value"])
     # check our expected invariants
     assert isinstance(vtreat_descr, pandas.DataFrame)
+    # numeric is a function of original variable only
+    check_fn_relnn = (
+        data(vtreat_descr=vtreat_descr)
+            .project({}, group_by=["orig_var", "orig_was_numeric"])
+            .extend({"one": 1})
+            .project({"count": "one.sum()"}, group_by=["orig_var"])
+    ).ex()
+    assert numpy.all(check_fn_relnn["count"] == 1)
     # variable consumed is function of variable produced and treatment only
     check_fn_reln2 = (
         data(vtreat_descr=vtreat_descr)
@@ -101,10 +109,15 @@ def as_data_algebra_pipeline(
         vtreat_descr["treatment_class"] == "IndicateMissingTransform", :
     ].reset_index(inplace=False, drop=True)
     for i in range(im_rows.shape[0]):
-        step_1_ops[
-            im_rows["variable"][i]
-        ] = f"{im_rows['orig_var'][i]}.is_bad().if_else(1.0, 0.0)"
-    # add in general value indicators or dummies
+        if im_rows['orig_was_numeric'][i]:
+            step_1_ops[
+                im_rows["variable"][i]
+            ] = f"{im_rows['orig_var'][i]}.is_bad().if_else(1.0, 0.0)"
+        else:
+            step_1_ops[
+                im_rows["variable"][i]
+            ] = f"({im_rows['orig_var'][i]}.coalesce('{bad_sentinel}') == '{bad_sentinel}').if_else(1.0, 0.0)"
+    # add in general value indicators or dummies, all indicators are non-numeric (string)
     ic_rows = vtreat_descr.loc[
         vtreat_descr["treatment_class"] == "IndicatorCodeTransform", :
     ].reset_index(inplace=False, drop=True)
