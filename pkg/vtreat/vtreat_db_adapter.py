@@ -26,6 +26,14 @@ def _check_treatment_table(vtreat_descr: pandas.DataFrame):
     vtreat_descr["value"] = replace_bad_with_sentinel(vtreat_descr["value"])
     # check our expected invariants
     assert isinstance(vtreat_descr, pandas.DataFrame)
+    # numeric is a function of original variable only
+    check_fn_relnn = (
+        data(vtreat_descr=vtreat_descr)
+            .project({}, group_by=["orig_var", "orig_was_numeric"])
+            .extend({"one": 1})
+            .project({"count": "one.sum()"}, group_by=["orig_var"])
+    ).ex()
+    assert numpy.all(check_fn_relnn["count"] == 1)
     # variable consumed is function of variable produced and treatment only
     check_fn_reln2 = (
         data(vtreat_descr=vtreat_descr)
