@@ -2,15 +2,16 @@
 
 import os
 import pandas
-import xgboost
+import pytest
+
 import vtreat
 import vtreat.cross_plan
 import numpy.random
-import wvpy.util
-import scipy.sparse
 from data_algebra.data_ops import descr, TableDescription
 import vtreat.vtreat_db_adapter
 import data_algebra.BigQuery
+import sklearn.linear_model
+import sklearn.metrics
 
 
 # From:
@@ -18,6 +19,8 @@ import data_algebra.BigQuery
 def test_KDD2009_vtreat_1():
     data_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'KDD2009')
     # data from https://github.com/WinVector/PDSwR2/tree/master/KDD2009
+    expect_test = pandas.read_csv(
+        os.path.join(data_dir, 'test_processed.csv.gz'), compression='gzip')
     d = pandas.read_csv(
         os.path.join(data_dir, 'orange_small_train.data.gz'),
         sep='\t',
@@ -53,6 +56,32 @@ def test_KDD2009_vtreat_1():
         }))
     cross_frame = plan.fit_transform(d_train, churn_train)
     test_processed = plan.transform(d_test)
+    # check we got lots of variables, as seen in worksheet
+    rec = plan.score_frame_.loc[plan.score_frame_.recommended, :]
+    vc = rec.treatment.value_counts()
+    treatments_seen = set(vc.index)
+    assert numpy.all([t in treatments_seen for t in ['missing_indicator', 'indicator_code',
+                                                     'logit_code', 'prevalence_code', 'clean_copy']])
+    assert numpy.min(vc) >= 10
+    # try a simple model
+    model_vars = list(rec['variable'])
+    model = sklearn.linear_model.LogisticRegression(max_iter=1000)
+    with pytest.warns(UserWarning):  # densifying warns
+        model.fit(cross_frame.loc[:, model_vars], churn_train)
+    with pytest.warns(UserWarning):  # densifying warns
+        preds_test = model.predict_proba(test_processed.loc[:, model_vars])
+    with pytest.warns(UserWarning):  # densifying warns
+        preds_train = model.predict_proba(cross_frame.loc[:, model_vars])
+    fpr, tpr, _ = sklearn.metrics.roc_curve(churn_test, preds_test[:, 1])
+    auc_test = sklearn.metrics.auc(fpr, tpr)
+    fpr, tpr, _ = sklearn.metrics.roc_curve(churn_train, preds_train[:, 1])
+    auc_train = sklearn.metrics.auc(fpr, tpr)
+    assert auc_test > 0.6  # not good!
+    assert abs(auc_test - auc_train) < 0.05  # at least not over fit!
+    # check against previous result
+    assert test_processed.shape == expect_test.shape
+    assert set(test_processed.columns) == set(expect_test.columns)
+    assert numpy.max(numpy.max(numpy.abs(test_processed - expect_test))) < 1e-3
     # test transform conversion
     transform_as_data = plan.description_matrix()
     incoming_vars = list(set(transform_as_data['orig_var']))
@@ -82,7 +111,7 @@ def test_KDD2009_vtreat_1():
         db_handle = data_algebra.BigQuery.example_handle()
         db_handle.drop_table('d_test_processed')
         db_handle.insert_table(d_test.loc[:, incoming_vars + ['orig_index']], table_name='d_test', allow_overwrite=True)
-        _ = db_handle.insert_table(transform_as_data, table_name='transform_as_data', allow_overwrite=True)
+        db_handle.insert_table(transform_as_data, table_name='transform_as_data', allow_overwrite=True)
         db_handle.execute(
             f"CREATE TABLE {db_handle.db_model.table_prefix}.d_test_processed AS {db_handle.to_sql(ops)}")
         db_res = db_handle.read_query(
