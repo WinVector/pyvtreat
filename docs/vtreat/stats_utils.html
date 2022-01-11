@@ -45,6 +45,12 @@
             <li>
                     <a class="function" href="#our_pseudo_R2">our_pseudo_R2</a>
             </li>
+            <li>
+                    <a class="function" href="#xicor">xicor</a>
+            </li>
+            <li>
+                    <a class="function" href="#xicor_for_frame">xicor_for_frame</a>
+            </li>
     </ul>
 
 
@@ -71,6 +77,7 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">pandas</span>
 
 <span class="kn">import</span> <span class="nn">scipy.stats</span>
 <span class="kn">import</span> <span class="nn">scipy.optimize</span>
@@ -220,6 +227,64 @@
         <span class="n">delta_df</span> <span class="o">=</span> <span class="n">df_null</span> <span class="o">-</span> <span class="n">df_residual</span>
         <span class="n">sig</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">chi2</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">delta_deviance</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="n">delta_df</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">r2</span><span class="p">,</span> <span class="n">sig</span>
+
+
+<span class="k">def</span> <span class="nf">xicor</span><span class="p">(</span><span class="n">xvec</span><span class="p">,</span> <span class="n">yvec</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_reps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    xicor calculation built to match from R::caclulateXI() and published article.</span>
+
+<span class="sd">    :param xvec: numeric vector with explanatory variable to compute xicor for.</span>
+<span class="sd">    :param yvec: numeric dependent variable to relate to.</span>
+<span class="sd">    :param n_reps: number of times to repeat calculation.</span>
+<span class="sd">    :return: mean and standard error of estimate (under x-tie breaking)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">yvec</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">yvec</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">yvec</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n_reps</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">n_reps</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="n">xvec</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">xvec</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">n</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">xvec</span><span class="p">)</span>
+    <span class="n">PI</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">fr_orig</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">rankdata</span><span class="p">(</span><span class="n">yvec</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
+    <span class="n">gr</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">rankdata</span><span class="p">(</span><span class="o">-</span><span class="n">yvec</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
+    <span class="n">CU</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">gr</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">gr</span><span class="p">))</span>
+    <span class="n">xi_s</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_reps</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">rep_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_reps</span><span class="p">):</span>
+        <span class="n">perm</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>  <span class="c1"># get random ranking by ranking permuted</span>
+        <span class="n">PI_inv</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">rankdata</span><span class="p">(</span><span class="n">xvec</span><span class="p">[</span><span class="n">perm</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;ordinal&quot;</span><span class="p">)</span>
+        <span class="n">PI</span><span class="p">[</span><span class="n">perm</span><span class="p">]</span> <span class="o">=</span> <span class="n">PI_inv</span>  <span class="c1"># invert permutation, self assignment fails</span>
+        <span class="nb">ord</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">PI</span><span class="p">)</span>
+        <span class="n">fr</span> <span class="o">=</span> <span class="n">fr_orig</span><span class="p">[</span><span class="nb">ord</span><span class="p">]</span>
+        <span class="n">A1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fr</span><span class="p">[</span><span class="mi">0</span><span class="p">:(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">-</span> <span class="n">fr</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">n</span><span class="p">]))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>
+        <span class="n">xi</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">A1</span> <span class="o">/</span> <span class="n">CU</span>
+        <span class="n">xi_s</span><span class="p">[</span><span class="n">rep_i</span><span class="p">]</span> <span class="o">=</span> <span class="n">xi</span>
+    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">xi_s</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">xi_s</span><span class="p">)</span> <span class="o">/</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n_reps</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">xicor_for_frame</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_reps</span><span class="o">=</span><span class="mi">25</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="n">n</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n_reps</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">n_reps</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="n">y_perms</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span> <span class="k">for</span> <span class="n">rep_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_reps</span><span class="p">)]</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+        <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span>
+        <span class="s1">&#39;xicor&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s1">&#39;xicor_se&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s1">&#39;xicor_perm_mean&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s1">&#39;xicor_perm_stddev&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">})</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">)):</span>
+        <span class="n">xvec</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="n">xi_est</span><span class="p">,</span> <span class="n">xi_est_dev</span> <span class="o">=</span> <span class="n">xicor</span><span class="p">(</span><span class="n">xvec</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">n_reps</span><span class="o">=</span><span class="n">n_reps</span><span class="p">)</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;xicor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xi_est</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;xicor_se&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xi_est_dev</span>
+        <span class="n">xi_perm</span> <span class="o">=</span> <span class="p">[</span><span class="n">xicor</span><span class="p">(</span><span class="n">xvec</span><span class="p">,</span> <span class="n">y_perms</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">n_reps</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_reps</span><span class="p">)]</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;xicor_perm_mean&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">xi_perm</span><span class="p">)</span>  <span class="c1"># expected value should be zero, but report anyway</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;xicor_perm_stddev&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">xi_perm</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">res</span>
 </pre></div>
 
         </details>
@@ -470,6 +535,101 @@ cases removed.</p>
 :return: (pseudo-R2, significance)</p>
 </div>
 
+
+                </section>
+                <section id="xicor">
+                            <div class="attr function"><a class="headerlink" href="#xicor">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">xicor</span><span class="signature">(xvec, yvec, *, n_reps: int = 25) -&gt; Tuple[float, float]</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">xicor</span><span class="p">(</span><span class="n">xvec</span><span class="p">,</span> <span class="n">yvec</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_reps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    xicor calculation built to match from R::caclulateXI() and published article.</span>
+
+<span class="sd">    :param xvec: numeric vector with explanatory variable to compute xicor for.</span>
+<span class="sd">    :param yvec: numeric dependent variable to relate to.</span>
+<span class="sd">    :param n_reps: number of times to repeat calculation.</span>
+<span class="sd">    :return: mean and standard error of estimate (under x-tie breaking)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">yvec</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">yvec</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">yvec</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n_reps</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">n_reps</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="n">xvec</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">xvec</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">n</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">xvec</span><span class="p">)</span>
+    <span class="n">PI</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">fr_orig</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">rankdata</span><span class="p">(</span><span class="n">yvec</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
+    <span class="n">gr</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">rankdata</span><span class="p">(</span><span class="o">-</span><span class="n">yvec</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
+    <span class="n">CU</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">gr</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">gr</span><span class="p">))</span>
+    <span class="n">xi_s</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_reps</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">rep_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_reps</span><span class="p">):</span>
+        <span class="n">perm</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>  <span class="c1"># get random ranking by ranking permuted</span>
+        <span class="n">PI_inv</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">rankdata</span><span class="p">(</span><span class="n">xvec</span><span class="p">[</span><span class="n">perm</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;ordinal&quot;</span><span class="p">)</span>
+        <span class="n">PI</span><span class="p">[</span><span class="n">perm</span><span class="p">]</span> <span class="o">=</span> <span class="n">PI_inv</span>  <span class="c1"># invert permutation, self assignment fails</span>
+        <span class="nb">ord</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">PI</span><span class="p">)</span>
+        <span class="n">fr</span> <span class="o">=</span> <span class="n">fr_orig</span><span class="p">[</span><span class="nb">ord</span><span class="p">]</span>
+        <span class="n">A1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fr</span><span class="p">[</span><span class="mi">0</span><span class="p">:(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">-</span> <span class="n">fr</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">n</span><span class="p">]))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>
+        <span class="n">xi</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">A1</span> <span class="o">/</span> <span class="n">CU</span>
+        <span class="n">xi_s</span><span class="p">[</span><span class="n">rep_i</span><span class="p">]</span> <span class="o">=</span> <span class="n">xi</span>
+    <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">xi_s</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">xi_s</span><span class="p">)</span> <span class="o">/</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n_reps</span><span class="p">)</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>xicor calculation built to match from R::caclulateXI() and published article.</p>
+
+<p>:param xvec: numeric vector with explanatory variable to compute xicor for.
+:param yvec: numeric dependent variable to relate to.
+:param n_reps: number of times to repeat calculation.
+:return: mean and standard error of estimate (under x-tie breaking)</p>
+</div>
+
+
+                </section>
+                <section id="xicor_for_frame">
+                            <div class="attr function"><a class="headerlink" href="#xicor_for_frame">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">xicor_for_frame</span><span class="signature">(d: pandas.core.frame.DataFrame, y, *, n_reps=25)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">xicor_for_frame</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_reps</span><span class="o">=</span><span class="mi">25</span><span class="p">):</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="n">n</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n_reps</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">n_reps</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="n">y_perms</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span> <span class="k">for</span> <span class="n">rep_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_reps</span><span class="p">)]</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+        <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span>
+        <span class="s1">&#39;xicor&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s1">&#39;xicor_se&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s1">&#39;xicor_perm_mean&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s1">&#39;xicor_perm_stddev&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">})</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">)):</span>
+        <span class="n">xvec</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="n">xi_est</span><span class="p">,</span> <span class="n">xi_est_dev</span> <span class="o">=</span> <span class="n">xicor</span><span class="p">(</span><span class="n">xvec</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">n_reps</span><span class="o">=</span><span class="n">n_reps</span><span class="p">)</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;xicor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xi_est</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;xicor_se&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xi_est_dev</span>
+        <span class="n">xi_perm</span> <span class="o">=</span> <span class="p">[</span><span class="n">xicor</span><span class="p">(</span><span class="n">xvec</span><span class="p">,</span> <span class="n">y_perms</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">n_reps</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_reps</span><span class="p">)]</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;xicor_perm_mean&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">xi_perm</span><span class="p">)</span>  <span class="c1"># expected value should be zero, but report anyway</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;xicor_perm_stddev&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">xi_perm</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">res</span>
+</pre></div>
+
+        </details>
+
+    
 
                 </section>
     </main>

@@ -3,9 +3,11 @@ import os
 import yaml
 
 import numpy
+import numpy.random
 import pandas
 
 from vtreat.stats_utils import xicor, xicor_for_frame
+import data_algebra.test_util
 
 
 def test_xicor():
@@ -37,3 +39,21 @@ def test_xicor():
         assert numpy.abs(numpy.mean(ref_xicor) - our_xicor_mean) < 0.05
         assert numpy.abs(numpy.std(ref_xicor) - our_xicor_std) < 0.05
         # print(f'ref: {np.mean(ref_xicor)} {np.std(ref_xicor)}, ours: {our_xicor_mean} {our_xicor_std}')
+
+
+def test_xicor_frame():
+    numpy.random.seed(2022)
+    x = pandas.DataFrame({
+        'x1': [1, 2, 3, 4],
+        'x2': [1, 1, 2, 2],
+    })
+    y = [1, 2, 3, 4]
+    res = xicor_for_frame(x, y, n_reps=1000)
+    expect = pandas.DataFrame({
+        'variable': ['x1', 'x2'],
+        'xicor': [0.4, 0.2],
+        'xicor_se': 0.0,
+        'xicor_perm_mean': 0.0,
+        'xicor_perm_stddev': [0.2, 0.2]
+    })
+    assert data_algebra.test_util.equivalent_frames(res, expect, float_tol=0.01)

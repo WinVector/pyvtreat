@@ -211,10 +211,3 @@ def xicor_for_frame(d: pandas.DataFrame, y, *, n_reps=25):
         res.loc[i, 'xicor_perm_mean'] = numpy.mean(xi_perm)  # expected value should be zero, but report anyway
         res.loc[i, 'xicor_perm_stddev'] = numpy.std(xi_perm)
     return res
-
-
-# TODO: add tests
-# xicor([1, 2, 3], [1, 2, 3])
-# xicor([1, 1, 2, 2], [1, 2, 3, 4])
-# xicor_for_frame(pandas.DataFrame({'x': [1, 1, 2, 2]}), [1, 2, 3, 4])
-# xicor_for_frame(pandas.DataFrame({'x': range(100)}), range(100))
