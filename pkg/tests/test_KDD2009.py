@@ -7,17 +7,21 @@ import pytest
 import vtreat
 import vtreat.cross_plan
 import numpy.random
+import data_algebra
 from data_algebra.data_ops import descr, TableDescription
 import vtreat.vtreat_db_adapter
 import data_algebra.BigQuery
 import sklearn.linear_model
 import sklearn.metrics
+import data_algebra.solutions
 
 
 # From:
 # https://github.com/WinVector/pyvtreat/blob/main/Examples/KDD2009Example/KDD2009Example.ipynb
 def test_KDD2009_vtreat_1():
     data_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'KDD2009')
+    test_on_BigQuery = False
+    test_xicor = False
     # data from https://github.com/WinVector/PDSwR2/tree/master/KDD2009
     expect_test = pandas.read_csv(
         os.path.join(data_dir, 'test_processed.csv.gz'), compression='gzip')
@@ -63,8 +67,22 @@ def test_KDD2009_vtreat_1():
     assert numpy.all([t in treatments_seen for t in ['missing_indicator', 'indicator_code',
                                                      'logit_code', 'prevalence_code', 'clean_copy']])
     assert numpy.min(vc) >= 10
-    # try a simple model
     model_vars = list(rec['variable'])
+    if test_xicor:
+        ## xicor
+        # all_vars = list(set(plan.score_frame_["variable"]))
+        all_vars = [c for c in cross_frame.columns if c not in ['churn', 'orig_index']]
+        cross_frame['churn'] = churn_train
+        xicor_ops, rep_frame_name, rep_frame = data_algebra.solutions.xicor_score_variables_plan(
+            d=descr(cross_frame=cross_frame),
+            x_vars=all_vars,
+            y_name='churn',
+            n_rep=3,
+        )
+        xicor_scores = xicor_ops.eval({'cross_frame': cross_frame, rep_frame_name: rep_frame})
+        xicor_picked = list(xicor_scores.loc[xicor_scores['xicor_mean'] > xicor_scores['xicor_std'], 'variable_name'])
+        model_vars = xicor_picked
+    # try a simple model
     model = sklearn.linear_model.LogisticRegression(max_iter=1000)
     with pytest.warns(UserWarning):  # densifying warns
         model.fit(cross_frame.loc[:, model_vars], churn_train)
@@ -106,7 +124,7 @@ def test_KDD2009_vtreat_1():
     assert numpy.max(numpy.max(numpy.abs(test_processed[test_cols_sorted] - test_by_pipeline[test_cols_sorted]))) < 1e-5
     # data algebra pipeline in database
     sql = data_algebra.BigQuery.BigQueryModel().to_sql(ops)
-    test_on_BigQuery = False
+    assert isinstance(sql, str)
     if test_on_BigQuery:
         db_handle = data_algebra.BigQuery.example_handle()
         db_handle.drop_table('d_test_processed')
