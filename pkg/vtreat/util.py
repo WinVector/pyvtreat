@@ -12,7 +12,6 @@ import hashlib
 import numpy
 import pandas
 
-
 import vtreat.stats_utils
 
 
@@ -318,3 +317,6 @@ def hash_data_frame(d: pandas.DataFrame) -> str:
     :return: hash code as a string
     """
     return hashlib.sha256(pandas.util.hash_pandas_object(d).values).hexdigest()
+
+
+

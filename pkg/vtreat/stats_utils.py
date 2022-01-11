@@ -3,6 +3,7 @@
 from typing import Tuple
 
 import numpy
+import pandas
 
 import scipy.stats
 import scipy.optimize
@@ -152,3 +153,68 @@ def our_pseudo_R2(*, y_true, y_pred) -> Tuple[float, float]:
         delta_df = df_null - df_residual
         sig = 1 - scipy.stats.chi2.cdf(x=delta_deviance, df=delta_df)
     return r2, sig
+
+
+def xicor(xvec, yvec, *, n_reps: int = 25) -> Tuple[float, float]:
+    """
+    xicor calculation built to match from R::caclulateXI() and published article.
+
+    :param xvec: numeric vector with explanatory variable to compute xicor for.
+    :param yvec: numeric dependent variable to relate to.
+    :param n_reps: number of times to repeat calculation.
+    :return: mean and standard error of estimate (under x-tie breaking)
+    """
+    yvec = numpy.asarray(yvec)
+    n = len(yvec)
+    assert n > 1
+    assert isinstance(n_reps, int)
+    assert n_reps > 0
+    xvec = numpy.asarray(xvec)
+    assert n == len(xvec)
+    PI = numpy.zeros(n)
+    fr_orig = scipy.stats.rankdata(yvec, method="max") / n
+    gr = scipy.stats.rankdata(-yvec, method="max") / n
+    CU = numpy.mean(gr * (1 - gr))
+    xi_s = numpy.zeros(n_reps)
+    for rep_i in range(n_reps):
+        perm = numpy.random.permutation(n)  # get random ranking by ranking permuted
+        PI_inv = scipy.stats.rankdata(xvec[perm], method="ordinal")
+        PI[perm] = PI_inv  # invert permutation, self assignment fails
+        ord = numpy.argsort(PI)
+        fr = fr_orig[ord]
+        A1 = numpy.sum(numpy.abs(fr[0:(n - 1)] - fr[1:n])) / (2 * n)
+        xi = 1 - A1 / CU
+        xi_s[rep_i] = xi
+    return numpy.mean(xi_s), numpy.std(xi_s) / numpy.sqrt(n_reps)
+
+
+def xicor_for_frame(d: pandas.DataFrame, y, *, n_reps=25):
+    n = d.shape[0]
+    assert n > 1
+    y = numpy.asarray(y)
+    assert len(y) == n
+    assert isinstance(n_reps, int)
+    assert n_reps > 0
+    y_perms = [y[numpy.random.permutation(n)] for rep_i in range(n_reps)]
+    res = pandas.DataFrame({
+        'variable': d.columns,
+        'xicor': 0.0,
+        'xicor_se': 0.0,
+        'xicor_perm_mean': 0.0,
+        'xicor_perm_stddev': 0.0})
+    for i in range(len(d.columns)):
+        xvec = d[d.columns[i]]
+        xi_est, xi_est_dev = xicor(xvec, y, n_reps=n_reps)
+        res.loc[i, 'xicor'] = xi_est
+        res.loc[i, 'xicor_se'] = xi_est_dev
+        xi_perm = [xicor(xvec, y_perms[j], n_reps=1)[0] for j in range(n_reps)]
+        res.loc[i, 'xicor_perm_mean'] = numpy.mean(xi_perm)  # expected value should be zero, but report anyway
+        res.loc[i, 'xicor_perm_stddev'] = numpy.std(xi_perm)
+    return res
+
+
+# TODO: add tests
+# xicor([1, 2, 3], [1, 2, 3])
+# xicor([1, 1, 2, 2], [1, 2, 3, 4])
+# xicor_for_frame(pandas.DataFrame({'x': [1, 1, 2, 2]}), [1, 2, 3, 4])
+# xicor_for_frame(pandas.DataFrame({'x': range(100)}), range(100))
