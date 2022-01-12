@@ -229,7 +229,7 @@
     <span class="k">return</span> <span class="n">r2</span><span class="p">,</span> <span class="n">sig</span>
 
 
-<span class="k">def</span> <span class="nf">xicor</span><span class="p">(</span><span class="n">xvec</span><span class="p">,</span> <span class="n">yvec</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_reps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">xicor</span><span class="p">(</span><span class="n">xvec</span><span class="p">,</span> <span class="n">yvec</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_reps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    xicor calculation built to match from R::caclulateXI() and published article.</span>
 
@@ -262,7 +262,7 @@
     <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">xi_s</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">xi_s</span><span class="p">)</span> <span class="o">/</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n_reps</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">xicor_for_frame</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_reps</span><span class="o">=</span><span class="mi">25</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">xicor_for_frame</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_reps</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate xicor for all columns of data frame d with respect to dependent column y.</span>
 
@@ -568,12 +568,12 @@ cases removed.</p>
 
         
             <span class="def">def</span>
-            <span class="name">xicor</span><span class="signature">(xvec, yvec, *, n_reps: int = 25) -&gt; Tuple[float, float]</span>:
+            <span class="name">xicor</span><span class="signature">(xvec, yvec, *, n_reps: int = 5) -&gt; Tuple[float, float]</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">xicor</span><span class="p">(</span><span class="n">xvec</span><span class="p">,</span> <span class="n">yvec</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_reps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">xicor</span><span class="p">(</span><span class="n">xvec</span><span class="p">,</span> <span class="n">yvec</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_reps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    xicor calculation built to match from R::caclulateXI() and published article.</span>
 
@@ -623,12 +623,12 @@ cases removed.</p>
 
         
             <span class="def">def</span>
-            <span class="name">xicor_for_frame</span><span class="signature">(d: pandas.core.frame.DataFrame, y, *, n_reps=25)</span>:
+            <span class="name">xicor_for_frame</span><span class="signature">(d: pandas.core.frame.DataFrame, y, *, n_reps=5)</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">xicor_for_frame</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_reps</span><span class="o">=</span><span class="mi">25</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">xicor_for_frame</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_reps</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate xicor for all columns of data frame d with respect to dependent column y.</span>
 

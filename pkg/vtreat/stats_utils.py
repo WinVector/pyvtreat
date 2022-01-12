@@ -155,7 +155,7 @@ def our_pseudo_R2(*, y_true, y_pred) -> Tuple[float, float]:
     return r2, sig
 
 
-def xicor(xvec, yvec, *, n_reps: int = 25) -> Tuple[float, float]:
+def xicor(xvec, yvec, *, n_reps: int = 5) -> Tuple[float, float]:
     """
     xicor calculation built to match from R::caclulateXI() and published article.
 
@@ -188,7 +188,7 @@ def xicor(xvec, yvec, *, n_reps: int = 25) -> Tuple[float, float]:
     return numpy.mean(xi_s), numpy.std(xi_s) / numpy.sqrt(n_reps)
 
 
-def xicor_for_frame(d: pandas.DataFrame, y, *, n_reps=25):
+def xicor_for_frame(d: pandas.DataFrame, y, *, n_reps=5):
     """
     Calculate xicor for all columns of data frame d with respect to dependent column y.
 
