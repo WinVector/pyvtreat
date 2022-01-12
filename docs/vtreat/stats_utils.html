@@ -263,27 +263,53 @@
 
 
 <span class="k">def</span> <span class="nf">xicor_for_frame</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_reps</span><span class="o">=</span><span class="mi">25</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate xicor for all columns of data frame d with respect to dependent column y.</span>
+
+<span class="sd">    :param d: data frame of proposed explanatory variables.</span>
+<span class="sd">    :param y: vector of the dependent variable values.</span>
+<span class="sd">    :param n_reps: number of times to repeat experiment (positive integer)</span>
+<span class="sd">    :return: data frame with: variable (name of column), xicor (estimated xicor statistic),</span>
+<span class="sd">             xicor_se (standard error of xicor estimate, goes to zero as n_reps grows),</span>
+<span class="sd">             xicor_perm_mean (mean value of xicor with y scrambled, goes to zero as n_reps grows),</span>
+<span class="sd">             xicor_perm_stddev (sample standard deviation of y scrambled xicor estimates,</span>
+<span class="sd">             used to form z or t style estimates).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">assert</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="n">n</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n_reps</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">n_reps</span> <span class="o">&gt;</span> <span class="mi">0</span>
-    <span class="n">y_perms</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span> <span class="k">for</span> <span class="n">rep_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_reps</span><span class="p">)]</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
         <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span>
         <span class="s1">&#39;xicor&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="s1">&#39;xicor_se&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="s1">&#39;xicor_perm_mean&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s1">&#39;xicor_perm_stddev&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">})</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">)):</span>
-        <span class="n">xvec</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="s1">&#39;xicor_perm_stddev&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s1">&#39;xicor_perm_sum&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s1">&#39;xicor_perm_sum_sq&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">})</span>
+    <span class="c1"># get the xicor estimates</span>
+    <span class="k">for</span> <span class="n">col_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">)):</span>
+        <span class="n">xvec</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">col_i</span><span class="p">]]</span>
         <span class="n">xi_est</span><span class="p">,</span> <span class="n">xi_est_dev</span> <span class="o">=</span> <span class="n">xicor</span><span class="p">(</span><span class="n">xvec</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">n_reps</span><span class="o">=</span><span class="n">n_reps</span><span class="p">)</span>
-        <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;xicor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xi_est</span>
-        <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;xicor_se&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xi_est_dev</span>
-        <span class="n">xi_perm</span> <span class="o">=</span> <span class="p">[</span><span class="n">xicor</span><span class="p">(</span><span class="n">xvec</span><span class="p">,</span> <span class="n">y_perms</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">n_reps</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_reps</span><span class="p">)]</span>
-        <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;xicor_perm_mean&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">xi_perm</span><span class="p">)</span>  <span class="c1"># expected value should be zero, but report anyway</span>
-        <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;xicor_perm_stddev&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">xi_perm</span><span class="p">)</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col_i</span><span class="p">,</span> <span class="s1">&#39;xicor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xi_est</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col_i</span><span class="p">,</span> <span class="s1">&#39;xicor_se&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xi_est_dev</span>
+    <span class="c1"># score all x-columns with the same y-permutation</span>
+    <span class="c1"># estimate stddev with expanding squares to cut down storage</span>
+    <span class="k">for</span> <span class="n">rep_j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_reps</span><span class="p">):</span>
+        <span class="n">y_perm</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">col_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">)):</span>
+            <span class="n">xvec</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">col_i</span><span class="p">]]</span>
+            <span class="n">xi_perm</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">xicor</span><span class="p">(</span><span class="n">xvec</span><span class="p">,</span> <span class="n">y_perm</span><span class="p">,</span> <span class="n">n_reps</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col_i</span><span class="p">,</span> <span class="s1">&#39;xicor_perm_sum&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col_i</span><span class="p">,</span> <span class="s1">&#39;xicor_perm_sum&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">xi_perm</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col_i</span><span class="p">,</span> <span class="s1">&#39;xicor_perm_sum_sq&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col_i</span><span class="p">,</span> <span class="s1">&#39;xicor_perm_sum_sq&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">xi_perm</span> <span class="o">*</span> <span class="n">xi_perm</span>
+    <span class="n">res</span><span class="p">[</span><span class="s1">&#39;xicor_perm_mean&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;xicor_perm_sum&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">n_reps</span>
+    <span class="n">res</span><span class="p">[</span><span class="s1">&#39;xicor_perm_stddev&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_reps</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span>
+            <span class="n">res</span><span class="p">[</span><span class="s1">&#39;xicor_perm_sum_sq&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">n_reps</span><span class="p">)</span> <span class="o">*</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;xicor_perm_sum&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+    <span class="k">del</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;xicor_perm_sum&#39;</span><span class="p">]</span>
+    <span class="k">del</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;xicor_perm_sum_sq&#39;</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">res</span>
 </pre></div>
 
@@ -603,33 +629,70 @@ cases removed.</p>
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">xicor_for_frame</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_reps</span><span class="o">=</span><span class="mi">25</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate xicor for all columns of data frame d with respect to dependent column y.</span>
+
+<span class="sd">    :param d: data frame of proposed explanatory variables.</span>
+<span class="sd">    :param y: vector of the dependent variable values.</span>
+<span class="sd">    :param n_reps: number of times to repeat experiment (positive integer)</span>
+<span class="sd">    :return: data frame with: variable (name of column), xicor (estimated xicor statistic),</span>
+<span class="sd">             xicor_se (standard error of xicor estimate, goes to zero as n_reps grows),</span>
+<span class="sd">             xicor_perm_mean (mean value of xicor with y scrambled, goes to zero as n_reps grows),</span>
+<span class="sd">             xicor_perm_stddev (sample standard deviation of y scrambled xicor estimates,</span>
+<span class="sd">             used to form z or t style estimates).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">assert</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="n">n</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n_reps</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">n_reps</span> <span class="o">&gt;</span> <span class="mi">0</span>
-    <span class="n">y_perms</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span> <span class="k">for</span> <span class="n">rep_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_reps</span><span class="p">)]</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
         <span class="s1">&#39;variable&#39;</span><span class="p">:</span> <span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span>
         <span class="s1">&#39;xicor&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="s1">&#39;xicor_se&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="s1">&#39;xicor_perm_mean&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="s1">&#39;xicor_perm_stddev&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">})</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">)):</span>
-        <span class="n">xvec</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="s1">&#39;xicor_perm_stddev&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s1">&#39;xicor_perm_sum&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s1">&#39;xicor_perm_sum_sq&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">})</span>
+    <span class="c1"># get the xicor estimates</span>
+    <span class="k">for</span> <span class="n">col_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">)):</span>
+        <span class="n">xvec</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">col_i</span><span class="p">]]</span>
         <span class="n">xi_est</span><span class="p">,</span> <span class="n">xi_est_dev</span> <span class="o">=</span> <span class="n">xicor</span><span class="p">(</span><span class="n">xvec</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">n_reps</span><span class="o">=</span><span class="n">n_reps</span><span class="p">)</span>
-        <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;xicor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xi_est</span>
-        <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;xicor_se&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xi_est_dev</span>
-        <span class="n">xi_perm</span> <span class="o">=</span> <span class="p">[</span><span class="n">xicor</span><span class="p">(</span><span class="n">xvec</span><span class="p">,</span> <span class="n">y_perms</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">n_reps</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_reps</span><span class="p">)]</span>
-        <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;xicor_perm_mean&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">xi_perm</span><span class="p">)</span>  <span class="c1"># expected value should be zero, but report anyway</span>
-        <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;xicor_perm_stddev&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">xi_perm</span><span class="p">)</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col_i</span><span class="p">,</span> <span class="s1">&#39;xicor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xi_est</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col_i</span><span class="p">,</span> <span class="s1">&#39;xicor_se&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xi_est_dev</span>
+    <span class="c1"># score all x-columns with the same y-permutation</span>
+    <span class="c1"># estimate stddev with expanding squares to cut down storage</span>
+    <span class="k">for</span> <span class="n">rep_j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_reps</span><span class="p">):</span>
+        <span class="n">y_perm</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">col_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">)):</span>
+            <span class="n">xvec</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">col_i</span><span class="p">]]</span>
+            <span class="n">xi_perm</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">xicor</span><span class="p">(</span><span class="n">xvec</span><span class="p">,</span> <span class="n">y_perm</span><span class="p">,</span> <span class="n">n_reps</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col_i</span><span class="p">,</span> <span class="s1">&#39;xicor_perm_sum&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col_i</span><span class="p">,</span> <span class="s1">&#39;xicor_perm_sum&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">xi_perm</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col_i</span><span class="p">,</span> <span class="s1">&#39;xicor_perm_sum_sq&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">col_i</span><span class="p">,</span> <span class="s1">&#39;xicor_perm_sum_sq&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">xi_perm</span> <span class="o">*</span> <span class="n">xi_perm</span>
+    <span class="n">res</span><span class="p">[</span><span class="s1">&#39;xicor_perm_mean&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;xicor_perm_sum&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">n_reps</span>
+    <span class="n">res</span><span class="p">[</span><span class="s1">&#39;xicor_perm_stddev&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_reps</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span>
+            <span class="n">res</span><span class="p">[</span><span class="s1">&#39;xicor_perm_sum_sq&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">n_reps</span><span class="p">)</span> <span class="o">*</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;xicor_perm_sum&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+    <span class="k">del</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;xicor_perm_sum&#39;</span><span class="p">]</span>
+    <span class="k">del</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;xicor_perm_sum_sq&#39;</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">res</span>
 </pre></div>
 
         </details>
 
-    
+            <div class="docstring"><p>Calculate xicor for all columns of data frame d with respect to dependent column y.</p>
+
+<p>:param d: data frame of proposed explanatory variables.
+:param y: vector of the dependent variable values.
+:param n_reps: number of times to repeat experiment (positive integer)
+:return: data frame with: variable (name of column), xicor (estimated xicor statistic),
+         xicor_se (standard error of xicor estimate, goes to zero as n_reps grows),
+         xicor_perm_mean (mean value of xicor with y scrambled, goes to zero as n_reps grows),
+         xicor_perm_stddev (sample standard deviation of y scrambled xicor estimates,
+         used to form z or t style estimates).</p>
+</div>
+
 
                 </section>
     </main>

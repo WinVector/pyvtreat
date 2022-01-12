@@ -189,25 +189,51 @@ def xicor(xvec, yvec, *, n_reps: int = 25) -> Tuple[float, float]:
 
 
 def xicor_for_frame(d: pandas.DataFrame, y, *, n_reps=25):
+    """
+    Calculate xicor for all columns of data frame d with respect to dependent column y.
+
+    :param d: data frame of proposed explanatory variables.
+    :param y: vector of the dependent variable values.
+    :param n_reps: number of times to repeat experiment (positive integer)
+    :return: data frame with: variable (name of column), xicor (estimated xicor statistic),
+             xicor_se (standard error of xicor estimate, goes to zero as n_reps grows),
+             xicor_perm_mean (mean value of xicor with y scrambled, goes to zero as n_reps grows),
+             xicor_perm_stddev (sample standard deviation of y scrambled xicor estimates,
+             used to form z or t style estimates).
+    """
     n = d.shape[0]
     assert n > 1
     y = numpy.asarray(y)
     assert len(y) == n
     assert isinstance(n_reps, int)
     assert n_reps > 0
-    y_perms = [y[numpy.random.permutation(n)] for rep_i in range(n_reps)]
     res = pandas.DataFrame({
         'variable': d.columns,
         'xicor': 0.0,
         'xicor_se': 0.0,
         'xicor_perm_mean': 0.0,
-        'xicor_perm_stddev': 0.0})
-    for i in range(len(d.columns)):
-        xvec = d[d.columns[i]]
+        'xicor_perm_stddev': 0.0,
+        'xicor_perm_sum': 0.0,
+        'xicor_perm_sum_sq': 0.0,
+    })
+    # get the xicor estimates
+    for col_i in range(len(d.columns)):
+        xvec = d[d.columns[col_i]]
         xi_est, xi_est_dev = xicor(xvec, y, n_reps=n_reps)
-        res.loc[i, 'xicor'] = xi_est
-        res.loc[i, 'xicor_se'] = xi_est_dev
-        xi_perm = [xicor(xvec, y_perms[j], n_reps=1)[0] for j in range(n_reps)]
-        res.loc[i, 'xicor_perm_mean'] = numpy.mean(xi_perm)  # expected value should be zero, but report anyway
-        res.loc[i, 'xicor_perm_stddev'] = numpy.std(xi_perm)
+        res.loc[col_i, 'xicor'] = xi_est
+        res.loc[col_i, 'xicor_se'] = xi_est_dev
+    # score all x-columns with the same y-permutation
+    # estimate stddev with expanding squares to cut down storage
+    for rep_j in range(n_reps):
+        y_perm = y[numpy.random.permutation(n)]
+        for col_i in range(len(d.columns)):
+            xvec = d[d.columns[col_i]]
+            xi_perm, _ = xicor(xvec, y_perm, n_reps=1)
+            res.loc[col_i, 'xicor_perm_sum'] = res.loc[col_i, 'xicor_perm_sum'] + xi_perm
+            res.loc[col_i, 'xicor_perm_sum_sq'] = res.loc[col_i, 'xicor_perm_sum_sq'] + xi_perm * xi_perm
+    res['xicor_perm_mean'] = res['xicor_perm_sum'] / n_reps
+    res['xicor_perm_stddev'] = numpy.sqrt((1 / (n_reps - 1)) * (
+            res['xicor_perm_sum_sq'] - (1 / n_reps) * res['xicor_perm_sum']**2))
+    del res['xicor_perm_sum']
+    del res['xicor_perm_sum_sq']
     return res
