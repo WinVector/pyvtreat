@@ -248,8 +248,8 @@ def score_variables(
             )
         return sfi
 
-    sf = [f(v) for v in variables]
-    sf = pandas.concat(sf, axis=0, sort=False)
+    sf_list = [f(v) for v in variables]
+    sf = pandas.concat(sf_list, axis=0, sort=False)
     sf = sf.reset_index(inplace=False, drop=True)
     return sf
 
