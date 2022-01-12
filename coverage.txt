@@ -39,9 +39,9 @@ pkg/vtreat/transform.py              17      4    76%
 pkg/vtreat/util.py                  156     22    86%
 pkg/vtreat/vtreat_api.py            286     35    88%
 pkg/vtreat/vtreat_db_adapter.py      69      0   100%
-pkg/vtreat/vtreat_impl.py           717     75    90%
+pkg/vtreat/vtreat_impl.py           703     63    91%
 -----------------------------------------------------
-TOTAL                              1436    150    90%
+TOTAL                              1422    138    90%
 
 
-======================== 36 passed in 92.60s (0:01:32) =========================
+======================== 36 passed in 90.66s (0:01:30) =========================

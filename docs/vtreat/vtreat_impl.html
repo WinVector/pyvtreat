@@ -1871,33 +1871,6 @@
         <span class="sd">&quot;&quot;&quot;merge in use parameters&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base class called&quot;</span><span class="p">)</span>
 
-    <span class="c1"># display methods</span>
-
-    <span class="c1"># noinspection PyPep8Naming</span>
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">N_CHAR_MAX</span><span class="o">=</span><span class="mi">700</span><span class="p">):</span>
-        <span class="n">fmted</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__module__</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;(&quot;</span>
-        <span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">outcome_name_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">fmted</span> <span class="o">=</span> <span class="n">fmted</span> <span class="o">+</span> <span class="s2">&quot;outcome_name=&quot;</span> <span class="o">+</span> <span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outcome_name_</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">outcome_target_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">fmted</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">fmted</span> <span class="o">+</span> <span class="s2">&quot;outcome_target=&quot;</span> <span class="o">+</span> <span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outcome_target_</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_list_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_list_</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
-            <span class="n">fmted</span> <span class="o">=</span> <span class="n">fmted</span> <span class="o">+</span> <span class="s2">&quot;var_list=&quot;</span> <span class="o">+</span> <span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_list_</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
-        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cols_to_copy_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cols_to_copy_</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
-            <span class="n">fmted</span> <span class="o">=</span> <span class="n">fmted</span> <span class="o">+</span> <span class="s2">&quot;cols_to_copy=&quot;</span> <span class="o">+</span> <span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cols_to_copy_</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
-        <span class="c1"># if (self.params_ is not None) and (len(self.params_) &gt; 0):</span>
-        <span class="c1">#     fmted = fmted + &quot;params=&quot; + pprint.pformat(self.params_) + &quot;,\n&quot;</span>
-        <span class="c1"># if (self.imputation_map_ is not None) and (len(self.imputation_map_) &gt; 0):</span>
-        <span class="c1">#     fmted = fmted + &quot;imputation_map=&quot; + pprint.pformat(self.imputation_map_) + &quot;,\n&quot;</span>
-        <span class="n">fmted</span> <span class="o">=</span> <span class="n">fmted</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
-        <span class="k">return</span> <span class="n">fmted</span>
-
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
-
     <span class="c1"># sklearn pipeline step methods</span>
 
     <span class="c1"># https://scikit-learn.org/stable/modules/generated/sklearn.base.TransformerMixin.html</span>
@@ -5115,33 +5088,6 @@ Assumes each y-aware variable produces one derived column.</p>
     <span class="k">def</span> <span class="nf">merge_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;merge in use parameters&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base class called&quot;</span><span class="p">)</span>
-
-    <span class="c1"># display methods</span>
-
-    <span class="c1"># noinspection PyPep8Naming</span>
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">N_CHAR_MAX</span><span class="o">=</span><span class="mi">700</span><span class="p">):</span>
-        <span class="n">fmted</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__module__</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;(&quot;</span>
-        <span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">outcome_name_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">fmted</span> <span class="o">=</span> <span class="n">fmted</span> <span class="o">+</span> <span class="s2">&quot;outcome_name=&quot;</span> <span class="o">+</span> <span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outcome_name_</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">outcome_target_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">fmted</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">fmted</span> <span class="o">+</span> <span class="s2">&quot;outcome_target=&quot;</span> <span class="o">+</span> <span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outcome_target_</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_list_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_list_</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
-            <span class="n">fmted</span> <span class="o">=</span> <span class="n">fmted</span> <span class="o">+</span> <span class="s2">&quot;var_list=&quot;</span> <span class="o">+</span> <span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_list_</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
-        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cols_to_copy_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cols_to_copy_</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
-            <span class="n">fmted</span> <span class="o">=</span> <span class="n">fmted</span> <span class="o">+</span> <span class="s2">&quot;cols_to_copy=&quot;</span> <span class="o">+</span> <span class="n">pprint</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cols_to_copy_</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
-        <span class="c1"># if (self.params_ is not None) and (len(self.params_) &gt; 0):</span>
-        <span class="c1">#     fmted = fmted + &quot;params=&quot; + pprint.pformat(self.params_) + &quot;,\n&quot;</span>
-        <span class="c1"># if (self.imputation_map_ is not None) and (len(self.imputation_map_) &gt; 0):</span>
-        <span class="c1">#     fmted = fmted + &quot;imputation_map=&quot; + pprint.pformat(self.imputation_map_) + &quot;,\n&quot;</span>
-        <span class="n">fmted</span> <span class="o">=</span> <span class="n">fmted</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
-        <span class="k">return</span> <span class="n">fmted</span>
-
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
 
     <span class="c1"># sklearn pipeline step methods</span>
 

@@ -1611,33 +1611,6 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         """merge in use parameters"""
         raise NotImplementedError("base class called")
 
-    # display methods
-
-    # noinspection PyPep8Naming
-    def __repr__(self, N_CHAR_MAX=700):
-        fmted = (
-            str(self.__class__.__module__) + "." + str(self.__class__.__name__) + "("
-        )
-        if self.outcome_name_ is not None:
-            fmted = fmted + "outcome_name=" + pprint.pformat(self.outcome_name_) + ", "
-        if self.outcome_target_ is not None:
-            fmted = (
-                fmted + "outcome_target=" + pprint.pformat(self.outcome_target_) + ", "
-            )
-        if (self.var_list_ is not None) and (len(self.var_list_) > 0):
-            fmted = fmted + "var_list=" + pprint.pformat(self.var_list_) + ", "
-        if (self.cols_to_copy_ is not None) and (len(self.cols_to_copy_) > 0):
-            fmted = fmted + "cols_to_copy=" + pprint.pformat(self.cols_to_copy_) + ", "
-        # if (self.params_ is not None) and (len(self.params_) > 0):
-        #     fmted = fmted + "params=" + pprint.pformat(self.params_) + ",\n"
-        # if (self.imputation_map_ is not None) and (len(self.imputation_map_) > 0):
-        #     fmted = fmted + "imputation_map=" + pprint.pformat(self.imputation_map_) + ",\n"
-        fmted = fmted + ")"
-        return fmted
-
-    def __str__(self):
-        return self.__repr__()
-
     # sklearn pipeline step methods
 
     # https://scikit-learn.org/stable/modules/generated/sklearn.base.TransformerMixin.html
