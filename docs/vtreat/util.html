@@ -100,7 +100,7 @@
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">statistics</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">hashlib</span>
 
@@ -279,20 +279,40 @@
     <span class="k">return</span> <span class="n">sf</span>
 
 
-<span class="k">def</span> <span class="nf">score_variables</span><span class="p">(</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">variables</span><span class="p">,</span> <span class="n">outcome</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">is_classification</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;score the linear relation of variables to outcome&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">score_variables</span><span class="p">(</span>
+        <span class="n">cross_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">variables</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+        <span class="n">outcome</span><span class="p">,</span>
+        <span class="n">is_classification</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Score the linear relation of variables to outcome.</span>
 
+<span class="sd">    :param cross_frame: data frame to score</span>
+<span class="sd">    :param variables: names of variables to score</span>
+<span class="sd">    :param outcome: numeric outcome</span>
+<span class="sd">    :param is_classification: logical, True if a classification problem (0/1)</span>
+<span class="sd">    :return: data frame of variable evaluations, None if there are no non-constant variables.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">variables</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>  <span class="c1"># prevents str masquerading as iterable</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">variables</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cross_frame</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">variables</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">outcome</span> <span class="o">=</span> <span class="n">safe_to_numeric_array</span><span class="p">(</span><span class="n">outcome</span><span class="p">)</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">cross_frame</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">n</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">outcome</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;len(n) must equal cross_frame.shape[0]&quot;</span><span class="p">)</span>
-    <span class="n">outcome</span> <span class="o">=</span> <span class="n">safe_to_numeric_array</span><span class="p">(</span><span class="n">outcome</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">outcome</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">outcome</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># y must have range</span>
 
     <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;summarizing fn&quot;&quot;&quot;</span>
         <span class="n">col</span> <span class="o">=</span> <span class="n">cross_frame</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
-        <span class="n">col</span> <span class="o">=</span> <span class="n">safe_to_numeric_array</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span>
             <span class="p">(</span><span class="n">n</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span>
             <span class="ow">and</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">col</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">col</span><span class="p">))</span>
@@ -306,9 +326,9 @@
                 <span class="p">{</span>
                     <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">v</span><span class="p">],</span>
                     <span class="s2">&quot;has_range&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">True</span><span class="p">],</span>
-                    <span class="s2">&quot;PearsonR&quot;</span><span class="p">:</span> <span class="n">cor</span><span class="p">,</span>
-                    <span class="s2">&quot;R2&quot;</span><span class="p">:</span> <span class="n">r2</span><span class="p">,</span>
-                    <span class="s2">&quot;significance&quot;</span><span class="p">:</span> <span class="n">sig</span><span class="p">,</span>
+                    <span class="s2">&quot;PearsonR&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">cor</span><span class="p">],</span>
+                    <span class="s2">&quot;R2&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">r2</span><span class="p">],</span>
+                    <span class="s2">&quot;significance&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">sig</span><span class="p">],</span>
                 <span class="p">}</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -324,10 +344,8 @@
         <span class="k">return</span> <span class="n">sfi</span>
 
     <span class="n">sf</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sf</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">None</span>
     <span class="n">sf</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">sf</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">sf</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">sf</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">sf</span>
 
 
@@ -743,25 +761,51 @@
 
         
             <span class="def">def</span>
-            <span class="name">score_variables</span><span class="signature">(cross_frame, variables, outcome, *, is_classification=False)</span>:
+            <span class="name">score_variables</span><span class="signature">(
+    cross_frame: pandas.core.frame.DataFrame,
+    *,
+    variables: Optional[Iterable[str]],
+    outcome,
+    is_classification: bool = False
+) -&gt; Optional[pandas.core.frame.DataFrame]</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">score_variables</span><span class="p">(</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">variables</span><span class="p">,</span> <span class="n">outcome</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">is_classification</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;score the linear relation of variables to outcome&quot;&quot;&quot;</span>
+            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">score_variables</span><span class="p">(</span>
+        <span class="n">cross_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">variables</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
+        <span class="n">outcome</span><span class="p">,</span>
+        <span class="n">is_classification</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Score the linear relation of variables to outcome.</span>
 
+<span class="sd">    :param cross_frame: data frame to score</span>
+<span class="sd">    :param variables: names of variables to score</span>
+<span class="sd">    :param outcome: numeric outcome</span>
+<span class="sd">    :param is_classification: logical, True if a classification problem (0/1)</span>
+<span class="sd">    :return: data frame of variable evaluations, None if there are no non-constant variables.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cross_frame</span><span class="p">,</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">variables</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">variables</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>  <span class="c1"># prevents str masquerading as iterable</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">variables</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cross_frame</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">variables</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">outcome</span> <span class="o">=</span> <span class="n">safe_to_numeric_array</span><span class="p">(</span><span class="n">outcome</span><span class="p">)</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">cross_frame</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">n</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">outcome</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;len(n) must equal cross_frame.shape[0]&quot;</span><span class="p">)</span>
-    <span class="n">outcome</span> <span class="o">=</span> <span class="n">safe_to_numeric_array</span><span class="p">(</span><span class="n">outcome</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">outcome</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">outcome</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># y must have range</span>
 
     <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;summarizing fn&quot;&quot;&quot;</span>
         <span class="n">col</span> <span class="o">=</span> <span class="n">cross_frame</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
-        <span class="n">col</span> <span class="o">=</span> <span class="n">safe_to_numeric_array</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span>
             <span class="p">(</span><span class="n">n</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span>
             <span class="ow">and</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">col</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">col</span><span class="p">))</span>
@@ -775,9 +819,9 @@
                 <span class="p">{</span>
                     <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">v</span><span class="p">],</span>
                     <span class="s2">&quot;has_range&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">True</span><span class="p">],</span>
-                    <span class="s2">&quot;PearsonR&quot;</span><span class="p">:</span> <span class="n">cor</span><span class="p">,</span>
-                    <span class="s2">&quot;R2&quot;</span><span class="p">:</span> <span class="n">r2</span><span class="p">,</span>
-                    <span class="s2">&quot;significance&quot;</span><span class="p">:</span> <span class="n">sig</span><span class="p">,</span>
+                    <span class="s2">&quot;PearsonR&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">cor</span><span class="p">],</span>
+                    <span class="s2">&quot;R2&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">r2</span><span class="p">],</span>
+                    <span class="s2">&quot;significance&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">sig</span><span class="p">],</span>
                 <span class="p">}</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -793,16 +837,20 @@
         <span class="k">return</span> <span class="n">sfi</span>
 
     <span class="n">sf</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sf</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">None</span>
     <span class="n">sf</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">sf</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">sf</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">sf</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">sf</span>
 </pre></div>
 
         </details>
 
-            <div class="docstring"><p>score the linear relation of variables to outcome</p>
+            <div class="docstring"><p>Score the linear relation of variables to outcome.</p>
+
+<p>:param cross_frame: data frame to score
+:param variables: names of variables to score
+:param outcome: numeric outcome
+:param is_classification: logical, True if a classification problem (0/1)
+:return: data frame of variable evaluations, None if there are no non-constant variables.</p>
 </div>
 
 

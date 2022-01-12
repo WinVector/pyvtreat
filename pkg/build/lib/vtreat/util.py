@@ -5,7 +5,7 @@ Utility functions for vtreat
 import math
 import re
 import statistics
-from typing import Iterable, List
+from typing import Iterable, List, Optional
 
 import hashlib
 
@@ -184,20 +184,40 @@ def grouped_by_x_statistics(x, y):
     return sf
 
 
-def score_variables(cross_frame, variables, outcome, *, is_classification=False):
-    """score the linear relation of variables to outcome"""
+def score_variables(
+        cross_frame: pandas.DataFrame,
+        *,
+        variables: Optional[Iterable[str]],
+        outcome,
+        is_classification: bool = False) -> Optional[pandas.DataFrame]:
+    """
+    Score the linear relation of variables to outcome.
 
+    :param cross_frame: data frame to score
+    :param variables: names of variables to score
+    :param outcome: numeric outcome
+    :param is_classification: logical, True if a classification problem (0/1)
+    :return: data frame of variable evaluations, None if there are no non-constant variables.
+    """
+
+    assert isinstance(cross_frame, pandas.DataFrame)
+    if variables is not None:
+        assert not isinstance(variables, str)  # prevents str masquerading as iterable
+        variables = list(variables)
+    else:
+        variables = list(cross_frame.columns)
     if len(variables) <= 0:
         return None
+    outcome = safe_to_numeric_array(outcome)
     n = cross_frame.shape[0]
     if n != len(outcome):
         raise ValueError("len(n) must equal cross_frame.shape[0]")
-    outcome = safe_to_numeric_array(outcome)
+    if numpy.max(outcome) <= numpy.min(outcome):
+        return None  # y must have range
 
     def f(v):
         """summarizing fn"""
         col = cross_frame[v]
-        col = safe_to_numeric_array(col)
         if (
             (n > 2)
             and (numpy.max(col) > numpy.min(col))
@@ -211,9 +231,9 @@ def score_variables(cross_frame, variables, outcome, *, is_classification=False)
                 {
                     "variable": [v],
                     "has_range": [True],
-                    "PearsonR": cor,
-                    "R2": r2,
-                    "significance": sig,
+                    "PearsonR": [cor],
+                    "R2": [r2],
+                    "significance": [sig],
                 }
             )
         else:
@@ -229,10 +249,8 @@ def score_variables(cross_frame, variables, outcome, *, is_classification=False)
         return sfi
 
     sf = [f(v) for v in variables]
-    if len(sf) <= 0:
-        return None
     sf = pandas.concat(sf, axis=0, sort=False)
-    sf.reset_index(inplace=True, drop=True)
+    sf = sf.reset_index(inplace=False, drop=True)
     return sf
 
 
