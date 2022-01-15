@@ -34,9 +34,6 @@
                     <a class="class" href="#CrossValidationPlan">CrossValidationPlan</a>
                             <ul class="memberlist">
                         <li>
-                                <a class="function" href="#CrossValidationPlan.__init__">CrossValidationPlan</a>
-                        </li>
-                        <li>
                                 <a class="function" href="#CrossValidationPlan.split_plan">split_plan</a>
                         </li>
                 </ul>
@@ -77,8 +74,9 @@
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="sd">&quot;&quot;&quot;Basic cross validation methods&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span>
+<span class="kn">import</span> <span class="nn">abc</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">numpy.random</span>
@@ -86,12 +84,13 @@
 <span class="kn">import</span> <span class="nn">pandas</span>
 
 
-<span class="k">class</span> <span class="nc">CrossValidationPlan</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">CrossValidationPlan</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Data splitting plan&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
 
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">split_plan</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
@@ -109,13 +108,6 @@
 <span class="sd">        :param y: (optional) dependent variable</span>
 <span class="sd">        :return: cross validation plan (list of dictionaries)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base class called&quot;</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
-
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
 
 
 <span class="k">def</span> <span class="nf">_k_way_cross_plan_y_stratified</span><span class="p">(</span>
@@ -131,11 +123,11 @@
     <span class="sd">&quot;&quot;&quot;randomly split range(n_rows) into k_folds disjoint groups, attempting an even y-distribution&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">k_folds</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
         <span class="n">k_folds</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">n2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">n_rows</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">k_folds</span> <span class="o">&gt;</span> <span class="n">n2</span><span class="p">:</span>
-        <span class="n">k_folds</span> <span class="o">=</span> <span class="n">n2</span>
+    <span class="k">if</span> <span class="n">k_folds</span> <span class="o">&gt;</span> <span class="n">n_rows</span><span class="p">:</span>
+        <span class="n">k_folds</span> <span class="o">=</span> <span class="n">n_rows</span>
     <span class="k">if</span> <span class="n">n_rows</span> <span class="o">&lt;=</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">k_folds</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="c1"># degenerate overlap cases</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;degenerate cross plan, not disjoint&quot;</span><span class="p">,</span> <span class="ne">UserWarning</span><span class="p">)</span>
         <span class="n">plan</span> <span class="o">=</span> <span class="p">[</span>
             <span class="p">{</span><span class="s2">&quot;train&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_rows</span><span class="p">)],</span> <span class="s2">&quot;app&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_rows</span><span class="p">)]}</span>
         <span class="p">]</span>
@@ -143,6 +135,8 @@
     <span class="c1"># first sort by y plus a random key</span>
     <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_rows</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="n">n_rows</span>
     <span class="n">d</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
         <span class="p">{</span>
@@ -203,9 +197,6 @@
             <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_rows</span><span class="p">)</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="n">n_rows</span>
         <span class="k">return</span> <span class="n">_k_way_cross_plan_y_stratified</span><span class="p">(</span><span class="n">n_rows</span><span class="o">=</span><span class="n">n_rows</span><span class="p">,</span> <span class="n">k_folds</span><span class="o">=</span><span class="n">k_folds</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;vtreat.cross_plan.KWayCrossPlanYStratified()&quot;</span>
 </pre></div>
 
         </details>
@@ -222,12 +213,13 @@
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">CrossValidationPlan</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">CrossValidationPlan</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Data splitting plan&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
 
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">split_plan</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
@@ -245,13 +237,6 @@
 <span class="sd">        :param y: (optional) dependent variable</span>
 <span class="sd">        :return: cross validation plan (list of dictionaries)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base class called&quot;</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
-
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
 </pre></div>
 
         </details>
@@ -260,28 +245,11 @@
 </div>
 
 
-                            <div id="CrossValidationPlan.__init__" class="classattr">
-                                        <div class="attr function"><a class="headerlink" href="#CrossValidationPlan.__init__">#&nbsp;&nbsp</a>
-
-        
-            <span class="name">CrossValidationPlan</span><span class="signature">()</span>
-    </div>
-
-                <details>
-            <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">pass</span>
-</pre></div>
-
-        </details>
-
-    
-
-                            </div>
                             <div id="CrossValidationPlan.split_plan" class="classattr">
                                         <div class="attr function"><a class="headerlink" href="#CrossValidationPlan.split_plan">#&nbsp;&nbsp</a>
 
-        
+                <div class="decorator">@abc.abstractmethod</div>
+
             <span class="def">def</span>
             <span class="name">split_plan</span><span class="signature">(
     self,
@@ -295,7 +263,8 @@
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">split_plan</span><span class="p">(</span>
+            <div class="codehilite"><pre><span></span>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">split_plan</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">n_rows</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -312,7 +281,6 @@
 <span class="sd">        :param y: (optional) dependent variable</span>
 <span class="sd">        :return: cross validation plan (list of dictionaries)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base class called&quot;</span><span class="p">)</span>
 </pre></div>
 
         </details>
@@ -370,9 +338,6 @@
             <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_rows</span><span class="p">)</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="n">n_rows</span>
         <span class="k">return</span> <span class="n">_k_way_cross_plan_y_stratified</span><span class="p">(</span><span class="n">n_rows</span><span class="o">=</span><span class="n">n_rows</span><span class="p">,</span> <span class="n">k_folds</span><span class="o">=</span><span class="n">k_folds</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;vtreat.cross_plan.KWayCrossPlanYStratified()&quot;</span>
 </pre></div>
 
         </details>

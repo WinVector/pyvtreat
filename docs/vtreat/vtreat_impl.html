@@ -262,7 +262,7 @@
 <span class="sd">vtreat main implementation</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span>
+<span class="kn">import</span> <span class="nn">abc</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">pprint</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
@@ -329,7 +329,7 @@
     <span class="k">return</span> <span class="n">d</span><span class="p">,</span> <span class="n">columns</span>
 
 
-<span class="k">class</span> <span class="nc">VarTransform</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">VarTransform</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for vtreat transforms</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -375,6 +375,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">extra_args_</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">params_</span> <span class="o">=</span> <span class="kc">None</span>
 
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        return a transformed data frame</span>
@@ -384,15 +385,13 @@
 <span class="sd">        :return: transformed values</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base method called&quot;</span><span class="p">)</span>
-
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">description_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return description of transform as a data frame.</span>
 
 <span class="sd">        :return: description of transform.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base method called&quot;</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">TreatmentPlan</span><span class="p">:</span>
@@ -1037,7 +1036,7 @@
     <span class="k">for</span> <span class="n">vi</span> <span class="ow">in</span> <span class="n">var_list</span><span class="p">:</span>
         <span class="n">n_bad</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">vtreat</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">is_bad</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">vi</span><span class="p">]))</span>
         <span class="k">if</span> <span class="n">n_bad</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">:</span>
-            <span class="n">all_bad</span> <span class="o">=</span> <span class="n">all_bad</span> <span class="o">+</span> <span class="p">[</span><span class="n">vi</span><span class="p">]</span>
+            <span class="n">all_bad</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vi</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">n_bad</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">n_bad</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">):</span>
             <span class="n">mis_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vi</span><span class="p">)</span>
     <span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">co</span> <span class="k">for</span> <span class="n">co</span> <span class="ow">in</span> <span class="n">var_list</span> <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">co</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">all_bad</span><span class="p">)))]</span>
@@ -1425,7 +1424,7 @@
     <span class="n">col_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">col_list</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">ci</span> <span class="ow">in</span> <span class="n">cols_to_copy</span><span class="p">:</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">ci</span> <span class="ow">in</span> <span class="n">x_set</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">ci</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">col_set</span><span class="p">):</span>
-            <span class="n">col_list</span> <span class="o">=</span> <span class="n">col_list</span> <span class="o">+</span> <span class="p">[</span><span class="n">ci</span><span class="p">]</span>
+            <span class="n">col_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ci</span><span class="p">)</span>
     <span class="n">col_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">col_list</span><span class="p">)</span>
     <span class="n">missing_cols</span> <span class="o">=</span> <span class="n">col_set</span> <span class="o">-</span> <span class="n">x_set</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing_cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -1749,7 +1748,7 @@
     <span class="k">return</span> <span class="n">score_frame</span>
 
 
-<span class="k">class</span> <span class="nc">VariableTreatment</span><span class="p">(</span><span class="n">ABC</span><span class="p">,</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">TransformerMixin</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">VariableTreatment</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">,</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">TransformerMixin</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class for variable treatments, implements much of the sklearn pipeline/transformer</span>
 <span class="sd">    API. https://sklearn-template.readthedocs.io/en/latest/user_guide.html#transformer</span>
@@ -1867,9 +1866,9 @@
         <span class="k">if</span> <span class="p">(</span><span class="n">new_vars</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">new_vars</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">result_restriction</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">new_vars</span><span class="p">)</span>
 
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">merge_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;merge in use parameters&quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base class called&quot;</span><span class="p">)</span>
 
     <span class="c1"># sklearn pipeline step methods</span>
 
@@ -1890,6 +1889,7 @@
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="c1"># noinspection PyPep8Naming, PyUnusedLocal</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">fit_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        sklearn fit_transform, correct way to trigger cross methods.</span>
@@ -1900,9 +1900,8 @@
 <span class="sd">        :return: transformed data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base class method called&quot;</span><span class="p">)</span>
-
     <span class="c1"># noinspection PyPep8Naming</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        sklearn transform</span>
@@ -1910,8 +1909,6 @@
 <span class="sd">        :param X: explanatory variables</span>
 <span class="sd">        :return: transformed data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base class method called&quot;</span><span class="p">)</span>
 
     <span class="c1"># https://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html</span>
 
@@ -2263,7 +2260,7 @@
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">VarTransform</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">VarTransform</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for vtreat transforms</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -2309,6 +2306,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">extra_args_</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">params_</span> <span class="o">=</span> <span class="kc">None</span>
 
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        return a transformed data frame</span>
@@ -2318,15 +2316,13 @@
 <span class="sd">        :return: transformed values</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base method called&quot;</span><span class="p">)</span>
-
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">description_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return description of transform as a data frame.</span>
 
 <span class="sd">        :return: description of transform.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base method called&quot;</span><span class="p">)</span>
 </pre></div>
 
         </details>
@@ -2396,7 +2392,8 @@
                             <div id="VarTransform.transform" class="classattr">
                                         <div class="attr function"><a class="headerlink" href="#VarTransform.transform">#&nbsp;&nbsp</a>
 
-        
+                <div class="decorator">@abc.abstractmethod</div>
+
             <span class="def">def</span>
             <span class="name">transform</span><span class="signature">(
     self,
@@ -2406,7 +2403,8 @@
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+            <div class="codehilite"><pre><span></span>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_frame</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        return a transformed data frame</span>
 
@@ -2414,8 +2412,6 @@
 <span class="sd">        :param data_frame: incoming values</span>
 <span class="sd">        :return: transformed values</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base method called&quot;</span><span class="p">)</span>
 </pre></div>
 
         </details>
@@ -2432,20 +2428,21 @@
                             <div id="VarTransform.description_matrix" class="classattr">
                                         <div class="attr function"><a class="headerlink" href="#VarTransform.description_matrix">#&nbsp;&nbsp</a>
 
-        
+                <div class="decorator">@abc.abstractmethod</div>
+
             <span class="def">def</span>
             <span class="name">description_matrix</span><span class="signature">(self) -&gt; pandas.core.frame.DataFrame</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">description_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+            <div class="codehilite"><pre><span></span>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">description_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return description of transform as a data frame.</span>
 
 <span class="sd">        :return: description of transform.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base method called&quot;</span><span class="p">)</span>
 </pre></div>
 
         </details>
@@ -4520,7 +4517,7 @@
     <span class="n">col_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">col_list</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">ci</span> <span class="ow">in</span> <span class="n">cols_to_copy</span><span class="p">:</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">ci</span> <span class="ow">in</span> <span class="n">x_set</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">ci</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">col_set</span><span class="p">):</span>
-            <span class="n">col_list</span> <span class="o">=</span> <span class="n">col_list</span> <span class="o">+</span> <span class="p">[</span><span class="n">ci</span><span class="p">]</span>
+            <span class="n">col_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ci</span><span class="p">)</span>
     <span class="n">col_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">col_list</span><span class="p">)</span>
     <span class="n">missing_cols</span> <span class="o">=</span> <span class="n">col_set</span> <span class="o">-</span> <span class="n">x_set</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">missing_cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -4967,7 +4964,7 @@ Assumes each y-aware variable produces one derived column.</p>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">VariableTreatment</span><span class="p">(</span><span class="n">ABC</span><span class="p">,</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">TransformerMixin</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">VariableTreatment</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">,</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">TransformerMixin</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class for variable treatments, implements much of the sklearn pipeline/transformer</span>
 <span class="sd">    API. https://sklearn-template.readthedocs.io/en/latest/user_guide.html#transformer</span>
@@ -5085,9 +5082,9 @@ Assumes each y-aware variable produces one derived column.</p>
         <span class="k">if</span> <span class="p">(</span><span class="n">new_vars</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">new_vars</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">result_restriction</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">new_vars</span><span class="p">)</span>
 
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">merge_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;merge in use parameters&quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base class called&quot;</span><span class="p">)</span>
 
     <span class="c1"># sklearn pipeline step methods</span>
 
@@ -5108,6 +5105,7 @@ Assumes each y-aware variable produces one derived column.</p>
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="c1"># noinspection PyPep8Naming, PyUnusedLocal</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">fit_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        sklearn fit_transform, correct way to trigger cross methods.</span>
@@ -5118,9 +5116,8 @@ Assumes each y-aware variable produces one derived column.</p>
 <span class="sd">        :return: transformed data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base class method called&quot;</span><span class="p">)</span>
-
     <span class="c1"># noinspection PyPep8Naming</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        sklearn transform</span>
@@ -5128,8 +5125,6 @@ Assumes each y-aware variable produces one derived column.</p>
 <span class="sd">        :param X: explanatory variables</span>
 <span class="sd">        :return: transformed data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base class method called&quot;</span><span class="p">)</span>
 
     <span class="c1"># https://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html</span>
 
@@ -5475,16 +5470,17 @@ Also check variable columns are all present (columns to copy and outcome allowed
                             <div id="VariableTreatment.merge_params" class="classattr">
                                         <div class="attr function"><a class="headerlink" href="#VariableTreatment.merge_params">#&nbsp;&nbsp</a>
 
-        
+                <div class="decorator">@abc.abstractmethod</div>
+
             <span class="def">def</span>
             <span class="name">merge_params</span><span class="signature">(self, p: Optional[Dict[str, Any]]) -&gt; Dict[str, Any]</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">merge_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+            <div class="codehilite"><pre><span></span>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">merge_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;merge in use parameters&quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base class called&quot;</span><span class="p">)</span>
 </pre></div>
 
         </details>
@@ -5533,14 +5529,16 @@ Also check variable columns are all present (columns to copy and outcome allowed
                             <div id="VariableTreatment.fit_transform" class="classattr">
                                         <div class="attr function"><a class="headerlink" href="#VariableTreatment.fit_transform">#&nbsp;&nbsp</a>
 
-        
+                <div class="decorator">@abc.abstractmethod</div>
+
             <span class="def">def</span>
             <span class="name">fit_transform</span><span class="signature">(self, X, y=None, **fit_params)</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">fit_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">fit_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_params</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        sklearn fit_transform, correct way to trigger cross methods.</span>
 
@@ -5549,8 +5547,6 @@ Also check variable columns are all present (columns to copy and outcome allowed
 <span class="sd">        :param fit_params:</span>
 <span class="sd">        :return: transformed data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base class method called&quot;</span><span class="p">)</span>
 </pre></div>
 
         </details>
@@ -5568,22 +5564,22 @@ Also check variable columns are all present (columns to copy and outcome allowed
                             <div id="VariableTreatment.transform" class="classattr">
                                         <div class="attr function"><a class="headerlink" href="#VariableTreatment.transform">#&nbsp;&nbsp</a>
 
-        
+                <div class="decorator">@abc.abstractmethod</div>
+
             <span class="def">def</span>
             <span class="name">transform</span><span class="signature">(self, X)</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        sklearn transform</span>
 
 <span class="sd">        :param X: explanatory variables</span>
 <span class="sd">        :return: transformed data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base class method called&quot;</span><span class="p">)</span>
 </pre></div>
 
         </details>

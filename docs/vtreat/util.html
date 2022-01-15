@@ -46,9 +46,6 @@
                     <a class="function" href="#summarize_column">summarize_column</a>
             </li>
             <li>
-                    <a class="function" href="#characterize_numeric">characterize_numeric</a>
-            </li>
-            <li>
                     <a class="function" href="#get_unique_value_count">get_unique_value_count</a>
             </li>
             <li>
@@ -132,15 +129,13 @@
     <span class="n">not_bad</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">pandas</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
     <span class="n">n_not_bad</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">not_bad</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">n_not_bad</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">True</span>   <span class="c1"># All nan/None, can convert to numeric</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
             <span class="n">x</span><span class="p">[</span><span class="n">not_bad</span><span class="p">]</span> <span class="o">+</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span>
         <span class="p">)</span>  <span class="c1"># +0 prevents string parse, leaving strings as strings</span>
         <span class="k">return</span> <span class="kc">True</span>
     <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span>
-    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
 
 
@@ -196,37 +191,6 @@
     <span class="k">return</span> <span class="n">v</span>
 
 
-<span class="k">def</span> <span class="nf">characterize_numeric</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;compute na count, min,max,mean of a numeric vector&quot;&quot;&quot;</span>
-
-    <span class="n">x</span> <span class="o">=</span> <span class="n">safe_to_numeric_array</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="n">not_bad</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">is_bad</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
-    <span class="n">n_not_bad</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">not_bad</span><span class="p">)</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">n_not_bad</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="n">n</span><span class="p">,</span>
-            <span class="s2">&quot;n_not_bad&quot;</span><span class="p">:</span> <span class="n">n_not_bad</span><span class="p">,</span>
-            <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="s2">&quot;mean&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="s2">&quot;varies&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="s2">&quot;has_range&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="p">}</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">not_bad</span><span class="p">]</span>
-    <span class="n">mn</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="n">mx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="n">n</span><span class="p">,</span>
-        <span class="s2">&quot;n_not_bad&quot;</span><span class="p">:</span> <span class="n">n_not_bad</span><span class="p">,</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="n">mn</span><span class="p">,</span>
-        <span class="s2">&quot;mean&quot;</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="n">mx</span><span class="p">,</span>
-        <span class="s2">&quot;varies&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">mx</span> <span class="o">&gt;</span> <span class="n">mn</span><span class="p">)</span> <span class="ow">or</span> <span class="p">((</span><span class="n">n_not_bad</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">n_not_bad</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">)),</span>
-        <span class="s2">&quot;has_range&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">mx</span> <span class="o">&gt;</span> <span class="n">mn</span><span class="p">),</span>
-    <span class="p">}</span>
-
-
 <span class="k">def</span> <span class="nf">get_unique_value_count</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;compute how many unique values in list-x&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
@@ -239,10 +203,8 @@
 <span class="k">def</span> <span class="nf">grouped_by_x_statistics</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;compute some grouped by x vector summaries of numeric y vector (no missing values in y)&quot;&quot;&quot;</span>
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;no rows&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">n</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;len(y)!=len(x)&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">n</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">safe_to_numeric_array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
     <span class="n">eps</span> <span class="o">=</span> <span class="mf">1.0e-3</span>
     <span class="n">sf</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="n">y</span><span class="p">})</span>
@@ -305,8 +267,7 @@
         <span class="k">return</span> <span class="kc">None</span>
     <span class="n">outcome</span> <span class="o">=</span> <span class="n">safe_to_numeric_array</span><span class="p">(</span><span class="n">outcome</span><span class="p">)</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">cross_frame</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">n</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">outcome</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;len(n) must equal cross_frame.shape[0]&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">n</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">outcome</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">outcome</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">outcome</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># y must have range</span>
 
@@ -487,15 +448,13 @@
     <span class="n">not_bad</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">pandas</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
     <span class="n">n_not_bad</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">not_bad</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">n_not_bad</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">True</span>   <span class="c1"># All nan/None, can convert to numeric</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
             <span class="n">x</span><span class="p">[</span><span class="n">not_bad</span><span class="p">]</span> <span class="o">+</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span>
         <span class="p">)</span>  <span class="c1"># +0 prevents string parse, leaving strings as strings</span>
         <span class="k">return</span> <span class="kc">True</span>
     <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span>
-    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
 </pre></div>
 
@@ -622,54 +581,6 @@
 
 
                 </section>
-                <section id="characterize_numeric">
-                            <div class="attr function"><a class="headerlink" href="#characterize_numeric">#&nbsp;&nbsp</a>
-
-        
-            <span class="def">def</span>
-            <span class="name">characterize_numeric</span><span class="signature">(x)</span>:
-    </div>
-
-                <details>
-            <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">characterize_numeric</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;compute na count, min,max,mean of a numeric vector&quot;&quot;&quot;</span>
-
-    <span class="n">x</span> <span class="o">=</span> <span class="n">safe_to_numeric_array</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="n">not_bad</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">is_bad</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
-    <span class="n">n_not_bad</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">not_bad</span><span class="p">)</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">n_not_bad</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="n">n</span><span class="p">,</span>
-            <span class="s2">&quot;n_not_bad&quot;</span><span class="p">:</span> <span class="n">n_not_bad</span><span class="p">,</span>
-            <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="s2">&quot;mean&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="s2">&quot;varies&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="s2">&quot;has_range&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="p">}</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">not_bad</span><span class="p">]</span>
-    <span class="n">mn</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="n">mx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="n">n</span><span class="p">,</span>
-        <span class="s2">&quot;n_not_bad&quot;</span><span class="p">:</span> <span class="n">n_not_bad</span><span class="p">,</span>
-        <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="n">mn</span><span class="p">,</span>
-        <span class="s2">&quot;mean&quot;</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
-        <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="n">mx</span><span class="p">,</span>
-        <span class="s2">&quot;varies&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">mx</span> <span class="o">&gt;</span> <span class="n">mn</span><span class="p">)</span> <span class="ow">or</span> <span class="p">((</span><span class="n">n_not_bad</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">n_not_bad</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">)),</span>
-        <span class="s2">&quot;has_range&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">mx</span> <span class="o">&gt;</span> <span class="n">mn</span><span class="p">),</span>
-    <span class="p">}</span>
-</pre></div>
-
-        </details>
-
-            <div class="docstring"><p>compute na count, min,max,mean of a numeric vector</p>
-</div>
-
-
-                </section>
                 <section id="get_unique_value_count">
                             <div class="attr function"><a class="headerlink" href="#get_unique_value_count">#&nbsp;&nbsp</a>
 
@@ -709,10 +620,8 @@
             <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">grouped_by_x_statistics</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;compute some grouped by x vector summaries of numeric y vector (no missing values in y)&quot;&quot;&quot;</span>
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;no rows&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">n</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;len(y)!=len(x)&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">n</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">safe_to_numeric_array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
     <span class="n">eps</span> <span class="o">=</span> <span class="mf">1.0e-3</span>
     <span class="n">sf</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="n">y</span><span class="p">})</span>
@@ -798,8 +707,7 @@
         <span class="k">return</span> <span class="kc">None</span>
     <span class="n">outcome</span> <span class="o">=</span> <span class="n">safe_to_numeric_array</span><span class="p">(</span><span class="n">outcome</span><span class="p">)</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">cross_frame</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">n</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">outcome</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;len(n) must equal cross_frame.shape[0]&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">n</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">outcome</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">outcome</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">outcome</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># y must have range</span>
 

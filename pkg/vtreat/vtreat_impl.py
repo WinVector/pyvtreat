@@ -776,7 +776,7 @@ def _prepare_variable_lists(
     for vi in var_list:
         n_bad = numpy.sum(vtreat.util.is_bad(X[vi]))
         if n_bad >= n:
-            all_bad = all_bad + [vi]
+            all_bad.append(vi)
         if (n_bad > 0) and (n_bad < n):
             mis_list.append(vi)
     var_list = [co for co in var_list if (not (co in set(all_bad)))]
@@ -1164,7 +1164,7 @@ def pre_prep_frame(
     col_set = set(col_list)
     for ci in cols_to_copy:
         if (ci in x_set) and (ci not in col_set):
-            col_list = col_list + [ci]
+            col_list.append(ci)
     col_set = set(col_list)
     missing_cols = col_set - x_set
     if len(missing_cols) > 0:

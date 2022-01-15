@@ -1,7 +1,8 @@
 """Basic cross validation methods"""
 
-from abc import ABC
+import abc
 from typing import Dict, List, Optional
+import warnings
 
 import numpy
 import numpy.random
@@ -9,12 +10,13 @@ import numpy.random
 import pandas
 
 
-class CrossValidationPlan(ABC):
+class CrossValidationPlan(abc.ABC):
     """Data splitting plan"""
 
     def __init__(self):
         pass
 
+    @abc.abstractmethod
     def split_plan(
         self,
         *,
@@ -32,13 +34,6 @@ class CrossValidationPlan(ABC):
         :param y: (optional) dependent variable
         :return: cross validation plan (list of dictionaries)
         """
-        raise NotImplementedError("base class called")
-
-    def __repr__(self):
-        return str(type(self))
-
-    def __str__(self):
-        return self.__repr__()
 
 
 def _k_way_cross_plan_y_stratified(
@@ -54,11 +49,11 @@ def _k_way_cross_plan_y_stratified(
     """randomly split range(n_rows) into k_folds disjoint groups, attempting an even y-distribution"""
     if k_folds < 2:
         k_folds = 2
-    n2 = int(numpy.floor(n_rows / 2))
-    if k_folds > n2:
-        k_folds = n2
+    if k_folds > n_rows:
+        k_folds = n_rows
     if n_rows <= 2 or k_folds <= 1:
         # degenerate overlap cases
+        warnings.warn("degenerate cross plan, not disjoint", UserWarning)
         plan = [
             {"train": [i for i in range(n_rows)], "app": [i for i in range(n_rows)]}
         ]
@@ -66,6 +61,8 @@ def _k_way_cross_plan_y_stratified(
     # first sort by y plus a random key
     if y is None:
         y = numpy.zeros(n_rows)
+    else:
+        y = numpy.asarray(y)
     assert len(y) == n_rows
     d = pandas.DataFrame(
         {
@@ -126,6 +123,3 @@ class KWayCrossPlanYStratified(CrossValidationPlan):
             y = numpy.zeros(n_rows)
         assert len(y) == n_rows
         return _k_way_cross_plan_y_stratified(n_rows=n_rows, k_folds=k_folds, y=y)
-
-    def __repr__(self):
-        return f"vtreat.cross_plan.KWayCrossPlanYStratified()"

@@ -34,9 +34,6 @@
                     <a class="class" href="#UserTransform">UserTransform</a>
                             <ul class="memberlist">
                         <li>
-                                <a class="function" href="#UserTransform.__init__">UserTransform</a>
-                        </li>
-                        <li>
                                 <a class="function" href="#UserTransform.fit">fit</a>
                         </li>
                         <li>
@@ -71,8 +68,10 @@
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="sd">&quot;&quot;&quot;base class for user transforms&quot;&quot;&quot;</span>
 
+<span class="kn">import</span> <span class="nn">abc</span>
 
-<span class="k">class</span> <span class="nc">UserTransform</span><span class="p">:</span>
+
+<span class="k">class</span> <span class="nc">UserTransform</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;base class for user transforms, should express taking a set of k inputs to k outputs independently&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">treatment</span><span class="p">):</span>
@@ -82,6 +81,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">derived_vars_</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="c1"># noinspection PyPep8Naming</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        sklearn API</span>
@@ -91,21 +91,20 @@
 <span class="sd">        :return: self for method chaining</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base method called&quot;</span><span class="p">)</span>
-
     <span class="c1"># noinspection PyPep8Naming</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        sklearn API</span>
 
 <span class="sd">        :param X: explanatory values</span>
 <span class="sd">        :return: transformed data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base method called&quot;</span><span class="p">)</span>
-
     <span class="c1"># noinspection PyPep8Naming</span>
     <span class="k">def</span> <span class="nf">fit_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        sklearn API</span>
 
 <span class="sd">        :param X: explanatory values</span>
 <span class="sd">        :param y: dependent values</span>
@@ -114,26 +113,6 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span>
-            <span class="s2">&quot;vtreat.transform.UserTransform(&quot;</span>
-            <span class="o">+</span> <span class="s2">&quot;treatment=&quot;</span>
-            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
-            <span class="o">+</span> <span class="s2">&quot;) {&quot;</span>
-            <span class="o">+</span> <span class="s2">&quot;&#39;y_aware_&#39;: &quot;</span>
-            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_aware_</span><span class="p">)</span>
-            <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
-            <span class="o">+</span> <span class="s2">&quot;&#39;treatment_&#39;: &quot;</span>
-            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">)</span>
-            <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
-            <span class="o">+</span> <span class="s2">&quot;&#39;incoming_vars_&#39;: &quot;</span>
-            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_vars_</span><span class="p">)</span>
-            <span class="o">+</span> <span class="s2">&quot;}&quot;</span>
-        <span class="p">)</span>
-
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
 </pre></div>
 
         </details>
@@ -145,12 +124,12 @@
 
         
         <span class="def">class</span>
-        <span class="name">UserTransform</span>:
+        <span class="name">UserTransform</span><wbr>(<span class="base">abc.ABC</span>):
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">UserTransform</span><span class="p">:</span>
+            <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">UserTransform</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;base class for user transforms, should express taking a set of k inputs to k outputs independently&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">treatment</span><span class="p">):</span>
@@ -160,6 +139,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">derived_vars_</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="c1"># noinspection PyPep8Naming</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        sklearn API</span>
@@ -169,21 +149,20 @@
 <span class="sd">        :return: self for method chaining</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base method called&quot;</span><span class="p">)</span>
-
     <span class="c1"># noinspection PyPep8Naming</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        sklearn API</span>
 
 <span class="sd">        :param X: explanatory values</span>
 <span class="sd">        :return: transformed data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base method called&quot;</span><span class="p">)</span>
-
     <span class="c1"># noinspection PyPep8Naming</span>
     <span class="k">def</span> <span class="nf">fit_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        sklearn API</span>
 
 <span class="sd">        :param X: explanatory values</span>
 <span class="sd">        :param y: dependent values</span>
@@ -192,26 +171,6 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">(</span>
-            <span class="s2">&quot;vtreat.transform.UserTransform(&quot;</span>
-            <span class="o">+</span> <span class="s2">&quot;treatment=&quot;</span>
-            <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
-            <span class="o">+</span> <span class="s2">&quot;) {&quot;</span>
-            <span class="o">+</span> <span class="s2">&quot;&#39;y_aware_&#39;: &quot;</span>
-            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_aware_</span><span class="p">)</span>
-            <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
-            <span class="o">+</span> <span class="s2">&quot;&#39;treatment_&#39;: &quot;</span>
-            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span><span class="p">)</span>
-            <span class="o">+</span> <span class="s2">&quot;, &quot;</span>
-            <span class="o">+</span> <span class="s2">&quot;&#39;incoming_vars_&#39;: &quot;</span>
-            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">incoming_vars_</span><span class="p">)</span>
-            <span class="o">+</span> <span class="s2">&quot;}&quot;</span>
-        <span class="p">)</span>
-
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
 </pre></div>
 
         </details>
@@ -220,38 +179,19 @@
 </div>
 
 
-                            <div id="UserTransform.__init__" class="classattr">
-                                        <div class="attr function"><a class="headerlink" href="#UserTransform.__init__">#&nbsp;&nbsp</a>
-
-        
-            <span class="name">UserTransform</span><span class="signature">(treatment)</span>
-    </div>
-
-                <details>
-            <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">treatment</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">y_aware_</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">treatment_</span> <span class="o">=</span> <span class="n">treatment</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">incoming_vars_</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">derived_vars_</span> <span class="o">=</span> <span class="p">[]</span>
-</pre></div>
-
-        </details>
-
-    
-
-                            </div>
                             <div id="UserTransform.fit" class="classattr">
                                         <div class="attr function"><a class="headerlink" href="#UserTransform.fit">#&nbsp;&nbsp</a>
 
-        
+                <div class="decorator">@abc.abstractmethod</div>
+
             <span class="def">def</span>
             <span class="name">fit</span><span class="signature">(self, X, y)</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        sklearn API</span>
 
@@ -259,8 +199,6 @@
 <span class="sd">        :param y: dependent values</span>
 <span class="sd">        :return: self for method chaining</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base method called&quot;</span><span class="p">)</span>
 </pre></div>
 
         </details>
@@ -277,26 +215,29 @@
                             <div id="UserTransform.transform" class="classattr">
                                         <div class="attr function"><a class="headerlink" href="#UserTransform.transform">#&nbsp;&nbsp</a>
 
-        
+                <div class="decorator">@abc.abstractmethod</div>
+
             <span class="def">def</span>
             <span class="name">transform</span><span class="signature">(self, X)</span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        sklearn API</span>
 
 <span class="sd">        :param X: explanatory values</span>
 <span class="sd">        :return: transformed data</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;base method called&quot;</span><span class="p">)</span>
 </pre></div>
 
         </details>
 
-            <div class="docstring"><p>:param X: explanatory values
+            <div class="docstring"><p>sklearn API</p>
+
+<p>:param X: explanatory values
 :return: transformed data</p>
 </div>
 
@@ -314,6 +255,7 @@
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">fit_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        sklearn API</span>
 
 <span class="sd">        :param X: explanatory values</span>
 <span class="sd">        :param y: dependent values</span>
@@ -326,7 +268,9 @@
 
         </details>
 
-            <div class="docstring"><p>:param X: explanatory values
+            <div class="docstring"><p>sklearn API</p>
+
+<p>:param X: explanatory values
 :param y: dependent values
 :return: transformed data</p>
 </div>

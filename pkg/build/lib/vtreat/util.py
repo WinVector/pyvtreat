@@ -37,15 +37,13 @@ def can_convert_v_to_numeric(x) -> bool:
     not_bad = numpy.logical_not(pandas.isnull(x))
     n_not_bad = numpy.sum(not_bad)
     if n_not_bad < 1:
-        return True
+        return True   # All nan/None, can convert to numeric
     try:
         numpy.asarray(
             x[not_bad] + 0, dtype=float
         )  # +0 prevents string parse, leaving strings as strings
         return True
     except TypeError:
-        return False
-    except ValueError:
         return False
 
 
@@ -101,37 +99,6 @@ def summarize_column(x, *, fn=numpy.mean) -> float:
     return v
 
 
-def characterize_numeric(x):
-    """compute na count, min,max,mean of a numeric vector"""
-
-    x = safe_to_numeric_array(x)
-    not_bad = numpy.logical_not(is_bad(x))
-    n_not_bad = numpy.sum(not_bad)
-    n = len(x)
-    if n_not_bad <= 0:
-        return {
-            "n": n,
-            "n_not_bad": n_not_bad,
-            "min": None,
-            "mean": None,
-            "max": None,
-            "varies": False,
-            "has_range": False,
-        }
-    x = x[not_bad]
-    mn = numpy.min(x)
-    mx = numpy.max(x)
-    return {
-        "n": n,
-        "n_not_bad": n_not_bad,
-        "min": mn,
-        "mean": numpy.mean(x),
-        "max": mx,
-        "varies": (mx > mn) or ((n_not_bad > 0) and (n_not_bad < n)),
-        "has_range": (mx > mn),
-    }
-
-
 def get_unique_value_count(x):
     """compute how many unique values in list-x"""
     if len(x) <= 1:
@@ -144,10 +111,8 @@ def get_unique_value_count(x):
 def grouped_by_x_statistics(x, y):
     """compute some grouped by x vector summaries of numeric y vector (no missing values in y)"""
     n = len(x)
-    if n <= 0:
-        raise ValueError("no rows")
-    if n != len(y):
-        raise ValueError("len(y)!=len(x)")
+    assert n > 0
+    assert n == len(y)
     y = safe_to_numeric_array(y)
     eps = 1.0e-3
     sf = pandas.DataFrame({"x": x, "y": y})
@@ -210,8 +175,7 @@ def score_variables(
         return None
     outcome = safe_to_numeric_array(outcome)
     n = cross_frame.shape[0]
-    if n != len(outcome):
-        raise ValueError("len(n) must equal cross_frame.shape[0]")
+    assert n == len(outcome)
     if numpy.max(outcome) <= numpy.min(outcome):
         return None  # y must have range
 
