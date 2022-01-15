@@ -767,8 +767,7 @@ class UnsupervisedTreatment(vtreat_impl.VariableTreatment):
 
         X, orig_type = vtreat_impl.ready_data_frame(X)
         self.check_column_names(X.columns)
-        if y is not None:
-            raise ValueError("y should be None")
+        assert y is None
         self.clear()
         self.last_fit_x_id_ = vtreat.util.hash_data_frame(X)
         X = vtreat_impl.pre_prep_frame(

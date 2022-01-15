@@ -150,3 +150,8 @@ def test_logistic_r2():
     assert numpy.abs(r2 - check_r2) < 1.0e-2
     assert numpy.abs(r2 - 0.1262) < 1.0e-2
     assert numpy.abs(sig - 0.1925211) < 1.0e-2
+
+
+def test_stats_small():
+    cor = vtreat.stats_utils.our_corr_score(y_true=[1, 2], y_pred=[1, 2])
+    assert cor == (1, 1)

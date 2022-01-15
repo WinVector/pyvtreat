@@ -2,7 +2,7 @@
 vtreat main implementation
 """
 
-from abc import ABC
+import abc
 import math
 import pprint
 import warnings
@@ -69,7 +69,7 @@ def back_to_orig_type_data_frame(
     return d, columns
 
 
-class VarTransform(ABC):
+class VarTransform(abc.ABC):
     """
     Base class for vtreat transforms
     """
@@ -115,6 +115,7 @@ class VarTransform(ABC):
         self.extra_args_ = None
         self.params_ = None
 
+    @abc.abstractmethod
     def transform(self, data_frame: pandas.DataFrame) -> pandas.DataFrame:
         """
         return a transformed data frame
@@ -124,15 +125,13 @@ class VarTransform(ABC):
         :return: transformed values
         """
 
-        raise NotImplementedError("base method called")
-
+    @abc.abstractmethod
     def description_matrix(self) -> pandas.DataFrame:
         """
         Return description of transform as a data frame.
 
         :return: description of transform.
         """
-        raise NotImplementedError("base method called")
 
 
 class TreatmentPlan:
@@ -1489,7 +1488,7 @@ def pseudo_score_plan_variables(
     return score_frame
 
 
-class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.TransformerMixin):
+class VariableTreatment(abc.ABC, sklearn.base.BaseEstimator, sklearn.base.TransformerMixin):
     """
     Class for variable treatments, implements much of the sklearn pipeline/transformer
     API. https://sklearn-template.readthedocs.io/en/latest/user_guide.html#transformer
@@ -1607,9 +1606,9 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         if (new_vars is not None) and (len(new_vars) > 0):
             self.result_restriction = set(new_vars)
 
+    @abc.abstractmethod
     def merge_params(self, p: Optional[Dict[str, Any]]) -> Dict[str, Any]:
         """merge in use parameters"""
-        raise NotImplementedError("base class called")
 
     # sklearn pipeline step methods
 
@@ -1630,6 +1629,7 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         return self
 
     # noinspection PyPep8Naming, PyUnusedLocal
+    @abc.abstractmethod
     def fit_transform(self, X, y=None, **fit_params):
         """
         sklearn fit_transform, correct way to trigger cross methods.
@@ -1640,9 +1640,8 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         :return: transformed data
         """
 
-        raise NotImplementedError("base class method called")
-
     # noinspection PyPep8Naming
+    @abc.abstractmethod
     def transform(self, X):
         """
         sklearn transform
@@ -1650,8 +1649,6 @@ class VariableTreatment(ABC, sklearn.base.BaseEstimator, sklearn.base.Transforme
         :param X: explanatory variables
         :return: transformed data
         """
-
-        raise NotImplementedError("base class method called")
 
     # https://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html
 
