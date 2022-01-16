@@ -70,7 +70,7 @@ setuptools.setup(
         'pandas',
         'scipy',
         'sklearn',
-        'data_algebra>=1.2.2',
+        'data_algebra>=1.3.0',
     ],
     platforms=['any'],
     license='License :: OSI Approved :: BSD 3-clause License',
