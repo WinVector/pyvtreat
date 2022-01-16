@@ -60,7 +60,7 @@ and also as an [`R` package](https://github.com/WinVector/vtreat).
 
 setuptools.setup(
     name='vtreat',
-    version='1.2.3',
+    version='1.2.4',
     author='John Mount, Nina Zumel',
     author_email='jmount@win-vector.com',
     url='https://github.com/WinVector/pyvtreat',
