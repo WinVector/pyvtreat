@@ -112,11 +112,11 @@ def as_data_algebra_pipeline(
         if im_rows['orig_was_numeric'][i]:
             step_1_ops[
                 im_rows["variable"][i]
-            ] = f"{im_rows['orig_var'][i]}.is_bad().if_else(1.0, 0.0)"
+            ] = f"{im_rows['orig_var'][i]}.is_bad().where(1.0, 0.0)"
         else:
             step_1_ops[
                 im_rows["variable"][i]
-            ] = f"({im_rows['orig_var'][i]}.coalesce('{bad_sentinel}') == '{bad_sentinel}').if_else(1.0, 0.0)"
+            ] = f"({im_rows['orig_var'][i]}.coalesce('{bad_sentinel}') == '{bad_sentinel}').where(1.0, 0.0)"
     # add in general value indicators or dummies, all indicators are non-numeric (string)
     ic_rows = vtreat_descr.loc[
         vtreat_descr["treatment_class"] == "IndicatorCodeTransform", :
@@ -126,7 +126,7 @@ def as_data_algebra_pipeline(
         vi = ic_rows["value"].values[i]
         step_1_ops[
             ic_rows["variable"][i]
-        ] = f"({ov}.coalesce('{bad_sentinel}') == '{vi}').if_else(1.0, 0.0)"
+        ] = f"({ov}.coalesce('{bad_sentinel}') == '{vi}').where(1.0, 0.0)"
     if len(step_1_ops) > 0:
         ops = ops.extend(step_1_ops)
     # mapped columns
