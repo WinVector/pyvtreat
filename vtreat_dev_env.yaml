@@ -22,6 +22,7 @@ dependencies:
   - psycopg2
   - pymysql
   - pyspark
+  - pylint
   - pip
   - pip:
     - pdoc

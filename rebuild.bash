@@ -3,7 +3,7 @@ pushd pkg
 rm -rf dist build vtreat.egg-info vtreat/__pycache__ tests/__pycache__
 pip uninstall -y vtreat
 python3 setup.py sdist bdist_wheel
-pip install dist/vtreat-*.tar.gz
+# pip install dist/vtreat-*.tar.gz
 popd
 pdoc -o docs pkg/vtreat
 pytest --cov pkg/vtreat pkg/tests > coverage.txt
