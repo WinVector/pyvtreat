@@ -94,7 +94,7 @@ def test_KDD2009_vtreat_1():
     # check against previous result
     assert test_processed.shape == expect_test.shape
     assert set(test_processed.columns) == set(expect_test.columns)
-    assert numpy.max(numpy.max(numpy.abs(test_processed - expect_test))) < 1e-3
+    assert numpy.abs(test_processed - expect_test).max(axis=0).max() < 1e-3
     # test transform conversion
     transform_as_data = plan.description_matrix()
     incoming_vars = list(set(transform_as_data['orig_var']))
@@ -116,7 +116,7 @@ def test_KDD2009_vtreat_1():
     assert numpy.all([c in test_pipeline_cols for c in test_processed.columns])
     test_cols_sorted = list(test_processed.columns)
     test_cols_sorted.sort()
-    assert numpy.max(numpy.max(numpy.abs(test_processed[test_cols_sorted] - test_by_pipeline[test_cols_sorted]))) < 1e-5
+    assert numpy.abs(test_processed[test_cols_sorted] - test_by_pipeline[test_cols_sorted]).max(axis=0).max() < 1e-5
     # data algebra pipeline in database
     sql = data_algebra.BigQuery.BigQueryModel().to_sql(ops)
     assert isinstance(sql, str)
@@ -130,7 +130,7 @@ def test_KDD2009_vtreat_1():
         db_res = db_handle.read_query(
             f"SELECT * FROM {db_handle.db_model.table_prefix}.d_test_processed ORDER BY orig_index")
         assert db_res.shape[0] == test_processed.shape[0]
-        assert numpy.max(numpy.max(numpy.abs(test_processed[test_cols_sorted] - db_res[test_cols_sorted]))) < 1e-5
+        assert numpy.abs(test_processed[test_cols_sorted] - db_res[test_cols_sorted]).max(axis=0).max() < 1e-5
         db_handle.drop_table('d_test')
         db_handle.drop_table('transform_as_data')
         db_handle.drop_table('d_test_processed')

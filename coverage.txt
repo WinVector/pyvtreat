@@ -1,7 +1,7 @@
 ============================= test session starts ==============================
-platform darwin -- Python 3.7.4, pytest-6.2.5, py-1.11.0, pluggy-1.0.0
+platform darwin -- Python 3.9.7, pytest-6.2.5, py-1.11.0, pluggy-1.0.0
 rootdir: /Users/johnmount/Documents/work/pyvtreat/pkg
-plugins: cov-2.12.1, anyio-3.5.0, arraydiff-0.3, remotedata-0.3.2, doctestplus-0.4.0, openfiles-0.4.0
+plugins: anyio-3.5.0, cov-3.0.0
 collected 40 items
 
 pkg/tests/test_KDD2009.py .                                              [  2%]
@@ -31,19 +31,19 @@ pkg/tests/test_user_coders.py .                                          [ 90%]
 pkg/tests/test_util.py ..                                                [ 95%]
 pkg/tests/test_xicor.py ..                                               [100%]
 
----------- coverage: platform darwin, python 3.7.4-final-0 -----------
+---------- coverage: platform darwin, python 3.9.7-final-0 -----------
 Name                              Stmts   Miss  Cover
 -----------------------------------------------------
 pkg/vtreat/__init__.py                6      0   100%
 pkg/vtreat/cross_plan.py             49      1    98%
 pkg/vtreat/stats_utils.py           132      0   100%
-pkg/vtreat/transform.py              12      0   100%
+pkg/vtreat/transform.py              14      0   100%
 pkg/vtreat/util.py                  140      7    95%
 pkg/vtreat/vtreat_api.py            285     34    88%
 pkg/vtreat/vtreat_db_adapter.py      69      0   100%
-pkg/vtreat/vtreat_impl.py           702     58    92%
+pkg/vtreat/vtreat_impl.py           703     58    92%
 -----------------------------------------------------
-TOTAL                              1395    100    93%
+TOTAL                              1398    100    93%
 
 
-======================== 40 passed in 111.32s (0:01:51) ========================
+======================== 40 passed in 89.37s (0:01:29) =========================
