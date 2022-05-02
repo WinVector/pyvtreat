@@ -11,7 +11,7 @@ import numpy
 from vtreat.vtreat_api import *
 
 __docformat__ = "restructuredtext"
-__version__ = "1.2.4"
+__version__ = "1.2.5"
 
 __doc__ = """
 This<https://github.com/WinVector/pyvtreat> is the Python version of the vtreat data preparation system
