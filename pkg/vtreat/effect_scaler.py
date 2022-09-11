@@ -39,7 +39,7 @@ class EffectScaler:
         assert y.shape[0] == X.shape[0]
         self._n_columns = X.shape[1]
         self._x_means = np.zeros(self._n_columns)
-        self._x_scales = np.zeros(self._n_columns) + 1.0
+        self._x_scales = np.zeros(self._n_columns)
 
         def calc_mean_and_scale(i: int, *, xi: np.ndarray) -> None:
             self._x_means[i] = np.mean(xi)
