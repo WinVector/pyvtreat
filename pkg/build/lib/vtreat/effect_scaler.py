@@ -19,7 +19,7 @@ class EffectScaler:
         self._clear()
 
     # noinspection PyPep8Naming
-    def fit(self, X, y) -> None:
+    def fit(self, X, y, sample_weight=None) -> None:
         """
         Get per-variable effect scaling of (X[:, i] - np.mean(X[:, i])) -> (y - np.mean(y)).
         See https://win-vector.com/2022/09/08/y-aware-pca/
@@ -28,7 +28,7 @@ class EffectScaler:
         :param y: dependent values
         :return: self for method chaining
         """
-        self._clear()
+        assert sample_weight is None  # TODO: implement non-None case
         assert len(X.shape) == 2
         assert X.shape[0] > 0
         assert X.shape[1] > 0
@@ -37,9 +37,10 @@ class EffectScaler:
         y_sq = np.dot(y, y)
         assert len(y.shape) == 1
         assert y.shape[0] == X.shape[0]
+        self._clear()
         self._n_columns = X.shape[1]
         self._x_means = np.zeros(self._n_columns)
-        self._x_scales = np.zeros(self._n_columns) + 1.0
+        self._x_scales = np.zeros(self._n_columns)
 
         def calc_mean_and_scale(i: int, *, xi: np.ndarray) -> None:
             self._x_means[i] = np.mean(xi)
@@ -86,9 +87,13 @@ class EffectScaler:
             return pd.DataFrame({
                 i: transform_col(i, xi=np.array(X[:, i], float)) for i in range(X.shape[1])
             })
+    
+    # noinspection PyPep8Naming
+    def predict(self, X) -> pd.DataFrame:
+        return self.transform(X)
 
     # noinspection PyPep8Naming
-    def fit_transform(self, X, y) -> pd.DataFrame:
+    def fit_transform(self, X, y, sample_weight=None) -> pd.DataFrame:
         """
         Fit and transform combined. Not computed out of sample.
 
@@ -97,5 +102,9 @@ class EffectScaler:
         :return: transformed data
         """
 
-        self.fit(X, y)
+        self.fit(X, y, sample_weight=sample_weight)
         return self.transform(X)
+
+    # noinspection PyPep8Naming
+    def fit_predict(self, X, y, sample_weight=None) -> pd.DataFrame:
+        return self.fit_transform(X, y, sample_weight=sample_weight)

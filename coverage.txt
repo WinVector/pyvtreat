@@ -37,7 +37,7 @@ Name                              Stmts   Miss  Cover
 -----------------------------------------------------
 pkg/vtreat/__init__.py                6      0   100%
 pkg/vtreat/cross_plan.py             49      1    98%
-pkg/vtreat/effect_scaler.py          54      2    96%
+pkg/vtreat/effect_scaler.py          59      4    93%
 pkg/vtreat/stats_utils.py           132      0   100%
 pkg/vtreat/transform.py              14      0   100%
 pkg/vtreat/util.py                  140      7    95%
@@ -45,7 +45,7 @@ pkg/vtreat/vtreat_api.py            285     34    88%
 pkg/vtreat/vtreat_db_adapter.py      69      0   100%
 pkg/vtreat/vtreat_impl.py           703     58    92%
 -----------------------------------------------------
-TOTAL                              1452    102    93%
+TOTAL                              1457    104    93%
 
 
-======================== 42 passed in 91.89s (0:01:31) =========================
+======================== 42 passed in 96.65s (0:01:36) =========================
