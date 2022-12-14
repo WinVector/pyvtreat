@@ -69,7 +69,7 @@ setuptools.setup(
         'numpy',
         'pandas',
         'scipy',
-        'sklearn',
+        'scikit-learn',
         'data_algebra>=1.4.1',
     ],
     platforms=['any'],
