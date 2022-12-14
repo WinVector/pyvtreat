@@ -1,5 +1,5 @@
 ============================= test session starts ==============================
-platform darwin -- Python 3.9.7, pytest-6.2.5, py-1.11.0, pluggy-1.0.0
+platform darwin -- Python 3.9.15, pytest-7.1.2, pluggy-1.0.0
 rootdir: /Users/johnmount/Documents/work/pyvtreat/pkg
 plugins: anyio-3.5.0, cov-3.0.0
 collected 42 items
@@ -32,7 +32,17 @@ pkg/tests/test_user_coders.py .                                          [ 90%]
 pkg/tests/test_util.py ..                                                [ 95%]
 pkg/tests/test_xicor.py ..                                               [100%]
 
----------- coverage: platform darwin, python 3.9.7-final-0 -----------
+=============================== warnings summary ===============================
+tests/test_dup.py::test_dup
+tests/test_pipeparams.py::test_pipeparams
+tests/test_unsupervised.py::test_unsupervised
+  /Users/johnmount/opt/anaconda3/envs/vtreat_dev_env/lib/python3.9/site-packages/_pytest/python.py:192: PytestRemovedIn8Warning: Passing None has been deprecated.
+  See https://docs.pytest.org/en/latest/how-to/capture-warnings.html#additional-use-cases-of-warnings-in-tests for alternatives in common use cases.
+    result = testfunction(**testargs)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+---------- coverage: platform darwin, python 3.9.15-final-0 ----------
 Name                              Stmts   Miss  Cover
 -----------------------------------------------------
 pkg/vtreat/__init__.py                6      0   100%
@@ -47,5 +57,4 @@ pkg/vtreat/vtreat_impl.py           703     58    92%
 -----------------------------------------------------
 TOTAL                              1457    104    93%
 
-
-======================== 42 passed in 101.16s (0:01:41) ========================
+================== 42 passed, 3 warnings in 101.82s (0:01:41) ==================
