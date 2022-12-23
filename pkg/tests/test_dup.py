@@ -1,4 +1,5 @@
 import pytest
+import warnings
 
 import pandas
 import numpy
@@ -45,8 +46,10 @@ def test_dup():
         d_prepared_wrong = transform.transform(d)
 
     # no warning or error
-    with pytest.warns(None) as record:
+
+    # https://docs.pytest.org/en/7.0.x/how-to/capture-warnings.html#additional-use-cases-of-warnings-in-tests
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
         dtest = make_data(450)
-    assert not record
 
     dtest_prepared = transform.transform(dtest)

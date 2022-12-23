@@ -3,6 +3,7 @@ import pandas
 import vtreat  # https://github.com/WinVector/pyvtreat
 
 import pytest
+import warnings
 
 
 def test_unsupervised():
@@ -27,9 +28,10 @@ def test_unsupervised():
     assert set(sf["orig_variable"]) == {"zip"}
 
     # https://stackoverflow.com/a/45671804/6901725
-    with pytest.warns(None) as record:
+    # https://docs.pytest.org/en/7.0.x/how-to/capture-warnings.html#additional-use-cases-of-warnings-in-tests
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
         d_treated_2 = transform.transform(d)
-    assert len(record) == 0
     assert d_treated.equals(d_treated_2)
     fn = transform.get_feature_names()
     assert set(sf["variable"]) == set(fn)

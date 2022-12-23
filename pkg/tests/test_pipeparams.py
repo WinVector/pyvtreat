@@ -5,6 +5,7 @@
 #%%
 
 import pytest
+import warnings
 
 import pandas as pd
 import numpy as np
@@ -68,6 +69,7 @@ def test_pipeparams():
     assert transform.get_params()["indicator_min_fraction"] == 0
 
     # no warning or error
-    with pytest.warns(None) as record:
+    # https://docs.pytest.org/en/7.0.x/how-to/capture-warnings.html#additional-use-cases-of-warnings-in-tests
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
         clf.fit(X_train, y_train)
-    assert not record
