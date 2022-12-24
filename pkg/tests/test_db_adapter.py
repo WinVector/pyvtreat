@@ -24,16 +24,12 @@ def test_db_adapter_1_cdata():
     d_train = data_all.loc[range(n - 5), :].reset_index(inplace=False, drop=True)
     d_app = data_all.loc[range(n - 5, n)].reset_index(inplace=False, drop=True)
 
-    #%%
-
     outcome_name = "readmitted"
     cols_to_copy = ["orig_index", "encounter_id", "patient_nbr"] + [outcome_name]
     vars = ["time_in_hospital", "weight"]
     columns = vars + cols_to_copy
 
     # d_train.loc[:, columns]
-
-    #%%
 
     treatment = vtreat.BinomialOutcomeTreatment(
         cols_to_copy=cols_to_copy,
@@ -49,13 +45,9 @@ def test_db_adapter_1_cdata():
 
     # d_app_treated
 
-    #%%
-
     transform_as_data = treatment.description_matrix()
 
     # transform_as_data
-
-    #%%
 
     ops = as_data_algebra_pipeline(
         source=descr(d_app=d_app.loc[:, columns]),
@@ -66,27 +58,19 @@ def test_db_adapter_1_cdata():
 
     # print(ops)
 
-    #%%
-
     transformed = ops.eval(
         {"d_app": d_app.loc[:, columns], "transform_as_data": transform_as_data}
     )
 
     # transformed
 
-    #%%
-
     assert data_algebra.test_util.equivalent_frames(transformed, d_app_treated)
-
-    #%%
 
     db_handle = data_algebra.SQLite.example_handle()
 
     sql = db_handle.to_sql(ops)
     assert isinstance(sql, str)
     # print(sql)
-
-    #%%
 
     db_handle.insert_table(d_app.loc[:, columns], table_name="d_app")
     db_handle.insert_table(transform_as_data, table_name="transform_as_data")
@@ -97,11 +81,7 @@ def test_db_adapter_1_cdata():
 
     # res_db
 
-    #%%
-
     assert data_algebra.test_util.equivalent_frames(res_db, d_app_treated)
-
-    #%%
 
     db_handle.close()
 
