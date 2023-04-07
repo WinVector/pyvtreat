@@ -1,7 +1,7 @@
 ============================= test session starts ==============================
-platform darwin -- Python 3.9.15, pytest-7.1.2, pluggy-1.0.0
+platform darwin -- Python 3.11.2, pytest-7.1.2, pluggy-1.0.0
 rootdir: /Users/johnmount/Documents/work/pyvtreat/pkg
-plugins: anyio-3.5.0, cov-3.0.0
+plugins: anyio-3.5.0, cov-4.0.0
 collected 42 items
 
 pkg/tests/test_KDD2009.py .                                              [  2%]
@@ -33,20 +33,21 @@ pkg/tests/test_util.py ..                                                [ 95%]
 pkg/tests/test_xicor.py ..                                               [100%]
 
 =============================== warnings summary ===============================
-tests/test_dup.py::test_dup
-tests/test_pipeparams.py::test_pipeparams
-tests/test_unsupervised.py::test_unsupervised
-  /Users/johnmount/opt/anaconda3/envs/vtreat_dev_env/lib/python3.9/site-packages/_pytest/python.py:192: PytestRemovedIn8Warning: Passing None has been deprecated.
-  See https://docs.pytest.org/en/latest/how-to/capture-warnings.html#additional-use-cases-of-warnings-in-tests for alternatives in common use cases.
-    result = testfunction(**testargs)
+../../../opt/anaconda3/envs/vtreat_dev_env/lib/python3.11/site-packages/lark/utils.py:116
+  /Users/johnmount/opt/anaconda3/envs/vtreat_dev_env/lib/python3.11/site-packages/lark/utils.py:116: DeprecationWarning: module 'sre_parse' is deprecated
+    import sre_parse
+
+../../../opt/anaconda3/envs/vtreat_dev_env/lib/python3.11/site-packages/lark/utils.py:117
+  /Users/johnmount/opt/anaconda3/envs/vtreat_dev_env/lib/python3.11/site-packages/lark/utils.py:117: DeprecationWarning: module 'sre_constants' is deprecated
+    import sre_constants
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
 
----------- coverage: platform darwin, python 3.9.15-final-0 ----------
+---------- coverage: platform darwin, python 3.11.2-final-0 ----------
 Name                              Stmts   Miss  Cover
 -----------------------------------------------------
 pkg/vtreat/__init__.py                6      0   100%
-pkg/vtreat/cross_plan.py             49      1    98%
+pkg/vtreat/cross_plan.py             50      1    98%
 pkg/vtreat/effect_scaler.py          59      4    93%
 pkg/vtreat/stats_utils.py           132      0   100%
 pkg/vtreat/transform.py              14      0   100%
@@ -55,6 +56,6 @@ pkg/vtreat/vtreat_api.py            285     34    88%
 pkg/vtreat/vtreat_db_adapter.py      69      0   100%
 pkg/vtreat/vtreat_impl.py           703     58    92%
 -----------------------------------------------------
-TOTAL                              1457    104    93%
+TOTAL                              1458    104    93%
 
-================== 42 passed, 3 warnings in 98.68s (0:01:38) ===================
+================== 42 passed, 2 warnings in 98.80s (0:01:38) ===================

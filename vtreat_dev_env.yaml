@@ -8,7 +8,7 @@ dependencies:
   - lark
   - scipy
   - jupyterlab
-  - python=3.9.*
+  - python=3.11.*
   - scikit-learn
   - seaborn
   - matplotlib
