@@ -485,6 +485,8 @@ def fit_regression_impact_code(
     else:
         cf = vtreat.util.grouped_by_x_statistics(x, y)
         cf["_impact_code"] = cf["_group_mean"] - cf["_gm"]
+    if cf.shape[0] <= 1:
+        return None
     sf = cf.loc[:, ["x", "_impact_code"]].reset_index(drop=True, inplace=False)
     newcol = incoming_column_name + "_impact_code"
     sf.columns = [incoming_column_name, newcol]
@@ -523,6 +525,8 @@ def fit_regression_deviation_code(
     sf = vtreat.util.grouped_by_x_statistics(x, y)
     sf["_deviation_code"] = numpy.sqrt(sf["_var"])
     sf = sf.loc[:, ["x", "_deviation_code"]].copy()
+    if sf.shape[0] <= 1:
+        return None
     newcol = incoming_column_name + "_deviation_code"
     sf.columns = [incoming_column_name, newcol]
     return YAwareMappedCodeTransform(
@@ -561,7 +565,6 @@ def fit_binomial_impact_code(
     )  # TODO: document why this is a tuple
     var_suffix = extra_args["var_suffix"]
     y = numpy.asarray(numpy.asarray(y) == outcome_target, dtype=float)
-    
     eps = 1.0e-3
     if params["use_hierarchical_estimate"]:
         cf = vtreat.util.pooled_impact_estimate(x, y)
@@ -575,6 +578,8 @@ def fit_binomial_impact_code(
             numpy.log((numpy.maximum(cf["_group_mean"], 0.0) + eps)
                       / (numpy.maximum(cf["_gm"], 0.0) + eps))
         )
+    if cf.shape[0] <= 1:
+        return None
     sf = cf.loc[:, ["x", "_logit_code"]].reset_index(drop=True, inplace=False)
     newcol = incoming_column_name + "_logit_code" + var_suffix
     sf.columns = [incoming_column_name, newcol]

@@ -91,6 +91,10 @@ def test_KDD2009_vtreat_1():
     assert auc_test > 0.6  # not good!
     assert abs(auc_test - auc_train) < 0.05  # at least not over fit!
     # check against previous result
+    # test_processed.to_csv(
+    #     os.path.join(data_dir, 'test_processed.csv.gz'),
+    #     compression='gzip',
+    #     index=False)
     assert test_processed.shape == expect_test.shape
     assert set(test_processed.columns) == set(expect_test.columns)
     assert numpy.abs(test_processed - expect_test).max(axis=0).max() < 1e-3
