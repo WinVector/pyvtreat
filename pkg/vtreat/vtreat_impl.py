@@ -477,14 +477,15 @@ def fit_regression_impact_code(
     :return:
     """
 
-    sf = vtreat.util.grouped_by_x_statistics(x, y)
-    if sf.shape[0] <= 1:
+    if (len(x) <= 1) or (len(set(x)) <= 1):
         return None
     if params["use_hierarchical_estimate"]:
-        sf["_impact_code"] = sf["_hest"] - sf["_gm"]
+        cf = vtreat.util.pooled_impact_estimate(x, y)
+        cf["_impact_code"] = cf["estimate"] - cf["grand_mean"]
     else:
-        sf["_impact_code"] = sf["_group_mean"] - sf["_gm"]
-    sf = sf.loc[:, ["x", "_impact_code"]].copy()
+        cf = vtreat.util.grouped_by_x_statistics(x, y)
+        cf["_impact_code"] = cf["_group_mean"] - cf["_gm"]
+    sf = cf.loc[:, ["x", "_impact_code"]].reset_index(drop=True, inplace=False)
     newcol = incoming_column_name + "_impact_code"
     sf.columns = [incoming_column_name, newcol]
     return YAwareMappedCodeTransform(
@@ -517,9 +518,9 @@ def fit_regression_deviation_code(
     :return:
     """
 
-    sf = vtreat.util.grouped_by_x_statistics(x, y)
-    if sf.shape[0] <= 1:
+    if (len(x) <= 1) or (len(set(x)) <= 1):
         return None
+    sf = vtreat.util.grouped_by_x_statistics(x, y)
     sf["_deviation_code"] = numpy.sqrt(sf["_var"])
     sf = sf.loc[:, ["x", "_deviation_code"]].copy()
     newcol = incoming_column_name + "_deviation_code"
@@ -553,20 +554,28 @@ def fit_binomial_impact_code(
     :param params: control parameter dictionary
     :return:
     """
+    if (len(x) <= 1) or (len(set(x)) <= 1):
+        return None
     outcome_target = (
         extra_args["outcome_target"],
     )  # TODO: document why this is a tuple
     var_suffix = extra_args["var_suffix"]
     y = numpy.asarray(numpy.asarray(y) == outcome_target, dtype=float)
-    sf = vtreat.util.grouped_by_x_statistics(x, y)
-    if sf.shape[0] <= 1:
-        return None
+    
     eps = 1.0e-3
     if params["use_hierarchical_estimate"]:
-        sf["_logit_code"] = numpy.log((sf["_hest"] + eps) / (sf["_gm"] + eps))
+        cf = vtreat.util.pooled_impact_estimate(x, y)
+        cf["_logit_code"] = (
+            numpy.log((numpy.maximum(cf["estimate"], 0.0) + eps)
+                      / (numpy.maximum(cf["grand_mean"], 0.0) + eps))
+        )
     else:
-        sf["_logit_code"] = numpy.log((sf["_group_mean"] + eps) / (sf["_gm"] + eps))
-    sf = sf.loc[:, ["x", "_logit_code"]].copy()
+        cf = vtreat.util.grouped_by_x_statistics(x, y)
+        cf["_logit_code"] = (
+            numpy.log((numpy.maximum(cf["_group_mean"], 0.0) + eps)
+                      / (numpy.maximum(cf["_gm"], 0.0) + eps))
+        )
+    sf = cf.loc[:, ["x", "_logit_code"]].reset_index(drop=True, inplace=False)
     newcol = incoming_column_name + "_logit_code" + var_suffix
     sf.columns = [incoming_column_name, newcol]
     return YAwareMappedCodeTransform(
@@ -724,8 +733,8 @@ def fit_prevalence_code(incoming_column_name: str, x) -> Optional[VarTransform]:
     sf["_ni"] = 1.0
     sf = pandas.DataFrame(sf.groupby("x")["_ni"].sum())
     sf.reset_index(inplace=True, drop=False)
-    sf["_hest"] = sf["_ni"] / n
-    sf = sf.loc[:, ["x", "_hest"]].copy()
+    sf["_prev"] = sf["_ni"] / n
+    sf = sf.loc[:, ["x", "_prev"]].copy()
     newcol = incoming_column_name + "_prevalence_code"
     sf.columns = [incoming_column_name, newcol]
     sf[incoming_column_name] = sf[incoming_column_name].astype(str)

@@ -33,7 +33,8 @@ def standard_effect_estimate(observations: pd.DataFrame) -> pd.DataFrame:
 # define the pooled estimator
 def pooled_effect_estimate(observations: pd.DataFrame) -> pd.DataFrame:
     """
-    Get the pooled estimate of effect
+    Get the pooled estimate of effect.
+    See: https://github.com/WinVector/Examples/blob/main/PartialPooling/PartialPooling.ipynb .
 
     :param observations: the observations data frame, with columns location_id and observation
     :return: pooled estimates

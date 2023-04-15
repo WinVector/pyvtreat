@@ -4,6 +4,7 @@ setup.py
 vtreat/__init__.py
 vtreat/cross_plan.py
 vtreat/effect_scaler.py
+vtreat/partial_pooling_estimator.py
 vtreat/stats_utils.py
 vtreat/transform.py
 vtreat/util.py
