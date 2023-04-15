@@ -13,6 +13,7 @@ import numpy
 import pandas
 
 import vtreat.stats_utils
+from vtreat.partial_pooling_estimator import pooled_effect_estimate
 
 
 def safe_to_numeric_array(x):
@@ -138,15 +139,26 @@ def grouped_by_x_statistics(x, y):
     else:
         sf["_vb"] = eps
     sf["_gm"] = global_mean
-    # hierarchical model is in:
-    # http://www.win-vector.com/blog/2017/09/partial-pooling-for-lower-variance-variable-encoding/
-    # using naive empirical estimates of variances
-    # adjusted from ni to ni-1 and +eps variance to make
-    # rare levels look like new levels.
-    sf["_hest"] = (
-        (sf["_ni"] - 1) * sf["_group_mean"] / sf["_var"] + sf["_gm"] / sf["_vb"]
-    ) / ((sf["_ni"] - 1) / sf["_var"] + 1 / sf["_vb"])
+    sf.sort_values(["x"], inplace=True, ignore_index=True)
     return sf
+
+
+def pooled_impact_estimate(x, y):
+    """
+    compute some pooled grouped by x vector summaries of numeric y vector (no missing values in y)
+    http://www.win-vector.com/blog/2017/09/partial-pooling-for-lower-variance-variable-encoding/
+    https://github.com/WinVector/Examples/blob/main/PartialPooling/PartialPooling.ipynb
+    """
+    n = len(x)
+    assert n > 0
+    assert n == len(y)
+    obs = pandas.DataFrame({
+        "location_id": x,
+        "observation": safe_to_numeric_array(y),
+    })
+    res = pooled_effect_estimate(obs)
+    res.rename(columns={"location_id": "x"}, inplace=True)
+    return res
 
 
 def score_variables(
@@ -299,6 +311,3 @@ def hash_data_frame(d: pandas.DataFrame) -> str:
     :return: hash code as a string
     """
     return hashlib.sha256(pandas.util.hash_pandas_object(d).values).hexdigest()
-
-
-
