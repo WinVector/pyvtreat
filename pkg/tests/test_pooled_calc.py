@@ -105,3 +105,15 @@ def test_pooled_calc():
         example_locations=example_locations, 
         observations=observations)
     assert pooled_est_loss < std_est_loss
+
+
+def test_pooled_calc_2():
+    # more obs takes us closer to true expectation
+    rng = np.random.default_rng(2023)
+    d = pd.DataFrame({
+        "location_id": ["a"] * 100 + ["b"] * 5,
+    })
+    d["observation"] = 1.0 + rng.normal(size=d.shape[0])
+    pooled_estimates = pooled_effect_estimate(observations=d)
+    ests = {lid: est for lid, est in zip(pooled_estimates["location_id"], pooled_estimates["estimate"])}
+    assert np.abs(ests['a'] - 1.0) < np.abs(ests['b'] - 1.0)
