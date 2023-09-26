@@ -1,5 +1,10 @@
-numpy
-pandas
+numpy>=1.25.0
+pandas>=2.0.0
 scipy
 scikit-learn
-data_algebra>=1.4.1
+
+[all]
+data_algebra>=1.6.9
+
+[db_adapter]
+data_algebra>=1.6.9

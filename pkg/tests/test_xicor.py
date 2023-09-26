@@ -7,7 +7,7 @@ import numpy.random
 import pandas
 
 from vtreat.stats_utils import xicor, xicor_for_frame
-import data_algebra.test_util
+from vtreat.test_util import equivalent_frames
 
 
 def test_xicor():
@@ -56,4 +56,4 @@ def test_xicor_frame():
         'xicor_perm_mean': 0.0,
         'xicor_perm_stddev': [0.2, 0.2]
     })
-    assert data_algebra.test_util.equivalent_frames(res, expect, float_tol=0.01)
+    assert equivalent_frames(res, expect, float_tol=0.01)

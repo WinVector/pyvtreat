@@ -3,14 +3,23 @@ import numpy as np
 import numpy.random
 import pandas as pd
 
-from data_algebra.data_ops import *
-import data_algebra.SQLite
-import data_algebra.test_util
 import vtreat
-from vtreat.vtreat_db_adapter import as_data_algebra_pipeline
+from vtreat.test_util import equivalent_frames
+
+have_data_algebra = False
+try:
+    import data_algebra
+    from data_algebra.data_ops import *
+    import data_algebra.SQLite
+    from vtreat.vtreat_db_adapter import as_data_algebra_pipeline
+    have_data_algebra = True
+except ModuleNotFoundError:
+    pass
 
 
 def test_db_adapter_1_cdata():
+    if not have_data_algebra:
+        return
     # Example from:
     # https://github.com/WinVector/pyvtreat/blob/main/Examples/Database/vtreat_db_adapter.ipynb
     # Data from:
@@ -64,7 +73,7 @@ def test_db_adapter_1_cdata():
 
     # transformed
 
-    assert data_algebra.test_util.equivalent_frames(transformed, d_app_treated)
+    assert equivalent_frames(transformed, d_app_treated)
 
     db_handle = data_algebra.SQLite.example_handle()
 
@@ -81,13 +90,14 @@ def test_db_adapter_1_cdata():
 
     # res_db
 
-    assert data_algebra.test_util.equivalent_frames(res_db, d_app_treated)
+    assert equivalent_frames(res_db, d_app_treated)
 
     db_handle.close()
 
 
 def test_db_adapter_general():
-
+    if not have_data_algebra:
+        return
     # set up example data
     def mk_data(
         n_rows: int = 100,
@@ -152,7 +162,7 @@ def test_db_adapter_general():
     ops_source = str(ops)
     assert isinstance(ops_source, str)
     d_app_res = ops.eval({"d_app": d_app, "transform_as_data": transform_as_data})
-    assert data_algebra.test_util.equivalent_frames(d_app_treated, d_app_res)
+    assert equivalent_frames(d_app_treated, d_app_res)
 
     # test ops db path
     source_descr = TableDescription(table_name="d_app", column_names=columns,)
@@ -161,11 +171,13 @@ def test_db_adapter_general():
     db_handle.insert_table(transform_as_data, table_name="transform_as_data")
     db_handle.execute("CREATE TABLE res AS " + db_handle.to_sql(ops))
     res_db = db_handle.read_query("SELECT * FROM res ORDER BY orig_index")
-    assert data_algebra.test_util.equivalent_frames(res_db, d_app_treated)
+    assert equivalent_frames(res_db, d_app_treated)
     db_handle.close()
 
 
 def test_db_adapter_monster():
+    if not have_data_algebra:
+        return
     outcome_name = "y"
     row_id_name = 'row_id'
     n_vars = 5
@@ -216,5 +228,5 @@ def test_db_adapter_monster():
     assert isinstance(ops_source, str)
 
     d_app_res = ops.eval({"d_app": d_app, "transform_as_data": transform_as_data})
-    assert data_algebra.test_util.equivalent_frames(d_app_treated, d_app_res)
+    assert equivalent_frames(d_app_treated, d_app_res)
     assert numpy.all([c in d_app_res.columns for c in cols_to_copy])

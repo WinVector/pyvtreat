@@ -66,25 +66,34 @@ setuptools.setup(
     url='https://github.com/WinVector/pyvtreat',
     packages=setuptools.find_packages(where='.', exclude=['tests', 'Examples']),
     install_requires=[
-        'numpy',
-        'pandas',
+        "numpy>=1.25.0",
+        "pandas>=2.0.0",
         'scipy',
-        'scikit-learn',
-        'data_algebra>=1.4.1',
+        'scikit-learn'
     ],
+    extras_require={
+        'db_adapter': [
+            'data_algebra>=1.6.9'
+        ],
+        'all': [
+            'data_algebra>=1.6.9'
+        ]
+    },
     platforms=['any'],
     license='License :: OSI Approved :: BSD 3-clause License',
     python_requires=">=3.7",
     long_description_content_type='text/markdown',
     description=DESCRIPTION,
     classifiers=[
-          'Intended Audience :: Science/Research',
-          'Programming Language :: Python',
-          'Programming Language :: Python :: 3',
-          'Programming Language :: Python :: 3.7',
-          'Programming Language :: Python :: 3.8',
-          'Programming Language :: Python :: 3.9',
-          'License :: OSI Approved :: BSD License',
+        'Intended Audience :: Science/Research',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'License :: OSI Approved :: BSD License',
     ],
     long_description=LONG_DESCRIPTION
 )

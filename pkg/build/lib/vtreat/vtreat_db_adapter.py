@@ -8,7 +8,6 @@ import pandas
 
 from vtreat.vtreat_impl import bad_sentinel, replace_bad_with_sentinel
 
-
 from data_algebra.data_ops import data, descr, describe_table, TableDescription, ViewRepresentation
 from data_algebra.solutions import def_multi_column_map
 
