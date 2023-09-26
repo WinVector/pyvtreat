@@ -66,17 +66,17 @@ setuptools.setup(
     url='https://github.com/WinVector/pyvtreat',
     packages=setuptools.find_packages(where='.', exclude=['tests', 'Examples']),
     install_requires=[
-        "numpy>=1.25.0",
-        "pandas>=2.0.0",
-        'scipy',
-        'scikit-learn'
+        "numpy >=1.24.0, <2",
+        "pandas >=2.0.0, <3",
+        "scipy >=1.9.9, <2",
+        "scikit-learn >= 1.0, <2",
     ],
     extras_require={
         'db_adapter': [
-            'data_algebra>=1.6.9'
+            'data_algebra >=1.6.9'
         ],
         'all': [
-            'data_algebra>=1.6.9'
+            'data_algebra >=1.6.9'
         ]
     },
     platforms=['any'],
