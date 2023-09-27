@@ -9,6 +9,7 @@ import numpy.random
 import sklearn.linear_model
 import sklearn.metrics
 import vtreat.stats_utils
+from vtreat.test_util import equivalent_frames
 
 have_data_algebra = False
 try:
@@ -17,6 +18,13 @@ try:
     import data_algebra.BigQuery
     import vtreat.vtreat_db_adapter
     have_data_algebra = True
+except ModuleNotFoundError:
+    pass
+
+have_polars = False
+try:
+    import polars as pl
+    have_polars = True
 except ModuleNotFoundError:
     pass
 
@@ -119,17 +127,18 @@ def test_KDD2009_vtreat_1():
         test_by_pipeline = ops.eval({
             'd_test': d_test.loc[:, incoming_vars + ['orig_index']],
             'transform_as_data': transform_as_data})
-        assert test_by_pipeline.shape[0] == test_processed.shape[0]
-        assert test_by_pipeline.shape[1] >= test_processed.shape[1]
-        assert not numpy.any(numpy.isnan(test_by_pipeline))
-        test_pipeline_cols = set(test_by_pipeline.columns)
-        assert numpy.all([c in test_pipeline_cols for c in test_processed.columns])
-        test_cols_sorted = list(test_processed.columns)
-        test_cols_sorted.sort()
-        assert numpy.abs(test_processed[test_cols_sorted] - test_by_pipeline[test_cols_sorted]).max(axis=0).max() < 1e-5
+        assert equivalent_frames(test_by_pipeline.loc[:, test_processed.columns], 
+                                 test_processed)
         # data algebra pipeline in database
         sql = data_algebra.BigQuery.BigQueryModel().to_sql(ops)
         assert isinstance(sql, str)
+        if have_polars:
+            test_by_pipeline_pl = ops.eval({
+                'd_test': pl.DataFrame(d_test.loc[:, incoming_vars + ['orig_index']]),
+                'transform_as_data': pl.DataFrame(transform_as_data),
+                })
+            assert equivalent_frames(test_by_pipeline_pl.to_pandas().loc[:, test_processed.columns], 
+                                     test_processed)
         if test_on_BigQuery:
             db_handle = data_algebra.BigQuery.example_handle()
             db_handle.drop_table('d_test_processed')
