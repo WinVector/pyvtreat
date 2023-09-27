@@ -128,7 +128,8 @@ def test_KDD2009_vtreat_1():
             'd_test': d_test.loc[:, incoming_vars + ['orig_index']],
             'transform_as_data': transform_as_data})
         assert equivalent_frames(test_by_pipeline.loc[:, test_processed.columns], 
-                                 test_processed)
+                                 test_processed,
+                                 check_row_order=True)
         # data algebra pipeline in database
         sql = data_algebra.BigQuery.BigQueryModel().to_sql(ops)
         assert isinstance(sql, str)
@@ -138,7 +139,8 @@ def test_KDD2009_vtreat_1():
                 'transform_as_data': pl.DataFrame(transform_as_data),
                 })
             assert equivalent_frames(test_by_pipeline_pl.to_pandas().loc[:, test_processed.columns], 
-                                     test_processed)
+                                     test_processed,
+                                     check_row_order=True)
         if test_on_BigQuery:
             db_handle = data_algebra.BigQuery.example_handle()
             db_handle.drop_table('d_test_processed')
