@@ -16,6 +16,13 @@ try:
 except ModuleNotFoundError:
     pass
 
+have_polars = False
+try:
+    import polars as pl
+    have_polars = True
+except ModuleNotFoundError:
+    pass
+
 
 def test_db_adapter_1_cdata():
     if not have_data_algebra:
@@ -88,11 +95,18 @@ def test_db_adapter_1_cdata():
 
     res_db = db_handle.read_query("SELECT * FROM res ORDER BY orig_index LIMIT 10")
 
-    # res_db
+    db_handle.close()
 
     assert equivalent_frames(res_db, d_app_treated)
 
-    db_handle.close()
+    if have_polars:
+        transformed_pl = ops.eval({
+            "d_app": pl.DataFrame(d_app.loc[:, columns]), 
+            "transform_as_data": pl.DataFrame(transform_as_data),
+            })
+        assert isinstance(transformed_pl, pl.DataFrame)
+        transformed_pl_pd = transformed_pl.to_pandas()
+        assert equivalent_frames(transformed_pl_pd, d_app_treated)
 
 
 def test_db_adapter_general():

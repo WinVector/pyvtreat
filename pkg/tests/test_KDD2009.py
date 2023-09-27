@@ -21,9 +21,6 @@ except ModuleNotFoundError:
     pass
 
 
-
-
-
 # From:
 # https://github.com/WinVector/pyvtreat/blob/main/Examples/KDD2009Example/KDD2009Example.ipynb
 def test_KDD2009_vtreat_1():
