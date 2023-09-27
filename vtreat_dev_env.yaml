@@ -3,13 +3,13 @@ channels:
   - defaults
   - conda-forge
 dependencies:
-  - numpy
-  - pandas
+  - numpy>=1.24.0
+  - pandas>=2.0.0
   - lark
-  - scipy
+  - scipy>=1.9.9
   - jupyterlab
   - python=3.11.*
-  - scikit-learn
+  - scikit-learn>=1.0
   - seaborn
   - matplotlib
   - PyYAML
@@ -26,7 +26,8 @@ dependencies:
   - pip
   - pip:
     - pdoc
-    - data_algebra
+    - data_algebra>=1.6.9
     - google.cloud
     - google-cloud-bigquery
+    - polars>=0.19.4
 
