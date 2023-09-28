@@ -151,7 +151,10 @@ def test_KDD2009_vtreat_1():
             db_res = db_handle.read_query(
                 f"SELECT * FROM {db_handle.db_model.table_prefix}.d_test_processed ORDER BY orig_index")
             assert db_res.shape[0] == test_processed.shape[0]
-            assert numpy.abs(test_processed[test_cols_sorted] - db_res[test_cols_sorted]).max(axis=0).max() < 1e-5
+            assert equivalent_frames(db_res.loc[:, test_processed.columns], 
+                            test_processed,
+                            check_row_order=True,
+                            float_tol=1e-5)
             db_handle.drop_table('d_test')
             db_handle.drop_table('transform_as_data')
             db_handle.drop_table('d_test_processed')
