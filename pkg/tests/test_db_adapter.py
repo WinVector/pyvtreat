@@ -8,9 +8,8 @@ from vtreat.test_util import equivalent_frames
 
 have_data_algebra = False
 try:
-    import data_algebra
-    from data_algebra.view_representations import TableDescription
-    from data_algebra.data_ops import descr, describe_table
+    import data_algebra 
+    from data_algebra.data_ops import descr, TableDescription
     import data_algebra.SQLite
     from vtreat.vtreat_db_adapter import as_data_algebra_pipeline
     have_data_algebra = True
