@@ -8,7 +8,8 @@ import pandas
 # noinspection PyUnresolvedReferences
 import numpy
 
-from vtreat.vtreat_api import *
+from vtreat.vtreat_api import unsupervised_parameters, vtreat_parameters, BinomialOutcomeTreatment, MultinomialOutcomeTreatment, NumericOutcomeTreatment, UnsupervisedTreatment
+
 
 __docformat__ = "restructuredtext"
 __version__ = "1.3.0"
