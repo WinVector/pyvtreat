@@ -4,7 +4,7 @@ scipy<2,>=1.9.9
 scikit-learn<2,>=1.0
 
 [all]
-data_algebra>=1.6.9
+data_algebra>=1.7.0
 
 [db_adapter]
-data_algebra>=1.6.9
+data_algebra>=1.7.0

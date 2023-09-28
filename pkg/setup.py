@@ -60,7 +60,7 @@ and also as an [`R` package](https://github.com/WinVector/vtreat).
 
 setuptools.setup(
     name='vtreat',
-    version='1.3.0',
+    version='1.3.1',
     author='John Mount, Nina Zumel',
     author_email='jmount@win-vector.com',
     url='https://github.com/WinVector/pyvtreat',
@@ -73,10 +73,10 @@ setuptools.setup(
     ],
     extras_require={
         'db_adapter': [
-            'data_algebra >=1.6.9'
+            'data_algebra >=1.7.0'
         ],
         'all': [
-            'data_algebra >=1.6.9'
+            'data_algebra >=1.7.0'
         ]
     },
     platforms=['any'],

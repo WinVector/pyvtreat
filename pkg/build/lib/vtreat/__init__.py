@@ -12,7 +12,7 @@ from vtreat.vtreat_api import unsupervised_parameters, vtreat_parameters, Binomi
 
 
 __docformat__ = "restructuredtext"
-__version__ = "1.3.0"
+__version__ = "1.3.1"
 
 __doc__ = """
 This<https://github.com/WinVector/pyvtreat> is the Python version of the vtreat data preparation system

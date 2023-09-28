@@ -43,7 +43,7 @@ contourpy=1.0.5=py311ha357a0b_0
 coverage=7.2.2=py311h6c40b1e_0
 cryptography=41.0.3=py311h30e54ef_0
 cycler=0.11.0=pyhd3eb1b0_0
-data-algebra=1.6.9=pypi_0
+data-algebra=1.7.0=pypi_0
 debugpy=1.6.7=py311hcec6c5f_0
 decorator=5.1.1=pyhd3eb1b0_0
 defusedxml=0.7.1=pyhd3eb1b0_0
@@ -57,7 +57,7 @@ gflags=2.2.2=h0a44026_0
 giflib=5.2.1=h6c40b1e_3
 glog=0.5.0=h23ab428_0
 google-api-core=2.12.0=pypi_0
-google-auth=2.23.1=pypi_0
+google-auth=2.23.2=pypi_0
 google-cloud=0.34.0=pypi_0
 google-cloud-bigquery=3.11.4=pypi_0
 google-cloud-core=2.3.3=pypi_0
@@ -155,8 +155,8 @@ nest-asyncio=1.5.6=py311hecd8cb5_0
 notebook=6.5.4=py311hecd8cb5_1
 notebook-shim=0.2.2=py311hecd8cb5_0
 numexpr=2.8.4=py311h728a8a3_1
-numpy=1.25.2=py311h728a8a3_0
-numpy-base=1.25.2=py311h53bf9ac_0
+numpy=1.26.0=py311h728a8a3_0
+numpy-base=1.26.0=py311h53bf9ac_0
 openssl=3.0.11=hca72f7f_2
 orc=1.7.4=h995b336_1
 packaging=23.1=py311hecd8cb5_0
@@ -172,7 +172,7 @@ pip=23.2.1=py311hecd8cb5_0
 pkginfo=1.9.6=py311hecd8cb5_0
 platformdirs=3.10.0=py311hecd8cb5_0
 pluggy=1.0.0=py311hecd8cb5_1
-polars=0.19.4=pypi_0
+polars=0.19.5=pypi_0
 prometheus_client=0.14.1=py311hecd8cb5_0
 prompt-toolkit=3.0.36=py311hecd8cb5_0
 proto-plus=1.22.3=pypi_0
@@ -243,9 +243,9 @@ typing-extensions=4.7.1=py311hecd8cb5_0
 typing_extensions=4.7.1=py311hecd8cb5_0
 tzdata=2023c=h04d1e81_0
 tzlocal=2.1=py311hecd8cb5_1
-urllib3=2.0.5=pypi_0
+urllib3=1.26.16=py311hecd8cb5_0
 utf8proc=2.6.1=h9ed2024_0
-vtreat=1.3.0=dev_0
+vtreat=1.3.1=dev_0
 wcwidth=0.2.5=pyhd3eb1b0_0
 webencodings=0.5.1=py311hecd8cb5_1
 websocket-client=0.58.0=py311hecd8cb5_4
