@@ -56,14 +56,13 @@ def test_db_adapter_1_cdata():
         ),
     )
     d_train_treated = treatment.fit_transform(d_train.loc[:, columns])
+    assert isinstance(d_train_treated, pd.DataFrame)
 
     d_app_treated = treatment.transform(d_app.loc[:, columns])
-
-    # d_app_treated
+    assert isinstance(d_app_treated, pd.DataFrame)
 
     transform_as_data = treatment.description_matrix()
-
-    # transform_as_data
+    assert isinstance(transform_as_data, pd.DataFrame)
 
     ops = as_data_algebra_pipeline(
         source=descr(d_app=d_app.loc[:, columns]),
