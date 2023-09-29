@@ -182,7 +182,7 @@ def xicor(xvec, yvec, *, n_reps: int = 5) -> Tuple[float, float]:
         PI[perm] = PI_inv  # invert permutation, self assignment fails
         ord = numpy.argsort(PI)
         fr = fr_orig[ord]
-        A1 = numpy.sum(numpy.abs(fr[0:(n - 1)] - fr[1:n])) / (2 * n)
+        A1 = numpy.sum(numpy.abs(fr[0 : (n - 1)] - fr[1:n])) / (2 * n)
         xi = 1 - A1 / CU
         xi_s[rep_i] = xi
     return numpy.mean(xi_s), numpy.std(xi_s) / numpy.sqrt(n_reps)
@@ -207,21 +207,23 @@ def xicor_for_frame(d: pandas.DataFrame, y, *, n_reps=5):
     assert len(y) == n
     assert isinstance(n_reps, int)
     assert n_reps > 0
-    res = pandas.DataFrame({
-        'variable': d.columns,
-        'xicor': 0.0,
-        'xicor_se': 0.0,
-        'xicor_perm_mean': 0.0,
-        'xicor_perm_stddev': 0.0,
-        'xicor_perm_sum': 0.0,
-        'xicor_perm_sum_sq': 0.0,
-    })
+    res = pandas.DataFrame(
+        {
+            "variable": d.columns,
+            "xicor": 0.0,
+            "xicor_se": 0.0,
+            "xicor_perm_mean": 0.0,
+            "xicor_perm_stddev": 0.0,
+            "xicor_perm_sum": 0.0,
+            "xicor_perm_sum_sq": 0.0,
+        }
+    )
     # get the xicor estimates
     for col_i in range(len(d.columns)):
         xvec = d[d.columns[col_i]]
         xi_est, xi_est_dev = xicor(xvec, y, n_reps=n_reps)
-        res.loc[col_i, 'xicor'] = xi_est
-        res.loc[col_i, 'xicor_se'] = xi_est_dev
+        res.loc[col_i, "xicor"] = xi_est
+        res.loc[col_i, "xicor_se"] = xi_est_dev
     # score all x-columns with the same y-permutation
     # estimate stddev with expanding squares to cut down storage
     for rep_j in range(n_reps):
@@ -229,11 +231,17 @@ def xicor_for_frame(d: pandas.DataFrame, y, *, n_reps=5):
         for col_i in range(len(d.columns)):
             xvec = d[d.columns[col_i]]
             xi_perm, _ = xicor(xvec, y_perm, n_reps=1)
-            res.loc[col_i, 'xicor_perm_sum'] = res.loc[col_i, 'xicor_perm_sum'] + xi_perm
-            res.loc[col_i, 'xicor_perm_sum_sq'] = res.loc[col_i, 'xicor_perm_sum_sq'] + xi_perm * xi_perm
-    res['xicor_perm_mean'] = res['xicor_perm_sum'] / n_reps
-    res['xicor_perm_stddev'] = numpy.sqrt((1 / (n_reps - 1)) * (
-            res['xicor_perm_sum_sq'] - (1 / n_reps) * res['xicor_perm_sum']**2))
-    del res['xicor_perm_sum']
-    del res['xicor_perm_sum_sq']
+            res.loc[col_i, "xicor_perm_sum"] = (
+                res.loc[col_i, "xicor_perm_sum"] + xi_perm
+            )
+            res.loc[col_i, "xicor_perm_sum_sq"] = (
+                res.loc[col_i, "xicor_perm_sum_sq"] + xi_perm * xi_perm
+            )
+    res["xicor_perm_mean"] = res["xicor_perm_sum"] / n_reps
+    res["xicor_perm_stddev"] = numpy.sqrt(
+        (1 / (n_reps - 1))
+        * (res["xicor_perm_sum_sq"] - (1 / n_reps) * res["xicor_perm_sum"] ** 2)
+    )
+    del res["xicor_perm_sum"]
+    del res["xicor_perm_sum_sq"]
     return res

@@ -38,7 +38,7 @@ def can_convert_v_to_numeric(x) -> bool:
     not_bad = numpy.logical_not(pandas.isnull(x))
     n_not_bad = numpy.sum(not_bad)
     if n_not_bad < 1:
-        return True   # All nan/None, can convert to numeric
+        return True  # All nan/None, can convert to numeric
     try:
         numpy.asarray(
             x[not_bad] + 0, dtype=float
@@ -152,21 +152,24 @@ def pooled_impact_estimate(x, y):
     n = len(x)
     assert n > 0
     assert n == len(y)
-    obs = pandas.DataFrame({
-        "location_id": x,
-        "observation": safe_to_numeric_array(y),
-    })
+    obs = pandas.DataFrame(
+        {
+            "location_id": x,
+            "observation": safe_to_numeric_array(y),
+        }
+    )
     res = pooled_effect_estimate(obs)
     res.rename(columns={"location_id": "x"}, inplace=True)
     return res
 
 
 def score_variables(
-        cross_frame: pandas.DataFrame,
-        *,
-        variables: Optional[Iterable[str]],
-        outcome,
-        is_classification: bool = False) -> Optional[pandas.DataFrame]:
+    cross_frame: pandas.DataFrame,
+    *,
+    variables: Optional[Iterable[str]],
+    outcome,
+    is_classification: bool = False
+) -> Optional[pandas.DataFrame]:
     """
     Score the linear relation of variables to outcome.
 
@@ -200,7 +203,7 @@ def score_variables(
             and (numpy.max(outcome) > numpy.min(outcome))
         ):
             cor, sig = vtreat.stats_utils.our_corr_score(y_true=outcome, y_pred=col)
-            r2 = cor ** 2
+            r2 = cor**2
             if is_classification:
                 r2, sig = vtreat.stats_utils.our_pseudo_R2(y_true=outcome, y_pred=col)
             sfi = pandas.DataFrame(
@@ -283,7 +286,7 @@ def clean_string(s: str) -> str:
     }
     s = s.strip()
     s = re.sub(r"\s+", " ", s)
-    for (k, v) in mp.items():
+    for k, v in mp.items():
         s = s.replace(k, v)
     return s
 

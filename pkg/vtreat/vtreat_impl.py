@@ -146,13 +146,14 @@ class TreatmentPlan:
     xforms: Tuple[VarTransform, ...]
 
     def __init__(
-            self,
-            *,
-            outcome_name: Optional[str] = None,
-            cols_to_copy: Optional[Iterable[str]] = None,
-            num_list: Optional[Iterable[str]] = None,
-            cat_list: Optional[Iterable[str]] = None,
-            xforms: Iterable[Optional[VarTransform]]):
+        self,
+        *,
+        outcome_name: Optional[str] = None,
+        cols_to_copy: Optional[Iterable[str]] = None,
+        num_list: Optional[Iterable[str]] = None,
+        cat_list: Optional[Iterable[str]] = None,
+        xforms: Iterable[Optional[VarTransform]],
+    ):
         self.outcome_name = outcome_name
         if cols_to_copy is None:
             self.cols_to_copy = tuple()
@@ -296,10 +297,7 @@ class YAwareMappedCodeTransform(MappedCodeTransform):
 class CleanNumericTransform(VarTransform):
     """Class for numeric column cleaner."""
 
-    def __init__(self,
-                 *,
-                 incoming_column_name: str,
-                 replacement_value: float):
+    def __init__(self, *, incoming_column_name: str, replacement_value: float):
         """
 
         :param incoming_column_name:
@@ -354,11 +352,13 @@ class CleanNumericTransform(VarTransform):
 class IndicateMissingTransform(VarTransform):
     """Class for missing value indicator."""
 
-    def __init__(self,
-                 *,
-                 incoming_column_name: str,
-                 incoming_column_is_numeric: bool,
-                 derived_column_name: str):
+    def __init__(
+        self,
+        *,
+        incoming_column_name: str,
+        incoming_column_is_numeric: bool,
+        derived_column_name: str,
+    ):
         """
 
         :param incoming_column_name:
@@ -568,15 +568,15 @@ def fit_binomial_impact_code(
     eps = 1.0e-3
     if params["use_hierarchical_estimate"]:
         cf = vtreat.util.pooled_impact_estimate(x, y)
-        cf["_logit_code"] = (
-            numpy.log((numpy.maximum(cf["estimate"], 0.0) + eps)
-                      / (numpy.maximum(cf["grand_mean"], 0.0) + eps))
+        cf["_logit_code"] = numpy.log(
+            (numpy.maximum(cf["estimate"], 0.0) + eps)
+            / (numpy.maximum(cf["grand_mean"], 0.0) + eps)
         )
     else:
         cf = vtreat.util.grouped_by_x_statistics(x, y)
-        cf["_logit_code"] = (
-            numpy.log((numpy.maximum(cf["_group_mean"], 0.0) + eps)
-                      / (numpy.maximum(cf["_gm"], 0.0) + eps))
+        cf["_logit_code"] = numpy.log(
+            (numpy.maximum(cf["_group_mean"], 0.0) + eps)
+            / (numpy.maximum(cf["_gm"], 0.0) + eps)
         )
     if cf.shape[0] <= 1:
         return None
@@ -715,7 +715,9 @@ def fit_indicator_code(
         return None
     return IndicatorCodeTransform(
         incoming_column_name=incoming_column_name,
-        derived_column_names=vtreat.util.build_level_codes(incoming_column_name, levels),
+        derived_column_names=vtreat.util.build_level_codes(
+            incoming_column_name, levels
+        ),
         levels=levels,
         sparse_indicators=sparse_indicators,
     )
@@ -748,7 +750,7 @@ def fit_prevalence_code(incoming_column_name: str, x) -> Optional[VarTransform]:
         incoming_column_name=incoming_column_name,
         derived_column_name=newcol,
         treatment="prevalence_code",
-        code_book=sf
+        code_book=sf,
     )
 
 
@@ -841,7 +843,7 @@ def fit_numeric_outcome_treatment(
                 IndicateMissingTransform(
                     incoming_column_name=vi,
                     incoming_column_is_numeric=vi in num_set,
-                    derived_column_name=vi + "_is_bad"
+                    derived_column_name=vi + "_is_bad",
                 )
             )
     if "clean_copy" in params["coders"]:
@@ -934,7 +936,7 @@ def fit_binomial_outcome_treatment(
                 IndicateMissingTransform(
                     incoming_column_name=vi,
                     incoming_column_is_numeric=vi in num_set,
-                    derived_column_name=vi + "_is_bad"
+                    derived_column_name=vi + "_is_bad",
                 )
             )
     if "clean_copy" in params["coders"]:
@@ -1020,7 +1022,7 @@ def fit_multinomial_outcome_treatment(
                 IndicateMissingTransform(
                     incoming_column_name=vi,
                     incoming_column_is_numeric=vi in num_set,
-                    derived_column_name=vi + "_is_bad"
+                    derived_column_name=vi + "_is_bad",
                 )
             )
     if "clean_copy" in params["coders"]:
@@ -1106,7 +1108,7 @@ def fit_unsupervised_treatment(
                 IndicateMissingTransform(
                     incoming_column_name=vi,
                     incoming_column_is_numeric=vi in num_set,
-                    derived_column_name=vi + "_is_bad"
+                    derived_column_name=vi + "_is_bad",
                 )
             )
     if "clean_copy" in params["coders"]:
@@ -1502,7 +1504,9 @@ def pseudo_score_plan_variables(
     return score_frame
 
 
-class VariableTreatment(abc.ABC, sklearn.base.BaseEstimator, sklearn.base.TransformerMixin):
+class VariableTreatment(
+    abc.ABC, sklearn.base.BaseEstimator, sklearn.base.TransformerMixin
+):
     """
     Class for variable treatments, implements much of the sklearn pipeline/transformer
     API. https://sklearn-template.readthedocs.io/en/latest/user_guide.html#transformer
@@ -1687,7 +1691,7 @@ class VariableTreatment(abc.ABC, sklearn.base.BaseEstimator, sklearn.base.Transf
         :return: self (for method chaining)
         """
 
-        for (k, v) in params.items():
+        for k, v in params.items():
             if k in self.params_["tunable_params"]:
                 self.params_[k] = v
         return self

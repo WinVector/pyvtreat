@@ -6,8 +6,6 @@ import numpy as np
 import pandas as pd
 
 
-
-
 def equivalent_frames(
     a: pd.DataFrame,
     b: pd.DataFrame,
@@ -93,9 +91,7 @@ def equivalent_frames(
                     if np.any(ca_inf != cb_inf):
                         return False
                     if np.any(ca_inf):
-                        if np.any(
-                            np.sign(ca_n[ca_inf]) != np.sign(cb_n[cb_inf])
-                        ):
+                        if np.any(np.sign(ca_n[ca_inf]) != np.sign(cb_n[cb_inf])):
                             return False
                     if np.any(np.logical_not(ca_inf)):
                         ca_f = ca_n[np.logical_not(ca_inf)]

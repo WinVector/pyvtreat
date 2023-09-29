@@ -8,7 +8,13 @@ import pandas
 
 from vtreat.vtreat_impl import bad_sentinel, replace_bad_with_sentinel
 
-from data_algebra.data_ops import data, descr, describe_table, TableDescription, ViewRepresentation
+from data_algebra.data_ops import (
+    data,
+    descr,
+    describe_table,
+    TableDescription,
+    ViewRepresentation,
+)
 from data_algebra.solutions import def_multi_column_map
 
 
@@ -28,17 +34,17 @@ def _check_treatment_table(vtreat_descr: pandas.DataFrame):
     # numeric is a function of original variable only
     check_fn_relnn = (
         data(vtreat_descr=vtreat_descr)
-            .project({}, group_by=["orig_var", "orig_was_numeric"])
-            .extend({"one": 1})
-            .project({"count": "one.sum()"}, group_by=["orig_var"])
+        .project({}, group_by=["orig_var", "orig_was_numeric"])
+        .extend({"one": 1})
+        .project({"count": "one.sum()"}, group_by=["orig_var"])
     ).ex()
     assert numpy.all(check_fn_relnn["count"] == 1)
     # variable consumed is function of variable produced and treatment only
     check_fn_reln2 = (
         data(vtreat_descr=vtreat_descr)
-            .project({}, group_by=["treatment", "orig_var", "variable"])
-            .extend({"one": 1})
-            .project({"count": "one.sum()"}, group_by=["treatment", "variable"])
+        .project({}, group_by=["treatment", "orig_var", "variable"])
+        .extend({"one": 1})
+        .project({"count": "one.sum()"}, group_by=["treatment", "variable"])
     ).ex()
     assert numpy.all(check_fn_reln2["count"] == 1)
     # clean copies don't change variable names
@@ -108,7 +114,7 @@ def as_data_algebra_pipeline(
         vtreat_descr["treatment_class"] == "IndicateMissingTransform", :
     ].reset_index(inplace=False, drop=True)
     for i in range(im_rows.shape[0]):
-        if im_rows['orig_was_numeric'][i]:
+        if im_rows["orig_was_numeric"][i]:
             step_1_ops[
                 im_rows["variable"][i]
             ] = f"{im_rows['orig_var'][i]}.is_bad().where(1.0, 0.0)"
@@ -131,32 +137,37 @@ def as_data_algebra_pipeline(
     # mapped columns
     mapping_table = (
         describe_table(vtreat_descr, table_name=treatment_table_name)
-            .select_rows('treatment_class == "MappedCodeTransform"')
-            .select_columns(['orig_var', 'value', 'replacement', 'treatment']))
+        .select_rows('treatment_class == "MappedCodeTransform"')
+        .select_columns(["orig_var", "value", "replacement", "treatment"])
+    )
     mapping_rows = mapping_table.transform(vtreat_descr)
     if mapping_rows.shape[0] > 0:
-        groups = list(set(mapping_rows['treatment']))
-        mapping_rows = mapping_rows.groupby('treatment')
+        groups = list(set(mapping_rows["treatment"]))
+        mapping_rows = mapping_rows.groupby("treatment")
         for group_name in groups:
             mg = mapping_rows.get_group(group_name)
             if mg.shape[0] > 0:
-                cols_to_map = list(set(mg['orig_var']))
-                cols_to_map_back = [f'{c}_{group_name}' for c in cols_to_map]
+                cols_to_map = list(set(mg["orig_var"]))
+                cols_to_map_back = [f"{c}_{group_name}" for c in cols_to_map]
                 ops_g = def_multi_column_map(
-                    source.extend({v: f"{v}.coalesce('{bad_sentinel}')" for v in cols_to_map}),
-                    mapping_table=mapping_table.select_rows(f'treatment == "{group_name}"'),
+                    source.extend(
+                        {v: f"{v}.coalesce('{bad_sentinel}')" for v in cols_to_map}
+                    ),
+                    mapping_table=mapping_table.select_rows(
+                        f'treatment == "{group_name}"'
+                    ),
                     row_keys=row_keys,
                     cols_to_map=cols_to_map,
                     cols_to_map_back=cols_to_map_back,
                     coalesce_value=0.0,
-                    col_name_key='orig_var',
-                    col_value_key='value',
-                    mapped_value_key='replacement',
+                    col_name_key="orig_var",
+                    col_value_key="value",
+                    mapped_value_key="replacement",
                 )
                 ops = ops.natural_join(
                     b=ops_g,
                     by=row_keys,
-                    jointype='left',
+                    jointype="left",
                 )
     # add in any clean numeric copies, inputs are numeric- so disjoint of categorical processing
     cn_rows = vtreat_descr.loc[

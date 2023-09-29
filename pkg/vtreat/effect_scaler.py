@@ -1,4 +1,3 @@
-
 import numpy as np
 import pandas as pd
 
@@ -80,14 +79,20 @@ class EffectScaler:
         if isinstance(X, pd.DataFrame):
             if self._colnames is not None:
                 assert list(X.columns) == self._colnames
-            return pd.DataFrame({
-                c: transform_col(i, xi=np.array(X.loc[:, c], float)) for i, c in zip(range(X.shape[1]), X.columns)
-            })
+            return pd.DataFrame(
+                {
+                    c: transform_col(i, xi=np.array(X.loc[:, c], float))
+                    for i, c in zip(range(X.shape[1]), X.columns)
+                }
+            )
         else:
-            return pd.DataFrame({
-                i: transform_col(i, xi=np.array(X[:, i], float)) for i in range(X.shape[1])
-            })
-    
+            return pd.DataFrame(
+                {
+                    i: transform_col(i, xi=np.array(X[:, i], float))
+                    for i in range(X.shape[1])
+                }
+            )
+
     # noinspection PyPep8Naming
     def predict(self, X) -> pd.DataFrame:
         return self.transform(X)
