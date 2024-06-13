@@ -36,12 +36,12 @@ pkg/tests/test_util.py ..                                                [ 95%]
 pkg/tests/test_xicor.py ..                                               [100%]
 
 =============================== warnings summary ===============================
-../../../../../opt/anaconda3/envs/vtreat_dev_env/lib/python3.11/site-packages/lark/utils.py:116
-  /opt/anaconda3/envs/vtreat_dev_env/lib/python3.11/site-packages/lark/utils.py:116: DeprecationWarning: module 'sre_parse' is deprecated
+../../../opt/anaconda3/envs/vtreat_dev_env/lib/python3.11/site-packages/lark/utils.py:116
+  /Users/johnmount/opt/anaconda3/envs/vtreat_dev_env/lib/python3.11/site-packages/lark/utils.py:116: DeprecationWarning: module 'sre_parse' is deprecated
     import sre_parse
 
-../../../../../opt/anaconda3/envs/vtreat_dev_env/lib/python3.11/site-packages/lark/utils.py:117
-  /opt/anaconda3/envs/vtreat_dev_env/lib/python3.11/site-packages/lark/utils.py:117: DeprecationWarning: module 'sre_constants' is deprecated
+../../../opt/anaconda3/envs/vtreat_dev_env/lib/python3.11/site-packages/lark/utils.py:117
+  /Users/johnmount/opt/anaconda3/envs/vtreat_dev_env/lib/python3.11/site-packages/lark/utils.py:117: DeprecationWarning: module 'sre_constants' is deprecated
     import sre_constants
 
 tests/test_KDD2009.py::test_KDD2009_vtreat_1
@@ -50,11 +50,11 @@ tests/test_KDD2009.py::test_KDD2009_vtreat_1
 tests/test_KDD2009.py::test_KDD2009_vtreat_1
 tests/test_db_adapter.py::test_db_adapter_1_cdata
 tests/test_db_adapter.py::test_db_adapter_1_cdata
-  /opt/anaconda3/envs/vtreat_dev_env/lib/python3.11/site-packages/data_algebra/polars_model.py:1039: DeprecationWarning: The default coalesce behavior of left join will change to `False` in the next breaking release. Pass `coalesce=True` to keep the current behavior and silence this warning.
+  /Users/johnmount/opt/anaconda3/envs/vtreat_dev_env/lib/python3.11/site-packages/data_algebra/polars_model.py:1039: DeprecationWarning: The default coalesce behavior of left join will change to `False` in the next breaking release. Pass `coalesce=True` to keep the current behavior and silence this warning.
     res = inputs[0].join(
 
 tests/test_KDD2009.py: 72 warnings
-  /opt/anaconda3/envs/vtreat_dev_env/lib/python3.11/site-packages/data_algebra/polars_model.py:1313: DeprecationWarning: The default coalesce behavior of left join will change to `False` in the next breaking release. Pass `coalesce=True` to keep the current behavior and silence this warning.
+  /Users/johnmount/opt/anaconda3/envs/vtreat_dev_env/lib/python3.11/site-packages/data_algebra/polars_model.py:1313: DeprecationWarning: The default coalesce behavior of left join will change to `False` in the next breaking release. Pass `coalesce=True` to keep the current behavior and silence this warning.
     keys = keying.join(
 
 tests/test_grouped_stats.py::test_grouped_stats
@@ -81,4 +81,4 @@ pkg/vtreat/vtreat_impl.py                   711     61    91%
 -------------------------------------------------------------
 TOTAL                                      1635    127    92%
 
-================= 47 passed, 81 warnings in 100.82s (0:01:40) ==================
+================= 47 passed, 81 warnings in 117.43s (0:01:57) ==================
