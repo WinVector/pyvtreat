@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="generator" content="pdoc 14.1.0"/>
+    <meta name="generator" content="pdoc 14.5.0"/>
     <title>vtreat.vtreat_api API documentation</title>
 
     <style>/*! * Bootstrap Reboot v5.0.0 (https://getbootstrap.com/) * Copyright 2011-2021 The Bootstrap Authors * Copyright 2011-2021 Twitter, Inc. * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE) * Forked from Normalize.css, licensed MIT (https://github.com/necolas/normalize.css/blob/master/LICENSE.md) */*,::after,::before{box-sizing:border-box}@media (prefers-reduced-motion:no-preference){:root{scroll-behavior:smooth}}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";font-size:1rem;font-weight:400;line-height:1.5;color:#212529;background-color:#fff;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}hr{margin:1rem 0;color:inherit;background-color:currentColor;border:0;opacity:.25}hr:not([size]){height:1px}h1,h2,h3,h4,h5,h6{margin-top:0;margin-bottom:.5rem;font-weight:500;line-height:1.2}h1{font-size:calc(1.375rem + 1.5vw)}@media (min-width:1200px){h1{font-size:2.5rem}}h2{font-size:calc(1.325rem + .9vw)}@media (min-width:1200px){h2{font-size:2rem}}h3{font-size:calc(1.3rem + .6vw)}@media (min-width:1200px){h3{font-size:1.75rem}}h4{font-size:calc(1.275rem + .3vw)}@media (min-width:1200px){h4{font-size:1.5rem}}h5{font-size:1.25rem}h6{font-size:1rem}p{margin-top:0;margin-bottom:1rem}abbr[data-bs-original-title],abbr[title]{-webkit-text-decoration:underline dotted;text-decoration:underline dotted;cursor:help;-webkit-text-decoration-skip-ink:none;text-decoration-skip-ink:none}address{margin-bottom:1rem;font-style:normal;line-height:inherit}ol,ul{padding-left:2rem}dl,ol,ul{margin-top:0;margin-bottom:1rem}ol ol,ol ul,ul ol,ul ul{margin-bottom:0}dt{font-weight:700}dd{margin-bottom:.5rem;margin-left:0}blockquote{margin:0 0 1rem}b,strong{font-weight:bolder}small{font-size:.875em}mark{padding:.2em;background-color:#fcf8e3}sub,sup{position:relative;font-size:.75em;line-height:0;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}a{color:#0d6efd;text-decoration:underline}a:hover{color:#0a58ca}a:not([href]):not([class]),a:not([href]):not([class]):hover{color:inherit;text-decoration:none}code,kbd,pre,samp{font-family:SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:1em;direction:ltr;unicode-bidi:bidi-override}pre{display:block;margin-top:0;margin-bottom:1rem;overflow:auto;font-size:.875em}pre code{font-size:inherit;color:inherit;word-break:normal}code{font-size:.875em;color:#d63384;word-wrap:break-word}a>code{color:inherit}kbd{padding:.2rem .4rem;font-size:.875em;color:#fff;background-color:#212529;border-radius:.2rem}kbd kbd{padding:0;font-size:1em;font-weight:700}figure{margin:0 0 1rem}img,svg{vertical-align:middle}table{caption-side:bottom;border-collapse:collapse}caption{padding-top:.5rem;padding-bottom:.5rem;color:#6c757d;text-align:left}th{text-align:inherit;text-align:-webkit-match-parent}tbody,td,tfoot,th,thead,tr{border-color:inherit;border-style:solid;border-width:0}label{display:inline-block}button{border-radius:0}button:focus:not(:focus-visible){outline:0}button,input,optgroup,select,textarea{margin:0;font-family:inherit;font-size:inherit;line-height:inherit}button,select{text-transform:none}[role=button]{cursor:pointer}select{word-wrap:normal}select:disabled{opacity:1}[list]::-webkit-calendar-picker-indicator{display:none}[type=button],[type=reset],[type=submit],button{-webkit-appearance:button}[type=button]:not(:disabled),[type=reset]:not(:disabled),[type=submit]:not(:disabled),button:not(:disabled){cursor:pointer}::-moz-focus-inner{padding:0;border-style:none}textarea{resize:vertical}fieldset{min-width:0;padding:0;margin:0;border:0}legend{float:left;width:100%;padding:0;margin-bottom:.5rem;font-size:calc(1.275rem + .3vw);line-height:inherit}@media (min-width:1200px){legend{font-size:1.5rem}}legend+*{clear:left}::-webkit-datetime-edit-day-field,::-webkit-datetime-edit-fields-wrapper,::-webkit-datetime-edit-hour-field,::-webkit-datetime-edit-minute,::-webkit-datetime-edit-month-field,::-webkit-datetime-edit-text,::-webkit-datetime-edit-year-field{padding:0}::-webkit-inner-spin-button{height:auto}[type=search]{outline-offset:-2px;-webkit-appearance:textfield}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-color-swatch-wrapper{padding:0}::file-selector-button{font:inherit}::-webkit-file-upload-button{font:inherit;-webkit-appearance:button}output{display:inline-block}iframe{border:0}summary{display:list-item;cursor:pointer}progress{vertical-align:baseline}[hidden]{display:none!important}</style>
@@ -244,11 +244,11 @@
 </span><span id="L-108"><a href="#L-108"><span class="linenos">108</span></a>    <span class="p">):</span>
 </span><span id="L-109"><a href="#L-109"><span class="linenos">109</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="L-110"><a href="#L-110"><span class="linenos">110</span></a>
-</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a><span class="sd">         :param var_list: list or tuple of column names, if empty all non outcome and copy columns are used</span>
-</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a><span class="sd">         :param outcome_name: name of column containing dependent variable</span>
-</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a><span class="sd">         :param cols_to_copy: list or tuple of column names</span>
-</span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a><span class="sd">         :param params: vtreat.vtreat_parameters()</span>
-</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a><span class="sd">         :param imputation_map: map of column names to custom missing imputation values or functions</span>
+</span><span id="L-111"><a href="#L-111"><span class="linenos">111</span></a><span class="sd">        :param var_list: list or tuple of column names, if empty all non outcome and copy columns are used</span>
+</span><span id="L-112"><a href="#L-112"><span class="linenos">112</span></a><span class="sd">        :param outcome_name: name of column containing dependent variable</span>
+</span><span id="L-113"><a href="#L-113"><span class="linenos">113</span></a><span class="sd">        :param cols_to_copy: list or tuple of column names</span>
+</span><span id="L-114"><a href="#L-114"><span class="linenos">114</span></a><span class="sd">        :param params: vtreat.vtreat_parameters()</span>
+</span><span id="L-115"><a href="#L-115"><span class="linenos">115</span></a><span class="sd">        :param imputation_map: map of column names to custom missing imputation values or functions</span>
 </span><span id="L-116"><a href="#L-116"><span class="linenos">116</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="L-117"><a href="#L-117"><span class="linenos">117</span></a>        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge_params</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
 </span><span id="L-118"><a href="#L-118"><span class="linenos">118</span></a>        <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">VariableTreatment</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -440,12 +440,12 @@
 </span><span id="L-304"><a href="#L-304"><span class="linenos">304</span></a>    <span class="p">):</span>
 </span><span id="L-305"><a href="#L-305"><span class="linenos">305</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="L-306"><a href="#L-306"><span class="linenos">306</span></a>
-</span><span id="L-307"><a href="#L-307"><span class="linenos">307</span></a><span class="sd">         :param var_list: list or tuple of column names, if empty all non outcome and copy columns are used</span>
-</span><span id="L-308"><a href="#L-308"><span class="linenos">308</span></a><span class="sd">         :param outcome_name: name of column containing dependent variable</span>
-</span><span id="L-309"><a href="#L-309"><span class="linenos">309</span></a><span class="sd">         :param outcome_target: value of outcome to consider &quot;positive&quot;</span>
-</span><span id="L-310"><a href="#L-310"><span class="linenos">310</span></a><span class="sd">         :param cols_to_copy: list or tuple of column names</span>
-</span><span id="L-311"><a href="#L-311"><span class="linenos">311</span></a><span class="sd">         :param params: vtreat.vtreat_parameters()</span>
-</span><span id="L-312"><a href="#L-312"><span class="linenos">312</span></a><span class="sd">         :param imputation_map: map of column names to custom missing imputation values or functions</span>
+</span><span id="L-307"><a href="#L-307"><span class="linenos">307</span></a><span class="sd">        :param var_list: list or tuple of column names, if empty all non outcome and copy columns are used</span>
+</span><span id="L-308"><a href="#L-308"><span class="linenos">308</span></a><span class="sd">        :param outcome_name: name of column containing dependent variable</span>
+</span><span id="L-309"><a href="#L-309"><span class="linenos">309</span></a><span class="sd">        :param outcome_target: value of outcome to consider &quot;positive&quot;</span>
+</span><span id="L-310"><a href="#L-310"><span class="linenos">310</span></a><span class="sd">        :param cols_to_copy: list or tuple of column names</span>
+</span><span id="L-311"><a href="#L-311"><span class="linenos">311</span></a><span class="sd">        :param params: vtreat.vtreat_parameters()</span>
+</span><span id="L-312"><a href="#L-312"><span class="linenos">312</span></a><span class="sd">        :param imputation_map: map of column names to custom missing imputation values or functions</span>
 </span><span id="L-313"><a href="#L-313"><span class="linenos">313</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="L-314"><a href="#L-314"><span class="linenos">314</span></a>        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge_params</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
 </span><span id="L-315"><a href="#L-315"><span class="linenos">315</span></a>        <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">VariableTreatment</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -638,11 +638,11 @@
 </span><span id="L-502"><a href="#L-502"><span class="linenos">502</span></a>    <span class="p">):</span>
 </span><span id="L-503"><a href="#L-503"><span class="linenos">503</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="L-504"><a href="#L-504"><span class="linenos">504</span></a>
-</span><span id="L-505"><a href="#L-505"><span class="linenos">505</span></a><span class="sd">         :param var_list: list or tuple of column names, if empty all non outcome and copy columns are used</span>
-</span><span id="L-506"><a href="#L-506"><span class="linenos">506</span></a><span class="sd">         :param outcome_name: name of column containing dependent variable</span>
-</span><span id="L-507"><a href="#L-507"><span class="linenos">507</span></a><span class="sd">         :param cols_to_copy: list or tuple of column names</span>
-</span><span id="L-508"><a href="#L-508"><span class="linenos">508</span></a><span class="sd">         :param params: vtreat.vtreat_parameters()</span>
-</span><span id="L-509"><a href="#L-509"><span class="linenos">509</span></a><span class="sd">         :param imputation_map: map of column names to custom missing imputation values or functions</span>
+</span><span id="L-505"><a href="#L-505"><span class="linenos">505</span></a><span class="sd">        :param var_list: list or tuple of column names, if empty all non outcome and copy columns are used</span>
+</span><span id="L-506"><a href="#L-506"><span class="linenos">506</span></a><span class="sd">        :param outcome_name: name of column containing dependent variable</span>
+</span><span id="L-507"><a href="#L-507"><span class="linenos">507</span></a><span class="sd">        :param cols_to_copy: list or tuple of column names</span>
+</span><span id="L-508"><a href="#L-508"><span class="linenos">508</span></a><span class="sd">        :param params: vtreat.vtreat_parameters()</span>
+</span><span id="L-509"><a href="#L-509"><span class="linenos">509</span></a><span class="sd">        :param imputation_map: map of column names to custom missing imputation values or functions</span>
 </span><span id="L-510"><a href="#L-510"><span class="linenos">510</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="L-511"><a href="#L-511"><span class="linenos">511</span></a>
 </span><span id="L-512"><a href="#L-512"><span class="linenos">512</span></a>        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge_params</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
@@ -1106,11 +1106,11 @@
 </span><span id="NumericOutcomeTreatment-109"><a href="#NumericOutcomeTreatment-109"><span class="linenos">109</span></a>    <span class="p">):</span>
 </span><span id="NumericOutcomeTreatment-110"><a href="#NumericOutcomeTreatment-110"><span class="linenos">110</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="NumericOutcomeTreatment-111"><a href="#NumericOutcomeTreatment-111"><span class="linenos">111</span></a>
-</span><span id="NumericOutcomeTreatment-112"><a href="#NumericOutcomeTreatment-112"><span class="linenos">112</span></a><span class="sd">         :param var_list: list or tuple of column names, if empty all non outcome and copy columns are used</span>
-</span><span id="NumericOutcomeTreatment-113"><a href="#NumericOutcomeTreatment-113"><span class="linenos">113</span></a><span class="sd">         :param outcome_name: name of column containing dependent variable</span>
-</span><span id="NumericOutcomeTreatment-114"><a href="#NumericOutcomeTreatment-114"><span class="linenos">114</span></a><span class="sd">         :param cols_to_copy: list or tuple of column names</span>
-</span><span id="NumericOutcomeTreatment-115"><a href="#NumericOutcomeTreatment-115"><span class="linenos">115</span></a><span class="sd">         :param params: vtreat.vtreat_parameters()</span>
-</span><span id="NumericOutcomeTreatment-116"><a href="#NumericOutcomeTreatment-116"><span class="linenos">116</span></a><span class="sd">         :param imputation_map: map of column names to custom missing imputation values or functions</span>
+</span><span id="NumericOutcomeTreatment-112"><a href="#NumericOutcomeTreatment-112"><span class="linenos">112</span></a><span class="sd">        :param var_list: list or tuple of column names, if empty all non outcome and copy columns are used</span>
+</span><span id="NumericOutcomeTreatment-113"><a href="#NumericOutcomeTreatment-113"><span class="linenos">113</span></a><span class="sd">        :param outcome_name: name of column containing dependent variable</span>
+</span><span id="NumericOutcomeTreatment-114"><a href="#NumericOutcomeTreatment-114"><span class="linenos">114</span></a><span class="sd">        :param cols_to_copy: list or tuple of column names</span>
+</span><span id="NumericOutcomeTreatment-115"><a href="#NumericOutcomeTreatment-115"><span class="linenos">115</span></a><span class="sd">        :param params: vtreat.vtreat_parameters()</span>
+</span><span id="NumericOutcomeTreatment-116"><a href="#NumericOutcomeTreatment-116"><span class="linenos">116</span></a><span class="sd">        :param imputation_map: map of column names to custom missing imputation values or functions</span>
 </span><span id="NumericOutcomeTreatment-117"><a href="#NumericOutcomeTreatment-117"><span class="linenos">117</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="NumericOutcomeTreatment-118"><a href="#NumericOutcomeTreatment-118"><span class="linenos">118</span></a>        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge_params</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
 </span><span id="NumericOutcomeTreatment-119"><a href="#NumericOutcomeTreatment-119"><span class="linenos">119</span></a>        <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">VariableTreatment</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -1313,11 +1313,11 @@
 </span><span id="NumericOutcomeTreatment.__init__-109"><a href="#NumericOutcomeTreatment.__init__-109"><span class="linenos">109</span></a>    <span class="p">):</span>
 </span><span id="NumericOutcomeTreatment.__init__-110"><a href="#NumericOutcomeTreatment.__init__-110"><span class="linenos">110</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="NumericOutcomeTreatment.__init__-111"><a href="#NumericOutcomeTreatment.__init__-111"><span class="linenos">111</span></a>
-</span><span id="NumericOutcomeTreatment.__init__-112"><a href="#NumericOutcomeTreatment.__init__-112"><span class="linenos">112</span></a><span class="sd">         :param var_list: list or tuple of column names, if empty all non outcome and copy columns are used</span>
-</span><span id="NumericOutcomeTreatment.__init__-113"><a href="#NumericOutcomeTreatment.__init__-113"><span class="linenos">113</span></a><span class="sd">         :param outcome_name: name of column containing dependent variable</span>
-</span><span id="NumericOutcomeTreatment.__init__-114"><a href="#NumericOutcomeTreatment.__init__-114"><span class="linenos">114</span></a><span class="sd">         :param cols_to_copy: list or tuple of column names</span>
-</span><span id="NumericOutcomeTreatment.__init__-115"><a href="#NumericOutcomeTreatment.__init__-115"><span class="linenos">115</span></a><span class="sd">         :param params: vtreat.vtreat_parameters()</span>
-</span><span id="NumericOutcomeTreatment.__init__-116"><a href="#NumericOutcomeTreatment.__init__-116"><span class="linenos">116</span></a><span class="sd">         :param imputation_map: map of column names to custom missing imputation values or functions</span>
+</span><span id="NumericOutcomeTreatment.__init__-112"><a href="#NumericOutcomeTreatment.__init__-112"><span class="linenos">112</span></a><span class="sd">        :param var_list: list or tuple of column names, if empty all non outcome and copy columns are used</span>
+</span><span id="NumericOutcomeTreatment.__init__-113"><a href="#NumericOutcomeTreatment.__init__-113"><span class="linenos">113</span></a><span class="sd">        :param outcome_name: name of column containing dependent variable</span>
+</span><span id="NumericOutcomeTreatment.__init__-114"><a href="#NumericOutcomeTreatment.__init__-114"><span class="linenos">114</span></a><span class="sd">        :param cols_to_copy: list or tuple of column names</span>
+</span><span id="NumericOutcomeTreatment.__init__-115"><a href="#NumericOutcomeTreatment.__init__-115"><span class="linenos">115</span></a><span class="sd">        :param params: vtreat.vtreat_parameters()</span>
+</span><span id="NumericOutcomeTreatment.__init__-116"><a href="#NumericOutcomeTreatment.__init__-116"><span class="linenos">116</span></a><span class="sd">        :param imputation_map: map of column names to custom missing imputation values or functions</span>
 </span><span id="NumericOutcomeTreatment.__init__-117"><a href="#NumericOutcomeTreatment.__init__-117"><span class="linenos">117</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="NumericOutcomeTreatment.__init__-118"><a href="#NumericOutcomeTreatment.__init__-118"><span class="linenos">118</span></a>        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge_params</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
 </span><span id="NumericOutcomeTreatment.__init__-119"><a href="#NumericOutcomeTreatment.__init__-119"><span class="linenos">119</span></a>        <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">VariableTreatment</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -1629,6 +1629,10 @@
                 <dd id="NumericOutcomeTreatment.description_matrix" class="function"><a href="vtreat_impl.html#VariableTreatment.description_matrix">description_matrix</a></dd>
 
             </div>
+            <div><dt>sklearn.utils._metadata_requests._MetadataRequester</dt>
+                                <dd id="NumericOutcomeTreatment.get_metadata_routing" class="function">get_metadata_routing</dd>
+
+            </div>
             <div><dt>sklearn.utils._set_output._SetOutputMixin</dt>
                                 <dd id="NumericOutcomeTreatment.set_output" class="function">set_output</dd>
 
@@ -1662,12 +1666,12 @@
 </span><span id="BinomialOutcomeTreatment-305"><a href="#BinomialOutcomeTreatment-305"><span class="linenos">305</span></a>    <span class="p">):</span>
 </span><span id="BinomialOutcomeTreatment-306"><a href="#BinomialOutcomeTreatment-306"><span class="linenos">306</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="BinomialOutcomeTreatment-307"><a href="#BinomialOutcomeTreatment-307"><span class="linenos">307</span></a>
-</span><span id="BinomialOutcomeTreatment-308"><a href="#BinomialOutcomeTreatment-308"><span class="linenos">308</span></a><span class="sd">         :param var_list: list or tuple of column names, if empty all non outcome and copy columns are used</span>
-</span><span id="BinomialOutcomeTreatment-309"><a href="#BinomialOutcomeTreatment-309"><span class="linenos">309</span></a><span class="sd">         :param outcome_name: name of column containing dependent variable</span>
-</span><span id="BinomialOutcomeTreatment-310"><a href="#BinomialOutcomeTreatment-310"><span class="linenos">310</span></a><span class="sd">         :param outcome_target: value of outcome to consider &quot;positive&quot;</span>
-</span><span id="BinomialOutcomeTreatment-311"><a href="#BinomialOutcomeTreatment-311"><span class="linenos">311</span></a><span class="sd">         :param cols_to_copy: list or tuple of column names</span>
-</span><span id="BinomialOutcomeTreatment-312"><a href="#BinomialOutcomeTreatment-312"><span class="linenos">312</span></a><span class="sd">         :param params: vtreat.vtreat_parameters()</span>
-</span><span id="BinomialOutcomeTreatment-313"><a href="#BinomialOutcomeTreatment-313"><span class="linenos">313</span></a><span class="sd">         :param imputation_map: map of column names to custom missing imputation values or functions</span>
+</span><span id="BinomialOutcomeTreatment-308"><a href="#BinomialOutcomeTreatment-308"><span class="linenos">308</span></a><span class="sd">        :param var_list: list or tuple of column names, if empty all non outcome and copy columns are used</span>
+</span><span id="BinomialOutcomeTreatment-309"><a href="#BinomialOutcomeTreatment-309"><span class="linenos">309</span></a><span class="sd">        :param outcome_name: name of column containing dependent variable</span>
+</span><span id="BinomialOutcomeTreatment-310"><a href="#BinomialOutcomeTreatment-310"><span class="linenos">310</span></a><span class="sd">        :param outcome_target: value of outcome to consider &quot;positive&quot;</span>
+</span><span id="BinomialOutcomeTreatment-311"><a href="#BinomialOutcomeTreatment-311"><span class="linenos">311</span></a><span class="sd">        :param cols_to_copy: list or tuple of column names</span>
+</span><span id="BinomialOutcomeTreatment-312"><a href="#BinomialOutcomeTreatment-312"><span class="linenos">312</span></a><span class="sd">        :param params: vtreat.vtreat_parameters()</span>
+</span><span id="BinomialOutcomeTreatment-313"><a href="#BinomialOutcomeTreatment-313"><span class="linenos">313</span></a><span class="sd">        :param imputation_map: map of column names to custom missing imputation values or functions</span>
 </span><span id="BinomialOutcomeTreatment-314"><a href="#BinomialOutcomeTreatment-314"><span class="linenos">314</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="BinomialOutcomeTreatment-315"><a href="#BinomialOutcomeTreatment-315"><span class="linenos">315</span></a>        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge_params</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
 </span><span id="BinomialOutcomeTreatment-316"><a href="#BinomialOutcomeTreatment-316"><span class="linenos">316</span></a>        <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">VariableTreatment</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -1873,12 +1877,12 @@
 </span><span id="BinomialOutcomeTreatment.__init__-305"><a href="#BinomialOutcomeTreatment.__init__-305"><span class="linenos">305</span></a>    <span class="p">):</span>
 </span><span id="BinomialOutcomeTreatment.__init__-306"><a href="#BinomialOutcomeTreatment.__init__-306"><span class="linenos">306</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="BinomialOutcomeTreatment.__init__-307"><a href="#BinomialOutcomeTreatment.__init__-307"><span class="linenos">307</span></a>
-</span><span id="BinomialOutcomeTreatment.__init__-308"><a href="#BinomialOutcomeTreatment.__init__-308"><span class="linenos">308</span></a><span class="sd">         :param var_list: list or tuple of column names, if empty all non outcome and copy columns are used</span>
-</span><span id="BinomialOutcomeTreatment.__init__-309"><a href="#BinomialOutcomeTreatment.__init__-309"><span class="linenos">309</span></a><span class="sd">         :param outcome_name: name of column containing dependent variable</span>
-</span><span id="BinomialOutcomeTreatment.__init__-310"><a href="#BinomialOutcomeTreatment.__init__-310"><span class="linenos">310</span></a><span class="sd">         :param outcome_target: value of outcome to consider &quot;positive&quot;</span>
-</span><span id="BinomialOutcomeTreatment.__init__-311"><a href="#BinomialOutcomeTreatment.__init__-311"><span class="linenos">311</span></a><span class="sd">         :param cols_to_copy: list or tuple of column names</span>
-</span><span id="BinomialOutcomeTreatment.__init__-312"><a href="#BinomialOutcomeTreatment.__init__-312"><span class="linenos">312</span></a><span class="sd">         :param params: vtreat.vtreat_parameters()</span>
-</span><span id="BinomialOutcomeTreatment.__init__-313"><a href="#BinomialOutcomeTreatment.__init__-313"><span class="linenos">313</span></a><span class="sd">         :param imputation_map: map of column names to custom missing imputation values or functions</span>
+</span><span id="BinomialOutcomeTreatment.__init__-308"><a href="#BinomialOutcomeTreatment.__init__-308"><span class="linenos">308</span></a><span class="sd">        :param var_list: list or tuple of column names, if empty all non outcome and copy columns are used</span>
+</span><span id="BinomialOutcomeTreatment.__init__-309"><a href="#BinomialOutcomeTreatment.__init__-309"><span class="linenos">309</span></a><span class="sd">        :param outcome_name: name of column containing dependent variable</span>
+</span><span id="BinomialOutcomeTreatment.__init__-310"><a href="#BinomialOutcomeTreatment.__init__-310"><span class="linenos">310</span></a><span class="sd">        :param outcome_target: value of outcome to consider &quot;positive&quot;</span>
+</span><span id="BinomialOutcomeTreatment.__init__-311"><a href="#BinomialOutcomeTreatment.__init__-311"><span class="linenos">311</span></a><span class="sd">        :param cols_to_copy: list or tuple of column names</span>
+</span><span id="BinomialOutcomeTreatment.__init__-312"><a href="#BinomialOutcomeTreatment.__init__-312"><span class="linenos">312</span></a><span class="sd">        :param params: vtreat.vtreat_parameters()</span>
+</span><span id="BinomialOutcomeTreatment.__init__-313"><a href="#BinomialOutcomeTreatment.__init__-313"><span class="linenos">313</span></a><span class="sd">        :param imputation_map: map of column names to custom missing imputation values or functions</span>
 </span><span id="BinomialOutcomeTreatment.__init__-314"><a href="#BinomialOutcomeTreatment.__init__-314"><span class="linenos">314</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="BinomialOutcomeTreatment.__init__-315"><a href="#BinomialOutcomeTreatment.__init__-315"><span class="linenos">315</span></a>        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge_params</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
 </span><span id="BinomialOutcomeTreatment.__init__-316"><a href="#BinomialOutcomeTreatment.__init__-316"><span class="linenos">316</span></a>        <span class="n">vtreat_impl</span><span class="o">.</span><span class="n">VariableTreatment</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -2193,6 +2197,10 @@
                 <dd id="BinomialOutcomeTreatment.description_matrix" class="function"><a href="vtreat_impl.html#VariableTreatment.description_matrix">description_matrix</a></dd>
 
             </div>
+            <div><dt>sklearn.utils._metadata_requests._MetadataRequester</dt>
+                                <dd id="BinomialOutcomeTreatment.get_metadata_routing" class="function">get_metadata_routing</dd>
+
+            </div>
             <div><dt>sklearn.utils._set_output._SetOutputMixin</dt>
                                 <dd id="BinomialOutcomeTreatment.set_output" class="function">set_output</dd>
 
@@ -2225,11 +2233,11 @@
 </span><span id="MultinomialOutcomeTreatment-503"><a href="#MultinomialOutcomeTreatment-503"><span class="linenos">503</span></a>    <span class="p">):</span>
 </span><span id="MultinomialOutcomeTreatment-504"><a href="#MultinomialOutcomeTreatment-504"><span class="linenos">504</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="MultinomialOutcomeTreatment-505"><a href="#MultinomialOutcomeTreatment-505"><span class="linenos">505</span></a>
-</span><span id="MultinomialOutcomeTreatment-506"><a href="#MultinomialOutcomeTreatment-506"><span class="linenos">506</span></a><span class="sd">         :param var_list: list or tuple of column names, if empty all non outcome and copy columns are used</span>
-</span><span id="MultinomialOutcomeTreatment-507"><a href="#MultinomialOutcomeTreatment-507"><span class="linenos">507</span></a><span class="sd">         :param outcome_name: name of column containing dependent variable</span>
-</span><span id="MultinomialOutcomeTreatment-508"><a href="#MultinomialOutcomeTreatment-508"><span class="linenos">508</span></a><span class="sd">         :param cols_to_copy: list or tuple of column names</span>
-</span><span id="MultinomialOutcomeTreatment-509"><a href="#MultinomialOutcomeTreatment-509"><span class="linenos">509</span></a><span class="sd">         :param params: vtreat.vtreat_parameters()</span>
-</span><span id="MultinomialOutcomeTreatment-510"><a href="#MultinomialOutcomeTreatment-510"><span class="linenos">510</span></a><span class="sd">         :param imputation_map: map of column names to custom missing imputation values or functions</span>
+</span><span id="MultinomialOutcomeTreatment-506"><a href="#MultinomialOutcomeTreatment-506"><span class="linenos">506</span></a><span class="sd">        :param var_list: list or tuple of column names, if empty all non outcome and copy columns are used</span>
+</span><span id="MultinomialOutcomeTreatment-507"><a href="#MultinomialOutcomeTreatment-507"><span class="linenos">507</span></a><span class="sd">        :param outcome_name: name of column containing dependent variable</span>
+</span><span id="MultinomialOutcomeTreatment-508"><a href="#MultinomialOutcomeTreatment-508"><span class="linenos">508</span></a><span class="sd">        :param cols_to_copy: list or tuple of column names</span>
+</span><span id="MultinomialOutcomeTreatment-509"><a href="#MultinomialOutcomeTreatment-509"><span class="linenos">509</span></a><span class="sd">        :param params: vtreat.vtreat_parameters()</span>
+</span><span id="MultinomialOutcomeTreatment-510"><a href="#MultinomialOutcomeTreatment-510"><span class="linenos">510</span></a><span class="sd">        :param imputation_map: map of column names to custom missing imputation values or functions</span>
 </span><span id="MultinomialOutcomeTreatment-511"><a href="#MultinomialOutcomeTreatment-511"><span class="linenos">511</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="MultinomialOutcomeTreatment-512"><a href="#MultinomialOutcomeTreatment-512"><span class="linenos">512</span></a>
 </span><span id="MultinomialOutcomeTreatment-513"><a href="#MultinomialOutcomeTreatment-513"><span class="linenos">513</span></a>        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge_params</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
@@ -2440,11 +2448,11 @@
 </span><span id="MultinomialOutcomeTreatment.__init__-503"><a href="#MultinomialOutcomeTreatment.__init__-503"><span class="linenos">503</span></a>    <span class="p">):</span>
 </span><span id="MultinomialOutcomeTreatment.__init__-504"><a href="#MultinomialOutcomeTreatment.__init__-504"><span class="linenos">504</span></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="MultinomialOutcomeTreatment.__init__-505"><a href="#MultinomialOutcomeTreatment.__init__-505"><span class="linenos">505</span></a>
-</span><span id="MultinomialOutcomeTreatment.__init__-506"><a href="#MultinomialOutcomeTreatment.__init__-506"><span class="linenos">506</span></a><span class="sd">         :param var_list: list or tuple of column names, if empty all non outcome and copy columns are used</span>
-</span><span id="MultinomialOutcomeTreatment.__init__-507"><a href="#MultinomialOutcomeTreatment.__init__-507"><span class="linenos">507</span></a><span class="sd">         :param outcome_name: name of column containing dependent variable</span>
-</span><span id="MultinomialOutcomeTreatment.__init__-508"><a href="#MultinomialOutcomeTreatment.__init__-508"><span class="linenos">508</span></a><span class="sd">         :param cols_to_copy: list or tuple of column names</span>
-</span><span id="MultinomialOutcomeTreatment.__init__-509"><a href="#MultinomialOutcomeTreatment.__init__-509"><span class="linenos">509</span></a><span class="sd">         :param params: vtreat.vtreat_parameters()</span>
-</span><span id="MultinomialOutcomeTreatment.__init__-510"><a href="#MultinomialOutcomeTreatment.__init__-510"><span class="linenos">510</span></a><span class="sd">         :param imputation_map: map of column names to custom missing imputation values or functions</span>
+</span><span id="MultinomialOutcomeTreatment.__init__-506"><a href="#MultinomialOutcomeTreatment.__init__-506"><span class="linenos">506</span></a><span class="sd">        :param var_list: list or tuple of column names, if empty all non outcome and copy columns are used</span>
+</span><span id="MultinomialOutcomeTreatment.__init__-507"><a href="#MultinomialOutcomeTreatment.__init__-507"><span class="linenos">507</span></a><span class="sd">        :param outcome_name: name of column containing dependent variable</span>
+</span><span id="MultinomialOutcomeTreatment.__init__-508"><a href="#MultinomialOutcomeTreatment.__init__-508"><span class="linenos">508</span></a><span class="sd">        :param cols_to_copy: list or tuple of column names</span>
+</span><span id="MultinomialOutcomeTreatment.__init__-509"><a href="#MultinomialOutcomeTreatment.__init__-509"><span class="linenos">509</span></a><span class="sd">        :param params: vtreat.vtreat_parameters()</span>
+</span><span id="MultinomialOutcomeTreatment.__init__-510"><a href="#MultinomialOutcomeTreatment.__init__-510"><span class="linenos">510</span></a><span class="sd">        :param imputation_map: map of column names to custom missing imputation values or functions</span>
 </span><span id="MultinomialOutcomeTreatment.__init__-511"><a href="#MultinomialOutcomeTreatment.__init__-511"><span class="linenos">511</span></a><span class="sd">        &quot;&quot;&quot;</span>
 </span><span id="MultinomialOutcomeTreatment.__init__-512"><a href="#MultinomialOutcomeTreatment.__init__-512"><span class="linenos">512</span></a>
 </span><span id="MultinomialOutcomeTreatment.__init__-513"><a href="#MultinomialOutcomeTreatment.__init__-513"><span class="linenos">513</span></a>        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge_params</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
@@ -2773,6 +2781,10 @@
                 <dd id="MultinomialOutcomeTreatment.predict_proba" class="function"><a href="vtreat_impl.html#VariableTreatment.predict_proba">predict_proba</a></dd>
                 <dd id="MultinomialOutcomeTreatment.get_feature_names" class="function"><a href="vtreat_impl.html#VariableTreatment.get_feature_names">get_feature_names</a></dd>
                 <dd id="MultinomialOutcomeTreatment.description_matrix" class="function"><a href="vtreat_impl.html#VariableTreatment.description_matrix">description_matrix</a></dd>
+
+            </div>
+            <div><dt>sklearn.utils._metadata_requests._MetadataRequester</dt>
+                                <dd id="MultinomialOutcomeTreatment.get_metadata_routing" class="function">get_metadata_routing</dd>
 
             </div>
             <div><dt>sklearn.utils._set_output._SetOutputMixin</dt>
@@ -3163,6 +3175,10 @@
                 <dd id="UnsupervisedTreatment.predict_proba" class="function"><a href="vtreat_impl.html#VariableTreatment.predict_proba">predict_proba</a></dd>
                 <dd id="UnsupervisedTreatment.get_feature_names" class="function"><a href="vtreat_impl.html#VariableTreatment.get_feature_names">get_feature_names</a></dd>
                 <dd id="UnsupervisedTreatment.description_matrix" class="function"><a href="vtreat_impl.html#VariableTreatment.description_matrix">description_matrix</a></dd>
+
+            </div>
+            <div><dt>sklearn.utils._metadata_requests._MetadataRequester</dt>
+                                <dd id="UnsupervisedTreatment.get_metadata_routing" class="function">get_metadata_routing</dd>
 
             </div>
             <div><dt>sklearn.utils._set_output._SetOutputMixin</dt>

@@ -30,6 +30,9 @@ def test_pooled_effect_estimate():
     r = pooled_effect_estimate(d)
     expect = pd.DataFrame({
         'location_id': ['a', 'b', 'c'],
+        'mean': [2.0, 4.5, 6.0],
+        'var': [1.0, 0.5, np.nan],
+        'size': [3, 2, 1],
         'estimate': [2.161608, 4.362170, 5.342105],
         'grand_mean': [3.5, 3.5, 3.5],
         'impact': [-1.338392, 0.862170, 1.842105],

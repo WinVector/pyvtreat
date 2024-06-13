@@ -66,11 +66,6 @@ def pooled_effect_estimate(observations: pd.DataFrame) -> pd.DataFrame:
     grand_mean = estimated_centers['grand_mean']
     # build the pooled estimate
     pooled_estimate = v * estimated_centers["estimate"] + (1 - v) * grand_mean
-    return pd.DataFrame(
-        {
-            "location_id": estimated_centers["location_id"],
-            "estimate": pooled_estimate,
-            "grand_mean": grand_mean,
-            "impact": pooled_estimate - grand_mean,
-        }
-    )
+    estimated_centers["estimate"] = pooled_estimate
+    estimated_centers['impact'] = pooled_estimate - grand_mean
+    return estimated_centers
