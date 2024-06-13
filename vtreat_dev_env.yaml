@@ -33,4 +33,5 @@ dependencies:
     - google.cloud
     - google-cloud-bigquery
     - polars>=0.19.4
+    - plotnine
 

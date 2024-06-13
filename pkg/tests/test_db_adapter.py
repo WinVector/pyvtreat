@@ -108,9 +108,6 @@ def test_db_adapter_1_cdata():
         assert equivalent_frames(transformed_pl_pd, d_app_treated)
 
 
-test_db_adapter_1_cdata()  # TODO: remove
-
-
 def test_db_adapter_general():
     if not have_data_algebra:
         return
