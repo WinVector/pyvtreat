@@ -10,6 +10,7 @@ def test_standard_effect_estimate():
         'observation': [  1,   2,   3,   4,   5,   6],
     })
     r = standard_effect_estimate(d)
+    assert np.abs(np.sum(r['size'] * r['impact'])) < 1e-5
     expect = pd.DataFrame({
         'location_id': ['a', 'b', 'c'],
         'mean': [2.0, 4.5, 6.0],
@@ -28,14 +29,15 @@ def test_pooled_effect_estimate():
         'observation': [  1,   2,   3,   4,   5,   6],
     })
     r = pooled_effect_estimate(d)
+    assert np.abs(np.sum(r['size'] * r['impact'])) < 1e-5
     expect = pd.DataFrame({
         'location_id': ['a', 'b', 'c'],
         'mean': [2.0, 4.5, 6.0],
         'var': [1.0, 0.5, np.nan],
         'size': [3, 2, 1],
-        'estimate': [2.161608, 4.362170, 5.342105],
+        'estimate': [2.161608, 4.362170, 3.500000],
         'grand_mean': [3.5, 3.5, 3.5],
-        'impact': [-1.338392, 0.862170, 1.842105],
+        'impact': [-0.956586, 1.243976, 0.381806],
     })
     assert r.shape == expect.shape
     assert np.all(r.columns == expect.columns)

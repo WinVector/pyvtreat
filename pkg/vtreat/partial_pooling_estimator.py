@@ -24,7 +24,10 @@ def standard_effect_estimate(observations: pd.DataFrame) -> pd.DataFrame:
     means.sort_values(["location_id"], inplace=True, ignore_index=True)
     means['estimate'] = means['mean']
     means["grand_mean"] = np.mean(observations["observation"])
-    means["impact"] = means["estimate"] - means["grand_mean"]
+    means["impact"] = means["estimate"]
+    means["impact"] = (
+        means["impact"] 
+        - np.sum(means['size'] * means['impact']) / np.sum(means['size']))
     means.sort_values(["location_id"], inplace=True, ignore_index=True)
     return means
 
@@ -50,9 +53,11 @@ def pooled_effect_estimate(observations: pd.DataFrame) -> pd.DataFrame:
     # get counts per group
     n_j = estimated_centers["size"]
     per_location_observation_var = estimated_centers['var'].copy()
-    # inflate a bit
     per_location_observation_var[pd.isnull(per_location_observation_var)] = 0
-    per_location_observation_var = (n_j * per_location_observation_var + np.var(observations['observation'])) / (n_j + 1)
+    # inflate per-loc a bit
+    per_location_observation_var = (
+        (n_j * per_location_observation_var + np.var(observations['observation'])) 
+        / (n_j + 1))
     # get the observed variance between locations
     between_location_var = np.var(estimated_centers["estimate"], ddof=1)
     # get v, the pooling coefficient
@@ -62,10 +67,13 @@ def pooled_effect_estimate(observations: pd.DataFrame) -> pd.DataFrame:
         # as between_location_var > 0 and per_location_observation_var > 0 here
         # v will be in the range 0 to 1
         v = 1 / (1 + per_location_observation_var / (n_j * between_location_var))
-    # this quantity can be improved using knowledge of the variances
-    grand_mean = estimated_centers['grand_mean']
+    v[n_j <= 1] = 0  # no information in size one items
+    v[pd.isnull(v)] = 0
     # build the pooled estimate
-    pooled_estimate = v * estimated_centers["estimate"] + (1 - v) * grand_mean
+    pooled_estimate = v * estimated_centers["estimate"] + (1 - v) * estimated_centers["grand_mean"]
     estimated_centers["estimate"] = pooled_estimate
-    estimated_centers['impact'] = pooled_estimate - grand_mean
+    estimated_centers["impact"] = estimated_centers["estimate"] 
+    estimated_centers["impact"] = (
+        estimated_centers["impact"] 
+        - np.sum(estimated_centers['size'] * estimated_centers['impact']) / np.sum(estimated_centers['size']))
     return estimated_centers

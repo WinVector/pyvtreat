@@ -70,7 +70,7 @@ pkg/vtreat/__init__.py                        6      0   100%
 pkg/vtreat/cross_plan.py                     50      1    98%
 pkg/vtreat/da_adapter.py                    109      1    99%
 pkg/vtreat/effect_scaler.py                  59      4    93%
-pkg/vtreat/partial_pooling_estimator.py      32      0   100%
+pkg/vtreat/partial_pooling_estimator.py      35      0   100%
 pkg/vtreat/stats_utils.py                   132      0   100%
 pkg/vtreat/test_util.py                      84     18    79%
 pkg/vtreat/transform.py                      14      0   100%
@@ -79,6 +79,6 @@ pkg/vtreat/vtreat_api.py                    285     34    88%
 pkg/vtreat/vtreat_db_adapter.py               1      0   100%
 pkg/vtreat/vtreat_impl.py                   711     61    91%
 -------------------------------------------------------------
-TOTAL                                      1632    127    92%
+TOTAL                                      1635    127    92%
 
-================= 47 passed, 81 warnings in 111.33s (0:01:51) ==================
+================= 47 passed, 81 warnings in 104.41s (0:01:44) ==================
