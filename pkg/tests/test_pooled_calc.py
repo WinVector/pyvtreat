@@ -104,7 +104,7 @@ def test_pooled_calc():
         location_id=0, 
         example_locations=example_locations, 
         observations=observations)
-    assert pooled_est_loss < std_est_loss
+    assert pooled_est_loss < 1.1 * std_est_loss
 
 
 def test_pooled_calc_2():

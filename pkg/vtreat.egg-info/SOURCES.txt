@@ -17,6 +17,7 @@ tests/test_max_levels.py
 tests/test_multinomial.py
 tests/test_nan_inf.py
 tests/test_outcome_name_required.py
+tests/test_partial_pooling.py
 tests/test_pipeparams.py
 tests/test_pooled_calc.py
 tests/test_r1_issue.py
@@ -32,6 +33,7 @@ tests/test_util.py
 tests/test_xicor.py
 vtreat/__init__.py
 vtreat/cross_plan.py
+vtreat/da_adapter.py
 vtreat/effect_scaler.py
 vtreat/partial_pooling_estimator.py
 vtreat/stats_utils.py

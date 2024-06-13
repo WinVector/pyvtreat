@@ -3,6 +3,7 @@ channels:
   - defaults
   - conda-forge
 dependencies:
+  - db-dtypes
   - numpy>=1.24.0
   - pandas>=2.0.0
   - lark
@@ -23,9 +24,11 @@ dependencies:
   - pymysql
   - pyspark
   - pylint
+  - xgboost
   - pip
   - pip:
     - pdoc
+    - wvu
     - data_algebra>=1.7.0
     - google.cloud
     - google-cloud-bigquery
