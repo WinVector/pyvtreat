@@ -47,7 +47,8 @@ def pooled_effect_estimate(observations: pd.DataFrame) -> pd.DataFrame:
     )
     # get the standard estimates
     estimated_centers = standard_effect_estimate(observations=observations)
-    if estimated_centers.shape[0] <= 1:
+    grand_var = np.var(observations['observation'])
+    if (estimated_centers.shape[0] <= 1) or pd.isnull(grand_var) or (grand_var <= 0):
         # no pooling possible
         return estimated_centers
     # get counts per group
@@ -56,7 +57,7 @@ def pooled_effect_estimate(observations: pd.DataFrame) -> pd.DataFrame:
     per_location_observation_var[pd.isnull(per_location_observation_var)] = 0
     # inflate per-loc a bit
     per_location_observation_var = (
-        (n_j * per_location_observation_var + np.var(observations['observation'])) 
+        (n_j * per_location_observation_var + grand_var)
         / (n_j + 1))
     # get the observed variance between locations
     between_location_var = np.var(estimated_centers["estimate"], ddof=1)
@@ -67,7 +68,6 @@ def pooled_effect_estimate(observations: pd.DataFrame) -> pd.DataFrame:
         # as between_location_var > 0 and per_location_observation_var > 0 here
         # v will be in the range 0 to 1
         v = 1 / (1 + per_location_observation_var / (n_j * between_location_var))
-    v[n_j <= 1] = 0  # no information in size one items
     v[pd.isnull(v)] = 0
     # build the pooled estimate
     pooled_estimate = v * estimated_centers["estimate"] + (1 - v) * estimated_centers["grand_mean"]

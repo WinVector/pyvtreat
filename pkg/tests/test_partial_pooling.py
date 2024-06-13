@@ -35,9 +35,9 @@ def test_pooled_effect_estimate():
         'mean': [2.0, 4.5, 6.0],
         'var': [1.0, 0.5, np.nan],
         'size': [3, 2, 1],
-        'estimate': [2.161608, 4.362170, 3.500000],
+        'estimate': [2.161608, 4.362170, 5.342105],
         'grand_mean': [3.5, 3.5, 3.5],
-        'impact': [-0.956586, 1.243976, 0.381806],
+        'impact': [-1.263603, 0.936958, 1.916893],
     })
     assert r.shape == expect.shape
     assert np.all(r.columns == expect.columns)
